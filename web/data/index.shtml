@@ -5,10 +5,18 @@
 <p>We have a number of data feeds:</p>
 
 <dl>
-<dd><a href="/cgi-bin/rss.cgi"><img src="/images/rss.gif" alt="rss "/><img src="/images/reasons.gif" alt="reasons" /></a></dd>
-<dd><a href="/cgi-bin/rss-comments.cgi"><img src="/images/rss.gif" alt="rss "/><img src="/images/responses.gif" alt="responses" /></a></dd>
-<dd><a href="/cgi-bin/postsxml.cgi"><img src="/images/xml.gif" alt="xml "/></a></dd>
-<dd><img src="/images/csv.gif" alt="csv "/></dd>
+	<dd>
+		<a href="/cgi-bin/rss.cgi"><img src="/images/rss.gif" alt="rss "/><img src="/images/reasons.gif" alt="reasons" /></a>
+	</dd>
+	<dd>
+		<a href="/cgi-bin/rss-comments.cgi"><img src="/images/rss.gif" alt="rss "/><img src="/images/responses.gif" alt="responses" /></a>
+	</dd>
+	<dd>
+		<a href="/cgi-bin/postsxml.cgi"><img src="/images/xml.gif" alt="xml "/></a>
+	</dd>
+	<dd>
+		<img src="/images/csv.gif" alt="csv "/>
+	</dd>
 </dl>
 
 <!--#include virtual="../includes/footer.shtml" -->

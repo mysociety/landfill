@@ -45,8 +45,14 @@ sub send_email {
     $headers{'From'}= "Not Apathetic <$abuse_address>" ;
     $headers{"X-Originating-IP"}= $ENV{'HTTP_X_FORWARDED_FOR'}  || $ENV{'REMOTE_ADDR'} || return;
     $mailer->open(\%headers);
+    my $about;
+        if ($commentid) {
+                $about=&output_comment($postid,$commentid);
+        } else {
+                $about=&output_post($postid,$commentid);
+	}
 
-
+    $about=wrap('',"    ", $about);
     print $mailer <<EOmail;
 
 Someone thinks $url_prefix/admin/comments.shtml?$postid#$commentid is abusive.
@@ -56,6 +62,8 @@ Name  :  $Passed_Values{name}
 Email :  $Passed_Values{email}
 Reason: $Passed_Values{body}
 
+talking about:
+	$about	
 	
 Delete comment: $url_prefix/admin/cgi-bin/hide.cgi?postid=$postid;commentid=$commentid
 
@@ -77,3 +85,30 @@ sub die_cleanly {
 	";
 	exit(0);
 }
+
+
+
+sub output_comment {
+        my $postid= shift;
+        my $commentid=shift;
+
+        my $query=$dbh->prepare("
+                      select * from comments
+                       where postid=? and commentid=? ");
+        $query->execute ($postid, $commentid);
+        my $result=$query->fetchrow_hashref;
+
+        return $result->{comment};
+}
+
+sub output_post {
+        my $postid= shift;
+
+        my $query=$dbh->prepare("
+                      select * from posts
+                       where postid=?");
+        $query->execute ($postid);
+        my $result=$query->fetchrow_hashref;
+        return "$result->{title}\n$result->{why}";
+}
+

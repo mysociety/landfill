@@ -51,15 +51,10 @@ function clearText(input){
 	input.style.background="#FFFFFF";
 }
 
-function grey_thing(t, e) {
-    d = document.getElementById(e)
-    if (t) {
-        d.disabled = true
-        d.style.color = '#999999'
-    } else {
-        d.disabled = false
-        d.style.color = '#000000'
-        d.focus()
+function growTextarea(id) {
+    if (document && document.getElementById) {
+        d = document.getElementById(id);
+        if (id) d.rows += 4;
     }
 }
 

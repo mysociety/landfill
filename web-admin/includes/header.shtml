@@ -5,7 +5,7 @@
 <title>Not Apathetic Admin</title>
 <style type="text/css" media="screen">
 /* <![CDATA[ */
-	@import url("/na.css");
+	@import url("http://www.notapathetic.com/na.css");
 /* ]]> */
 </style>
 <link rel="shortcut icon" href="/favicon.ico" />
@@ -14,7 +14,7 @@
 <body>
 	<div id="wrap">
 	<div id="top">
-		<h1><a href="/"><img align="right" src="/images/na2.png" alt="not apathetic - I'm not voting because..." /></a></h1>
+		<h1><a href="/"><img align="right" src="http://www.notapathetic.com/images/na2.png" alt="not apathetic - I'm not voting because..." /></a></h1>
 	</div>
 	<ul id="nav">
 	<li><a href="/"><span>H</span>ome</a></li>

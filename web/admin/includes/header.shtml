@@ -1,0 +1,21 @@
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="/na.css">
+</head>
+<body>
+<h1><a href="/">NotApathetic Admin</a>
+<a href="/" class="subtitle">I'm not slacking because...</a>
+</h1>
+
+<table border="0">
+	<tr>
+		<td align="right" width="25%" valign="top" id="nav">
+			<a href="/">Home</a> <br />
+			<a href="/admin/">Admin Home</a> <br />
+			<a href="/admin/comments/">View comments</a> <br />
+			<a href="/admin/posts/">View posts</a> <br />
+		</td>
+		<td  id="main" valign="top">
+
+
+		<!-- end of header -->

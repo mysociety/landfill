@@ -1,5 +1,9 @@
 <!--#include virtual="/includes/header.shtml" -->
 
+<div style="float: right; padding: 0 0 0 8px; background-color: white;">
+	<!--#include virtual="/includes/new-stage1.shtml" -->
+</div>
+
 <!--#include virtual="/cgi-bin/list.cgi?${QUERY_STRING}" -->
 
 <!--#include virtual="/includes/footer.shtml" -->

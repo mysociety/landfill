@@ -1,0 +1,27 @@
+<h4>Say why:</h4>
+
+<form method="post" action="/cgi-bin/new-stage1.cgi">
+	<table border="0">
+		<tr>
+			<td>
+				<textarea name="why" rows="10" cols="30"></textarea>
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+			Email address: <br />
+			<input type="text" name="email" /> <br />
+			<small>It will never be shown</small>
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+			<input type="submit" value="Tell us Why">
+			</td>
+		</tr>
+	</table>
+</form>
+
+

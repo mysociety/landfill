@@ -4,7 +4,18 @@
 	<!--#include virtual="/includes/new-stage1.shtml" -->
 </div>
 
-<!--#include virtual="/cgi-bin/list.cgi?${QUERY_STRING}" -->
+  <!--#if expr="$QUERY_STRING = /^\//" -->      <!-- it's a search -->
+        <!--#include virtual="/cgi-bin/list.cgi?${QUERY_STRING}" -->
+  <!--#else -->
+
+	<!-- this cgi can be replaced with a static file built from cron
+	     once every minute or two. Shoud massively reduce load on 
+	     server and database when we go live -->
+	
+	<!--#include virtual="/cgi-bin/list.cgi?${QUERY_STRING}" -->
+
+  <!--#endif -->
+
 
 <!--#include virtual="/includes/footer.shtml" -->
 

@@ -47,6 +47,10 @@ sub handle_comment {
 	$Passed_Values{text}= $scrubber->scrub($Passed_Values{text});
 	$Passed_Values{author}= $scrubber->scrub($Passed_Values{author});
 
+        unless ($Passed_Values{text} && $Passed_Values{text} ne 'Write your response...') {
+            &die_cleanly("Please give a response.");
+        }
+
 	foreach my $pv (keys %Passed_Values) {
 		$quoted{$pv}= $dbh->quote($Passed_Values{$pv});
 	}

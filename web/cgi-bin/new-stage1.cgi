@@ -48,7 +48,11 @@ sub handle_comment {
 		$quoted{$pv}= $dbh->quote($Passed_Values{$pv});
 	}
 
-	my $randomness = rand(); $randomness=~ s/^0\.(\d+)/$1/;
+        unless ($Passed_Values{why} && $Passed_Values{why} ne 'Write your reasons here...') {
+            &die_cleanly("Please give a reason.");
+        }
+
+        my $randomness = rand(); $randomness=~ s/^0\.(\d+)/$1/;
 	$Passed_Values{authcode}= $randomness;
 	my $auth_code_q= $dbh->quote($randomness);
 

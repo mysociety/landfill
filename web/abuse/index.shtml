@@ -5,19 +5,25 @@
 	Here's the comment you're reporting. Please enter a brief reason why you think it should be deleted in the form beneath. Thanks for your help!
 </p>
 
-<form action="/cgi-bin/send-abuse-report.cgi" method="post" id="comment">
 <!--#include virtual="/cgi-bin/show-abuse.cgi?${QUERY_STRING}" -->
+<form action="/cgi-bin/send-abuse-report.cgi" method="post" id="comment">
 
+<div>
 	<label for="name">Your name:</label>
 	<input type="text" name="name" id="name" value="" maxlength="50" size="30" />
+</div>
 
+<div>
 	<label for="emailt">Email address:</label>
 	<input type="text" name="emailt" id="email" value="" maxlength="100" size="30" class="form" />
+</div>
 
-	<label for="abusereasons"><strong>Why should this comment be deleted?</strong><label>
+<div>
+	<label for="abusereasons">Why should this comment be deleted?<label>
 	<textarea name="body" rows="10" cols="45" id="abusereasons"></textarea>
 
 	<input type="submit" value="Send report" />
+</div>
 </form>
 
 

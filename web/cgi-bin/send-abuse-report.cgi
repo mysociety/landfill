@@ -8,6 +8,8 @@ use HTML::Scrubber;
 use Email::Valid;
 use CGI qw/param/;
 use mysociety::NotApathetic::Config;
+my %Passed_Values;
+use Text::Wrap;
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
@@ -17,6 +19,12 @@ my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $abuse_address= 'abuse'. $mysociety::NotApathetic::Config::email_domain; 
 
 {
+	foreach my $param (param()) {
+		$Passed_Values{$param}=param($param);
+		$Passed_Values{$param}=~ s#\n# #gsi;
+	}
+
+	$Passed_Values{body}= wrap("","    ", $Passed_Values{'body'});
 	&send_email;
 	print "Location: $url_prefix/abuse/sent/\n\n";
 }
@@ -25,12 +33,6 @@ my $abuse_address= 'abuse'. $mysociety::NotApathetic::Config::email_domain;
 sub send_email {
     my $postid= param('postid') || return;
     my $commentid= param('commentid') || '';
-
-    return unless ($postid =~ m#^\d+$#);
-    return unless ($commentid=~ m#^\d*$#);
-
-    print "Location: $url_prefix/abuse/?postid=$postid;commentid=$commentid\n\n";
-    exit;
 
     use Mail::Mailer;
     my $mailer= new Mail::Mailer 'sendmail';#, Server => 'mailrouter.mcc.ac.uk';
@@ -47,7 +49,13 @@ sub send_email {
 
     print $mailer <<EOmail;
 
-Someone things $url_prefix/admin/comments.shtml?$postid#$commentid is abusive
+Someone thinks $url_prefix/admin/comments.shtml?$postid#$commentid is abusive.
+
+Name :  $Passed_Values{name}
+Email:  $Passed_Values{email}
+Reason: $Passed_Values{body}
+
+
 EOmail
 
     $mailer->close;

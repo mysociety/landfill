@@ -36,20 +36,24 @@ print "Content-type: text/html\n\n";
 	while ($result=$query->fetchrow_hashref) {
 
 		$more_link= $result->{link};
+		$someday = UnixDate($result->{posted}, "%E %b %Y");
 		print <<EOfragment;
 	$date_html
 	<div class="entry">
-		<a href="$url_prefix/admin/comments.shtml?$result->{postid}"><strong>$result->{title}</strong></a>
+		<h4><a href="$url_prefix/comments/$result->{postid}">$result->{title}</a></h4>
+	
 	<form method="post" action="/admin/cgi-bin/hide.cgi" />
 		$result->{shortwhy}
 		<input type="hidden" name="postid" value="$result->{postid}" />
 		<input type="submit" value="Hide this posting" />
 	</form>
-		<span>
-			<small>posted at  $result->{posted}. <a href="$url_prefix/admin/comments.shtml?$result->{postid}">$result->{commentcount} comments.</a> by $result->{email}</small>
-		</span>
+		<div>
+		<small>
+			written $someday | <a href="$url_prefix/admin/comments.shtml?$result->{postid}">$result->{commentcount} responses</a> by $result->{email}
+		</small>
+		</div>
 	</div>
-		<br />
+
 EOfragment
 	}
 

@@ -1,16 +1,12 @@
 <!--#include virtual="/includes/header.shtml" -->
 
-<h2>Say Why</h2>
+<h2>I'm <span>not voting</span> because...</h2>
 
 <form method="post" action="/cgi-bin/new-stage1.cgi">
-    <fieldset>
-        <textarea name="why" rows="25" cols="75"></textarea>
-
-        <p>Email address <small>(It will never be shown)</small>:
-        <br><input type="text" name="email" size="30"></p>
-
-        <p align="right"><input type="submit" value="Tell us Why"></p>
-    </fieldset>
+        <textarea name="why" rows="15" cols="70"></textarea>
+        <label for="email">Email address <small>(It will never be shown)</small></label>
+        <input type="text" name="email" id="email" size="30">
+		<input type="submit" value="Submit">
 </form>
 
 

@@ -1,6 +1,6 @@
 <!--#include virtual="/includes/header.shtml" -->
 
-<h2>Email Notification of posts</h2>
+<h2><span>Email</span> Notification of posts</h2>
 
 	<p>
 		By filling in your email address below, you can
@@ -14,27 +14,12 @@
 		address.
 	</p>
 
-XXX this form needs javascript to prevent submit before email address typed in.
-
-	<form method="post" action="/cgi-bin/emailnotify/initial.cgi">
+	<form method="post" action="/cgi-bin/emailnotify/initial.cgi" onsubmit="return checkEmail(this);">
 	<input type="hidden" name="search" value="<!--#echo var="QUERY_STRING" -->" />
-		<table border="0">
-			<tr>
-				<td>
-					Email address
-				</td>
-				<td>
-					<input type="text" name="email" />
-				</td>
-			</tr>
-			<tr>
-				<td>
-				</td>
-				<td>
-					<input type="submit" value="Submit" />
-				</td>
-			</tr>
-		</table>
+	
+	<label for="email">Email address: </label><input type="text" id="email" name="email" />
+	<input type="submit" value="Submit" />
+
 	</form>
 
 <!--#include virtual="/includes/footer.shtml" -->

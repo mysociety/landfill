@@ -1,11 +1,13 @@
 <!--#include virtual="/includes/header.shtml" -->
-<p>You're Not Apathetic - so check your email.</p>
+<h2><span>Please</span> check your email</h2>
 
 <p>
    We've sent you an email to confirm that your email
    address is valid. When you follow the link in that
    email, your posting will appear.
 </p>
+
+<h4>If you do not follow the link, your message will not appear</h4>
 
 
 

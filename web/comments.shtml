@@ -1,5 +1,6 @@
 	<!--#include virtual="/includes/header.shtml" -->
 
+	<h2>They're <span>not voting</span> because...</h2>
 	<!--#include virtual="/cgi-bin/comments.cgi?${QUERY_STRING}" -->
 
 	<!--#include virtual="/includes/footer.shtml" -->

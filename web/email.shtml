@@ -1,70 +1,19 @@
 	<!--#include virtual="/includes/header.shtml" -->
 
-	<p>
-	<strong>Email</strong>
-	</p>
+	<h2>Email this reason to a friend</h2>
 
-	<form method="post" action="/cgi-bin/email.cgi">
-	<input type="hidden" name="entryid" value="<!--#echo var="QUERY_STRING" -->" />
 
-	<table border="0" valign="top">
-		<tr>
-			<th>
-				To:
-			</th>
-			<td>
-				Email address:
-			</td>
-			<td>
-				<input type="text" name="to" />
-			</td>
-		</tr>
-		<tr>
-			<td colspan="3">
-				&nbsp;
-			</td>
-		</tr>
-
-		<tr>
-			<th valign="top" rowspan="3">
-				Your details:
-			</th>
-			<td>
-				Email address:
-			</td>
-			<td>
-				<input type="text" name="from" />
-			</td>
-		</tr>
-
-		<tr>
-			<td>
-				Name:
-			</td>
-			<td>
-				<input type="text" maxlength="120" name="name" />
-			</td>
-		</tr>
-
-		<tr>
-			<td valign="top">
-				Message:
-			</td>
-			<td>
-				<textarea cols="40" rows="5" name="message"></textarea>
-			</td>
-		</tr>
-
-		<tr>
-			<td>
-			</td>
-			<td>
-				<input type="submit" value="Send" />
-			</td>
-			<td>
-			</td>
-		</tr>
-	</table>
+	<form method="post" action="/cgi-bin/email.cgi" id="comment">
+		<input type="hidden" name="entryid" value="<!--#echo var="QUERY_STRING" -->" />
+	
+		<label for="toaddress">Friend's email address</label><input type="text" name="to" id="toaddress" />
+					
+		<label for="youraddress">Your email address</label><input type="text" name="from" id="youraddress" />
+	
+		<label for="yourname">Your name</label><input type="text" maxlength="120" name="name" />
+		
+		<textarea cols="40" rows="9" name="message" id="commenttext">Write your message here...</textarea>
+		<input type="submit" value="Send" />
 	</form>
 
 	<!--#include virtual="/includes/footer.shtml" -->

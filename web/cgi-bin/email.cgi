@@ -20,7 +20,7 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 my %Passed_Values;
 my $mailer= new Mail::Mailer 'sendmail';
 
-{
+while (new CGI::Fast()) {
         foreach my $param (param()) {
                 $Passed_Values{$param}=param($param);
         }

@@ -18,7 +18,7 @@ my $email_domain= $mysociety::NotApathetic::Config::email_domain;
 my %State; # State variables during display.
 my %Passed_Values;
 
-{
+while (new CGI::Fast()) {
 	foreach my $param (param()) {
 		$Passed_Values{$param}=param($param);
 	}

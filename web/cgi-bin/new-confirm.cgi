@@ -6,7 +6,7 @@ use DBI;
 use HTML::Entities;
 use HTML::Scrubber;
 use Email::Valid;
-use CGI qw/param/;
+use CGI::Fast qw/param/;
 
 use mysociety::NotApathetic::Config;
 
@@ -19,7 +19,7 @@ my $url_prefix= $mysociety::NotApathetic::Config::url;
 my %State; # State variables during display.
 my %Passed_Values;
 
-{
+while (new CGI::Fast()) {
 
         my $postid_q = $dbh->quote(param('u'));
         my $auth_code_q = $dbh->quote(param('c'));

@@ -6,7 +6,7 @@ use DBI;
 use HTML::Entities;
 use HTML::Scrubber;
 use Email::Valid;
-use CGI qw/param/;
+use CGI::Fast qw/param/;
 use mysociety::NotApathetic::Config;
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
@@ -16,7 +16,7 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $abuse_address= 'abuse'. $mysociety::NotApathetic::Config::email_domain; 
 
-{
+while (new CGI::Fast()) {
 	&send_email;
 	print "Location: $url_prefix/abuse/sent/\n\n";
 }

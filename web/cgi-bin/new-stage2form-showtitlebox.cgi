@@ -5,13 +5,13 @@ use strict;
 use DBI;
 use HTML::Entities;
 use mysociety::NotApathetic::Config;
-use CGI qw/param encode_entities/;
+use CGI::Fast qw/param encode_entities/;
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 
-{
+while (new CGI::Fast()) {
 	print "Content-Type: text/html\n\n";
 	my $param_c= param("c") || exit(0);
 	my $param_r= param("u") || exit(0);

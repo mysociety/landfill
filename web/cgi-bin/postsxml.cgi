@@ -6,6 +6,7 @@ use DBI;
 use HTML::Entities;
 use XML::Simple;
 use mysociety::NotApathetic::Config;
+use CGI::Fast;
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
@@ -15,8 +16,8 @@ my %State; # State variables during display.
 my $search_term = &handle_search_term(); #' 1 = 1 ';
 
 
+while (new CGI::Fast()) {
 print "Content-Type: text/html\n\n";
-{
 
 	my $query=$dbh->prepare("
 	              select postid, why, age, sex, region, evervoted, why, nochildren,posted,title,commentcount,ethgroup

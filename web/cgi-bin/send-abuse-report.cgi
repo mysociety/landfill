@@ -6,7 +6,7 @@ use DBI;
 use HTML::Entities;
 use HTML::Scrubber;
 use Email::Valid;
-use CGI qw/param/;
+use CGI::Fast qw/param/;
 use mysociety::NotApathetic::Config;
 my %Passed_Values;
 use Text::Wrap;
@@ -19,7 +19,7 @@ my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $admin_url_prefix= $mysociety::NotApathetic::Config::admin_url;
 my $abuse_address= 'abuse'. $mysociety::NotApathetic::Config::email_domain; 
 
-{
+while (new CGI::Fast()) {
 	foreach my $param (param()) {
 		$Passed_Values{$param}=param($param);
 		$Passed_Values{$param}=~ s#\n# #gsi;

@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 use DBI;
-use CGI qw/:standard/;
+use CGI::Fast qw/:standard/;
 use HTML::Scrubber;
 use mysociety::NotApathetic::Config;
 
@@ -15,7 +15,7 @@ my %State; # State variables during display.
 my %Passed_Values;
 my %quoted;
 
-{
+while (new CGI::Fast()) {
         foreach my $param (param()) {
                 $Passed_Values{$param}=param($param);
         }

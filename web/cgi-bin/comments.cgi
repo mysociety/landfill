@@ -2,6 +2,7 @@
 
 use warnings;
 use strict;
+use CGI::Fast;
 use DBI;
 use HTML::Entities;
 use Date::Manip;
@@ -23,27 +24,29 @@ my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 my %State; # State variables during display.
 
-print "Content-Type: text/html\n\n";
-{
-	my $query=$dbh->prepare("
-	              select postid,
-		             email,
-			     age,
-			     sex,
-			     region,
-			     evervoted,
-			     why,
-			     nochildren,
-			     title,
-			     posted,
-			     commentcount,
-			     ethgroup,
-			     date_format(posted, \"%H:%i, %e %M\") as posted_formatted
-			from posts
-		       where postid=$Entry
-		    order by posted desc
-		       "); # XXX order by first_seen needs to change
 
+
+while (new CGI::Fast()) {
+        print "Content-Type: text/html\n\n";
+
+        my $query=$dbh->prepare("
+                      select postid,
+                             email,
+                             age,
+                             sex,
+                             region,
+                             evervoted,
+                             why,
+                             nochildren,
+                             title,
+                             posted,
+                             commentcount,
+                             ethgroup,
+                             date_format(posted, \"%H:%i, %e %M\") as posted_formatted
+                        from posts
+                       where postid=$Entry
+                    order by posted desc
+                       "); # XXX order by first_seen needs to change
 
 	$query->execute;
 	my $result;

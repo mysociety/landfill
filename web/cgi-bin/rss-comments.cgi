@@ -6,6 +6,7 @@ use DBI;
 use HTML::Entities;
 use XML::RSS;
 use mysociety::NotApathetic::Config;
+use CGI::Fast;
 
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $email_domain= $mysociety::NotApathetic::Config::email_domain;
@@ -24,8 +25,8 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 my %State; # State variables during display.
 
 
+while (new CGI::Fast()) {
 print "Content-Type: text/xml\n\n";
-{
 	my $query;
 	my $title='';
 	my $limiter='';

@@ -6,7 +6,7 @@ use DBI;
 use HTML::Entities;
 use HTML::Scrubber;
 use Email::Valid;
-use CGI qw/param/;
+use CGI::Fast qw/param/;
 use mysociety::NotApathetic::Config;
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
@@ -18,7 +18,7 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 my %State; # State variables during display.
 my %Passed_Values;
 
-{
+while (new CGI::Fast()) {
 	foreach my $param (param()) {
 		$Passed_Values{$param}=param($param);
 	}

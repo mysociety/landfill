@@ -55,6 +55,7 @@ print "Content-Type: text/html\n\n";
 	my $why = $result->{why};
 
 	$why=~ s#\n#</p>\n\n<p>\n#g;
+	$why =~ s#<p>\n</p>\n\n<p>\n#<p>\n#g;
 	
 	print <<EOfragment;
 <!--
@@ -99,6 +100,7 @@ sub show_comments {
 	$query->execute;
 	while ($result=$query->fetchrow_hashref) {
 	$result->{comment} =~ s#\n#</p>\n\n<p>\n#g;
+	$result->{comment} =~ s#<p>\n</p>\n\n<p>\n#<p>\n#g;
 
 		$html.= <<EOhtml;
 	<hr width="80%" />

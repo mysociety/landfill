@@ -41,10 +41,10 @@
 				<label for="emailreason">Email address <small>(It will never be shown)</small></label>
 				<input type="text" name="email" id="emailreason" size="30" />
 				<input type="submit" value="Submit" />
-				<p><strong><a href="/new/" id="bigBox">Bigger Box</a></strong></p>
+				<p><strong><a href="/new/">Want more space to write in?</a></strong></p>
 		</form>
 		
-		<p>NotApathetic was built so that people who are not planning to vote
+		<p>NotApathetic was built so that people who are planning not to vote
 		in the UK General Election on May 5th can tell the world why. We won't
 		try to persuade you that voting is a good or a bad idea - we're just
 		here to record and share your explanations. Whether ideological,

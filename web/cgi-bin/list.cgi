@@ -38,7 +38,6 @@ while (my $q = new CGI::Fast()) {
             my $parsed;
             my $google_terms;
             my $comments_html;
-            my $date_html;
             my $show_link;
             my $more_link;
             while ($result=$query->fetchrow_hashref) {
@@ -55,7 +54,6 @@ while (my $q = new CGI::Fast()) {
                     $someday = UnixDate($result->{posted}, "%E %b %Y");
                     
                     print <<EOfragment;
-            $date_html
             <div class="entry">
                     <h4><a href="$url_prefix/comments/$result->{postid}">$result->{title}</a></h4>
                     <p>

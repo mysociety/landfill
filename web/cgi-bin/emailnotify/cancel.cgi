@@ -5,7 +5,7 @@ use warnings;
 use strict;
 use DBI;
 use Email::Valid;
-use CGI qw/param/;
+use CGI::Fast qw/param/;
 use Mail::Mailer qw(sendmail);
 use mysociety::NotApathetic::Config;
 
@@ -18,7 +18,7 @@ my %State; # State variables during display.
 my %Passed_Values;
 my $search_term;
 
-{
+while (new CGI::Fast()) {
 	print "Content-Type: text/html\n\n";
         my $notifyid_q = $dbh->quote(param('u'));
         my $auth_code_q = $dbh->quote(param('c'));

@@ -1,2 +1,2 @@
 Options +ExecCGI +FollowSymlinks
-# SetHandler fastcgi-script
+SetHandler fastcgi-script

@@ -6,15 +6,6 @@ use DBI;
 use HTML::Entities;
 use Date::Manip;
 
-my $commentcount;
-my $Entry=$ENV{QUERY_STRING} || '';
-
-if ($Entry !~ /^\d+$/) {
-	print "Content-Type: text/html/\n\n";
-	print "$Entry Error - no entry id passed in\n\n";
-	exit (0);
-}
-
 use mysociety::NotApathetic::Config;
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
@@ -24,27 +15,38 @@ my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 my %State; # State variables during display.
 
-print "Content-Type: text/html\n\n";
-{
-	my $query=$dbh->prepare("
-	              select postid,
-		             email,
-			     age,
-			     sex,
-			     region,
-			     evervoted,
-			     why,
-			     nochildren,
-			     title,
-			     posted,
-			     commentcount,
-			     ethgroup,
-			     date_format(posted, \"%H:%i, %e %M\") as posted_formatted
-			from posts
-		       where postid=$Entry
-		    order by posted desc
-		       "); # XXX order by first_seen needs to change
+my $commentcount;
+my $Entry;
 
+while (new CGI::Fast()) {
+        $Entry=$ENV{QUERY_STRING} || '';
+
+        if ($Entry !~ /^\d+$/) {
+                print "Content-Type: text/html\n\n";
+                print "$Entry Error - no entry id passed in\n\n";
+                next;
+        }
+
+        print "Content-Type: text/html\n\n";
+
+        my $query=$dbh->prepare("
+                      select postid,
+                             email,
+                             age,
+                             sex,
+                             region,
+                             evervoted,
+                             why,
+                             nochildren,
+                             title,
+                             posted,
+                             commentcount,
+                             ethgroup,
+                             date_format(posted, \"%H:%i, %e %M\") as posted_formatted
+                        from posts
+                       where postid=$Entry
+                    order by posted desc
+                       "); # XXX order by first_seen needs to change
 
 	$query->execute;
 	my $result;

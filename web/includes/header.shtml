@@ -1,38 +1,57 @@
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<link rel="stylesheet" type="text/css" href="na.css">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Not Apathetic</title>
+<style type="text/css" media="screen">
+/* <![CDATA[ */
+	@import url("/na.css");
+/* ]]> */
+</style>
+<link rel="shortcut icon" href="/favicon.ico" />
+<script type="text/javascript" src="/forms.js"></script>
 </head>
 <body>
-<h1><a href="/">NotApathetic
-<span class="subtitle">I'm not voting because...</span></a>
-<!-- <a href="/" class="subtitle">If you aren't going to vote, tell the world why</a> -->
-</h1>
+	<div id="wrap">
+	<div id="top">
+		<h1><a href="/"><img src="/images/na2.png" alt="not apathetic - I'm not voting because..." /></a></h1>
+		<h3><img src="/images/tagline.gif" alt="Tell the world why you're not voting - Don't let your silence go unheard" /></h3>
+	</div>
+	
+	<ul id="nav">
+		<li><a href="/"><span>c</span>over</a></li>
+		<li><a href="/about/"><span>a</span>bout us</a></li>
+		<li><a href="/news/"><span>n</span>ews</a></li>
+		<li><a href="/emailnotify/"><span>e</span>mail alerts</a></li>
+		<li id="last"><a href="/data/"><span>rss</span> &amp; more</a></li>
+	</ul>
+	
+	<form method="get" action="/cgi-bin/search.cgi" id="search">
+		<label for="q"><span>search:</span></label>
+		<input type="text" name="q" id="q" size="10" />
+		<input type="submit" value="Go" class="submit" />
+	</form>
 
-<table border="0">
-	<tr>
-		<td align="right" width="25%" valign="top" id="nav">
-			<a href="/about/">About Us</a> <br />
-			<a href="/news/">News</a> <br />
 
-		<!--#if expr="$QUERY_STRING = /^\//" -->
-			<a href="/cgi-bin/rss-comments.cgi?<!--#echo var="QUERY_STRING" -->">RSS of these Comments</a><br />
-			<a href="/cgi-bin/rss.cgi?<!--#echo var="QUERY_STRING" -->">RSS of Search</a><br />
-			<a href="/emailnotify/?<!--#echo var="QUERY_STRING" -->">Email Alerts for this Query</a><br />
-			<a href="/cgi-bin/postsxml.cgi/?<!--#echo var="QUERY_STRING" -->">XML output of Search</a><br />
-		<!--#else -->
-			<a href="/emailnotify/">Email Alerts<br />
-			<a href="/cgi-bin/rss.cgi">RSS of posts</a> <br />
-			<a href="/cgi-bin/rss-comments.cgi">RSS of comments</a> <br />
-			<a href="/cgi-bin/postsxml.cgi">XML output</a><br />
-		<!--#endif -->
-
-		<form method="get" action="/cgi-bin/search.cgi">
-                        <input type="text" name="q" /> <br />
-                        <input type="submit" value="Search NotApathetic.com" />
+	<!--#if expr="\"$DOCUMENT_URI\" != \"/new/index.shtml\"" -->
+	<div id="inputBox">
+		<form method="post" action="/cgi-bin/new-stage1.cgi">
+			<h2>I'm <span>not voting</span> because...</h2>
+				<textarea name="why" rows="8" cols="24" id="reasons">Write your reasons here...</textarea>
+				<label for="emailreason">Email address <small>(It will never be shown)</small></label>
+				<input type="text" name="email" id="emailreason" size="30" />
+				<input type="submit" value="Submit" />
+				<p><strong><a href="/new/" id="bigBox">Bigger Box</a></strong></p>
 		</form>
+		
+		<p>NotApathetic was built so that people who are not planning to vote
+		in the UK General Election on May 5th can tell the world why. We won't
+		try to persuade you that voting is a good or a bad idea - we're just
+		here to record and share your explanations. Whether ideological,
+		practical or other, any	reason will do.</p>
 
-		</td>
-		<td  id="main" valign="top">
-
-
-		<!-- end of header -->
+	</div>
+	<div id="main">
+		<!--#else -->
+	<div id="mainInput">
+		<!--#endif -->

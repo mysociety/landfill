@@ -1,8 +1,16 @@
+	<!-- start of header -->
+	
+	<!-- end of header -->
 
-	<!-- start of footer -->
+<!-- start of footer -->
+</div>
 
-		</td>
-	</tr>
-</table>
+<div id="footer">
+	<small>Built by </small><a href="http://www.mysociety.org/"><img src="/images/mysociety.gif" alt="mySociety" /></a>
+</div>
+
+</div>
+
 </body>
 </html>
+

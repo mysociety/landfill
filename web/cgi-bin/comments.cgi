@@ -97,8 +97,8 @@ sub show_comments {
 	my $result;
 
 	$query->execute;
-
 	while ($result=$query->fetchrow_hashref) {
+	$result->{comment} =~ s#\n#</p>\n\n<p>\n#g;
 
 		$html.= <<EOhtml;
 	<hr width="80%" />

@@ -29,6 +29,7 @@ sub handle_abuse {
 	
     &hide_abuse($postid, $commentid);
 
+    use Mail::Mailer qw/sendmail/;
     my $mailer= new Mail::Mailer 'sendmail';
     my %headers;
     my $address      = $abuse_address;

@@ -12,7 +12,7 @@ my $db_password= $mysociety::NotApathetic::Config::db_password;         # databa
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 
 while (new CGI::Fast()) {
-	print "Content-Type: text/html\n\n";
+	print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
 	my $param_c= param("c") || exit(0);
 	my $param_r= param("u") || exit(0);
 

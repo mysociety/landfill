@@ -47,9 +47,9 @@ while (new CGI::Fast()) {
                 if ($query->rows == 1 ) { 
 			my $postid= $postid_q;
 			$postid=~ s#'##g;
-                        print "Location: $url_prefix/new/stage2/?u=$postid_q;c=$new_authcode\n\n";      
+                        print "Location: $url_prefix/new/stage2/?u=$postid_q;c=$new_authcode\r\n\r\n";      
                 } else {
-                        print "Location: $url_prefix/new/checkemail/failed.shtml\n\n";       
+                        print "Location: $url_prefix/new/checkemail/failed.shtml\r\n\r\n";       
                 }
         }
 }
@@ -57,7 +57,7 @@ while (new CGI::Fast()) {
 
 sub die_cleanly {
         my $reason=shift;
-        print "Content-Type: text/plain\n\n
+        print "Content-Type: text/plain\r\n\r\n
 
         Your submission failed:
                 $reason

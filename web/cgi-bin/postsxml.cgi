@@ -17,7 +17,7 @@ my $search_term = &handle_search_term(); #' 1 = 1 ';
 
 
 while (new CGI::Fast()) {
-print "Content-Type: text/html\n\n";
+print "Content-Type: text/xml\r\n\r\n";
 
 	my $query=$dbh->prepare("
 	              select postid, why, age, sex, region, evervoted, why, nochildren,posted,title,commentcount,ethgroup

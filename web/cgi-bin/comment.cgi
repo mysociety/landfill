@@ -64,13 +64,13 @@ sub handle_comment {
 		update posts set commentcount=commentcount+1 where postid=$quoted{postid}
 	");
 
-	print "Location: $url_prefix/comments/$Passed_Values{postid}\n\n";
+	print "Location: $url_prefix/comments/$Passed_Values{postid}\r\n\r\n";
 }
 
 
 sub die_cleanly {
 	my $reason=shift;
-	print "Content-Type: text/plain\n\n
+	print "Content-Type: text/plain\r\n\r\n
 
 	Your submission failed:
 		$reason

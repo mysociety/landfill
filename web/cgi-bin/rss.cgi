@@ -11,7 +11,7 @@ my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $email_domain= $mysociety::NotApathetic::Config::email_domain;
 
 if ((defined $ENV{QUERY_STRING}) and ($ENV{QUERY_STRING} =~/^\d+$/)){
-	print "Location: $url_prefix/cgi-bin/rss-comments.cgi?$ENV{QUERY_STRING}\n\n";
+	print "Location: $url_prefix/cgi-bin/rss-comments.cgi?$ENV{QUERY_STRING}\r\n\r\n";
 }
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
@@ -23,7 +23,7 @@ my $search_term = &handle_search_term(); #' 1 = 1 ';
 
 
 while (new CGI::Fast()) {
-print "Content-Type: text/xml\n\n";
+print "Content-Type: text/xml\r\n\r\n";
 	my $query=$dbh->prepare("
 	              select postid,
 			     posts.title as title,

@@ -17,7 +17,7 @@ our $url_prefix=$mysociety::NotApathetic::Config::url;
 
 while (my $q = new CGI::Fast()) {
 
-if (defined $ENV{REQUEST_METHOD}) {print "Content-Type: text/html\n\n";};
+if (defined $ENV{REQUEST_METHOD}) {print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";};
 
 {
 

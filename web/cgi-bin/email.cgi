@@ -55,11 +55,11 @@ while (new CGI::Fast()) {
 	{
 		if (defined $Passed_Values{error_redirect})
 		{
-			print "Location: $Passed_Values{error_redirect}\n\n";
+			print "Location: $Passed_Values{error_redirect}\r\n\r\n";
 		}
 		else
 		{
-			print "Location: http://www.notapathetic.com/\n\n";
+			print "Location: http://www.notapathetic.com/\r\n\r\n";
 		}
                 next;
 	}
@@ -114,12 +114,12 @@ EOmail
 		}
     	$mailer->close;
 
-	print "Location: $url_prefix/emailfriend/emailsent.shtml?$Passed_Values{entryid}\n\n";
+	print "Location: $url_prefix/emailfriend/emailsent.shtml?$Passed_Values{entryid}\r\n\r\n";
 
 }
 sub die_cleanly {
         my $reason=shift || '';
-        print "Content-Type: text/plain\n\n
+        print "Content-Type: text/plain\r\n\r\n
 
         Your submission failed:
                 $reason

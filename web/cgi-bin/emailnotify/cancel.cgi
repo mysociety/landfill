@@ -19,7 +19,7 @@ my %Passed_Values;
 my $search_term;
 
 while (new CGI::Fast()) {
-	print "Content-Type: text/html\n\n";
+	print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
         my $notifyid_q = $dbh->quote(param('u'));
         my $auth_code_q = $dbh->quote(param('c'));
         my $query=$dbh->prepare ("select email,search from emailnotify

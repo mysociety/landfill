@@ -76,11 +76,11 @@ EOcomment
 	$dbh->do("update posts set commentcount=commentcount+1
 		  where postid=$Passed_Values{postid}");
 
-	print "Content-Type: text/plain\n\n<error>0</error><message>it worked</message>\n";
+	print "Content-Type: text/plain\r\n\r\n<error>0</error><message>it worked</message>\n";
 }
 
 sub die_cleanly {
 	my $error= shift || 'unknown';
-	print "Content-Type: text/plain\n\n<error>1</error><message>it went wrong</message>\n";
+	print "Content-Type: text/plain\r\n\r\n<error>1</error><message>it went wrong</message>\n";
 	exit(0);
 }

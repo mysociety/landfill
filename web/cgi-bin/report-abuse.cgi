@@ -18,7 +18,7 @@ my $abuse_address= 'abuse'. $mysociety::NotApathetic::Config::email_domain;
 
 while (new CGI::Fast()) {
 	&send_email;
-	print "Location: $url_prefix/abuse/sent/\n\n";
+	print "Location: $url_prefix/abuse/sent/\r\n\r\n";
 }
 
 
@@ -29,7 +29,7 @@ sub send_email {
     return unless ($postid =~ m#^\d+$#);
     return unless ($commentid=~ m#^\d*$#);
 
-    print "Location: $url_prefix/abuse/?postid=$postid;commentid=$commentid\n\n";
+    print "Location: $url_prefix/abuse/?postid=$postid;commentid=$commentid\r\n\r\n";
     exit;
 
     use Mail::Mailer;
@@ -58,7 +58,7 @@ EOmail
 
 sub die_cleanly {
 	my $reason=shift;
-	print "Content-Type: text/plain\n\n
+	print "Content-Type: text/plain\r\n\r\n
 
 	Your submission failed:
 		$reason

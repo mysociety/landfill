@@ -33,7 +33,7 @@ while (new CGI::Fast()) {
 
 	&handle_comment;
 	
-	print "Location: $url_prefix/comments/$Passed_Values{postid}\n\n";
+	print "Location: $url_prefix/comments/$Passed_Values{postid}\r\n\r\n";
 }
 
 
@@ -74,7 +74,7 @@ sub handle_comment {
 
 sub die_cleanly {
 	my $reason=shift;
-	print "Content-Type: text/plain\n\n
+	print "Content-Type: text/plain\r\n\r\n
 
 	Your submission failed:
 		$reason

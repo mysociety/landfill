@@ -27,7 +27,7 @@ while (new CGI::Fast()) {
 
 	$Passed_Values{body}= wrap("","    ", $Passed_Values{'body'});
 	&send_email;
-	print "Location: $url_prefix/abuse/sent/\n\n";
+	print "Location: $url_prefix/abuse/sent/\r\n\r\n";
 }
 
 
@@ -78,7 +78,7 @@ EOmail
 
 sub die_cleanly {
 	my $reason=shift;
-	print "Content-Type: text/plain\n\n
+	print "Content-Type: text/plain\r\n\r\n
 
 	Your submission failed:
 		$reason

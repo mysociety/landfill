@@ -18,7 +18,7 @@ my $search_term;
 our $url_prefix=$mysociety::NotApathetic::Config::url;
 
 while (my $q = new CGI::Fast()) {
-    print "Content-Type: text/html\n\n";
+    print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
 	$search_term = &handle_search_term(); #' 1 = 1 ';
     {
 
@@ -42,12 +42,16 @@ while (my $q = new CGI::Fast()) {
             my $show_link;
             my $more_link;
 			
-			if ($ENV{"QUERY_STRING"} ne ''){
-				my $search_bit = $ENV{"QUERY_STRING"}||"";
-				$search_bit =~ s/\// /g;
-				print ("<p>Your search for \"".$search_bit."\" yielded the following results</p>");
-			}
+            my $printed = 0;
+	    my $search_bit = $ENV{"QUERY_STRING"} || "";
+            $search_bit =~ s/\// /g;
+
             while ($result=$query->fetchrow_hashref) {
+
+		if ($printed==0 && $ENV{"QUERY_STRING"} ne ''){
+		    print '<p>Your search for "'.$search_bit.'" yielded the following results:</p>';
+                    $printed = 1;
+		}
 
                     $comments_html= &handle_links($result);
 
@@ -75,6 +79,9 @@ while (my $q = new CGI::Fast()) {
 EOfragment
             }
 
+	    if ($printed == 0 && $ENV{"QUERY_STRING"} ne '') {
+                print "<p>Your search for " . $search_bit . " yielded no results.</p>";
+            }
     }
 }
 

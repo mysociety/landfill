@@ -38,7 +38,7 @@ while (new CGI::Fast()) {
 	&handle_comment;
 	
 	&send_email;
-	print "Location: $url_prefix/new/checkemail/\n\n";
+	print "Location: $url_prefix/new/checkemail/\r\n\r\n";
 }
 
 
@@ -130,7 +130,7 @@ EOmail
 
 sub die_cleanly {
 	my $reason=shift;
-	print "Content-Type: text/plain\n\n
+	print "Content-Type: text/plain\r\n\r\n
 
 	Your submission failed:
 		$reason

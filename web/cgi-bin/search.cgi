@@ -13,5 +13,5 @@ while (new CGI::Fast()) {
         $query=~ s#"# #g;
         $query=~ s# #/#g;
         $query=~ s#//+#/#g;
-        print "Location: ".$url_prefix."/search/?$query\n\n";
+        print "Location: ".$url_prefix."/search/?$query\r\n\r\n";
 }

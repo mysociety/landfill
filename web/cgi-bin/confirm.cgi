@@ -43,9 +43,9 @@ while (new CGI::Fast()) {
                                 ");
                 $query->execute || &die_cleanly("sql error");
                 if ($query->rows == 1 ) { 
-                        print "Location: $url_prefix\n\n";      
+                        print "Location: $url_prefix\r\n\r\n";      
                 } else {
-                        print "Location: $url_prefix/new/checkemail/failed.shtml\n\n";       
+                        print "Location: $url_prefix/new/checkemail/failed.shtml\r\n\r\n";       
                 }
         }
 }
@@ -53,7 +53,7 @@ while (new CGI::Fast()) {
 
 sub die_cleanly {
         my $reason=shift;
-        print "Content-Type: text/plain\n\n
+        print "Content-Type: text/plain\r\n\r\n
 
         Your submission failed:
                 $reason

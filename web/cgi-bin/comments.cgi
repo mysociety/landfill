@@ -23,12 +23,12 @@ while (my $q = new CGI::Fast()) {
         $Entry=$ENV{QUERY_STRING} || '';
 
         if ($Entry !~ /^\d+$/) {
-                print "Content-Type: text/html\n\n";
-                print "$Entry Error - no entry id passed in\n\n";
+                print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
+                print "$Entry Error - no entry id passed in\r\n\r\n";
                 next;
         }
 
-        print "Content-Type: text/html\n\n";
+        print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
 
         my $query=$dbh->prepare("
                       select postid,
@@ -61,7 +61,7 @@ while (my $q = new CGI::Fast()) {
 	my $why = $result->{why};
 	$someday = UnixDate($result->{posted}, "%E %b %Y");
 
-	$why=~s/\r\n\r\n/<\/p><p>/g;
+	$why=~s/(\r\n){2,}/<\/p><p>/g;
 	$why=~s/\r\n/<br \/>/g;
 
 	# $why =~ s/(\r?\n){2,}/</p> <p>/g;
@@ -111,7 +111,7 @@ sub show_comments {
 	while ($result=$query->fetchrow_hashref) {
 		my $someday = UnixDate($result->{posted}, "%E %b %Y");
 		my $comment = $result->{comment};
-		$comment =~s/\r\n\r\n/<\/p><p>/g;
+		$comment =~s/(\r\n){2,}/<\/p><p>/g;
 		$comment =~s/\r\n/<br \/>/g;
 		if(!(substr($comment, 0, 6) eq "  <div")){$comment="<p>".$comment."</p>";} ## remove later ##
 
@@ -160,7 +160,8 @@ sub comment_form {
     	
 	<textarea id="commenttext" name="text" rows="15" cols="30">Write your response...</textarea>
 	<small>We only allow the following html tags:
-		<tt>a cite em strong p br</tt>. After posting,
+		<tt>a cite em strong p br</tt>. Newlines automatically
+                become new paragraphs or line breaks. After posting,
 		there may be a short delay before your comment
 	appears on the site</small>
 	</div>

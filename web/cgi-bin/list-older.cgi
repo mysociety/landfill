@@ -28,7 +28,7 @@ if (defined $ENV{REQUEST_METHOD}) {print "Content-Type: text/html\n\n";};
 			 and hidden=0
 			     $search_term
 		    order by posted
-			     desc limit 25, 250
+			     desc limit 1, 250
 		       "); #  The above needs cranking to 25 from 2
 
 

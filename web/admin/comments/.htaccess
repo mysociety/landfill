@@ -1,0 +1,2 @@
+RewriteEngine On
+RewriteRule ^(.*)	/admin/comments.shtml?$1 [R]

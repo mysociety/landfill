@@ -1,13 +1,8 @@
 <!--#include virtual="/includes/header.shtml" -->
 <h2>Reporting a comment</h2>
-
-<p>
-	Here's the comment you're reporting. Please enter a brief reason why you think it should be deleted in the form beneath. Thanks for your help!
-</p>
-
-<!--#include virtual="/cgi-bin/show-abuse.cgi?${QUERY_STRING}" -->
+<p> Please enter a brief reason why you think the comment should
+be deleted. Thanks for your help!</p> 
 <form action="/cgi-bin/send-abuse-report.cgi" method="post" id="comment">
-
 <div>
 	<label for="name">Your name:</label>
 	<input type="text" name="name" id="name" value="" maxlength="50" size="30" />
@@ -25,7 +20,12 @@
 	<input type="submit" value="Send report" />
 </div>
 </form>
+</div>
 
+<div id="inputBox">
+<h2>The comment you're reporting</h2>
+
+<!--#include virtual="/cgi-bin/show-abuse.cgi?${QUERY_STRING}" -->
 
 <!--#include virtual="/includes/footer.shtml" -->
 

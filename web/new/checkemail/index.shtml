@@ -1,0 +1,13 @@
+<!--#include virtual="/includes/header.shtml" -->
+<p>You're Not Apathetic - so check your email.</p>
+
+<p>
+   We've sent you an email to confirm that your email
+   address is valid. When you follow the link in that
+   email, your posting will appear.
+</p>
+
+
+
+<!--#include virtual="/includes/footer.shtml" -->
+

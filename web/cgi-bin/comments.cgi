@@ -54,9 +54,9 @@ print "Content-Type: text/html\n\n";
 	$result=$query->fetchrow_hashref;
 	my $why = $result->{why};
 
-	$why=~ s#\n#</p>\n\n<p>\n#g;
-	$why =~ s#<p>\n</p>\n\n<p>\n#<p>\n#g;
-	
+	$why =~ s#(\r?\n){2,}#</p> <p>#g;
+        $why =~ s#\r?\n#<br />#g;
+
 	print <<EOfragment;
 <!--
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -99,9 +99,9 @@ sub show_comments {
 
 	$query->execute;
 	while ($result=$query->fetchrow_hashref) {
-	$result->{comment} =~ s#\n#</p>\n\n<p>\n#g;
-	$result->{comment} =~ s#<p>\n</p>\n\n<p>\n#<p>\n#g;
-
+	$result->{comment} =~ s#(\r?\n){2,}#</p> <p>#g;
+        $result->{comment} =~ s#\r?\n#<br />#g;
+        
 		$html.= <<EOhtml;
 	<hr width="80%" />
 	<a name="comment_$result->{commentid}" />

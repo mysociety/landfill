@@ -35,7 +35,7 @@ sub send_email {
     my $address      = $abuse_address;
     my $name         = 'NotApathetic abuse report';
 
-    $headers{"Subject"}= "Report of abuse in http://www.notapathetic.com/comments/$postid#$commentid" ;
+    $headers{"Subject"}= "NA Report of abuse http://www.notapathetic.com/admin/comments.shtml?$postid#$commentid" ;
     $headers{"To"}= "$name <$address>" ;
     $headers{'From'}= "Not Apathetic <$abuse_address>" ;
     $headers{"X-Originating-IP"}= $ENV{'HTTP_X_FORWARDED_FOR'}  || $ENV{'REMOTE_ADDR'} || return;
@@ -44,7 +44,7 @@ sub send_email {
 
     print $mailer <<EOmail;
 
-Someone things $url_prefix/comments/$postid#$commentid is abusive
+Someone things $url_prefix/admin/comments.shtml?$postid#$commentid is abusive
 EOmail
 
     $mailer->close;

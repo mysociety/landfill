@@ -52,6 +52,9 @@ print "Content-Type: text/html\n\n";
 		print "Location: $url_prefix\n";
 	}
 	$result=$query->fetchrow_hashref;
+	my $why = $result->{why};
+
+	$why=~ s#\n#</p>\n\n<p>\n#g;
 
 	print <<EOfragment;
 <!--
@@ -68,11 +71,12 @@ print "Content-Type: text/html\n\n";
 	/>
 </rdf:RDF>
 -->
+
 	<div class="entry">
 		<strong>$result->{title}</strong>
-		<p>$result->{why}</p>
+		<p>$why</p>
 		<span class="rightalign">
-		Posted at $result->{posted_formatted}
+		Posted at $result->{posted}
 		<br />
 		<a href="../email/$result->{postid}">Email this to a friend</a>.
 		</span>

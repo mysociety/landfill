@@ -37,13 +37,6 @@
 		<a href="/cgi-bin/postsxml.cgi"><img src="/images/xml.gif" alt="xml "/></a>
 	</dd>
 
-<!-- 
-	Commented out until the script gets written.
-
-	<dd>
-		<img src="/images/csv.gif" alt="csv "/>
-	</dd>
--->
 
 </dl>
 

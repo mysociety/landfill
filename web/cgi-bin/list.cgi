@@ -63,7 +63,7 @@ while (my $q = new CGI::Fast()) {
                     </p>
                     <div>
                             <small>
-                                    written $someday | <a href="$url_prefix/comments/$result->{postid}\#comments">$result->{commentcount} responses</a> | <a href="$url_prefix/comments/$result->{postid}">read more</a> | <a href="/abuse/?postid=$result->{postid}">abusive?</a>
+                                    written $someday | <a href="$url_prefix/comments/$result->{postid}\#comments">$result->{commentcount} responses</a> | <a href="/abuse/?postid=$result->{postid}">abusive?</a> | <a href="$url_prefix/comments/$result->{postid}">read more</a> 
                             </small>
                     </div>
             </div>

@@ -8,6 +8,7 @@ use HTML::Scrubber;
 use Email::Valid;
 use Text::Wrap;
 use Mail::Mailer qw(sendmail);
+use CGI::Fast;
 use CGI qw/param/;
 use mysociety::NotApathetic::Config;
 
@@ -17,10 +18,12 @@ my $db_password= $mysociety::NotApathetic::Config::db_password;         # databa
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $email_domain= $mysociety::NotApathetic::Config::email_domain;
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
-my %Passed_Values;
-my $mailer= new Mail::Mailer 'sendmail';
+
+begin:
 
 while (new CGI::Fast()) {
+	my %Passed_Values;
+	my $mailer= new Mail::Mailer 'sendmail';
         foreach my $param (param()) {
                 $Passed_Values{$param}=param($param);
         }
@@ -58,7 +61,7 @@ while (new CGI::Fast()) {
 		{
 			print "Location: http://www.notapathetic.com/\n\n";
 		}
-		exit(0);
+                next;
 	}
 
 
@@ -122,6 +125,6 @@ sub die_cleanly {
                 $reason
         Please go back and correct this before submitting again.
         ";
-        exit(0);
+        goto begin; # XXX HACK!
 }
 

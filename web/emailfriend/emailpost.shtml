@@ -1,0 +1,19 @@
+	<!--#include virtual="/includes/header.shtml" -->
+
+	<h2>Email this reason to a friend</h2>
+
+
+	<form method="post" action="/cgi-bin/email.cgi" id="comment">
+		<input type="hidden" name="entryid" value="<!--#echo var="QUERY_STRING" -->" />
+	
+		<label for="toaddress">Friend's email address</label><input type="text" name="to" id="toaddress" />
+					
+		<label for="youraddress">Your email address</label><input type="text" name="from" id="youraddress" />
+	
+		<label for="yourname">Your name</label><input type="text" maxlength="120" name="name" />
+		
+		<textarea cols="40" rows="9" name="message" id="commenttext">Write your message here...</textarea>
+		<input type="submit" value="Send" />
+	</form>
+
+	<!--#include virtual="/includes/footer.shtml" -->

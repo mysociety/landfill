@@ -2,7 +2,7 @@
 
 <h2><span>RSS</span>, XML and CSV feeds</h2>
 
-<p>If you've got here, you probably already know what RSS is. If you don't, <a href="http://en.wikipedia.org/wiki/RSS_%28file_format%29">click here</a></p>
+<p>If you've got here, you probably already know what RSS is. If you don't, read <a href="http://en.wikipedia.org/wiki/RSS_%28file_format%29">Wikipedia's entry on RSS</a>.</p>
 
 <dl>
 <dd><a href="/cgi-bin/rss.cgi"><img src="/images/rss.gif" alt="rss "/>people's reasons</a></dd>

@@ -2,7 +2,7 @@
 
 function addEvent(obj, evType, fn){
     if (obj.addEventListener){ 
-        obj.addEventListener(evType, fn, true); 
+        obj.addEventListener(evType, fn, false); 
         return true; 
     } else if (obj.attachEvent){ 
         var r = obj.attachEvent("on"+evType, fn); 

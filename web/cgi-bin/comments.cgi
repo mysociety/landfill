@@ -147,11 +147,11 @@ sub comment_form {
 	<input type="hidden" name="postid" value="$Entry" />
 	
 	<div>
-	<label for="author">Your Name</label><input id="author" name="author" />
+	<label for="author">Your Name</label><input id="author" name="author" type="text" size="20" />
 	</div>
 	
 	<div>
-	<label for="email">Email</label><input id="email" name="email" />
+	<label for="email">Email</label><input id="email" name="email" type="text" size="20" />
 	<small>You must give a valid email address, but it will
     	<em>not</em> be displayed to the public.</small>
 	</div>

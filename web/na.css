@@ -235,7 +235,9 @@ div.entry div.trackback{
 	clear:both;
 	text-align:center;
 	float:none;
+	width:100%;
 }
+
 #footer img{
 	vertical-align:middle;
 }

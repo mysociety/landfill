@@ -41,7 +41,6 @@ print "Content-type: text/html\n\n";
 		$more_link= $result->{link};
 		my $someday = UnixDate($result->{posted}, "%E %b %Y");
 		print <<EOfragment;
-	$date_html
 	<div class="entry">
 		<h4><a href="/admin/comments/$result->{postid}">$result->{title}</a></h4>
 		$result->{shortwhy}

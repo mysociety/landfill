@@ -218,7 +218,8 @@ p.nomargin{
 	margin:0;
 }
 p.enlarge{
-	margin:0;
+	margin:-0.8em 0 0 0;
+	padding:0;
 	text-align:right;
 }
 div.entry div{

@@ -1,7 +1,7 @@
 <!--#include virtual="/includes/header.shtml" -->
 <h2>They're <span>not voting</span> because...</h2>
 <!--#include virtual="/cgi-bin/list.cgi?${QUERY_STRING}" -->
-<!--#include virtual="/cgi-bin/list-older.cgi" -->
+<!--#include virtual="/cgi-bin/list-older.cgi?${QUERY_STRING}" -->
 	</div>
 	<div id="inputBox">
 		<!--#include virtual="/includes/new-stage1.shtml" -->

@@ -54,10 +54,15 @@ sub handle_comment {
 
 	foreach my $pv (keys %Passed_Values) {
 		$Passed_Values{$pv}= $scrubber->scrub($Passed_Values{$pv});
+                $Passed_Values{$pv} =~ s/[\x80-\x9f]//g;
 		$quoted{$pv}= $dbh->quote($Passed_Values{$pv});
 	}
 
-	my $randomness = rand(); $randomness=~ s/^0\.(\d+)/$1/;
+        unless ($Passed_Values{text} && $Passed_Values{text} ne 'Write your response...') {
+            &die_cleanly("Please give a response.");
+        }
+
+        my $randomness = rand(); $randomness=~ s/^0\.(\d+)/$1/;
 	$Passed_Values{authcode}= $randomness;
 	my $auth_code_q= $dbh->quote($randomness);
 

@@ -45,6 +45,7 @@ sub handle_comment {
 	$scrubber->allow(qw[a em cite strong p br]);
 	$scrubber->comment(0);
 	$Passed_Values{text}= $scrubber->scrub($Passed_Values{text});
+        $Passed_Values{text} =~ s/[\x80-\x9f]//g;
 	$Passed_Values{author}= $scrubber->scrub($Passed_Values{author});
 
         unless ($Passed_Values{text} && $Passed_Values{text} ne 'Write your response...') {

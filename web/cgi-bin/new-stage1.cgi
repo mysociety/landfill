@@ -45,6 +45,7 @@ sub handle_comment {
 
 	foreach my $pv (keys %Passed_Values) {
 		$Passed_Values{$pv}= $scrubber->scrub($Passed_Values{$pv});
+                $Passed_Values{$pv} =~ s/[\x80-\x9f]//g;
 		$quoted{$pv}= $dbh->quote($Passed_Values{$pv});
 	}
 

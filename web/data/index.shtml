@@ -8,7 +8,7 @@
 	<!--#if expr="$QUERY_STRING = /^\//" -->      <!-- it's a search -->
 
 	<dd>
-		<a href="/cgi-bin/rss.cgi?${QUERY_STRING}"><img src="/images/rss.gif" alt="rss "/><img src="/images/reasons.gif" alt="reasons" /></a> of your search results
+		<a href="/cgi-bin/rss.cgi?<!--#echo var="QUERY_STRING" -->"><img src="/images/rss.gif" alt="rss "/><img src="/images/reasons.gif" alt="reasons" /></a> of your search results
 	</dd>
 
 	<!-- 
@@ -26,11 +26,11 @@
 	<!--#endif -->
 
 	<dd>
-		<a href="/cgi-bin/rss.cgi?${QUERY_STRING}"><img src="/images/rss.gif" alt="rss "/><img src="/images/reasons.gif" alt="reasons" /></a>
+		<a href="/cgi-bin/rss.cgi"><img src="/images/rss.gif" alt="rss "/><img src="/images/reasons.gif" alt="reasons" /></a>
 	</dd>
 
 	<dd>
-		<a href="/cgi-bin/rss-comments.cgi?${QUERY_STRING}"><img src="/images/rss.gif" alt="rss "/><img src="/images/responses.gif" alt="responses" /></a>
+		<a href="/cgi-bin/rss-comments.cgi"><img src="/images/rss.gif" alt="rss "/><img src="/images/responses.gif" alt="responses" /></a>
 	</dd>
 
 	<dd>

@@ -22,8 +22,8 @@
 		<li><a href="/"><span>h</span>ome</a></li>
 		<li><a href="/about/"><span>a</span>bout us</a></li>
 		<li><a href="/news/"><span>n</span>ews</a></li>
-		<li><a href="/emailnotify/?${QUERY_STRING}"><span>e</span>mail alerts</a></li>
-		<li id="last"><a href="/data/?${QUERY_STRING}"><span>rss</span> &amp; more</a></li>
+		<li><a href="/emailnotify/?<!--#echo var="QUERY_STRING" -->"><span>e</span>mail alerts</a></li>
+		<li id="last"><a href="/data/?<!--#echo var="QUERY_STRING" -->"><span>rss</span> &amp; more</a></li>
 	</ul>
 	
 	<form method="get" action="/cgi-bin/search.cgi" id="search">

@@ -1,21 +1,8 @@
 <!--#include virtual="/includes/header.shtml" -->
+<h2>They're <span>not voting</span> because...</h2>
+<!--#include virtual="/cgi-bin/list.cgi?${QUERY_STRING}" -->
 
-<div style="float: right; padding: 0 0 0 8px; background-color: white;">
-	<!--#include virtual="/includes/new-stage1.shtml" -->
-</div>
-
-  <!--#if expr="$QUERY_STRING = /^\//" -->      <!-- it's a search -->
-        <!--#include virtual="/cgi-bin/list.cgi?${QUERY_STRING}" -->
-  <!--#else -->
-
-	<!-- this cgi can be replaced with a static file built from cron
-	     once every minute or two. Shoud massively reduce load on 
-	     server and database when we go live -->
-	
-	<!--#include virtual="/cgi-bin/list.cgi?${QUERY_STRING}" -->
-
-  <!--#endif -->
-
+<!--#include virtual="/cgi-bin/list-older.cgi" -->
 
 <!--#include virtual="/includes/footer.shtml" -->
 

@@ -2,6 +2,7 @@
 
 use warnings;
 use strict;
+use CGI::Fast;
 use DBI;
 use HTML::Entities;
 use mysociety::NotApathetic::Config;
@@ -13,6 +14,8 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 my %State; # State variables during display.
 my $search_term = &handle_search_term(); #' 1 = 1 ';
 our $url_prefix=$mysociety::NotApathetic::Config::url;
+
+while (my $q = new CGI::Fast()) {
 
 if (defined $ENV{REQUEST_METHOD}) {print "Content-Type: text/html\n\n";};
 
@@ -57,7 +60,7 @@ EOfragment
 	}
 
 }
-
+}
 
 
 sub handle_links {

@@ -4,6 +4,7 @@ use warnings;
 use strict;
 use DBI;
 use HTML::Entities;
+use Date::Manip;
 
 my $Entry=$ENV{QUERY_STRING} || '';
 
@@ -47,15 +48,20 @@ print "Content-Type: text/html\n\n";
 	$query->execute;
 	my $result;
 	my $google_terms;
+	my $someday;
 
 	if ($query->rows == 0) {
 		print "Location: $url_prefix\n";
 	}
 	$result=$query->fetchrow_hashref;
 	my $why = $result->{why};
+	$someday = UnixDate($result->{posted}, "%E %b %Y");
 
-	$why =~ s#(\r?\n){2,}#</p> <p>#g;
-        $why =~ s#\r?\n#<br />#g;
+	$why=~s/\r\n\r\n/<\/p><p>/g;
+	$why=~s/\r\n/<br \/>/g;
+
+	# $why =~ s/(\r?\n){2,}/</p> <p>/g;
+        # $why =~ s/\r?\n/<br />/g;
 
 	print <<EOfragment;
 <!--
@@ -74,15 +80,14 @@ print "Content-Type: text/html\n\n";
 -->
 
 	<div class="entry">
-		<strong>$result->{title}</strong>
+		<h4>$result->{title}</h4>
 		<p>$why</p>
-		<span class="rightalign">
-		Posted at $result->{posted}
-		<br />
-		<a href="../email/$result->{postid}">Email this to a friend</a>.
-		</span>
+		<div>
+		<small>
+		written $someday | <a href="../email/$result->{postid}">Email this to a friend</a> | <a href="/abuse/?postid=$result->{postid}">abusive?</a>
+		</small>
+		</div>
 	</div>
-		<br />
 
 EOfragment
 	if ($result->{commentcount} > 0) {print &show_comments();}
@@ -90,7 +95,7 @@ EOfragment
 }
 
 sub show_comments {
-	my $html=" <h2>Comments</h2>";
+	my $html="<h2><a name=\"comments\"></a>Responses</h2>";
 
 	my $query=$dbh->prepare(
 	  " select * from comments where postid=$Entry");
@@ -99,22 +104,22 @@ sub show_comments {
 
 	$query->execute;
 	while ($result=$query->fetchrow_hashref) {
-	$result->{comment} =~ s#(\r?\n){2,}#</p> <p>#g;
-        $result->{comment} =~ s#\r?\n#<br />#g;
-        
+		my $someday = UnixDate($result->{posted}, "%E %b %Y");
+		my $comment = $result->{comment};
+		$comment =~s/\r\n\r\n/<\/p><p>/g;
+		$comment =~s/\r\n/<br \/>/g;
+		if(!(substr($comment, 0, 6) eq "  <div")){$comment="<p>".$comment."</p>";} ## remove later ##
+
 		$html.= <<EOhtml;
-	<hr width="80%" />
-	<a name="comment_$result->{commentid}" />
-	<p>
-	$result->{comment}
-	</p>
-	<small>
-	<form method="post" action="/cgi-bin/report-abuse.cgi">
-		Posted by $result->{name} on $result->{posted}.
-		<input type="hidden" name="postid" value="$Entry" />
-		<input type="hidden" name="commentid" value="$result->{commentid}" />
-		<input type="submit" value="report this comment as abusive" />
-	</form>
+	<div class="entry">
+		<a name="comment_$result->{commentid}" ></a>
+		$comment
+		<div>
+		<small>
+		written by $result->{name} on $someday | <a href="/abuse/?postid=$result->{postid}&amp;commentid=$result->{commentid}">abusive?</a>
+		</small>
+		</div>
+	</div>
 EOhtml
 	}
 	
@@ -127,36 +132,35 @@ sub comment_form {
 
 	my $html= <<EOhtml;
 
-<h2>Comment</h2>
+<h2>Respond</h2>
 
-<form method="post" action="../cgi-bin/comment.cgi">
+<form method="post" action="../cgi-bin/comment.cgi" id="comment">
 	<input type="hidden" name="postid" value="$Entry" />
-	<table class="commentsformtable">
-	<tr>
+	
+	<div>
+	<label for="author">Your Name</label><input id="author" name="author" />
+	</div>
+	
+	<div>
+	<label for="email">Email</label><input id="email" name="email" />
+	<small>You must give a valid email address, but it will
+    	<em>not</em> be displayed to the public.</small>
+	</div>
 
-    		<th><label for="author">Your Name</label></th>
-    		<td><input id="author" name="author" /></td>
-	</tr>
-	<tr>
-    		<th><label for="email">Email</label></th>
-    		<td><input id="email" name="email" /><br /></td>
-	</tr>
-	<tr>
-    		<td colspan="2">
-    		<span class="smallprint">(You must give a valid email address, but it will <em>not</em> be displayed to the public.)</span>
+	<div>
+    	
+	<textarea id="commenttext" name="text" rows="15" cols="30">Write your response...</textarea>
+	<small>We only allow the following html tags:
+		<tt>a cite em strong p br</tt>. After posting,
+		there may be a short delay before your comment
+	appears on the site</small>
+	</div>
+	<div>
+	<input type="submit" name="post" value="Post" id="commentsubmit" />
+	</div>
 
-    		</td>
-	</tr>
-</table>
-
-<p class="commentsformlabel"><label for="text">Comments:</label></p>
-
-<textarea id="text" name="text" rows="15" cols="50"></textarea>
-
-<p>
-<span class="smallprint">We only allow the following html tags <tt>a cite em strong p br</tt>. After posting, there may be a short delay before your comment appears on the site</span><br />
-<input style="font-weight: bold;" type="submit" name="post" value="Post" />
-</p>
+	
+</form>
 
 
 EOhtml

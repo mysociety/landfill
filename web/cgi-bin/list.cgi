@@ -2,9 +2,12 @@
 
 use warnings;
 use strict;
+use CGI::Fast;
+use Date::Manip;
 use DBI;
 use HTML::Entities;
 use mysociety::NotApathetic::Config;
+
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
@@ -14,59 +17,61 @@ my %State; # State variables during display.
 my $search_term = &handle_search_term(); #' 1 = 1 ';
 our $url_prefix=$mysociety::NotApathetic::Config::url;
 
-if (defined $ENV{REQUEST_METHOD}) {print "Content-Type: text/html\n\n";};
+while (my $q = new CGI::Fast()) {
+    print "Content-Type: text/html\n\n";
+    {
 
-{
-
-	my $query=$dbh->prepare("
-	              select *
-			from posts
-	 	       where validated=1
-			 and hidden=0
-			     $search_term
-		    order by posted
-			     desc limit 25
-		       "); # XXX order by first_seen needs to change
+            my $query=$dbh->prepare("
+                          select *
+                            from posts
+                           where validated=1
+                             and hidden=0
+                                 $search_term
+                        order by posted
+                                 desc limit 25
+                           "); # XXX order by first_seen needs to change
 
 
-	$query->execute;
-	my $result;
-	my $google_terms;
-	my $comments_html;
-	my $date_html;
-	my $show_link;
-	my $more_link;
-	while ($result=$query->fetchrow_hashref) {
+            $query->execute;
+            my $result;
+            my $someday;
+            my $parsed;
+            my $google_terms;
+            my $comments_html;
+            my $date_html;
+            my $show_link;
+            my $more_link;
+            while ($result=$query->fetchrow_hashref) {
 
-		$comments_html= &handle_links($result);
+                    $comments_html= &handle_links($result);
 
-		#if ($result->{content} eq $result->{shortcontent}) {
-		#	$more_link= $result->{link};
-		#} else  {
-		#	$more_link= "comments/?$result->{entryid}";
-		#}
+                    #if ($result->{content} eq $result->{shortcontent}) {
+                    #	$more_link= $result->{link};
+                    #} else  {
+                    #	$more_link= "comments/?$result->{entryid}";
+                    #}
 
-		$more_link= $result->{link};
-		print <<EOfragment;
-	$date_html
-	<div class="entry">
-		<a href="$url_prefix/comments/$result->{postid}"><strong>$result->{title}</strong></a>
-		$result->{shortwhy}
-		<br />
-		<span>
-			<small>posted at  $result->{posted}. <a href="$url_prefix/comments/$result->{postid}">$result->{commentcount} comments.</a></small>
-<form method="get" action="/cgi-bin/report-abuse.cgi">
-	<input type="hidden" name="postid" value="$result->{postid}" />
-	<input type="submit" value="report as abusive" />
-</form>
-		</span>
-	</div>
-		<br />
+                    $more_link= $result->{link};
+                    $someday = UnixDate($result->{posted}, "%E %b %Y");
+                    
+                    print <<EOfragment;
+            $date_html
+            <div class="entry">
+                    <h4><a href="$url_prefix/comments/$result->{postid}">$result->{title}</a></h4>
+                    <p>
+                            $result->{shortwhy}
+                    </p>
+                    <div>
+                            <small>
+                                    written $someday | <a href="$url_prefix/comments/$result->{postid}\#comments">$result->{commentcount} responses</a> | <a href="$url_prefix/comments/$result->{postid}">read more</a> | <a href="/abuse/?postid=$result->{postid}">abusive?</a>
+                            </small>
+                    </div>
+            </div>
 EOfragment
-	}
+            }
 
+    }
 }
-
 
 
 sub handle_links {

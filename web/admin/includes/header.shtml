@@ -1,21 +1,36 @@
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<link rel="stylesheet" type="text/css" href="/na.css">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Not Apathetic Admin</title>
+<style type="text/css" media="screen">
+/* <![CDATA[ */
+	@import url("/na.css");
+/* ]]> */
+</style>
+<link rel="shortcut icon" href="/favicon.ico" />
+<script type="text/javascript" src="/forms.js"></script>
 </head>
 <body>
-<h1><a href="/">NotApathetic Admin</a>
-<a href="/" class="subtitle">I'm not slacking because...</a>
-</h1>
+	<div id="wrap">
+	<div id="top">
+		<h1><a href="/"><img src="/images/na2.png" alt="not apathetic - I'm not voting because..." /></a></h1>
+		<h3><img src="/images/tagline.gif" alt="Tell the world why you're not voting - Don't let your silence go unheard" /></h3>
+	</div>
+	
+	<ul id="nav">
+		<li><a href="/"><span>H</span>ome</a></li>
+		<li><a href="/admin/"><span>A</span>dmin home</a></li>
+		<li><a href="/admin/comments/"><span>C</span>omments</a></li>
+		<li><a href="/admin/posts/"><span>V</span>iew posts</a></li>
+	</ul>
+	
+	<form method="get" action="/cgi-bin/search.cgi" id="search">
+		<label for="q"><span>search:</span></label>
+		<input type="text" name="q" id="q" size="10" />
+		<input type="submit" value="Go" class="submit" />
+	</form>
 
-<table border="0">
-	<tr>
-		<td align="right" width="25%" valign="top" id="nav">
-			<a href="/">Home</a> <br />
-			<a href="/admin/">Admin Home</a> <br />
-			<a href="/admin/comments/">View comments</a> <br />
-			<a href="/admin/posts/">View posts</a> <br />
-		</td>
-		<td  id="main" valign="top">
 
-
-		<!-- end of header -->
+	<!-- end of header -->
+	<div id="adminMain">

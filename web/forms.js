@@ -62,3 +62,10 @@ function grey_thing(t, e) {
         d.focus()
     }
 }
+
+function growTextarea(id) {
+    if (document && document.getElementById) {
+        d = document.getElementById(id);
+        if (id) d.rows += 4;
+    }
+}

@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -I ../../web/cgi-bin
 
 use warnings;
 use strict;
@@ -15,11 +15,12 @@ my $db_username= $mysociety::NotApathetic::Config::db_username;              # d
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 my $url_prefix= $mysociety::NotApathetic::Config::url;
+my $admin_url_prefix= $mysociety::NotApathetic::Config::admin_url;
 my $abuse_address= 'abuse'. $mysociety::NotApathetic::Config::email_domain; 
 
 {
 	&handle_abuse();
-	print "Location: $url_prefix/admin/\n\n";
+	print "Location: $admin_url_prefix/\n\n";
 }
 
 
@@ -45,7 +46,7 @@ sub handle_abuse {
     print $mailer <<EOmail;
 
 $ENV{REMOTE_USER} just decided that this post should reappear
-	$url_prefix/admin/comments.shtml?$postid/$commentid
+	$admin_url_prefix/comments.shtml?$postid/$commentid
 
 EOmail
     $mailer->close;

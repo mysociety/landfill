@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -I ../../web/cgi-bin
 
 use warnings;
 use strict;
@@ -14,6 +14,7 @@ my $db_password= $mysociety::NotApathetic::Config::db_password;         # databa
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 my %State; # State variables during display.
 our $url_prefix=$mysociety::NotApathetic::Config::url;
+our $admin_url_prefix=$mysociety::NotApathetic::Config::admin_url;
 
 print "Content-type: text/html\n\n";
 {
@@ -50,7 +51,7 @@ print "Content-type: text/html\n\n";
 	</form>
 		<div>
 		<small>
-			written $someday | <a href="$url_prefix/admin/comments.shtml?$result->{postid}">$result->{commentcount} responses</a> by $result->{email}
+			written $someday | <a href="$admin_url_prefix/comments.shtml?$result->{postid}">$result->{commentcount} responses</a> by $result->{email}
 		</small>
 		</div>
 	</div>

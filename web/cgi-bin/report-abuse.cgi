@@ -18,7 +18,7 @@ my $abuse_address= 'abuse'. $mysociety::NotApathetic::Config::email_domain;
 
 {
 	&send_email;
-	print "Location: $url_prefix/abuse/\n\n";
+	print "Location: $url_prefix/abuse/sent/\n\n";
 }
 
 

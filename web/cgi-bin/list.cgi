@@ -55,7 +55,7 @@ print "Content-Type: text/html\n\n";
 		<span>
 			<small>posted at  $result->{posted}. <a href="$url_prefix/comments/$result->{postid}">$result->{commentcount} comments.</a></small>
 <form method="get" action="/cgi-bin/report-abuse.cgi">
-	<input type="hidden" name="postid" value="$result->{entryid}" />
+	<input type="hidden" name="postid" value="$result->{postid}" />
 	<input type="submit" value="report as abusive" />
 </form>
 		</span>

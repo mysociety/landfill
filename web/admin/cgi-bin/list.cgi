@@ -39,14 +39,14 @@ print "Content-type: text/html\n\n";
 		print <<EOfragment;
 	$date_html
 	<div class="entry">
-		<a href="$url_prefix/comments/$result->{postid}"><strong>$result->{title}</strong></a>
+		<a href="$url_prefix/admin/comments.shtml?$result->{postid}"><strong>$result->{title}</strong></a>
 	<form method="post" action="/admin/cgi-bin/hide.cgi" />
 		$result->{shortwhy}
 		<input type="hidden" name="postid" value="$result->{postid}" />
 		<input type="submit" value="Hide this posting" />
 	</form>
 		<span>
-			<small>posted at  $result->{posted}. <a href="$url_prefix/comments/$result->{postid}">$result->{commentcount} comments.</a> by $result->{email}</small>
+			<small>posted at  $result->{posted}. <a href="$url_prefix/admin/comments.shtml?$result->{postid}">$result->{commentcount} comments.</a> by $result->{email}</small>
 		</span>
 	</div>
 		<br />

@@ -52,22 +52,6 @@ sub handle_comment {
 	my $randomness = rand(); $randomness=~ s/^0\.(\d+)/$1/;
 	my $auth_code_q= $dbh->quote($randomness);
 
-	print "
-		update posts
-		   set age=$quoted{age} ,
-		       sex=$quoted{sex} ,
-		       title=$quoted{title} ,
-		       region=$quoted{region} ,
-		       evervoted=$quoted{evervoted} ,
-		       ethgroup=$quoted{ethgroup} ,
-		       nochildren=$quoted{nochildren} ,
-		       postcode=$quoted{postcode} ,
-		       posted=now(),
-		       authcode=$auth_code_q
-		 where postid=$quoted{postid}
-  		   and authcode=$quoted{authcode}
-
-";
 	my $query=$dbh->prepare("
 		update posts
 		   set age=$quoted{age} ,

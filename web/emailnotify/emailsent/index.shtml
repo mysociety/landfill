@@ -4,9 +4,15 @@
 
 <p>
 	We have now sent an email to the address
-	you provided. In that email, is a link which you must
+	you provided.
+</p>
+		
+<p>In that email is a link which you must
 	click on to activate your notifications.
 </p>
+
+<h2>You need to <span>check your email</span> <em>and follow the instructions</em>
+	to get email alerts in the future</h2>
 
 <!--#include virtual="/includes/footer.shtml" -->
 

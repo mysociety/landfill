@@ -1,18 +1,11 @@
-DirectoryIndex index.html index.shtml
-
-# all the SSI directives
-AddType text/x-server-parsed-html .shtml
-AddType text/html .shtml 
-Options Includes
-AddHandler server-parsed .shtml 
-
-# so CGIs work
-Options +ExecCGI
-AddHandler cgi-script .cgi
+DirectoryIndex index.shtml
 
 RewriteEngine On
 
-# so mod_rewrite works. But it breaks the SSI. WTF? 
-Options +SymLinksIfOwnerMatch
+# Make a file down.html in the DocumentRoot to bring down the whole site
+# displaying itself.
+RewriteCond %{DOCUMENT_ROOT}/down.html -s
+RewriteRule /(.+).php /down.html [R]
+RewriteCond %{DOCUMENT_ROOT}/down.html !-s
+RewriteRule /down.html / [R]
 
-#RewriteRule ^(.*)	http://www.notapathetic.com/$1 [R]

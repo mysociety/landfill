@@ -45,7 +45,7 @@ h3 {
 	width:330px;
 	text-align:right;
 	font-weight:normal;
-	margin:10px 0 0 0;
+	margin:6px 0 0 0;
 	float:right;
 }
 h4{
@@ -77,7 +77,7 @@ clear:left;
 float:left;
 margin:0 70px 20px 0;
 width:350px;
-min-height:30px;
+min-height:20px;
 display:block;
 }
 ul#nav li{
@@ -108,14 +108,15 @@ form#search {
 	padding:0;
 	margin:0 0 20px 0;
 	width:330px;
-	min-height:30px;
+	min-height:20px;
 	display:block;
+	text-align:right;
 }
-form#search input{float:left; margin:0 0 0 0.5em;}
+form#search input{ margin:0 0.3em 0 0.3em;}
 form#search input#q{width:150px;}
 form#search label{
 	float:left;
-	margin:3px 60px 0 3px;
+	margin:3px 0.3em 0 3px;
 	color:#B10005;
 	font-weight:bold;
 }
@@ -148,6 +149,16 @@ small tt{ /* hee-hee */
 form#comment textarea{
 	float:left;
 	clear:left;
+}
+
+div#adminMain {
+clear:left;
+float:left;
+width:450px;
+}
+
+div#adminMain h2{
+margin-top:0;
 }
 
 div#main {

@@ -45,7 +45,7 @@ while (my $q = new CGI::Fast()) {
 			if ($ENV{"QUERY_STRING"} ne ''){
 				my $search_bit = $ENV{"QUERY_STRING"}||"";
 				$search_bit =~ s/\// /g;
-				print ("<p>Your search for ".$search_bit." yielded the following results</p>");
+				print ("<p>Your search for \"".$search_bit."\" yielded the following results</p>");
 			}
             while ($result=$query->fetchrow_hashref) {
 

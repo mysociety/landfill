@@ -28,13 +28,15 @@ if (defined $ENV{REQUEST_METHOD}) {print "Content-Type: text/html\n\n";};
 			 and hidden=0
 			     $search_term
 		    order by posted
-			     desc limit 25, 250
+			     desc limit 1, 250
 		       "); #  The above needs cranking to 25 from 2
 
 
 	$query->execute;
 	if ($query->rows ne 0) {
-		print "<h3>Older items:</h3>\n";
+		print "<div id=\"olderItems\">\n";
+		print "<h2>Older items:</h2>\n";
+		print "<ul>\n";
 	}
 	my $result;
 	my $google_terms;
@@ -58,7 +60,10 @@ if (defined $ENV{REQUEST_METHOD}) {print "Content-Type: text/html\n\n";};
 		<li><a href="$url_prefix/comments/$result->{postid}">$result->{title}</a></li>
 EOfragment
 	}
-
+	if ($query->rows ne 0) {
+		print "</ul>\n";
+		print "</div>\n";
+	}
 }
 }
 

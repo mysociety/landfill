@@ -46,7 +46,11 @@ sub handle_abuse {
 $ENV{REMOTE_USER} just decided that this post should disappear
 	$url_prefix/admin/comments.shtml?$postid/$commentid
 
+To bring it back, visit
+	$url_prefix/admin/cgi-bin/unhide.cgi?postid=$postid;commentid=$commentid
+
 EOmail
+
     $mailer->close;
 
     return;

@@ -13,9 +13,12 @@
 </head>
 <body>
 	<div id="wrap">
-		<a href="/"><img align="right" src="/images/na2.png" alt="not apathetic - I'm not voting because..." /></a>
-		<h4><a href="/"><span>H</span>ome</a>
-		<a href="/admin/"><span>A</span>dmin home</a></h4>
-
+	<div id="top">
+		<h1><a href="/"><img align="right" src="/images/na2.png" alt="not apathetic - I'm not voting because..." /></a></h1>
+	</div>
+	<ul id="nav">
+	<li><a href="/"><span>H</span>ome</a></li>
+	<li><a href="/admin/"><span>A</span>dmin home</a></li>
+	</ul>
 	<!-- end of header -->
 	<div id="adminMain">

@@ -15,5 +15,13 @@
 		<textarea cols="40" rows="9" name="message" id="commenttext">Write your message here...</textarea>
 		<input type="submit" value="Send" />
 	</form>
+	
+	</div>
+	
+	<div id="inputBox">
+	
+	<h2>The comment you're emailing</h2>
+	
+	<!--#include virtual="/cgi-bin/show-abuse.cgi?postid=${QUERY_STRING}" -->
 
 	<!--#include virtual="/includes/footer.shtml" -->

@@ -32,6 +32,7 @@ print "Content-Type: text/xml\n\n";
 			     date_format(posted, \"%H:%i, %e %M\") as posted_formatted 
 			from posts
 	 	       where validated=1
+                             and hidden=0
 			     $search_term
 		    order by posted
 			desc limit 50

@@ -32,7 +32,7 @@ my $search_term;
                 &die_cleanly("Code either used or incorrect");
         }
         else {
-		my ($search_term, $address)= $query->fetchrow_array;
+		my ($address, $search_term)= $query->fetchrow_array;
 
                 $query= $dbh->prepare ("update emailnotify
                                      set validated      = 1 ,

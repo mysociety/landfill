@@ -57,7 +57,8 @@ while (my $q = new CGI::Fast()) {
 
                     $more_link= $result->{link};
                     $someday = UnixDate($result->{posted}, "%E %b %Y");
-                    
+
+                    my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';
                     print <<EOfragment;
             <div class="entry">
                     <h4><a href="$url_prefix/comments/$result->{postid}">$result->{title}</a></h4>
@@ -66,7 +67,7 @@ while (my $q = new CGI::Fast()) {
                     </p>
                     <div>
                             <small>
-                                    written $someday | <a href="$url_prefix/comments/$result->{postid}\#comments">$result->{commentcount} responses</a> | <a href="$url_prefix/comments/$result->{postid}">read more</a> | <a href="/abuse/?postid=$result->{postid}">abusive?</a>
+                                    written $someday | <a href="$url_prefix/comments/$result->{postid}\#comments">$result->{commentcount} $responses</a> | <a href="$url_prefix/comments/$result->{postid}">read more</a> | <a href="/abuse/?postid=$result->{postid}">abusive?</a>
                             </small>
                     </div>
             </div>

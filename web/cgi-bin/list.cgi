@@ -14,11 +14,12 @@ my $db_username= $mysociety::NotApathetic::Config::db_username;              # d
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 my %State; # State variables during display.
-my $search_term = &handle_search_term(); #' 1 = 1 ';
+my $search_term;
 our $url_prefix=$mysociety::NotApathetic::Config::url;
 
 while (my $q = new CGI::Fast()) {
     print "Content-Type: text/html\n\n";
+	$search_term = &handle_search_term(); #' 1 = 1 ';
     {
 
             my $query=$dbh->prepare("

@@ -2,6 +2,9 @@
 
 <h2><span>Email</span> Notification of posts</h2>
 
+		<!--#if expr="$QUERY_STRING != ''"-->
+	<p><strong>Your e-mail alerts will only contain results matching your search:<!--#echo var="QUERY_STRING" --></strong></p>
+	<!--#endif -->
 	<p>
 		By filling in your email address below, you can
 		request to be told by about new posts which appear.
@@ -27,6 +30,14 @@
 	
 	<div id="inputBox">
 		<h2>Custom Email Alerts</h2>
+		
+		<p>If you would like to receieve e-mail notifications about
+		a given keyword, please enter your search below</p>
+		
+		<form method="get" action="/cgi-bin/search.cgi" id="search">
+		<input type="text" name="q" id="q" size="10" />
+		<input type="submit" value="Go" class="submit" />
+		</form>
 	<!--#endif -->
 
 <!--#include virtual="/includes/footer.shtml" -->

@@ -27,7 +27,7 @@ while (new CGI::Fast()) {
 
 	$Passed_Values{body}= wrap("","    ", $Passed_Values{'body'});
 	&send_email;
-	print "Location: $url_prefix/sent/\n\n";
+	print "Location: $url_prefix/abuse/sent/\n\n";
 }
 
 

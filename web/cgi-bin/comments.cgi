@@ -3,10 +3,13 @@
 use warnings;
 use strict;
 use DBI;
+use CGI::Fast;
 use HTML::Entities;
 use Date::Manip;
-
 use mysociety::NotApathetic::Config;
+
+my $commentcount;
+my $Entry;
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
@@ -15,10 +18,8 @@ my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 my %State; # State variables during display.
 
-my $commentcount;
-my $Entry;
 
-while (new CGI::Fast()) {
+while (my $q = new CGI::Fast()) {
         $Entry=$ENV{QUERY_STRING} || '';
 
         if ($Entry !~ /^\d+$/) {

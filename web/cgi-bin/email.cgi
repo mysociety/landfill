@@ -15,6 +15,7 @@ my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $url_prefix= $mysociety::NotApathetic::Config::url;
+my $email_domain= $mysociety::NotApathetic::Config::email_domain;
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 my %Passed_Values;
 my $mailer= new Mail::Mailer 'sendmail';
@@ -65,7 +66,7 @@ my $mailer= new Mail::Mailer 'sendmail';
     	}
 
 
-    	my $from_address      = $Passed_Values{"from"} || 'email-a-story@msmith.net';
+    	my $from_address      = $Passed_Values{"from"} || "team$email_domain";
     	my $from_name         = $Passed_Values{"name"} || 'Someone';
     	my $to_person         = $Passed_Values{"to"} ;
     	delete $Passed_Values{"subject"};

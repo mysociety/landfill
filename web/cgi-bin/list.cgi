@@ -18,7 +18,7 @@ my $search_term;
 our $url_prefix=$mysociety::NotApathetic::Config::url;
 
 while (my $q = new CGI::Fast()) {
-    print "Content-Type: text/html\r\n";
+    print "Content-Type: text/html\n\n";
 	$search_term = &handle_search_term(); #' 1 = 1 ';
     {
 

@@ -1,0 +1,6 @@
+AuthUserFile /data/vhost/sams.notapathetic.com/docs/admin/.htpasswd
+AuthGroupFile /dev/null
+AuthName "Go away "
+AuthType Basic
+Require valid-user
+

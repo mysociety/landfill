@@ -56,6 +56,8 @@ Name  :  $Passed_Values{name}
 Email :  $Passed_Values{email}
 Reason: $Passed_Values{body}
 
+	
+Delete comment: $url_prefix/admin/cgi-bin/hide.cgi?postid=$postid;commentid=$commentid
 
 EOmail
 

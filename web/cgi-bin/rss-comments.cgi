@@ -60,8 +60,8 @@ print "Content-Type: text/xml\n\n";
    link         => "$url_prefix",
    description  => "Comments on $title on $url_prefix ",
    dc => {
-     creator    => "rss$email_domain",
-     publisher  => "rss$email_domain",
+     creator    => "team$email_domain",
+     publisher  => "team$email_domain",
      rights     => 'Copyright 2005',
      language   => 'en-gb',
      ttl        =>  600

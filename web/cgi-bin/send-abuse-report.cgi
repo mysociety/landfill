@@ -16,6 +16,7 @@ my $db_username= $mysociety::NotApathetic::Config::db_username;              # d
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 my $url_prefix= $mysociety::NotApathetic::Config::url;
+my $admin_url_prefix= $mysociety::NotApathetic::Config::admin_url;
 my $abuse_address= 'abuse'. $mysociety::NotApathetic::Config::email_domain; 
 
 {
@@ -26,7 +27,7 @@ my $abuse_address= 'abuse'. $mysociety::NotApathetic::Config::email_domain;
 
 	$Passed_Values{body}= wrap("","    ", $Passed_Values{'body'});
 	&send_email;
-	print "Location: $url_prefix/abuse/sent/\n\n";
+	print "Location: $url_prefix/sent/\n\n";
 }
 
 
@@ -55,7 +56,7 @@ sub send_email {
     $about=wrap('',"    ", $about);
     print $mailer <<EOmail;
 
-Someone thinks $url_prefix/admin/comments.shtml?$postid#$commentid is abusive.
+Someone thinks $admin_url_prefix/comments.shtml?$postid#$commentid is abusive.
 
 IP    :  $ENV{REMOTE_ADDR}
 Name  :  $Passed_Values{name}
@@ -65,7 +66,7 @@ Reason: $Passed_Values{body}
 talking about:
 	$about	
 	
-Delete comment: $url_prefix/admin/cgi-bin/hide.cgi?postid=$postid;commentid=$commentid
+Delete comment: $admin_url_prefix/cgi-bin/hide.cgi?postid=$postid;commentid=$commentid
 
 EOmail
 

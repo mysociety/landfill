@@ -13,24 +13,9 @@
 </head>
 <body>
 	<div id="wrap">
-	<div id="top">
-		<h1><a href="/"><img src="/images/na2.png" alt="not apathetic - I'm not voting because..." /></a></h1>
-		<h3><img src="/images/tagline.gif" alt="Tell the world why you're not voting - Don't let your silence go unheard" /></h3>
-	</div>
-	
-	<ul id="nav">
-		<li><a href="/"><span>H</span>ome</a></li>
-		<li><a href="/admin/"><span>A</span>dmin home</a></li>
-		<li><a href="/admin/comments/"><span>C</span>omments</a></li>
-		<li><a href="/admin/posts/"><span>V</span>iew posts</a></li>
-	</ul>
-	
-	<form method="get" action="/cgi-bin/search.cgi" id="search">
-		<label for="q"><span>search:</span></label>
-		<input type="text" name="q" id="q" size="10" />
-		<input type="submit" value="Go" class="submit" />
-	</form>
-
+		<a href="/"><img align="right" src="/images/na2.png" alt="not apathetic - I'm not voting because..." /></a>
+		<h4><a href="/"><span>H</span>ome</a>
+		<a href="/admin/"><span>A</span>dmin home</a></h4>
 
 	<!-- end of header -->
 	<div id="adminMain">

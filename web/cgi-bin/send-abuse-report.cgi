@@ -51,8 +51,9 @@ sub send_email {
 
 Someone thinks $url_prefix/admin/comments.shtml?$postid#$commentid is abusive.
 
-Name :  $Passed_Values{name}
-Email:  $Passed_Values{email}
+IP    :  $ENV{REMOTE_ADDR}
+Name  :  $Passed_Values{name}
+Email :  $Passed_Values{email}
 Reason: $Passed_Values{body}
 
 

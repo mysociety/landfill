@@ -4,18 +4,14 @@ use warnings;
 use strict;
 use mysociety::NotApathetic::Config;
 use CGI qw/param/;
-my $response= '/';
+my $query;
 our $url_prefix=$mysociety::NotApathetic::Config::url;
-my $value;
-{
-	foreach my $param (param()) {
-		next unless $param =~ /box\d/;
-		$value= param($param);
-		$value=~ s#^\s*(.*)\s*$#$1#;
-		$value=~ s#\s+#\+#g;
-		$response.= "/$value";
-	}
 
-	$response=~ s#//+#/#g;
-	print "Location: $url_prefix?$response\n\n";
+{
+        $query=param("q")|| '';
+        $query=~ s#("\S*)\s+(\S*")#$1+$2#g;
+        $query=~ s#"# #g;
+        $query=~ s# #/#g;
+        $query=~ s#//+#/#g;
+        print "Location: $url_prefix?/$query\n\n";
 }

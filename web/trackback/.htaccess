@@ -1,0 +1,2 @@
+RewriteEngine on
+RewriteRule ^(.*)	/cgi-bin/trackback.cgi [L]

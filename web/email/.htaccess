@@ -1,0 +1,2 @@
+RewriteEngine on
+RewriteRule ^(.*)	/email.shtml?$1 [L]

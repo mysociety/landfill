@@ -1,0 +1,133 @@
+<!--#include virtual="/includes/header.shtml" -->
+
+<h2>Tell Us Why</h2>
+<p>
+	Post why you aren't apathetic here:
+</p>
+<form method="post" action="/cgi-bin/new.cgi">
+<table border="0">
+	<tr>
+		<td>
+			Email
+		</td>
+		<td>
+			<input name="email" />
+			We must validate your email address before your submission
+			can be displayed on the site. We wont use it after that.
+		</td>
+	</tr>
+
+	<tr>
+		<td>
+			Age
+		</td>
+		<td>
+			<input name="age" />
+		</td>
+	</tr>
+
+	<tr>
+		<td>
+			Sex
+		</td>
+		<td>
+			<select name="sex">
+				<option value=""></option>
+				<option value="female">Female</option>
+				<option value="male">Male</option>
+			</select>
+		</td>
+	</tr>
+
+	<tr>
+		<td>
+			Ever voted?
+		</td>
+		<td>
+			<select name="region">
+				<option value=""></option>
+				<option value="yes">yes</option>
+				<option value="notlast">Yes, but not last time</option>
+				<option value="no">no</option>
+			</select>
+		</td>
+	</tr>
+
+	<tr>
+		<td>
+			Region
+		</td>
+		<td>
+			<select name="region">
+				<option value=""></option>
+				<option value="North West">North West</option>
+				<option value="South West">South West</option>
+			</select>
+		</td>
+
+	</tr>
+
+	<tr>
+		<td>
+			One line:
+		</td>
+		<td>
+			<input name="title" />
+		</td>
+	</tr>
+
+	<tr>
+		<td>
+			Why?
+		</td>
+		<td>
+			<textarea name="why" rows="20" cols="60"></textarea>
+		</td>
+	</tr>
+
+
+<tr><td colspan="2">Optional questions</td></tr>
+
+
+	<tr>
+		<td>
+			Ethnic Group
+		</td>
+		<td>
+			<input type="text" name="ethgrp" />Optional
+		</td>
+	</tr>
+
+	<tr>
+		<td>
+			No of Children
+		</td>
+		<td>
+			<select name="nochildren">
+				<option value="0">0</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3 or more</option>
+			</select>
+			Optional
+		</td>
+	</tr>
+
+	<tr>
+		<td>
+			First half of post code
+		</td>
+		<td>
+			<input type="text" name="postcode" />
+			Optional
+		</td>
+	</tr>
+
+<tr><td colspan="2"><input type="submit" value="Submit" /></td></tr>
+
+</table>
+</form>
+
+
+<!--#include virtual="/includes/footer.shtml" -->
+

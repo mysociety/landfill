@@ -1,0 +1,34 @@
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="/na.css">
+</head>
+<body>
+<h1><a href="/">NotApathetic</a></h1>
+
+<table border="0">
+	<tr>
+		<td align="right" width="25%" valign="top" id="nav">
+			<a href="/new/">Say Why</a> <br />
+			<a href="/about/">About NA</a> <br />
+			<a href="/news/">News</a> <br />
+			<a href="/search/">Search</a> <br />
+
+
+
+		<!--#if expr="$QUERY_STRING = /^\//" -->
+			<a href="/cgi-bin/rss-comments.cgi?<!--#echo var="QUERY_STRING" -->">RSS of these Comments</a><br />
+			<a href="/cgi-bin/rss.cgi?<!--#echo var="QUERY_STRING" -->">RSS of Search</a><br />
+			<a href="/emailnotify/?<!--#echo var="QUERY_STRING" -->">Email Notify of Search</a><br />
+			<a href="/cgi-bin/postsxml.cgi/?<!--#echo var="QUERY_STRING" -->">XML output of Search</a><br />
+		<!--#else -->
+			<a href="/emailnotify/">Email Notification<br />
+			<a href="/cgi-bin/rss.cgi">RSS of posts</a> <br />
+			<a href="/cgi-bin/rss-comments.cgi">RSS of comments</a> <br />
+			<a href="/cgi-bin/postsxml.cgi">XML output</a><br />
+		<!--#endif -->
+
+		</td>
+		<td  id="main">
+
+
+		<!-- end of header -->

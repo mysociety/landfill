@@ -1,0 +1,100 @@
+	<!--#include virtual="/includes/header.shtml" -->
+
+
+<h2>Word Search</h2>
+
+
+<p>
+	To search for <strong>all of</strong> multiple words, put them in one box, space seperated.
+	To search for <strong>one of</strong> multiple words, put them in seperate boxes.
+</p>
+
+<p>
+	You only need fill in one box.
+</p>
+
+<form method="get" action="/cgi-bin/search.cgi">
+<table border="1" align="center">
+	<tr  align="center">
+		<th>
+			term
+		</th>
+		<th>
+			e.g. Search for "health"
+		</th>
+		<th>
+			e.g. Search for "Blair and Africa"
+		</th>
+		<th>
+			e.g. Search for "Devolution or Wales or Welsh"
+		</th>
+	</tr>
+	<tr>
+		<td>
+			<input type="text" name="box1" />
+		</td>
+		<td>
+			Health
+		</td>
+		<td>
+			Blair Africa
+		</td>
+		<td>
+			Devolution
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<input type="text" name="box2" />
+		</td>
+		<td>
+		</td>
+		<td>
+		</td>
+		<td>
+			Wales
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<input type="text" name="box3" />
+		</td>
+		<td>
+		</td>
+		<td>
+		</td>
+		<td>
+			Welsh
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<input type="text" name="box4" />
+		</td>
+		<td>
+		</td>
+		<td>
+		</td>
+		<td>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4"   align="center">
+			<input type="submit" value="Search The Government Says" />
+		</td>
+	</tr>
+</table>
+
+<h2>Advanced Searchers</h2>
+<p>
+	If you wish to make your own searches in a 'del.icio.us'ish 
+	style manner, you can enter arbitrary search criteria:
+	<tt>http://www.notapathetic.com/search/?/one/two/three+four/five</tt>
+	will search for (one or two or (three and four) or five).
+</p>
+
+
+
+</form>
+
+	<!--#include virtual="/includes/footer.shtml" -->

@@ -1,0 +1,41 @@
+<!--#include virtual="/includes/header.shtml" -->
+
+<h2>Email Notification of posts</h2>
+
+	<p>
+		By filling in your email address below, you can
+		request to be told by about new posts which appear.
+		We will only send one email a day containing the
+		last days results.
+	</p>
+
+	<p>
+		To prevent abuse, we require confirmation of your email
+		address.
+	</p>
+
+XXX this form needs javascript to prevent submit before email address typed in.
+
+	<form method="post" action="/cgi-bin/emailnotify/initial.cgi">
+	<input type="hidden" name="search" value="<!--#echo var="QUERY_STRING" -->" />
+		<table border="0">
+			<tr>
+				<td>
+					Email address
+				</td>
+				<td>
+					<input type="text" name="email" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+				</td>
+				<td>
+					<input type="submit" value="Submit" />
+				</td>
+			</tr>
+		</table>
+	</form>
+
+<!--#include virtual="/includes/footer.shtml" -->
+

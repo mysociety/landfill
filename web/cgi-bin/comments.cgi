@@ -55,7 +55,7 @@ print "Content-Type: text/html\n\n";
 	my $why = $result->{why};
 
 	$why=~ s#\n#</p>\n\n<p>\n#g;
-
+	
 	print <<EOfragment;
 <!--
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -107,11 +107,12 @@ sub show_comments {
 	$result->{comment}
 	</p>
 	<small>
+	<form method="post" action="/cgi-bin/report-abuse.cgi">
 		Posted by $result->{name} on $result->{posted}.
-	<a
-	href="$url_prefix/comments/?$Entry#comment_$result->{commentid}">Link</a>.
-		Report abuse to abuse\@notapathetic.com
-	</small>
+		<input type="hidden" name="postid" value="$Entry" />
+		<input type="hidden" name="commentid" value="$result->{commentid}" />
+		<input type="submit" value="report this comment as abusive" />
+	</form>
 EOhtml
 	}
 	

@@ -74,7 +74,7 @@ If you wish to confirm this, please click the below link:
 
 If you didn't request this (or have changed your mind), just
 ignore this message. If you wish to report it, forward it to
-help\@notapathetic.com
+team\@notapathetic.com
 
 
 EOmail

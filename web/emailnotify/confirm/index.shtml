@@ -1,3 +1,4 @@
+<!--#set var="page_title" value="Notification confirmation" -->
 <!--#include virtual="/includes/header.shtml" -->
 <!--#include virtual="/cgi-bin/emailnotify/confirm.cgi?${QUERY_STRING}" -->
 <!--#include virtual="/includes/footer.shtml" -->

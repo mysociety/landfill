@@ -1,3 +1,4 @@
+<!--#set var="page_title" value="They're not voting because..." -->
 	<!--#include virtual="/includes/header.shtml" -->
 
 	<h2>They're <span>not voting</span> because...</h2>

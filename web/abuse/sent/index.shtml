@@ -1,3 +1,4 @@
+<!--#set var="page_title" value="Report Sent" -->
 <!--#include virtual="/includes/header.shtml" -->
 
 <h2>Report sent</h2>

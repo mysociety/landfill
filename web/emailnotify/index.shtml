@@ -1,3 +1,4 @@
+<!--#set var="page_title" value="Email alerts" -->
 <!--#include virtual="/includes/header.shtml" -->
 
 <h2><span>Email</span> Notification of posts</h2>

@@ -1,3 +1,4 @@
+<!--#set var="page_title" value="Please check your email" -->
 <!--#include virtual="/includes/header.shtml" -->
 <h2><span>Please</span> check your email</h2>
 

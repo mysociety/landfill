@@ -1,3 +1,4 @@
+<!--#set var="page_title" value="RSS, XML and CSV feeds" -->
 <!--#include virtual="../includes/header.shtml" -->
 
 <h2><span>RSS</span>, XML and CSV feeds</h2>

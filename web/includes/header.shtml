@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Not Apathetic</title>
+<title>Not Apathetic<!--#if expr="${page_title}" --> - <!--#echo var="page_title" --><!--#endif --></title>
 <style type="text/css" media="screen">
 /* <![CDATA[ */
 	@import url("/na.css");

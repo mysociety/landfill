@@ -1,3 +1,4 @@
+<!--#set var="page_title" value="Reporting a comment" -->
 <!--#include virtual="/includes/header.shtml" -->
 <h2>Reporting a comment</h2>
 <p> Please enter a brief reason why you think the comment should

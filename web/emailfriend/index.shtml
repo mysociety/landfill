@@ -1,3 +1,4 @@
+<!--#set var="page_title" value="Email a friend" -->
 	<!--#include virtual="/includes/header.shtml" -->
 
 	<h2><span>Tell</span> a friend about Not Apathetic</h2>

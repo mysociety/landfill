@@ -1,3 +1,4 @@
+<!--#set var="page_title" value="News" -->
 <!--#include virtual="/includes/header.shtml" -->
 
 <h2><span>News</span> from NotApathetic.com</h2>

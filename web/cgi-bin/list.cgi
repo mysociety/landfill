@@ -18,7 +18,7 @@ my $search_term;
 our $url_prefix=$mysociety::NotApathetic::Config::url;
 
 while (my $q = new CGI::Fast()) {
-    print "Content-Type: text/html\n\n";
+    print "Content-Type: text/html\r\n";
 	$search_term = &handle_search_term(); #' 1 = 1 ';
     {
 
@@ -43,7 +43,9 @@ while (my $q = new CGI::Fast()) {
             my $more_link;
 			
 			if ($ENV{"QUERY_STRING"} ne ''){
-				print ("<p>Your search for ".$ENV{"QUERY_STRING"}." yielded the following results</p>");
+				my $search_bit = $ENV{"QUERY_STRING"}||"";
+				$search_bit =~ s/\// /g;
+				print ("<p>Your search for ".$search_bit." yielded the following results</p>");
 			}
             while ($result=$query->fetchrow_hashref) {
 
@@ -57,8 +59,7 @@ while (my $q = new CGI::Fast()) {
 
                     $more_link= $result->{link};
                     $someday = UnixDate($result->{posted}, "%E %b %Y");
-
-                    my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';
+                    
                     print <<EOfragment;
             <div class="entry">
                     <h4><a href="$url_prefix/comments/$result->{postid}">$result->{title}</a></h4>
@@ -67,7 +68,7 @@ while (my $q = new CGI::Fast()) {
                     </p>
                     <div>
                             <small>
-                                    written $someday | <a href="$url_prefix/comments/$result->{postid}\#comments">$result->{commentcount} $responses</a> | <a href="$url_prefix/comments/$result->{postid}">read more</a> | <a href="/abuse/?postid=$result->{postid}">abusive?</a>
+                                    written $someday | <a href="$url_prefix/comments/$result->{postid}\#comments">$result->{commentcount} responses</a> | <a href="$url_prefix/comments/$result->{postid}">read more</a> | <a href="/abuse/?postid=$result->{postid}">abusive?</a>
                             </small>
                     </div>
             </div>

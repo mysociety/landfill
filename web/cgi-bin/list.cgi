@@ -61,7 +61,7 @@ while (my $q = new CGI::Fast()) {
                     print <<EOfragment;
             <div class="entry">
                     <h4><a href="$url_prefix/comments/$result->{postid}">$result->{title}</a></h4>
-                    <p>
+                    <p class="nomargin">
                             $result->{shortwhy}
                     </p>
                     <div>

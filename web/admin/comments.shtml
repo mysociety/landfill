@@ -1,5 +1,0 @@
-	<!--#include virtual="/admin/includes/header.shtml" -->
-
-	<!--#include virtual="/admin/cgi-bin/comments.cgi?${QUERY_STRING}" -->
-
-	<!--#include virtual="/admin/includes/footer.shtml" -->

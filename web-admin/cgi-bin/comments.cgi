@@ -97,7 +97,7 @@ sub show_comments {
 		$result->{comment}
 		</p>
 		<div>
-		<form method="post" action="/admin/cgi-bin/$hideorshow.cgi">
+		<form method="post" action="$admin_url_prefix/cgi-bin/$hideorshow.cgi">
 			<small>Posted by $result->{name} $result->{email} on $result->{posted}.</small>
 			<input type="hidden" name="postid" value="$Entry" />
 			<input type="hidden" name="commentid" value="$result->{commentid}" />

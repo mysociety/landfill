@@ -45,14 +45,14 @@ print "Content-type: text/html\n\n";
 	
 	<form method="post" action="/admin/cgi-bin/hide.cgi" />
 		$result->{shortwhy}
-		<input type="hidden" name="postid" value="$result->{postid}" />
-		<input type="submit" value="Hide this posting" />
-	</form>
 		<div>
 		<small>
 			written $someday | <a href="$url_prefix/admin/comments.shtml?$result->{postid}">$result->{commentcount} responses</a> by $result->{email}
+		<input type="hidden" name="postid" value="$result->{postid}" />
+		<input type="submit" value="Hide this posting" />
 		</small>
 		</div>
+	</form>
 	</div>
 
 EOfragment

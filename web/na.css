@@ -1,0 +1,73 @@
+body {
+	font-family: "Trebuchet MS", sans-serif;
+	margin: 0;
+	padding: 0;
+}
+h1 {
+	font-size: 200%;
+	padding: 0.4em 10px;
+	text-align: left;
+	margin: 0 0 0.5em 0;
+	color: #ff9900;
+	background-color: #990000;
+	border-bottom: solid 2px #ff9900;
+}
+
+h1 a, h1 a:link, h1 a:visited { color: #ff9900; text-decoration: none; }
+
+a:link { color: #ff0000; }
+a:visited { color: #990000; }
+a:hover, a:active { color: #000000; }
+
+td#nav {
+padding-right: 10px;
+border-right: solid 2px #990000;
+}
+
+.entry {
+padding-bottom: 10px;
+border-bottom: solid 1px #ff9900;
+}
+
+#main {
+padding: 0 10px;
+}
+
+.subtitle {
+	font-size: 50%;
+	text-align: right;
+	color: #ff9900;
+}
+.trackback { background-color: #eeeeee; margin: 0 5%; padding: 3px;
+border: solid 1px #cccccc; }
+
+fieldset {
+    border: solid 2px #ff9900;
+    padding: 5px;
+    background-color: #ffffcc;
+    color: #000000;
+}
+legend {
+    font-weight: bold;
+}
+
+form {
+}
+
+/* input[type=submit] {
+    color: #ff0000;
+    border: solid 1px #ff0000;
+    background-color: #ffffff;
+    font-size: 93%;
+}
+*/
+
+textarea, input[type=text] {
+    background-color: #ffffff;
+    color: #000000;
+    border: solid 1px #ff9900;
+}
+textarea:hover, textarea:focus, input[type=text]:hover, input[type=text]:focus {
+    border: solid 1px #ff0000;
+}
+

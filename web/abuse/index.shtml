@@ -1,15 +1,32 @@
 <!--#include virtual="/includes/header.shtml" -->
-
-<h2>Report sent</h2>
-
-<p>
-	Your report of an abusive comment has been 
-	passed on. We'll look at it as soon as possible.
-</p>
+<h2>Reporting a comment</h2>
 
 <p>
-	Thanks for letting us know.
+	Here's the comment you're reporting. Please enter a brief reason why you think it should be deleted in the form beneath. Thanks for your help!
 </p>
+
+<form action="/cgi-bin/send-abuse-report.cgi" method="post">
+<!--#include virtual="/cgi-bin/show-abuse.cgi?${QUERY_STRING}" -->
+
+<div class="row">
+	<span class="label"><label for="name">Your name:</label></span>
+	<span class="formw"><input type="text" name="name" id="name" value="" maxlength="50" size="30" class="form" /></span>
+</div>
+
+<div class="row">
+	<span class="label"><label for="email">Email address:</label></span>
+	<span class="formw"><input type="text" name="email" id="email" value="" maxlength="100" size="30" class="form" /></span>
+</div>
+
+	<p style="clear: left;"><strong>Why should this comment be deleted?</strong><br />
+	<textarea name="body" rows="10" cols="45"></textarea></p>
+
+<div class="row">
+<span class="label">&nbsp;</span>
+<span class="formw"><input type="submit" value="Send report" /></span>
+</div>
+</form>
+
 
 <!--#include virtual="/includes/footer.shtml" -->
 

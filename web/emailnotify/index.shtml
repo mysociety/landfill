@@ -9,7 +9,7 @@
 		By filling in your email address below, you can
 		request to be told by about new posts which appear.
 		We will only send one email a day containing the
-		last days results.
+		last day's results.
 	</p>
 
 	<p>
@@ -35,7 +35,7 @@
 		a given keyword, please enter your search below</p>
 		
 		<form method="get" action="/cgi-bin/search.cgi" id="search">
-		<input type="text" name="q" id="q" size="10" />
+		<input type="text" name="q" id="q" size="30" />
 		<input type="submit" value="Go" class="submit" />
 		</form>
 	<!--#endif -->

@@ -5,7 +5,7 @@
 <ul>
 	<li>displayed on the website</li>
 	<li>used to send unsolicited (spam) email</li>
-	<li>sold, or passed on to organisations outside the mySociety Group</li>
+        <li>sold, or passed on to other organisations</li>
 </ul></p>
 
 <p>Your email address is <strong>required</strong> for the purposes of validating as we believe in responsibility and to prevent fraudulent use of the website.</p>
@@ -23,6 +23,6 @@
 	<li><a href="http://www.electoralcommission.org.uk/">The Electoral Commission</a></li>
 </ul>
 
-<p>The site operates as a project of <a href="http://www.mysociety.org">mySociety</a>, part of registered charity <a href="http://www.democracy.org.uk"><acronym title="UK Citizens Online Democracy">UKCOD</acronym></a></p>
+<p>The site operates as a project of <a href="http://www.mysociety.org">mySociety</a>, part of registered charity <a href="http://www.democracy.org.uk"><acronym title="UK Citizens Online Democracy">UKCOD</acronym></a>.</p>
 
 <!--#include virtual="/includes/footer.shtml" -->

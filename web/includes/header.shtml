@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <title>Not Apathetic</title>
@@ -14,8 +14,8 @@
 <body>
 	<div id="wrap">
 	<div id="top">
-		<h1><a href="/"><img src="/images/na2.png" alt="not apathetic - I'm not voting because..." /></a></h1>
-		<h3><img src="/images/tagline.png" alt="Tell the world why you're not voting - Don't let your silence go unheard" /></h3>
+                <h1><a href="/"><img src="/images/na2.png" alt="not apathetic - I'm not voting because..." width="350" height="63" /></a></h1>
+		<h3><img src="/images/tagline.png" alt="Tell the world why you're not voting - Don't let your silence go unheard" width="330" height="50" /></h3>
 	</div>
 	
 	<ul id="nav">
@@ -27,7 +27,7 @@
 	</ul>
 	
 	<div id="emailBox">
-		<a href="/emailfriend/"><img src="/images/novote.png" alt="got a friend who isn't going to vote? click here" /></a>
+                <a href="/emailfriend/"><img src="/images/novote.png" alt="got a friend who isn't going to vote? click here" width="330" height="32" /></a>
 	</div>
 	
 

@@ -14,7 +14,8 @@ my %State; # State variables during display.
 my $search_term = &handle_search_term(); #' 1 = 1 ';
 our $url_prefix=$mysociety::NotApathetic::Config::url;
 
-print "Content-Type: text/html\n\n";
+if (defined $ENV{REQUEST_METHOD}) {print "Content-Type: text/html\n\n";};
+
 {
 
 	my $query=$dbh->prepare("

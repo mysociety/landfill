@@ -1,5 +1,6 @@
 <!--#include virtual="/includes/header.shtml" -->
 
+
 <h2>I'm <span>not voting</span> because...</h2>
 
 <form method="post" action="/cgi-bin/new-stage1.cgi">

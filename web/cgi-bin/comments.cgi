@@ -7,6 +7,7 @@ use DBI;
 use HTML::Entities;
 use Date::Manip;
 
+my $commentcount;
 my $Entry=$ENV{QUERY_STRING} || '';
 
 if ($Entry !~ /^\d+$/) {
@@ -81,7 +82,7 @@ while (new CGI::Fast()) {
 	/>
 </rdf:RDF>
 -->
-
+	
 	<div class="entry">
 		<h4>$result->{title}</h4>
 		<p>$why</p>
@@ -94,6 +95,7 @@ while (new CGI::Fast()) {
 
 EOfragment
 	if ($result->{commentcount} > 0) {print &show_comments();}
+	$commentcount = $result->{commentcount};
 	print &comment_form();
 }
 
@@ -101,7 +103,7 @@ sub show_comments {
 	my $html="<h2><a name=\"comments\"></a>Responses</h2>";
 
 	my $query=$dbh->prepare(
-	  " select * from comments where visible=1 and postid=$Entry");
+	  " select * from comments where postid=$Entry");
 
 	my $result;
 
@@ -132,10 +134,14 @@ EOhtml
 
 
 sub comment_form {
+	my $anchor = "";
+	if($commentcount==0){
+		$anchor = "<a name=\"comments\"></a>";
+	}
 
 	my $html= <<EOhtml;
 
-<h2>Respond</h2>
+<h2>$anchor Respond</h2>
 
 <form method="post" action="../cgi-bin/comment.cgi" id="comment">
 	<input type="hidden" name="postid" value="$Entry" />
@@ -159,6 +165,7 @@ sub comment_form {
 	appears on the site</small>
 	</div>
 	<div>
+
 	<input type="submit" name="post" value="Post" id="commentsubmit" />
 	</div>
 

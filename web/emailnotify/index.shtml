@@ -21,6 +21,13 @@
 	<input type="submit" value="Submit" />
 
 	</form>
+	
+		<!--#if expr="$QUERY_STRING = ''"-->
+	</div>
+	
+	<div id="inputBox">
+		<h2>Custom Email Alerts</h2>
+	<!--#endif -->
 
 <!--#include virtual="/includes/footer.shtml" -->
 

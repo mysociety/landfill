@@ -16,7 +16,7 @@ body {
 div#top{
 	text-align: left;
 	margin: 10px 0 20px 0;
-	height:5em;
+	height:63px;
 }
 
 h1 {
@@ -31,7 +31,7 @@ h2 {
 	font-size: 150%;
 	clear:left;
 	font-family:Georgia, "Times New Roman", Times, serif;
-	margin:2em 0 1em 0;
+	margin:1em 0 1em 0;
 	padding:0;
 	font-weight:normal;
 	border-bottom:1px solid #CCCCCC;
@@ -75,9 +75,9 @@ list-style:none;
 padding:0;
 clear:left;
 float:left;
-margin:0 70px 20px 0;
+margin:0.5em 70px 1em 0;
 width:350px;
-min-height:20px;
+min-height:32px;
 display:block;
 }
 ul#nav li{
@@ -102,23 +102,17 @@ ul#nav li a:hover{
 	border-bottom:2px solid #FF8083;
 }
 
-form#search {
+#emailBox{
 	clear:right;
 	float:left;
-	padding:0;
-	margin:0 0 20px 0;
+	margin:0 0 1.5em 0;
 	width:330px;
-	min-height:20px;
-	display:block;
+	font-weight:bold;
+	min-height:32px;
 	text-align:right;
 }
-form#search input{ margin:0 0.3em 0 0.3em;}
-form#search input#q{width:150px;}
-form#search label{
-	float:left;
-	margin:3px 0.3em 0 3px;
-	color:#B10005;
-	font-weight:bold;
+#emailBox a{
+font-weight:normal;
 }
 
 form#comment label{
@@ -151,16 +145,6 @@ form#comment textarea{
 	clear:left;
 }
 
-div#adminMain {
-clear:left;
-float:left;
-width:450px;
-}
-
-div#adminMain h2{
-margin-top:0;
-}
-
 div#main {
 clear:left;
 float:left;
@@ -173,7 +157,7 @@ padding: 0;
 background-color:#FFFFFF;
 }
 #inputBox form{
-border-bottom:1px solid #CCCCCC;
+margin-bottom:1em;
 }
 #inputBox a#bigBox{
 	display:block;
@@ -238,6 +222,8 @@ div.entry div.trackback{
 	width:100%;
 }
 
+
+
 #footer img{
 	vertical-align:middle;
 }
@@ -251,4 +237,14 @@ form {
 textarea{
 	padding:2px;
 	margin:0 0 10px 0;
+}
+
+div#adminMain {
+clear:left;
+float:left;
+width:450px;
+}
+
+div#adminMain h2{
+margin-top:0;
 }

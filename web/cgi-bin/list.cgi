@@ -40,6 +40,10 @@ while (my $q = new CGI::Fast()) {
             my $comments_html;
             my $show_link;
             my $more_link;
+			
+			if ($ENV{"QUERY_STRING"} ne ''){
+				print ("<p>Your search for ".$ENV{"QUERY_STRING"}." yielded the following results</p>");
+			}
             while ($result=$query->fetchrow_hashref) {
 
                     $comments_html= &handle_links($result);
@@ -61,7 +65,7 @@ while (my $q = new CGI::Fast()) {
                     </p>
                     <div>
                             <small>
-                                    written $someday | <a href="$url_prefix/comments/$result->{postid}\#comments">$result->{commentcount} responses</a> | <a href="/abuse/?postid=$result->{postid}">abusive?</a> | <a href="$url_prefix/comments/$result->{postid}">read more</a> 
+                                    written $someday | <a href="$url_prefix/comments/$result->{postid}\#comments">$result->{commentcount} responses</a> | <a href="$url_prefix/comments/$result->{postid}">read more</a> | <a href="/abuse/?postid=$result->{postid}">abusive?</a>
                             </small>
                     </div>
             </div>

@@ -34,7 +34,10 @@ stay at home, often attributing motives to you which you might not
 agree with. By posting here, you can talk back, and make your case for
 not voting.
 </p>
-
+</div>
+<div id="inputBox">
+		<!--#include virtual="/includes/new-stage1.shtml" -->
+		<!--#include virtual="/includes/searchform.shtml" -->
 
 <!--#include virtual="/includes/footer.shtml" -->
 

@@ -1,13 +1,10 @@
-<form method="post" action="/cgi-bin/new-stage1.cgi">
-    <fieldset>
-        <legend>Say why:</legend>
-        <textarea name="why" rows="10" cols="30"></textarea>
-
-        <p>Email address <small>(It will never be shown)</small>:
-        <br><input type="text" name="email" size="30"></p>
-
-        <p align="right"><input type="submit" value="Tell us Why"></p>
-    </fieldset>
-</form>
+		<form method="post" action="/cgi-bin/new-stage1.cgi">
+			<h2>I'm <span>not voting</span> because...</h2>
+				<textarea name="why" rows="8" cols="24" id="reasons">Write your reasons here...</textarea>
+				<label for="emailreason">Email address <small>(It will never be shown)</small></label>
+				<input type="text" name="email" id="emailreason" size="30" />
+				<input type="submit" value="Submit" />
+				<p><strong><a href="/new/">Want more space to write in?</a></strong></p>
+		</form>
 
 

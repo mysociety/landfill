@@ -22,36 +22,14 @@
 		<li><a href="/"><span>h</span>ome</a></li>
 		<li><a href="/about/"><span>a</span>bout us</a></li>
 		<li><a href="/news/"><span>n</span>ews</a></li>
-		<li><a href="/emailnotify/?<!--#echo var="QUERY_STRING" -->"><span>e</span>mail alerts</a></li>
-		<li id="last"><a href="/data/?<!--#echo var="QUERY_STRING" -->"><span>rss</span> &amp; more</a></li>
+		<li><a href="/emailnotify/"><span>e</span>mail alerts</a></li>
+		<li id="last"><a href="/data/"><span>rss</span> &amp; more</a></li>
 	</ul>
 	
-	<form method="get" action="/cgi-bin/search.cgi" id="search">
-		<label for="q"><span>search:</span></label>
-		<input type="text" name="q" id="q" size="10" />
-		<input type="submit" value="Go" class="submit" />
-	</form>
-
-
-	<!--#if expr="\"$DOCUMENT_URI\" != \"/new/index.shtml\"" -->
-	<div id="inputBox">
-		<form method="post" action="/cgi-bin/new-stage1.cgi">
-			<h2>I'm <span>not voting</span> because...</h2>
-				<textarea name="why" rows="8" cols="24" id="reasons">Write your reasons here...</textarea>
-				<label for="emailreason">Email address <small>(It will never be shown)</small></label>
-				<input type="text" name="email" id="emailreason" size="30" />
-				<input type="submit" value="Submit" />
-				<p><strong><a href="/new/">Want more space to write in?</a></strong></p>
-		</form>
-		
-		<p>NotApathetic was built so that people who are planning not to vote
-		in the UK General Election on May 5th can tell the world why. We won't
-		try to persuade you that voting is a good or a bad idea - we're just
-		here to record and share your explanations. Whether ideological,
-		practical or other, any	reason will do.</p>
-
+	<div id="emailBox">
+		<a href="/emailfriend/"><img src="/images/novote.png" alt="got a friend who isn't going to vote? click here" /></a>
 	</div>
+	
+
 	<div id="main">
-		<!--#else -->
-	<div id="mainInput">
-		<!--#endif -->
+	

@@ -25,64 +25,68 @@ while (new CGI::Fast()) {
                 $Passed_Values{$param}=param($param);
         }
 
-	&die_cleanly unless defined $Passed_Values{entryid};
+	#&die_cleanly unless defined $Passed_Values{entryid};
 	&die_cleanly unless defined $Passed_Values{from};
 	&die_cleanly unless defined $Passed_Values{to};
 	&die_cleanly unless defined $Passed_Values{name};
-	&die_cleanly unless $Passed_Values{entryid} =~ /^\d+$/; 
-
-
-        my $query=$dbh->prepare("
-                      select postid,
-                             title,
-			     shortwhy
-                        from posts
-	 	       where postid='$Passed_Values{entryid}'
-                         and hidden=0
-			 and validated=1
-                       "); # XXX order by first_seen needs to change
-
+	&die_cleanly unless $Passed_Values{entryid} =~ /^\d*$/; 
+    
+	my $result;
+	if(defined $Passed_Values{entryid}){
+        my $query=$dbh->prepare("select
+									postid, title, shortwhy
+								from
+									posts
+								where
+									postid='$Passed_Values{entryid}' and
+									hidden=0 and
+									validated=1"); # XXX order by first_seen needs to change
         $query->execute;
-        my $result;
-	$result= $query->fetchrow_hashref;
 
-    	my %headers;
+		$result= $query->fetchrow_hashref;
+	}
 
-    	unless (  (Email::Valid->address
-                        ( -address => $Passed_Values{"from"},
-                          -mxcheck => 1 ) )
-    	     and  (Email::Valid->address
-                        ( -address => $Passed_Values{"to"},
-                          -mxcheck => 1 ) )
-		)
-           {
-                   if (defined $Passed_Values{error_redirect}) {
-                        print "Location: $Passed_Values{error_redirect}\n\n";
-                   }
-                   else  {
-                        print "Location: http://www.mugss.org/contact/error.shtml\n\n";
-                   }
-                   exit(0);
-    	}
+	unless (	(Email::Valid->address(-address => $Passed_Values{"from"},-mxcheck => 1 ))
+			and (Email::Valid->address(-address => $Passed_Values{"to"},-mxcheck => 1 ))
+			)
+	{
+		if (defined $Passed_Values{error_redirect})
+		{
+			print "Location: $Passed_Values{error_redirect}\n\n";
+		}
+		else
+		{
+			print "Location: http://www.notapathetic.com/\n\n";
+		}
+		exit(0);
+	}
 
 
-    	my $from_address      = $Passed_Values{"from"} || "team$email_domain";
-    	my $from_name         = $Passed_Values{"name"} || 'Someone';
-    	my $to_person         = $Passed_Values{"to"} ;
-    	delete $Passed_Values{"subject"};
-    	delete $Passed_Values{"submitter_name"};
-    	delete $Passed_Values{"recipient"};
-
-    	$headers{'To'}= "$to_person" ;
-    	$headers{"Subject"}= "NotApathetic.com email: $result->{title}" ;
-    	$headers{"From"}= "$from_name <$from_address>" ;
-    	$headers{"X-Originating-IP"}= $ENV{'HTTP_X_FORWARDED_FOR'}  || $ENV{'REMOTE_ADDR'} || return;
-    	$mailer->open(\%headers);
-
-	my $shortwhy= wrap('     ','     ', $result->{shortwhy});
+	my $from_address      = $Passed_Values{"from"} || "team$email_domain";
+	my $from_name         = $Passed_Values{"name"} || 'Someone';
+	my $to_person         = $Passed_Values{"to"} ;
+	delete $Passed_Values{"subject"};
+	delete $Passed_Values{"submitter_name"};
+	delete $Passed_Values{"recipient"};
+	my %headers;
+	$headers{'To'}= "$to_person" ;
+	if(defined $Passed_Values{entryid}){
+		$headers{"Subject"} = "NotApathetic.com email: $result->{title}";
+	} else{
+		$headers{"Subject"} = "Have you heard about Not Apathetic?";
+	}
+	$headers{"From"}= "$from_name <$from_address>";
+	$headers{"X-Originating-IP"}= $ENV{'HTTP_X_FORWARDED_FOR'}  || $ENV{'REMOTE_ADDR'} || return;
+	$mailer->open(\%headers);
+	
+	my $shortwhy = "";
+	if (defined $Passed_Values{entryid}){
+		$shortwhy= wrap('     ','     ', $result->{shortwhy});
+	}
 	my $message= wrap('     ','     ', $Passed_Values{message});
-
-print $mailer <<EOmail;
+	
+	if (defined $Passed_Values{entryid}){
+		print $mailer <<EOmail;
 
 $headers{From} saw this item on NotApathetic.com and
 thought you should see it:
@@ -94,10 +98,20 @@ $message
 
      $url_prefix/comments/$Passed_Values{entryid}
 EOmail
+		}
+		else
+		{
+			print $mailer <<EOmail;
 
+$headers{From} wanted to tell you about www.notapathetic.com
+
+$message
+
+EOmail
+		}
     	$mailer->close;
 
-	print "Location: $url_prefix/emailsent.shtml?$Passed_Values{entryid}\n\n";
+	print "Location: $url_prefix/emailfriend/emailsent.shtml?$Passed_Values{entryid}\n\n";
 
 }
 sub die_cleanly {

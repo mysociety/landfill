@@ -17,7 +17,7 @@ addEvent(window, 'load', initialise);
 function initialise(){
 	if(document&&document.getElementById){
 		var entryText = document.getElementById("reasons");
-		addEvent(entryText, 'focus', clearForm);
+		if (entryText!=null)addEvent(entryText, 'focus', clearForm);
 		var commentText = document.getElementById("commenttext");
 		if (commentText!=null) addEvent(commentText, 'focus', clearComments);
 	}

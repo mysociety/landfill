@@ -72,21 +72,23 @@ print "Content-Type: text/html\n\n";
 		<br />
 
 EOfragment
-	if ($result->{commentcount} > 0) {print &show_comments();}
+	print &show_comments();
 }
 
 sub show_comments {
 	my $html=" <h2>Comments</h2>";
 
 	my $query=$dbh->prepare(
-	  " select * from comments where postid=$Entry and visible=1");
+	  " select * from comments where postid=$Entry and visible<2");
 
 	my $result;
 
 	$query->execute;
-
-	while ($result=$query->fetchrow_hashref) {
-
+	my $commentcount = 0;
+	while ($result=$query->fetchrow_hashref){
+		
+		my $hideorshow = "hide";$commentcount++;
+		if ($result->{visible}==0){$hideorshow = "unhide";$commentcount--;}
 		$html.= <<EOhtml;
 	<div class="entry">
 		<a name="comment_$result->{commentid}" ></a>
@@ -94,17 +96,16 @@ sub show_comments {
 		$result->{comment}
 		</p>
 		<div>
-		<form method="post" action="/admin/cgi-bin/hide.cgi">
+		<form method="post" action="/admin/cgi-bin/$hideorshow.cgi">
 			<small>Posted by $result->{name} $result->{email} on $result->{posted}.</small>
 			<input type="hidden" name="postid" value="$Entry" />
 			<input type="hidden" name="commentid" value="$result->{commentid}" />
-			<input type="submit" value="Hide Comment" />
+			<input type="submit" value="$hideorshow comment" />
 		</form>
 		</div>
 	</div>
 EOhtml
 	}
-	
 
 	return $html;
 }

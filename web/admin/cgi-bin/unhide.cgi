@@ -76,6 +76,7 @@ sub hide_abuse {
 	if ($commentid  ne '') { 
 		$commentid_q= $dbh->quote($commentid);
 		$dbh->do("update comments set visible=1 where postid=$postid_q and commentid=$commentid_q");
+		$dbh->do("update posts set commentcount=commentcount+1 where postid=$postid_q");
 	} else {
 		$dbh->do("update posts set hidden=0 where postid=$postid_q");
 	}

@@ -21,7 +21,6 @@ print "Content-type: text/html\n\n";
 	my $query=$dbh->prepare("
 	              select * from posts
 	 	       where validated=1
-			 and hidden=0
 		    order by posted
 			     desc limit 25
 		       "); # XXX order by first_seen needs to change
@@ -34,25 +33,26 @@ print "Content-type: text/html\n\n";
 	my $date_html;
 	my $show_link;
 	my $more_link;
+	my $hideorshow;
 	while ($result=$query->fetchrow_hashref) {
-
+		$hideorshow = "hide";
+		if ($result->{hidden}==1){$hideorshow = "unhide";}
 		$more_link= $result->{link};
 		my $someday = UnixDate($result->{posted}, "%E %b %Y");
 		print <<EOfragment;
 	$date_html
 	<div class="entry">
 		<h4><a href="/admin/comments/$result->{postid}">$result->{title}</a></h4>
-	
-	<form method="post" action="/admin/cgi-bin/hide.cgi" />
 		$result->{shortwhy}
+	<form method="post" action="/admin/cgi-bin/$hideorshow.cgi" />
+		<input type="hidden" name="postid" value="$result->{postid}" />
+		<input type="submit" value="$hideorshow this post" />
+	</form>
 		<div>
 		<small>
 			written $someday | <a href="$url_prefix/admin/comments.shtml?$result->{postid}">$result->{commentcount} responses</a> by $result->{email}
-		<input type="hidden" name="postid" value="$result->{postid}" />
-		<input type="submit" value="Hide this posting" />
 		</small>
 		</div>
-	</form>
 	</div>
 
 EOfragment

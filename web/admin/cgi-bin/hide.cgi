@@ -28,7 +28,6 @@ sub handle_abuse {
     my $commentid= param('commentid') || '';
 	
     &hide_abuse($postid, $commentid);
-    use Mail::Mailer qw/sendmail/;
 
     my $mailer= new Mail::Mailer 'sendmail';
     my %headers;
@@ -45,13 +44,9 @@ sub handle_abuse {
     print $mailer <<EOmail;
 
 $ENV{REMOTE_USER} just decided that this post should disappear
-	$url_prefix/admin/comments.shtml?$postid/$commentid
-
-To bring it back, visit
-	$url_prefix/admin/cgi-bin/unhide.cgi?postid=$postid;commentid=$commentid
+	$url_prefix/admin/comments.shtml?$postid#$commentid
 
 EOmail
-
     $mailer->close;
 
     return;
@@ -80,6 +75,7 @@ sub hide_abuse {
 	if ($commentid  ne '') { 
 		$commentid_q= $dbh->quote($commentid);
 		$dbh->do("update comments set visible=0 where postid=$postid_q and commentid=$commentid_q");
+		$dbh->do("update posts set commentcount=commentcount-1 where postid=$postid_q");
 	} else {
 		$dbh->do("update posts set hidden=1 where postid=$postid_q");
 	}

@@ -1,0 +1,12 @@
+<!--#include virtual="/includes/header.shtml" -->
+
+<h2>Email Notification of posts</h2>
+
+<p>
+	We have now sent an email to the address
+	you provided. In that email, is a link which you must
+	click on to activate your notifications.
+</p>
+
+<!--#include virtual="/includes/footer.shtml" -->
+

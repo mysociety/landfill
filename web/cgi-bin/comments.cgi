@@ -72,7 +72,7 @@ print "Content-Type: text/html\n\n";
 		<strong>$result->{title}</strong>
 		<p>$result->{why}</p>
 		<span class="rightalign">
-		Posted at $result->{posted}
+		Posted at $result->{posted_formatted}
 		<br />
 		<a href="../email/$result->{postid}">Email this to a friend</a>.
 		</span>

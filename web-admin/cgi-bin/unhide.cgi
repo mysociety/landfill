@@ -20,7 +20,7 @@ my $abuse_address= 'abuse'. $mysociety::NotApathetic::Config::email_domain;
 
 {
 	&handle_abuse();
-	print "Location: $admin_url_prefix/\n\n";
+	print "Location: $admin_url_prefix/index.shtml\n\n";
 }
 
 

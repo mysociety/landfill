@@ -43,7 +43,7 @@ sub handle_abuse {
 
     print $mailer <<EOmail;
 
-$ENV{REMOTE_USER} just decided that this post should disappear
+$ENV{REMOTE_USER} just decided that this post should reappear
 	$url_prefix/admin/comments.shtml?$postid/$commentid
 
 EOmail

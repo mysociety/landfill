@@ -98,7 +98,7 @@ sub show_comments {
 	my $html="<h2><a name=\"comments\"></a>Responses</h2>";
 
 	my $query=$dbh->prepare(
-	  " select * from comments where postid=$Entry");
+	  " select * from comments where visible=1 and postid=$Entry");
 
 	my $result;
 

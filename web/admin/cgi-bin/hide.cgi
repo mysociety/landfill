@@ -7,6 +7,7 @@ use HTML::Entities;
 use HTML::Scrubber;
 use Email::Valid;
 use CGI qw/param/;
+
 use mysociety::NotApathetic::Config;
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
@@ -25,8 +26,7 @@ my $abuse_address= 'abuse'. $mysociety::NotApathetic::Config::email_domain;
 sub handle_abuse {
     my $postid= param('postid') || return;
     my $commentid= param('commentid') || '';
-
-
+	
     &hide_abuse($postid, $commentid);
 
     my $mailer= new Mail::Mailer 'sendmail';
@@ -44,7 +44,7 @@ sub handle_abuse {
     print $mailer <<EOmail;
 
 $ENV{REMOTE_USER} just decided that this post should disappear
-	$url_prefix/admin/comments.shtml?$postid#$commentid
+	$url_prefix/admin/comments.shtml?$postid/$commentid
 
 EOmail
     $mailer->close;

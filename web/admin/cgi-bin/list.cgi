@@ -4,6 +4,7 @@ use warnings;
 use strict;
 use CGI::Carp qw/fatalsToBrowser/;
 use DBI;
+use Date::Manip;
 use HTML::Entities;
 use mysociety::NotApathetic::Config;
 
@@ -36,11 +37,11 @@ print "Content-type: text/html\n\n";
 	while ($result=$query->fetchrow_hashref) {
 
 		$more_link= $result->{link};
-		$someday = UnixDate($result->{posted}, "%E %b %Y");
+		my $someday = UnixDate($result->{posted}, "%E %b %Y");
 		print <<EOfragment;
 	$date_html
 	<div class="entry">
-		<h4><a href="$url_prefix/comments/$result->{postid}">$result->{title}</a></h4>
+		<h4><a href="/admin/comments/$result->{postid}">$result->{title}</a></h4>
 	
 	<form method="post" action="/admin/cgi-bin/hide.cgi" />
 		$result->{shortwhy}

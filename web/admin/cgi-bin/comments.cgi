@@ -54,17 +54,20 @@ print "Content-Type: text/html\n\n";
 	$result=$query->fetchrow_hashref;
 	my $why = $result->{why};
 
-	$why=~ s#\n#</p>\n\n<p>\n#g;
+	$why=~s/\r\n\r\n/<\/p><p>/g;
+	$why=~s/\r\n/<br \/>/g;
 	
 	print <<EOfragment;
+	<h2>Administer comments</h2>
 	<div class="entry">
-		<strong>$result->{title}</strong>
+		<h4>$result->{title}</h4>
 		<p>$why</p>
-		<span class="rightalign">
+		<div>
+		<small>
 		Posted by: $result->{email}
 		at $result->{posted}
-		<br />
-		</span>
+		</small>
+		</div>
 	</div>
 		<br />
 
@@ -85,18 +88,20 @@ sub show_comments {
 	while ($result=$query->fetchrow_hashref) {
 
 		$html.= <<EOhtml;
-	<hr width="80%" />
-	<a name="comment_$result->{commentid}" />
-	<p>
-	$result->{comment}
-	</p>
-	<small>
-	<form method="post" action="/admin/cgi-bin/hide.cgi">
-		Posted by $result->{name} $result->{email} on $result->{posted}.
-		<input type="hidden" name="postid" value="$Entry" />
-		<input type="hidden" name="commentid" value="$result->{commentid}" />
-		<input type="submit" value="Hide Comment" />
-	</form>
+	<div class="entry">
+		<a name="comment_$result->{commentid}" ></a>
+		<p>
+		$result->{comment}
+		</p>
+		<div>
+		<form method="post" action="/admin/cgi-bin/hide.cgi">
+			<small>Posted by $result->{name} $result->{email} on $result->{posted}.</small>
+			<input type="hidden" name="postid" value="$Entry" />
+			<input type="hidden" name="commentid" value="$result->{commentid}" />
+			<input type="submit" value="Hide Comment" />
+		</form>
+		</div>
+	</div>
 EOhtml
 	}
 	

@@ -1,5 +1,6 @@
 <!--#include virtual="/admin/includes/header.shtml" -->
 
+<h2>Admin Interface</h2>
 <p>
 	The admin interface to NA.
 	If you're not supposed to be here, go away.

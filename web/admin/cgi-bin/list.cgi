@@ -42,7 +42,7 @@ print "Content-type: text/html\n\n";
 		<a href="$url_prefix/comments/$result->{postid}"><strong>$result->{title}</strong></a>
 	<form method="post" action="/admin/cgi-bin/hide.cgi" />
 		$result->{shortwhy}
-		<input type="hidden" name="$result->{postid}" />
+		<input type="hidden" name="postid" value="$result->{postid}" />
 		<input type="submit" value="Hide this posting" />
 	</form>
 		<span>

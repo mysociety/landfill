@@ -6,5 +6,6 @@ our $db_username= 'notapathetic';              # database username
 our $db_password= 'wearenottellingyou';         # database password
 
 our $url='http://www.notapathetic.com';
+our $admin_url='https://secure.notapathetic.com/admin';
 our $email_domain='@notapathetic.com';
 our $catch_all_address='team@notapathetic.com';

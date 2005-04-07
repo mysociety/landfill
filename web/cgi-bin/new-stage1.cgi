@@ -63,11 +63,13 @@ sub handle_comment {
                 $quoted{shortwhy}= $quoted{why};
         }
 
-        if ($Passed_Values{why} =~ m/(.{15}.+?\b)/) {
+        if ($Passed_Values{why} =~ m/(.{25}.+?\b)/) {
                 $quoted{title}= $dbh->quote($1 . "...");
         } else  {
                 $quoted{title}= $quoted{why};
         }
+
+        $Passed_Values{title} = $quoted{title};
 
 
 	my $query=$dbh->prepare("

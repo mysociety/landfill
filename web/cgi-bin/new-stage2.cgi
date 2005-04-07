@@ -21,11 +21,11 @@ while (new CGI::Fast()) {
 	foreach my $param (param()) {
 		$Passed_Values{$param}=param($param);
 	}
-
 	$Passed_Values{sex} ||= '';
 	$Passed_Values{age} ||= '';
 	$Passed_Values{title} ||= '';
 	$Passed_Values{ethgroup} ||= '';
+	$Passed_Values{nochildren} ||= '';
 	$Passed_Values{region} ||= '';
 	$Passed_Values{title} ||= '';
 	$Passed_Values{evervoted} ||= '';
@@ -51,17 +51,20 @@ sub handle_comment {
 
 	my $randomness = rand(); $randomness=~ s/^0\.(\d+)/$1/;
 	my $auth_code_q= $dbh->quote($randomness);
+        my $email_alert=0;
+        $email_alert=1 if (defined $Passed_Values{'emailalert'});
 
 	my $query=$dbh->prepare("
 		update posts
 		   set age=$quoted{age} ,
 		       sex=$quoted{sex} ,
+		       emailalert='$email_alert',
 		       title=$quoted{title} ,
 		       region=$quoted{region} ,
 		       evervoted=$quoted{evervoted} ,
 		       ethgroup=$quoted{ethgroup} ,
 		       nochildren=$quoted{nochildren} ,
-		       postcode=$quoted{postcode} ,
+		       postcode=$quoted{postcode},
 		       posted=now(),
 		       authcode=$auth_code_q
 		 where postid=$quoted{postid}

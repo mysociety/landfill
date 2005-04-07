@@ -41,7 +41,6 @@ if (defined $ENV{REQUEST_METHOD}) {print "Content-Type: text/html; charset=iso-8
 	my $result;
 	my $google_terms;
 	my $comments_html;
-	my $date_html;
 	my $show_link;
 	my $more_link;
 	while ($result=$query->fetchrow_hashref) {
@@ -56,7 +55,6 @@ if (defined $ENV{REQUEST_METHOD}) {print "Content-Type: text/html; charset=iso-8
 
 		$more_link= $result->{link};
 		print <<EOfragment;
-	$date_html
 		<li><a href="$url_prefix/comments/$result->{postid}">$result->{title}</a></li>
 EOfragment
 	}

@@ -43,6 +43,7 @@ while (my $q = new CGI::Fast()) {
                              posted,
                              commentcount,
                              ethgroup,
+                             shortwhy,
                              date_format(posted, \"%H:%i, %e %M\") as posted_formatted
                         from posts
                        where postid=$Entry
@@ -61,7 +62,7 @@ while (my $q = new CGI::Fast()) {
 	my $why = $result->{why};
 	$someday = UnixDate($result->{posted}, "%E %b %Y");
 
-	$why=~s/(\r\n){2,}/<\/p><p>/g;
+	$why=~s/(\r\n){2,}/<\/p> <p>/g;
 	$why=~s/\r\n/<br \/>/g;
 
 	# $why =~ s/(\r?\n){2,}/</p> <p>/g;
@@ -77,7 +78,7 @@ while (my $q = new CGI::Fast()) {
     trackback:ping="$url_prefix/cgi-bin/trackback.cgi/$result->{postid}"
     dc:title="$result->{title}"
     dc:identifier="$url_prefix/comments/$result->{postid}"
-    dc:description="$result->{shortcontent}"
+    dc:description="$result->{shortwhy}"
     dc:creator="NotApathetic.com"
 	/>
 </rdf:RDF>
@@ -111,7 +112,7 @@ sub show_comments {
 	while ($result=$query->fetchrow_hashref) {
 		my $someday = UnixDate($result->{posted}, "%E %b %Y");
 		my $comment = $result->{comment};
-		$comment =~s/(\r\n){2,}/<\/p><p>/g;
+		$comment =~s/(\r\n){2,}/<\/p> <p>/g;
 		$comment =~s/\r\n/<br \/>/g;
 		if(!(substr($comment, 0, 6) eq "  <div")){$comment="<p>".$comment."</p>";} ## remove later ##
 

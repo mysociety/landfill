@@ -15,7 +15,7 @@
 	<div id="wrap">
 	<div id="top">
                 <h1><a href="/"><img src="/images/na2.png" alt="not apathetic - I'm not voting because..." width="350" height="63" /></a></h1>
-		<h3><img src="/images/tagline.png" alt="Tell the world why you're not voting - Don't let your silence go unheard" width="330" height="50" /></h3>
+		<h3><a href="/"><img src="/images/tagline.png" alt="Tell the world why you're not voting - Don't let your silence go unheard" width="330" height="50" /></a></h3>
 	</div>
 	
 	<ul id="nav">

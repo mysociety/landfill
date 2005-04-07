@@ -1,4 +1,3 @@
-<!--#set var="page_title" value="About Us" -->
 <!--#include virtual="/includes/header.shtml" -->
 
 <h2><span>About</span> NotApathetic.com</h2>
@@ -38,6 +37,9 @@ not voting.
 </div>
 <div id="inputBox">
 		<!--#include virtual="/includes/new-stage1.shtml" -->
+		<h2>Contact Us</h2>
+		<p>Our email address is:<a href="mailto:team@notapathetic.com">team@notapathetic.com</a>.
+		Tell us what you think of the site.</p>
 		<!--#include virtual="/includes/searchform.shtml" -->
 
 <!--#include virtual="/includes/footer.shtml" -->

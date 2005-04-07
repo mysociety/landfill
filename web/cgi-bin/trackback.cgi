@@ -11,9 +11,10 @@ my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
-my %State; # State variables during display.
 my %Passed_Values;
 my %quoted;
+
+begin:
 
 while (new CGI::Fast()) {
         foreach my $param (param()) {
@@ -82,5 +83,5 @@ EOcomment
 sub die_cleanly {
 	my $error= shift || 'unknown';
 	print "Content-Type: text/plain\r\n\r\n<error>1</error><message>it went wrong</message>\n";
-	exit(0);
+	goto begin;
 }

@@ -16,6 +16,8 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $abuse_address= 'abuse'. $mysociety::NotApathetic::Config::email_domain; 
 
+begin:
+
 while (new CGI::Fast()) {
 	&send_email;
 	print "Location: $url_prefix/abuse/sent/\r\n\r\n";
@@ -30,7 +32,7 @@ sub send_email {
     return unless ($commentid=~ m#^\d*$#);
 
     print "Location: $url_prefix/abuse/?postid=$postid;commentid=$commentid\r\n\r\n";
-    exit;
+    goto begin;         # surely not?
 
     use Mail::Mailer;
     my $mailer= new Mail::Mailer 'sendmail';#, Server => 'mailrouter.mcc.ac.uk';
@@ -64,5 +66,5 @@ sub die_cleanly {
 		$reason
 	Please go back and correct this before submitting again.
 	";
-	exit(0);
+	goto begin;
 }

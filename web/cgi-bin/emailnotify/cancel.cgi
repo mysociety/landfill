@@ -14,9 +14,10 @@ my $db_username= $mysociety::NotApathetic::Config::db_username;              # d
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
-my %State; # State variables during display.
 my %Passed_Values;
 my $search_term;
+
+begin:
 
 while (new CGI::Fast()) {
 	print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
@@ -86,6 +87,6 @@ sub die_cleanly {
                 $reason
         Please go back and correct this before submitting again.
         ";
-        exit(0);
+        goto begin;
 }
 

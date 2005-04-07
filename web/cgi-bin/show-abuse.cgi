@@ -13,8 +13,8 @@ my $db_password= $mysociety::NotApathetic::Config::db_password;         # databa
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 
 while (new CGI::Fast()) {
-print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
-    	my $postid= param('postid') || exit(0);
+        print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
+    	my $postid= param('postid') || next;
     	my $commentid= param('commentid') || '';
 
 	print "<input type=\"hidden\" name=\"postid\" value=\"$postid\" />\n";

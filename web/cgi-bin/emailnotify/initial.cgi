@@ -16,6 +16,7 @@ my $db_username= $mysociety::NotApathetic::Config::db_username;              # d
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 
+begin:
 
 while (new CGI::Fast()) {
 	my %Passed_Values;
@@ -26,7 +27,7 @@ while (new CGI::Fast()) {
 
 	if (not defined ($Passed_Values{email})) {
 		print "Location: $url_prefix/emailnotify/\n\n";
-		exit(0);
+		next;
 	}
     
 	my %headers;
@@ -93,5 +94,5 @@ sub die_cleanly {
                 $reason
         Please go back and correct this before submitting again.
         ";
-        exit(0);
+        goto begin;
 }

@@ -19,6 +19,8 @@ my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $admin_url_prefix= $mysociety::NotApathetic::Config::admin_url;
 my $abuse_address= 'abuse'. $mysociety::NotApathetic::Config::email_domain; 
 
+begin:
+
 while (new CGI::Fast()) {
 	foreach my $param (param()) {
 		$Passed_Values{$param}=param($param);
@@ -84,7 +86,7 @@ sub die_cleanly {
 		$reason
 	Please go back and correct this before submitting again.
 	";
-	exit(0);
+	goto begin;
 }
 
 

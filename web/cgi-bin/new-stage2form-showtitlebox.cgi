@@ -13,8 +13,8 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 
 while (new CGI::Fast()) {
 	print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
-	my $param_c= param("c") || exit(0);
-	my $param_r= param("u") || exit(0);
+	my $param_c= param("c") || next;
+	my $param_r= param("u") || next;
 
 	$param_r =~ s#'##g;
 

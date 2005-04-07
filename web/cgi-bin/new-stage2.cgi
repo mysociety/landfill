@@ -14,8 +14,9 @@ my $db_username= $mysociety::NotApathetic::Config::db_username;              # d
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 my $url_prefix= $mysociety::NotApathetic::Config::url;
-my %State; # State variables during display.
 my %Passed_Values;
+
+begin:
 
 while (new CGI::Fast()) {
 	foreach my $param (param()) {
@@ -83,5 +84,5 @@ sub die_cleanly {
 		$reason
 	Please go back and correct this before submitting again.
 	";
-	exit(0);
+	goto begin;
 }

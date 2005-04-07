@@ -23,7 +23,7 @@ while (new CGI::Fast()) {
     my $Entry=$ENV{QUERY_STRING};
     if (($Entry ne '') and ($Entry !~ /^\d+$/)) {
             print "Location: $url_prefix\r\n\r\n";
-            exit (0);
+            next;
     }
 
     print "Content-Type: text/xml\r\n\r\n";

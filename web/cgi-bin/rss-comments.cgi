@@ -11,12 +11,6 @@ use CGI::Fast;
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $email_domain= $mysociety::NotApathetic::Config::email_domain;
 
-my $Entry=$ENV{QUERY_STRING};
-if (($Entry ne '') and ($Entry !~ /^\d+$/)) {
-        print "Location: $url_prefix\r\n\r\n";
-        exit (0);
-}
-
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
@@ -26,7 +20,13 @@ my %State; # State variables during display.
 
 
 while (new CGI::Fast()) {
-print "Content-Type: text/xml\r\n\r\n";
+    my $Entry=$ENV{QUERY_STRING};
+    if (($Entry ne '') and ($Entry !~ /^\d+$/)) {
+            print "Location: $url_prefix\r\n\r\n";
+            exit (0);
+    }
+
+    print "Content-Type: text/xml\r\n\r\n";
 	my $query;
 	my $title='';
 	my $limiter='';

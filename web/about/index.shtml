@@ -38,7 +38,7 @@ not voting.
 <div id="inputBox">
 		<!--#include virtual="/includes/new-stage1.shtml" -->
 		<h2>Contact Us</h2>
-		<p>Our email address is:<a href="mailto:team@notapathetic.com">team@notapathetic.com</a>.
+		<p>Our email address is: <a href="mailto:team@notapathetic.com">team@notapathetic.com</a>.
 		Tell us what you think of the site.</p>
 		<!--#include virtual="/includes/searchform.shtml" -->
 

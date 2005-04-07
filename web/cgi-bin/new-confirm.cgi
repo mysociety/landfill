@@ -31,7 +31,7 @@ while (new CGI::Fast()) {
         $query->execute;
 
         if ($query->rows != 1 ) {
-                &die_cleanly("Code either used or incorrect");
+                        print "Location: $url_prefix/new/checkemail/failed.shtml\r\n\r\n";       
         }
         else {
 		my $new_authcode= rand(); $new_authcode=~ s/^0\.(\d+)/$1/;

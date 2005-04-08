@@ -24,7 +24,7 @@
 		<li><a href="/about/"><span>a</span>bout us</a></li>
 		<li><a href="/news/"><span>n</span>ews</a></li>
 		<li><a href="/emailnotify/"><span>e</span>mail alerts</a></li>
-		<li id="last"><a href="/data/"><span>rss</span> &amp; more</a></li>
+                <li id="last"><a title="RSS feeds, logos, XML" href="/data/"><span>rss</span>+</a></li>
 	</ul>
 	
 	<div id="emailBox">

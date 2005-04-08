@@ -56,7 +56,7 @@ while (my $q = new CGI::Fast()) {
 			
         my $printed = 0;
         $search_bit =~ s/\// /g;
-
+        my $title;
         while ($result=$query->fetchrow_hashref) {
 
             if ($printed==0) {
@@ -84,17 +84,18 @@ while (my $q = new CGI::Fast()) {
             #	$more_link= "comments/?$result->{entryid}";
             #}
 
+            $title = $result->{title} || '&lt;No subject&gt;';
             $more_link= $result->{link};
             if ($type eq 'summary') {
                 print <<EOfragment;
-                <li><a href="$url_prefix/comments/$result->{postid}">$result->{title}</a></li>
+                <li><a href="$url_prefix/comments/$result->{postid}">$title</a></li>
 EOfragment
             } else {
                 $someday = UnixDate($result->{posted}, "%E %b %Y");
                 my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';
                 print <<EOfragment;
             <div class="entry">
-                    <h4><a href="$url_prefix/comments/$result->{postid}">$result->{title}</a></h4>
+                    <h4><a href="$url_prefix/comments/$result->{postid}">$title</a></h4>
                     <p class="nomargin">
                             $result->{shortwhy}
                     </p>

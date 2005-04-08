@@ -61,6 +61,8 @@ function growTextarea(id) {
 function growTextarea(id) {
     if (document && document.getElementById) {
         d = document.getElementById(id);
-        if (id) d.rows += 4;
+        if (d) d.rows += 5;
+        d = document.getElementById('growtext');
+        if (d && d.innerHTML) d.innerHTML = 'Still want more space to write in?';
     }
 }

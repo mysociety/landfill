@@ -44,8 +44,9 @@ if (defined $ENV{REQUEST_METHOD}) {print "Content-Type: text/html; charset=iso-8
 
 
 	$query->execute;
+			print "<h2><a name=\"older\"></a>Older items:</h2>\n";
 	if ($query->rows ne 0 && $offset== $limit) {
-		print "<h2><a name=\"older\"></a>Older items:</h2>\n";
+
 		print "<ul>\n";
 	}
 	my $result;
@@ -97,13 +98,17 @@ EOfragment
 			print "</ul>\n";
 			print "<p align=\"right\">";
 		}
+		elsif ($offset== $limit*2){
+			print "</ul>\n";
+			print "<p><a href=\"/\">front page</a><br />";
+		}
 		else
 		{
 			$offset-=$limit*2;
-			print "<p><a href=\"/older.shtml?$offset\">previous $limit entries</a><br />";
+			print "<p><a href=\"/older/$offset\">previous $limit entries</a><br />";
 			$offset+=$limit*2;
 		}
-		print "<a href=\"/older.shtml?$offset\">next $limit entries</a></p>";
+		print "<a href=\"/older/$offset\">next $limit entries</a></p>";
 	}
 }
 }

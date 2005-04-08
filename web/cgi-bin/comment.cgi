@@ -5,6 +5,7 @@ use strict;
 use DBI;
 use HTML::Entities;
 use HTML::Scrubber;
+use Mail::Mailer qw/sendmail/;
 use Email::Valid;
 use CGI::Fast qw/param/;
 use mysociety::NotApathetic::Config;
@@ -67,10 +68,10 @@ sub handle_comment {
 		       name=$quoted{author},
 		       posted=now()
 	");
-	$dbh->do("
-		update posts set commentcount=commentcount+1 where postid=$quoted{postid}
-	");
 
+	$dbh->do(" update posts set commentcount=commentcount+1 where postid=$quoted{postid} ");
+
+        &email_comment_to_person();
 	print "Location: $url_prefix/comments/$Passed_Values{postid}\r\n\r\n";
 }
 
@@ -84,4 +85,35 @@ sub die_cleanly {
 	Please go back and correct this before submitting again.
 	";
 	goto begin;
+}
+
+
+sub email_comment_to_person {
+        my $mailer= new Mail::Mailer 'sendmail';
+        my $to_person;
+        my %headers;
+
+        my $query= $dbh->prepare("select email from posts where postid=? and emailalert=1 "); 
+        $query->execute($Passed_Values{postid});
+
+        return unless ($query->rows == 1); # false id or no notification wanted
+
+        ($to_person) = $query->fetchrow_array;
+        $headers{'To'}= "$to_person" ;
+        $headers{"From"}= "NotApathetic.com <donotreply\@notapathetic.com>" ;
+        $headers{"Subject"}= "Reply to your notapathetic.com post";
+        $mailer->open(\%headers);
+
+        print $mailer <<EOmail;
+
+Someone has replied to your www.notapathetic.com post. 
+You can view it here:
+
+        $url_prefix/comments/$Passed_Values{postid}
+
+EOmail
+
+        $mailer->close;
+
+        return();
 }

@@ -25,6 +25,15 @@
 <form method="post" action="/cgi-bin/new-stage2.cgi">
 <table border="0">
 
+	<tr>
+		<td>
+                    Receive an email whenever someone comments on your post:
+		</td>
+		<td>
+			<input type="checkbox" name="emailalert" value="checked" />
+		</td>
+	</tr>
+
 	<!--#include virtual="/cgi-bin/new-stage2form-showtitlebox.cgi?${QUERY_STRING}" -->
 
 	<tr>

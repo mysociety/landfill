@@ -39,7 +39,7 @@ while (new CGI::Fast()) {
 	<input type="hidden" name="authcode" value="$authcode" />
 	<tr>
 		<td>
-			Title
+			Subject
 		</td>
 		<td>
 			<input type="text" name="title" value="$title" />

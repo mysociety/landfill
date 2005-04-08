@@ -32,14 +32,11 @@ while (new CGI::Fast()) {
     
 	my %headers;
 
-    unless (	(Email::Valid->address(-address => $Passed_Values{"from"},-mxcheck => 1 ))
-			and (Email::Valid->address(-address => $Passed_Values{"to"},-mxcheck => 1 ))
-			)
-	{
-		if (defined $Passed_Values{error_redirect}) {
-			&die_cleanly("email verification failed");
+    unless ((Email::Valid->address(-address => $Passed_Values{"email"},-mxcheck => 1 ))) {
+        if (defined $Passed_Values{error_redirect}) {
+	    &die_cleanly("email verification failed");
         }
-	}
+    }
 
 	my $randomness = rand(); $randomness=~ s/^0\.(\d+)/$1/;
 	$Passed_Values{authcode}= $randomness;

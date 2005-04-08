@@ -2,71 +2,97 @@
 
 use warnings;
 use strict;
-use CGI::Fast;
+use CGI::Fast qw/param/;
 use Date::Manip;
 use DBI;
 use HTML::Entities;
 use mysociety::NotApathetic::Config;
-
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 my %State; # State variables during display.
-my $search_term;
 our $url_prefix=$mysociety::NotApathetic::Config::url;
 
 while (my $q = new CGI::Fast()) {
-    print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
-	$search_term = &handle_search_term(); #' 1 = 1 ';
+
+    if (defined $ENV{REQUEST_METHOD}) {
+        print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
+    };
+
     {
-        my $limit = 20;
-        
-            my $query=$dbh->prepare("
+        my $type = param('type') || 'details';
+        my $search_bit = param('search') || '';
+        my $page = param('page') || 0;
+        if ($search_bit =~ /\|(\d+)$/) {
+            $page = $1;
+            $search_bit =~ s/\|(\d+)$//;
+        }
+        my $search_term = handle_search_term($search_bit); #' 1 = 1 ';
+        my $limit = ($type eq 'details') ? 20 : 100;
+        my $mainlimit = 20;
+        my $offset = $page * $mainlimit;
+        $offset += $mainlimit if ($type eq 'summary');
+
+        my $query=$dbh->prepare("
                           select *
                             from posts
                            where validated=1
                              and hidden=0
                                  $search_term
                         order by posted
-                                 desc limit $limit
+                                 desc limit $offset, $limit
                            "); # XXX order by first_seen needs to change
 
 
-            $query->execute;
-            my $result;
-            my $someday;
-            my $parsed;
-            my $google_terms;
-            my $comments_html;
-            my $show_link;
-            my $more_link;
+        $query->execute;
+        my $result;
+        my $someday;
+        my $google_terms;
+        my $comments_html;
+        my $show_link;
+        my $more_link;
 			
-            my $printed = 0;
-	    my $search_bit = $ENV{"QUERY_STRING"} || "";
-            $search_bit =~ s/\// /g;
+        my $printed = 0;
+        $search_bit =~ s/\// /g;
 
-            while ($result=$query->fetchrow_hashref) {
+        while ($result=$query->fetchrow_hashref) {
 
-		if ($printed==0 && $ENV{"QUERY_STRING"} ne ''){
-		    print '<p>Your search for "'.$search_bit.'" yielded the following results:</p>';
-                    $printed = 1;
-		}
+            if ($printed==0) {
+                $printed = 1;
+                if ($type eq 'summary' || !$search_bit) {
+                    if ($page > 0 || $type eq 'summary') {
+                        print "<h2><a name=\"older\"></a>Older items:</h2>\n";
+                    } else {
+                        print "<h2>They're <span>not voting</span> because...</h2>\n";
+                    }
+                }
+                if ($type eq 'summary') {
+                    print "<ul>\n";
+                }
+                if ($type eq 'details' && $search_bit ne '') {
+        	    print '<p>Your search for "'.$search_bit.'" yielded the following results:</p>';
+                }
+	    }
 
-                    $comments_html= &handle_links($result);
+            $comments_html= &handle_links($result);
 
-                    #if ($result->{content} eq $result->{shortcontent}) {
-                    #	$more_link= $result->{link};
-                    #} else  {
-                    #	$more_link= "comments/?$result->{entryid}";
-                    #}
+            #if ($result->{content} eq $result->{shortcontent}) {
+            #	$more_link= $result->{link};
+            #} else  {
+            #	$more_link= "comments/?$result->{entryid}";
+            #}
 
-                    $more_link= $result->{link};
-                    $someday = UnixDate($result->{posted}, "%E %b %Y");
-
-                    my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';
-                    print <<EOfragment;
+            $more_link= $result->{link};
+            if ($type eq 'summary') {
+                print <<EOfragment;
+                <li><a href="$url_prefix/comments/$result->{postid}">$result->{title}</a></li>
+EOfragment
+            } else {
+                $someday = UnixDate($result->{posted}, "%E %b %Y");
+                my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';
+                print <<EOfragment;
             <div class="entry">
                     <h4><a href="$url_prefix/comments/$result->{postid}">$result->{title}</a></h4>
                     <p class="nomargin">
@@ -83,16 +109,36 @@ while (my $q = new CGI::Fast()) {
             </div>
 EOfragment
             }
-            print "<p><a href=\"/older/$limit\">older $limit entries</a></p>\n";
-	    if ($printed == 0 && $ENV{"QUERY_STRING"} ne '') {
-                print "<p>Your search for " . $search_bit . " yielded no results.</p>";
+        }
+        if ($query->rows > 0) {
+            my $url = ($search_bit ne '') ? '/search/?'.$search_bit.'|' : '/?';
+            if ($type eq 'summary') {
+                print "</ul>\n";
+                my $older = $page + 6;
+                print "<p align=\"right\"><a href=\"$url$older\">Even older entries</a></p>";
+            } else {
+                my $older = $page + 1;
+                my $newer = $page - 1;
+                print '<p align="center">';
+                if ($newer == 0) {
+                    my $fronturl = ($search_bit ne '') ? '/search/?'.$search_bit : '/';
+                    print "<a href=\"$fronturl\">front page</a> | ";
+                } elsif ($newer > 0) {
+                    print "<a href=\"$url$newer\">newer $mainlimit entries</a> | ";
+                }
+                if ($type eq 'summary' || $query->rows eq $limit) {
+                    print "<a href=\"$url$older\">older $mainlimit entries</a>";
+                }
+                print '</p>';
             }
+        } elsif ($search_bit ne '') {
+            print "<p>Your search for " . $search_bit . " yielded no results.</p>";
+        }
     }
 }
 
 
 sub handle_links {
-
 
 	return '' if (defined $ENV{NO_COMMENTING});
 
@@ -132,7 +178,7 @@ sub date_header {
 
 
 sub handle_search_term {
-	my $search_path= $ENV{"QUERY_STRING"} || '';
+	my $search_path= shift;
 	my @search_fields= ('posts.region',
 			    'posts.why',
 			    'posts.title'

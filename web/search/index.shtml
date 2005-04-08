@@ -3,7 +3,7 @@
 
 
 <h2>Search results</h2>
-<!--#include virtual="/cgi-bin/list.cgi?${QUERY_STRING}" -->
+<!--#include virtual="/cgi-bin/list.cgi?search=${QUERY_STRING}" -->
 
 </div>
 
@@ -31,7 +31,7 @@ download a live RSS feed of your keywords.</p>
 	will search for (one or two or (three and four) or five).
 </p>
 
-
+<!--#include virtual="/cgi-bin/list.cgi?type=summary&search=${QUERY_STRING}" -->
 
 
 	<!--#include virtual="/includes/footer.shtml" -->

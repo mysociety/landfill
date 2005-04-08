@@ -28,8 +28,6 @@ while (my $q = new CGI::Fast()) {
                 next;
         }
 
-        print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
-
         my $query=$dbh->prepare("
                       select postid,
                              email,
@@ -56,8 +54,11 @@ while (my $q = new CGI::Fast()) {
 	my $someday;
 
 	if ($query->rows == 0) {
-		print "Location: $url_prefix\n";
+		print "Location: $url_prefix\r\n\r\n";
 	}
+
+        print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
+
 	$result=$query->fetchrow_hashref;
 	my $why = $result->{why};
 	$someday = UnixDate($result->{posted}, "%E %b %Y");

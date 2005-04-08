@@ -4,6 +4,7 @@ use warnings;
 use strict;
 use CGI::Fast;
 use DBI;
+use Date::Manip;
 use HTML::Entities;
 use mysociety::NotApathetic::Config;
 
@@ -20,22 +21,31 @@ while (my $q = new CGI::Fast()) {
 if (defined $ENV{REQUEST_METHOD}) {print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";};
 
 {
+	my $search_bit = $ENV{"QUERY_STRING"} || "";
+	my $offset = 10;
+	my $limit = 10;
+	
+	if ($search_bit =~ /^\d+$/){
+		$search_term = "";
+		$offset += $search_bit;
+	}
+	
+	
 
 	my $query=$dbh->prepare("
-	              select *
-			from posts
-	 	       where validated=1
-			 and hidden=0
-			     $search_term
-		    order by posted
-			     desc limit 30, 250
-		       "); #  The above needs cranking to 25 from 2
+	              	select *
+					from posts
+	 	      		where validated=1
+			 		and hidden=0
+					$search_term
+					order by posted
+					desc limit $offset, $limit
+					"); #  The above needs cranking to 25 from 2
 
 
 	$query->execute;
-	if ($query->rows ne 0) {
-		print "<div id=\"olderItems\">\n";
-		print "<h2>Older items:</h2>\n";
+	if ($query->rows ne 0 && $offset== $limit) {
+		print "<h2><a name=\"older\"></a>Older items:</h2>\n";
 		print "<ul>\n";
 	}
 	my $result;
@@ -54,20 +64,52 @@ if (defined $ENV{REQUEST_METHOD}) {print "Content-Type: text/html; charset=iso-8
 		#}
 
 		$more_link= $result->{link};
-		print <<EOfragment;
+		if ($offset== $limit){
+			print <<EOfragment;
 		<li><a href="$url_prefix/comments/$result->{postid}">$result->{title}</a></li>
 EOfragment
+		}
+		else
+		{
+			$more_link= $result->{link};
+			my $someday = UnixDate($result->{posted}, "%E %b %Y");
+			my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';
+			print <<EOfragment;
+            <div class="entry">
+                    <h4><a href="$url_prefix/comments/$result->{postid}">$result->{title}</a></h4>
+                    <p class="nomargin">
+                            $result->{shortwhy}
+                    </p>
+                    <div>
+                            <small>
+                                    written $someday 
+                                    | <a href="$url_prefix/comments/$result->{postid}">read more</a> 
+                                    | <a href="$url_prefix/comments/$result->{postid}\#comments">$result->{commentcount} $responses</a> 
+                                    | <a href="/abuse/?postid=$result->{postid}">abusive?</a>
+                            </small>
+                    </div>
+            </div>
+EOfragment
+		}
 	}
 	if ($query->rows ne 0) {
-		print "</ul>\n";
-		print "</div>\n";
+		if ($offset== $limit){
+			print "</ul>\n";
+			print "<p align=\"right\">";
+		}
+		else
+		{
+			$offset-=$limit*2;
+			print "<p><a href=\"/older.shtml?$offset\">previous $limit entries</a><br />";
+			$offset+=$limit*2;
+		}
+		print "<a href=\"/older.shtml?$offset\">next $limit entries</a></p>";
 	}
 }
 }
 
 
 sub handle_links {
-
 
 	return '' if (defined $ENV{NO_COMMENTING});
 

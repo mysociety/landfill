@@ -29,7 +29,7 @@ while (my $q = new CGI::Fast()) {
                              and hidden=0
                                  $search_term
                         order by posted
-                                 desc limit 15
+                                 desc limit 30
                            "); # XXX order by first_seen needs to change
 
 

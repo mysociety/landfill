@@ -30,7 +30,9 @@ while (new CGI::Fast()) {
 
 	$query->execute;
 	my ($title, $authcode)= $query->fetchrow_array;
-	encode_entities($title);
+	$title = encode_entities($title);
+        $param_r = encode_entities($param_r);
+        $authcode = encode_entities($authcode);
 	print <<EOfragment;
 
 	<input type="hidden" name="postid" value="$param_r" />

@@ -18,19 +18,25 @@ our $url_prefix=$mysociety::NotApathetic::Config::url;
 
 while (my $q = new CGI::Fast()) {
 
-if (defined $ENV{REQUEST_METHOD}) {print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";};
+    if (defined $ENV{REQUEST_METHOD}) {
+        print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
+    };
 
-{
+    {
+        my $type = 'summary';
 	my $search_bit = $ENV{"QUERY_STRING"} || "";
-	my $offset = 10;
-	my $limit = 10;
+	my $limit = 20;
+        my $offset = $limit;
 	
 	if ($search_bit =~ /^\d+$/){
+            $type = 'details';
 		$search_term = "";
-		$offset += $search_bit;
+		$offset = $search_bit;
 	}
-	
-	
+	if ($search_bit =~ /^QQQ(\d+)$/){
+		$search_term = "";
+		$offset += $1;
+	}
 
 	my $query=$dbh->prepare("
 	              	select *
@@ -44,17 +50,20 @@ if (defined $ENV{REQUEST_METHOD}) {print "Content-Type: text/html; charset=iso-8
 
 
 	$query->execute;
-			print "<h2><a name=\"older\"></a>Older items:</h2>\n";
-	if ($query->rows ne 0 && $offset== $limit) {
-
-		print "<ul>\n";
-	}
 	my $result;
 	my $google_terms;
 	my $comments_html;
 	my $show_link;
 	my $more_link;
+        my $print_head = 0;
 	while ($result=$query->fetchrow_hashref) {
+            if (!$print_head) {
+                $print_head = 1;
+                print "<h2><a name=\"older\"></a>Older items:</h2>\n";
+	        if ($type eq 'summary') {
+		    print "<ul>\n";
+        	}
+            }
 
 		$comments_html= &handle_links($result);
 
@@ -65,7 +74,7 @@ if (defined $ENV{REQUEST_METHOD}) {print "Content-Type: text/html; charset=iso-8
 		#}
 
 		$more_link= $result->{link};
-		if ($offset== $limit){
+		if ($type eq 'summary'){
 			print <<EOfragment;
 		<li><a href="$url_prefix/comments/$result->{postid}">$result->{title}</a></li>
 EOfragment
@@ -92,23 +101,32 @@ EOfragment
             </div>
 EOfragment
 		}
-	}
-	if ($query->rows ne 0) {
-		if ($offset== $limit){
+        }
+	if ($query->rows > 0) {
+            my $older = 0;
+            my $newer = 0;
+		if ($type eq 'summary'){
 			print "</ul>\n";
 			print "<p align=\"right\">";
-		}
-		elsif ($offset== $limit*2){
-			print "</ul>\n";
-			print "<p><a href=\"/\">front page</a><br />";
-		}
-		else
-		{
-			$offset-=$limit*2;
-			print "<p><a href=\"/older/$offset\">previous $limit entries</a><br />";
-			$offset+=$limit*2;
-		}
-		print "<a href=\"/older/$offset\">next $limit entries</a></p>";
+                        $older = $offset;
+                        $newer = $offset - $limit*2;
+		} else {
+                    print "<p>";
+                    $older = $offset + $limit;
+                    $newer = $offset - $limit;
+                }
+
+                if ($newer > -$limit) {
+                    if ($newer <= 0) {
+			print "<a href=\"/\">front page</a>";
+                    } else {
+			print "<a href=\"/older/$newer\">newer $limit entries</a>";
+                    }
+                    print '<br />';
+                }
+                if ($type eq 'summary' || $query->rows eq $limit) {
+                    print "<a href=\"/older/$older\">older $limit entries</a></p>";
+                }
 	}
 }
 }

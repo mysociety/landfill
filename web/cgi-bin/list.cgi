@@ -21,7 +21,8 @@ while (my $q = new CGI::Fast()) {
     print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
 	$search_term = &handle_search_term(); #' 1 = 1 ';
     {
-
+        my $limit = 20;
+        
             my $query=$dbh->prepare("
                           select *
                             from posts
@@ -29,7 +30,7 @@ while (my $q = new CGI::Fast()) {
                              and hidden=0
                                  $search_term
                         order by posted
-                                 desc limit 10
+                                 desc limit $limit
                            "); # XXX order by first_seen needs to change
 
 
@@ -82,7 +83,7 @@ while (my $q = new CGI::Fast()) {
             </div>
 EOfragment
             }
-
+            print "<p><a href=\"/older/$limit\">older $limit entries</a></p>\n";
 	    if ($printed == 0 && $ENV{"QUERY_STRING"} ne '') {
                 print "<p>Your search for " . $search_bit . " yielded no results.</p>";
             }

@@ -31,7 +31,7 @@ while (new CGI::Fast()) {
 	&die_cleanly unless defined $Passed_Values{from};
 	&die_cleanly unless defined $Passed_Values{to};
 	&die_cleanly unless defined $Passed_Values{name};
-	&die_cleanly unless $Passed_Values{entryid} =~ /^\d*$/; 
+	&die_cleanly unless defined $Passed_Values{entryid} && $Passed_Values{entryid} =~ /^\d+$/; 
     
 	my $result;
 	if(defined $Passed_Values{entryid}){

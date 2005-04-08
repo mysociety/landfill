@@ -95,10 +95,10 @@ sub email_comment_to_person {
 
         my $query= $dbh->prepare("select email from posts where postid=? and emailalert=1 "); 
         $query->execute($Passed_Values{postid});
-
-        return unless ($query->rows == 1); # false id or no notification wanted
-
         ($to_person) = $query->fetchrow_array;
+
+        return unless ($to_person); # false id or no notification wanted
+
         $headers{'To'}= "$to_person" ;
         $headers{"From"}= "NotApathetic.com <donotreply\@notapathetic.com>" ;
         $headers{"Subject"}= "Reply to your notapathetic.com post";

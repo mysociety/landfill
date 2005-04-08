@@ -19,18 +19,28 @@ my $url_prefix= $mysociety::NotApathetic::Config::url;
 begin:
 
 while (new CGI::Fast()) {
+    eval {
 
         my $postid_q = $dbh->quote(param('u'));
         my $auth_code_q = $dbh->quote(param('c'));
         my $query=$dbh->prepare ("select * from posts
                                     where postid= $postid_q
-                                      and validated = 0
+                                      and validated = 0 
                                       and authcode = $auth_code_q");
 
         $query->execute;
 
         if ($query->rows != 1 ) {
+            $query=$dbh->prepare ("select * from posts
+                                    where postid= $postid_q
+                                      and validated = 1 ");
+            $query->execute;
+
+            if ($query->rows == 1 ) {
+                        print "Location: $url_prefix/\r\n\r\n";      
+            } else {
                         print "Location: $url_prefix/new/checkemail/failed.shtml\r\n\r\n";       
+            }
         }
         else {
 		my $new_authcode= rand(); $new_authcode=~ s/^0\.(\d+)/$1/;
@@ -51,8 +61,11 @@ while (new CGI::Fast()) {
                         print "Location: $url_prefix/new/checkemail/failed.shtml\r\n\r\n";       
                 }
         }
+    }
+    if ($@) {
+        print "Content-Type: text/plain\r\nStatus: 500\r\n\r\nSorry, something went wrong.\n$@\n";
+    }
 }
-
 
 sub die_cleanly {
         my $reason=shift;

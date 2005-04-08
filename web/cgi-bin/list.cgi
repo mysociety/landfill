@@ -132,7 +132,7 @@ EOfragment
                 }
                 print '</p>';
             }
-        } elsif ($search_bit ne '') {
+        } elsif ($type eq 'details' && $search_bit ne '') {
             print "<p>Your search for " . $search_bit . " yielded no results.</p>";
         }
     }

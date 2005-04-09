@@ -9,6 +9,7 @@
 /* ]]> */
 </style>
 <link rel="shortcut icon" href="/favicon.ico" />
+<link href="/cgi-bin/rss.cgi" rel="alternate" type="application/rss+xml" title="NotApathetic Reasons" />
 <script type="text/javascript" src="/forms.js"></script>
 </head>
 <body>

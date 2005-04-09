@@ -61,7 +61,7 @@ while (new CGI::Fast()) {
                         print "Location: $url_prefix/new/checkemail/failed.shtml\r\n\r\n";       
                 }
         }
-    }
+    };
     if ($@) {
         print "Content-Type: text/plain\r\nStatus: 500\r\n\r\nSorry, something went wrong.\n$@\n";
     }

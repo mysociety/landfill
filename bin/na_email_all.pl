@@ -5,6 +5,7 @@ use strict;
 use DBI;
 use Text::Wrap;
 use Mail::Mailer qw(sendmail);
+$Text::Wrap::columns = 65;
 
 my $dsn = 'DBI:mysql:notapathetic:localhost'; # DSN connection string
 my $db_username= 'notapathetic';              # database username

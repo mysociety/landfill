@@ -1,0 +1,13 @@
+<!--#set var="page_title" value="Best comments from those not voting in the 2005 General Election?" -->
+<!--#include virtual="/includes/header.shtml" -->
+<!--#include virtual="/cgi-bin/list-interesting.cgi?page=${QUERY_STRING}" -->
+
+	</div>
+	<div id="inputBox">
+		<!--#include virtual="/includes/new-stage1.shtml" -->
+		<!--#include virtual="/includes/description.shtml" -->
+		<!--#include virtual="/includes/searchform.shtml" -->
+                <!--#include virtual="/cgi-bin/list-interesting.cgi?type=summary&page=${QUERY_STRING}" -->
+
+<!--#include virtual="/includes/footer.shtml" -->
+

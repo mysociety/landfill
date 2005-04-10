@@ -15,7 +15,6 @@ my $db_password= $mysociety::NotApathetic::Config::db_password;         # databa
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 my %Passed_Values;
-my $search_term;
 
 begin:
 
@@ -28,14 +27,14 @@ while (new CGI::Fast()) {
                                       and authcode = $auth_code_q");
 
         $query->execute;
+        my $ref= $query->fetchrow_hashref;
 
-        if ($query->rows != 1 ) {
+        if (not defined $ref) {
                 &die_cleanly("Code either used or incorrect");
-        }
-        else {
-		my ($address, $search_term)= $query->fetchrow_array;
+        } else {
 
-                $query= $dbh->prepare ("update emailnotify
+                $query= $dbh->prepare ("
+                    update emailnotify
                                      set cancelled      = 1 ,
                                          authcode       = 'used',
 					 lastupdated    = now()
@@ -44,7 +43,7 @@ while (new CGI::Fast()) {
                                 ");
                 $query->execute || &die_cleanly("sql error");
                 if ($query->rows == 1 ) { 
-			&send_notify_email($address);
+			&send_notify_email($ref->{email}, $ref->{search});
                         print "<h2>Successful</h2>\n<p>You registration is now cancelled.</p>";
                 } else {
                         print "<h2>Request Failed</h2>\n<p>code and id did not match</p>";
@@ -54,6 +53,7 @@ while (new CGI::Fast()) {
 
 sub send_notify_email {
         my $to_person= shift;
+        my $search_term= shift || '';
 	my %headers;
 	my $mailer= new Mail::Mailer 'sendmail';
 

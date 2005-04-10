@@ -40,7 +40,7 @@ while (my $q = new CGI::Fast()) {
 	    
             my ($text, @text, %words, %posts, $total, $posts);
             while ($result=$query->fetchrow_hashref) {
-                my %done = {};
+                my %done = ();
                 $text = lc($result->{title}) . "\n" . lc($result->{why});
                 $text =~ tr/\x92/'/;
                 $text =~ s/[^a-z0-9-']/ /ig;

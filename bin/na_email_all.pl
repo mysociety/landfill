@@ -48,7 +48,7 @@ sub send_email {
 	my %headers; 
 
         $headers{'To'}= "$to_person" ;
-        $headers{"From"}= "Notapathetic.com <donotreply\@notapathetic.com>" ;
+        $headers{"From"}= '"Notapathetic.com" <donotreply@notapathetic.com>';
         $headers{"Subject"}= "Yesterday on NotApathetic.com";
         $mailer->open(\%headers);
 

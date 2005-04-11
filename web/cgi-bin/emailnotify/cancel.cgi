@@ -58,7 +58,7 @@ sub send_notify_email {
 	my $mailer= new Mail::Mailer 'sendmail';
 
         $headers{'To'}= "$to_person" ;
-        $headers{"From"}= "'NotApathetic.com' <donotreply\@notapathetic.com>" ;
+        $headers{"From"}= '"NotApathetic.com" <donotreply@notapathetic.com>' ;
         $headers{"Subject"}= "Cancelled Updates from NotApathetic.com";
         $headers{"X-Originating-IP"}= $ENV{'HTTP_X_FORWARDED_FOR'}  || $ENV{'REMOTE_ADDR'} || return;
         $mailer->open(\%headers);

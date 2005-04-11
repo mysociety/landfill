@@ -100,7 +100,7 @@ sub email_comment_to_person {
         return unless ($to_person); # false id or no notification wanted
 
         $headers{'To'}= "$to_person" ;
-        $headers{"From"}= "NotApathetic.com <donotreply\@notapathetic.com>" ;
+        $headers{"From"}= '"NotApathetic.com" <donotreply@notapathetic.com>';
         $headers{"Subject"}= "Reply to your notapathetic.com post";
         $mailer->open(\%headers);
 

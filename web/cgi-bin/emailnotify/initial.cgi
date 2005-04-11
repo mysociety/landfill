@@ -57,7 +57,7 @@ while (new CGI::Fast()) {
 	my $to_person = $Passed_Values{"email"} ;
 
 	$headers{'To'}= "$to_person" ;
-	$headers{"From"}= "NotApathetic.com <donotreply\@notapathetic.com>" ;
+	$headers{"From"}= '"NotApathetic.com" <donotreply@notapathetic.com>';
 	$headers{"Subject"}= "Confirm request for Updates from NotApathetic.com";
 	$headers{"X-Originating-IP"}= $ENV{'HTTP_X_FORWARDED_FOR'}  || $ENV{'REMOTE_ADDR'} || return;
 	$mailer->open(\%headers);

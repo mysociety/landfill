@@ -111,7 +111,7 @@ on the topic of $Passed_Values{title}
 
 If it wasn't you, just ignore it.
 
-If this was you, and you wish to confirm the account, please click on
+If this was you, and you wish to confirm that post, please click on
 the following link
         $url_prefix/cgi-bin/new-confirm.cgi?u=$Passed_Values{rowid};c=$Passed_Values{authcode}
 

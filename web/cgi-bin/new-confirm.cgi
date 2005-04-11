@@ -13,14 +13,16 @@ use mysociety::NotApathetic::Config;
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
-my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
+my $dbh;
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 
 begin:
 
 while (new CGI::Fast()) {
     eval {
-
+        if (!defined($dbh) || !eval { $dbh->ping() }) {
+            $dbh = DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
+        }
         my $postid_q = $dbh->quote(param('u'));
         my $auth_code_q = $dbh->quote(param('c'));
         my $query=$dbh->prepare ("select * from posts

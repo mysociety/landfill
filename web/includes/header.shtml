@@ -25,12 +25,10 @@
 		<li><a href="/about/"><span>a</span>bout us</a></li>
 		<li><a href="/news/"><span>n</span>ews</a></li>
 		<li><a href="/emailnotify/"><span>e</span>mail alerts</a></li>
+                <li><a href="/bestof/"><span>b</span>est posts</a></li>
+                <li><a href="/emailfriend/"><span>t</span>ell a friend</a></li>
                 <li id="last"><a title="RSS feeds, logos, XML" href="/data/"><span>rss</span>+</a></li>
 	</ul>
-	
-	<div id="emailBox">
-                <a href="/emailfriend/"><img src="/images/novote.png" alt="got a friend who isn't going to vote? click here" width="330" height="32" /></a>
-	</div>
 	
 
 	<div id="main">

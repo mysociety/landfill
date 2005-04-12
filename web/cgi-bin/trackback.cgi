@@ -26,7 +26,7 @@ while (new CGI::Fast()) {
         $Passed_Values{excerpt} ||= '';
         $Passed_Values{url}||= '';
 
-        if ($Passed_Values{excerpt} =~ m/(.{210}.+?\b)/) {
+        if ($Passed_Values{excerpt} =~ m/^(.{210}.+?\b)/s) {
                 $Passed_Values{excerpt}= $dbh->quote($1 . "...");
         } else  {
                 $Passed_Values{excerpt}= $dbh->quote($Passed_Values{excerpt});

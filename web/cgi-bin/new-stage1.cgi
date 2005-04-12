@@ -58,13 +58,13 @@ sub handle_comment {
 	$Passed_Values{authcode}= $randomness;
 	my $auth_code_q= $dbh->quote($randomness);
 
-        if ($Passed_Values{why} =~ m/(.{210}.+?\b)/) {
+        if ($Passed_Values{why} =~ m/^(.{210}.+?\b)/s) {
                 $quoted{shortwhy}= $dbh->quote($1 . "...");
         } else  {
                 $quoted{shortwhy}= $quoted{why};
         }
 
-        if ($Passed_Values{why} =~ m/(.{35}.+?\b)/) {
+        if ($Passed_Values{why} =~ m/^(.{35}.+?\b)/s) {
                 $quoted{title}= $dbh->quote($1 . "...");
         } else  {
                 $quoted{title}= $quoted{why};

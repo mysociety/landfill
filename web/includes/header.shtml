@@ -9,7 +9,7 @@
 /* ]]> */
 </style>
 <link rel="shortcut icon" href="/favicon.ico" />
-<link href="/cgi-bin/rss.cgi" rel="alternate" type="application/rss+xml" title="NotApathetic Reasons" />
+<link href="/cgi-bin/rss.cgi<!--#if expr="${rss_query}" -->?<!--#echo var="rss-query" --><!--#endif -->" rel="alternate" type="application/rss+xml" title="NotApathetic Reasons" />
 <script type="text/javascript" src="/forms.js"></script>
 </head>
 <body>
@@ -19,15 +19,17 @@
 		<h3><a href="/"><img src="/images/tagline.png" alt="Tell the world why you're not voting - Don't let your silence go unheard" width="330" height="50" /></a></h3>
 	</div>
 	
-	<ul id="nav">
-            <li><a href="/"><span>h</span>ome</a></li>
-            <li><a href="/random"><span>r</span>andom</a></li>
+	<ul class="nav main">
+        <li><a href="/"><span>h</span>ome</a></li>
 		<li><a href="/about/"><span>a</span>bout us</a></li>
 		<li><a href="/news/"><span>n</span>ews</a></li>
 		<li><a href="/emailnotify/"><span>e</span>mail alerts</a></li>
-                <li><a href="/bestof/"><span>b</span>est posts</a></li>
-                <li><a href="/emailfriend/"><span>t</span>ell a friend</a></li>
-                <li id="last"><a title="RSS feeds, logos, XML" href="/data/"><span>rss</span>+</a></li>
+		<li id="last"><a href="/emailfriend/"><span>t</span>ell a friend</a></li>
+	</ul>
+	<ul class="nav posts">
+		<li><a href="/random"><span>r</span>andom post</a></li>
+        <li><a href="/bestof/"><span>b</span>est posts</a></li>
+		<li id="last"><a title="RSS feeds, logos, XML" href="/data/"><span>rss</span>+</a></li>
 	</ul>
 	
 

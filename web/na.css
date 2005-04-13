@@ -92,7 +92,7 @@ margin:0 12px 0 0;
 padding:0;
 float:left;
 }
-ul.nav li#last{
+ul.nav li.last{
 margin:0;
 }
 ul.nav li#separator{
@@ -109,6 +109,7 @@ ul.nav li a span{
 	color:#B10005;
 }
 ul.nav li a:hover{
+	color:#000000;
 	border-bottom:2px solid #FF8083;
 }
 
@@ -159,6 +160,7 @@ div#main {
 clear:left;
 float:left;
 width:350px;
+overflow:hidden;
 }
 div#inputBox {
 width:330px;

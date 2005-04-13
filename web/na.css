@@ -70,35 +70,45 @@ input[type=submit]{
 	background:#EEEEEE;
 }
 
-ul#nav {
+ul.nav {
 list-style:none;
 padding:0;
-clear:left;
-float:left;
-margin:0.5em 70px 1.5em 0;
-width:700px;
+margin:0.5em 0 1.5em 0;
 min-height:32px;
 display:block;
 }
-ul#nav li{
+ul.nav.main{
+clear:left;
+float:left;
+width:350px;
+}
+ul.nav.posts{
+float:right;
+clear:right;
+width:330px;
+}
+ul.nav li{
 margin:0 12px 0 0;
 padding:0;
 float:left;
 }
-ul#nav li#last{
+ul.nav li#last{
 margin:0;
 }
-ul#nav li a{
+ul.nav li#separator{
+margin:0 100px 0 0;
+}
+ul.nav li a{
 	display:block;
 	font:120% Georgia, "Times New Roman", Times, serif;
 	text-decoration:none;
 	color:#000000;
 	border-bottom:2px solid #CCCCCC;
 }
-ul#nav li a span{
+ul.nav li a span{
 	color:#B10005;
 }
-ul#nav li a:hover{
+ul.nav li a:hover{
 	border-bottom:2px solid #FF8083;
 }
 

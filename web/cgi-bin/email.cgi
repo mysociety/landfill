@@ -17,7 +17,7 @@ my $db_username= $mysociety::NotApathetic::Config::db_username;              # d
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $email_domain= $mysociety::NotApathetic::Config::email_domain;
-my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
+my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 
 
 while (new CGI::Fast()) {

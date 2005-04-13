@@ -21,7 +21,7 @@ begin:
 while (new CGI::Fast()) {
     eval {
         if (!defined($dbh) || !eval { $dbh->ping() }) {
-            $dbh = DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
+            $dbh = DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
         }
         my $postid_q = $dbh->quote(param('u'));
         my $auth_code_q = $dbh->quote(param('c'));

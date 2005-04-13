@@ -15,11 +15,15 @@ my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $url_prefix= $mysociety::NotApathetic::Config::url;
-my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
+my $dbh;
 my %State; # State variables during display.
 
 
 while (my $q = new CGI::Fast()) {
+        if (!defined($dbh) || !eval { $dbh->ping() }) {
+            $dbh = DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
+        }
+
         $Entry=$ENV{QUERY_STRING} || '';
 
         if ($Entry !~ /^\d+$/) {

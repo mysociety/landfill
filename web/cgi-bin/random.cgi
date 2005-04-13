@@ -16,7 +16,7 @@ our $url_prefix=$mysociety::NotApathetic::Config::url;
 while (my $q = new CGI::Fast()) {
     eval {
             if (!defined($dbh) || !eval { $dbh->ping() }) {
-                $dbh = DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
+                $dbh = DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
             }
 
             my $query=$dbh->prepare("

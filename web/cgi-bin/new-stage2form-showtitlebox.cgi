@@ -5,7 +5,7 @@ use strict;
 use DBI;
 use HTML::Entities;
 use mysociety::NotApathetic::Config;
-use CGI::Fast qw/param encode_entities/;
+use CGI::Fast qw/param/;
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password

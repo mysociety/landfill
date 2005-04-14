@@ -70,6 +70,17 @@ input[type=submit]{
 	background:#EEEEEE;
 }
 
+
+ul{
+padding:0 0 0 20px;
+margin:0;
+}
+li{
+line-height:1.5em;
+margin:0;
+list-style-type:circle;
+}
+
 ul.nav {
 list-style:none;
 padding:0;
@@ -91,6 +102,7 @@ ul.nav li{
 margin:0 12px 0 0;
 padding:0;
 float:left;
+list-style:none;
 }
 ul.nav li.last{
 margin:0;
@@ -224,11 +236,9 @@ padding:0 0 0.5em 0;
 div.entry h4{font-size:100%;}
 p{
 	margin:0 0 1em 0;
-	line-height:1.6em;
+	line-height:1.5em;
 }
-p.nomargin{
-	margin:0;
-}
+
 p.enlarge{
 	margin:-0.8em 0 0 0;
 	padding:0;
@@ -236,13 +246,14 @@ p.enlarge{
 }
 div.entry div{
 border-top:1px solid #CCCCCC;
-padding-top:0.3em;
+padding:0.2em 0 0 0;
+margin: -0.8em 0 0 0;
 }
 div.entry div.trackback{
 	border:0;
 	background-color: #eeeeee;
-	margin: 0;
 	padding: 5px;
+	margin:0;
 }
 
 #footer{

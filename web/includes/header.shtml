@@ -13,25 +13,23 @@
 <script type="text/javascript" src="/forms.js"></script>
 </head>
 <body>
-	<div id="wrap">
-	<div id="top">
-                <h1><a href="/"><img src="/images/na2.png" alt="not apathetic - I'm not voting because..." width="350" height="63" /></a></h1>
-		<h3><a href="/"><img src="/images/tagline.png" alt="Tell the world why you're not voting - Don't let your silence go unheard" width="330" height="50" /></a></h3>
-	</div>
+<div id="wrap">
+<div id="top">
+<h1><a href="/"><img src="/images/na2.png" alt="not apathetic - I'm not voting because..." width="350" height="63" /></a></h1>
+<h3><a href="/"><img src="/images/tagline.png" alt="Tell the world why you're not voting - Don't let your silence go unheard" width="330" height="50" /></a></h3>
+</div>
 	
-	<ul class="nav main">
-        <li><a href="/"><span>h</span>ome</a></li>
-		<li><a href="/about/"><span>a</span>bout us</a></li>
-		<li><a href="/news/"><span>n</span>ews</a></li>
-		<li><a href="/emailnotify/"><span>e</span>mail alerts</a></li>
-		<li id="last"><a href="/emailfriend/"><span>t</span>ell a friend</a></li>
-	</ul>
-	<ul class="nav posts">
-		<li><a href="/random"><span>r</span>andom post</a></li>
-        <li><a href="/bestof/"><span>b</span>est posts</a></li>
-		<li id="last"><a title="RSS feeds, logos, XML" href="/data/"><span>rss</span>+</a></li>
-	</ul>
-	
+<ul class="nav main">
+<li><a href="/"><span>h</span>ome</a></li>
+<li><a href="/about/"><span>a</span>bout us</a></li>
+<li><a href="/news/"><span>n</span>ews</a></li>
+<li><a href="/emailnotify/"><span>e</span>mail alerts</a></li>
+<li class="last"><a href="/emailfriend/"><span>t</span>ell a friend</a></li>
+</ul>
+<ul class="nav posts">
+<li><a href="/random"><span>r</span>andom post</a></li>
+<li><a href="/bestof/"><span>b</span>est posts</a></li>
+<li class="last"><a title="RSS feeds, logos, XML" href="/data/"><span>rss</span>+</a></li>
+</ul>
 
-	<div id="main">
-	
+<div id="main">

@@ -94,9 +94,9 @@ EOfragment
                 $someday = UnixDate($result->{posted}, "%E %b %Y");
                 my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';
                 print <<EOfragment;
-            <div class="entry">
+            <div class="entry small">
                     <h4><a href="$url_prefix/comments/$result->{postid}">$title</a></h4>
-                    <p class="nomargin">
+                    <p>
                             $result->{shortwhy}
                     </p>
                     <div>

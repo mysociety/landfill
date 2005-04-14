@@ -1,6 +1,6 @@
 <!--#set var="page_title" value="Search results" -->
+<!--#set var="rss_query" value="${QUERY_STRING}" -->
 <!--#include virtual="/includes/header.shtml" -->
-
 
 <h2>Search results</h2>
 <!--#include virtual="/cgi-bin/list.cgi?search=${QUERY_STRING}" -->

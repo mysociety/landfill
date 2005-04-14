@@ -88,26 +88,23 @@ while (my $q = new CGI::Fast()) {
             $more_link= $result->{link};
             if ($type eq 'summary') {
                 print <<EOfragment;
-                <li><a href="$url_prefix/comments/$result->{postid}">$title</a></li>
+<li><a href="$url_prefix/comments/$result->{postid}">$title</a></li>
 EOfragment
             } else {
                 $someday = UnixDate($result->{posted}, "%E %b %Y");
                 my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';
                 print <<EOfragment;
-            <div class="entry small">
-                    <h4><a href="$url_prefix/comments/$result->{postid}">$title</a></h4>
-                    <p>
-                            $result->{shortwhy}
-                    </p>
-                    <div>
-                            <small>
-                                    written $someday 
-                                    | <a href="$url_prefix/comments/$result->{postid}">read more</a> 
-                                    | <a href="$url_prefix/comments/$result->{postid}\#comments">$result->{commentcount} $responses</a> 
-                                    | <a href="/abuse/?postid=$result->{postid}">abusive?</a>
-                            </small>
-                    </div>
-            </div>
+<div class="entry small">
+<h4><a href="$url_prefix/comments/$result->{postid}">$title</a></h4>
+<p>$result->{shortwhy}</p>
+<div><small>
+written $someday 
+| <a href="$url_prefix/comments/$result->{postid}">read more</a> 
+| <a href="$url_prefix/comments/$result->{postid}\#comments">$result->{commentcount} $responses</a> 
+| <a href="/abuse/?postid=$result->{postid}">abusive?</a>
+</small>
+</div>
+</div>
 EOfragment
             }
         }

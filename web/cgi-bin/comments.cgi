@@ -89,24 +89,22 @@ while (my $q = new CGI::Fast()) {
 </rdf:RDF>
 -->
 	
-	<div class="entry">
-		<h4>$result->{title}</h4>
-		<p>$why</p>
-		<div>
-		<small>
-		written $someday | <a href="../email/$result->{postid}">Email this to a friend</a> | <a href="/abuse/?postid=$result->{postid}">abusive?</a>
-		</small>
-		</div>
-	</div>
+	<dl>
+	<dt>$result->{title}</dt>
+	<dd><p>$why</p>
+	<small>
+	written $someday | <a href="../email/$result->{postid}">Email this to a friend</a> | <a href="/abuse/?postid=$result->{postid}">abusive?</a>
+	</small>
+	</dd>
+	</dl>
 
 EOfragment
 	if ($result->{commentcount} > 0) {print &show_comments();}
-	$commentcount = $result->{commentcount};
-	print &comment_form();
 }
 
 sub show_comments {
-	my $html="<h2><a name=\"comments\"></a>Responses</h2>";
+
+	my $html="<h2><a name=\"comments\"></a>Responses</h2>\n<dl>";
 
 	my $query=$dbh->prepare(
 	  " select * from comments where postid=$Entry and visible=1");
@@ -119,69 +117,17 @@ sub show_comments {
 		my $comment = $result->{comment};
 		$comment =~s/(\r\n){2,}/<\/p> <p>/g;
 		$comment =~s/\r\n/<br \/>/g;
-		if(!(substr($comment, 0, 6) eq "  <div")){$comment="<p>".$comment."</p>";} ## remove later ##
-
+		
 		$html.= <<EOhtml;
-	<div class="entry">
-		<a name="comment_$result->{commentid}" ></a>
-		$comment
-		<div>
-		<small>
-		written by $result->{name} on $someday | <a href="/abuse/?postid=$result->{postid}&amp;commentid=$result->{commentid}">abusive?</a>
-		</small>
-		</div>
-	</div>
+	<dd><a name="comment_$result->{commentid}" ></a>
+	<p><em><strong>$result->{name}</strong> replies:</em> $comment</p>
+	<small>
+	written $someday | <a href="/abuse/?postid=$result->{postid}&amp;commentid=$result->{commentid}">abusive?</a>
+	</small>
+	</dd>
 EOhtml
 	}
 	
-
+	$html .="</dl>";
 	return $html;
 }
-
-
-sub comment_form {
-	my $anchor = "";
-	if($commentcount==0){
-		$anchor = "<a name=\"comments\"></a>";
-	}
-
-	my $html= <<EOhtml;
-
-<h2>$anchor Respond</h2>
-
-<form method="post" action="../cgi-bin/comment.cgi" id="comment">
-	<input type="hidden" name="postid" value="$Entry" />
-	
-	<div>
-	<label for="author">Your Name</label><input id="author" name="author" type="text" size="20" />
-	</div>
-	
-	<div>
-	<label for="email">Email</label><input id="email" name="email" type="text" size="20" />
-	<small>You must give a valid email address, but it will
-    	<em>not</em> be displayed to the public.</small>
-	</div>
-
-	<div>
-    	
-	<textarea id="commenttext" name="text" rows="15" cols="30">Write your response...</textarea>
-	<small>We only allow the following html tags:
-		<tt>a cite em strong p br</tt>. Newlines automatically
-                become new paragraphs or line breaks. After posting,
-		there may be a short delay before your comment
-	appears on the site</small>
-	</div>
-	<div>
-
-	<input type="submit" name="post" value="Post" id="commentsubmit" />
-	</div>
-
-	
-</form>
-
-
-EOhtml
-	return ($html);
-}
-
-

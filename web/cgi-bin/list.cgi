@@ -33,12 +33,17 @@ while (my $q = new CGI::Fast()) {
         my $mainlimit = 20;
         my $limit = ($type eq 'details') ? $mainlimit : $mainlimit * 5;
         my $offset = $page * $mainlimit;
+		my $interesting = "";
+		if (defined param('interest')){
+			$interesting = "and (interesting=1 or commentcount >= 5)";
+		}
         $offset += $mainlimit if ($type eq 'summary');
 
         my $query=$dbh->prepare("
                           select *
                             from posts
                            where validated=1
+						   		 $interesting
                              and hidden=0
                                  $search_term
                         order by posted
@@ -70,7 +75,9 @@ while (my $q = new CGI::Fast()) {
                 }
                 if ($type eq 'summary') {
                     print "<ul>\n";
-                }
+                } else {
+					print "<dl>\n";
+				}
                 if ($type eq 'details' && $search_bit ne '') {
         	    print '<p>Your search for "'.$search_bit.'" yielded the following results:</p>';
                 }
@@ -94,30 +101,37 @@ EOfragment
                 $someday = UnixDate($result->{posted}, "%E %b %Y");
                 my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';
                 print <<EOfragment;
-<div class="entry small">
-<h4><a href="$url_prefix/comments/$result->{postid}">$title</a></h4>
-<p>$result->{shortwhy}</p>
-<div><small>
+<dt><a href="$url_prefix/comments/$result->{postid}">$title</a></dt>
+<dd><p>$result->{shortwhy}</p>
+<small>
 written $someday 
 | <a href="$url_prefix/comments/$result->{postid}">read more</a> 
 | <a href="$url_prefix/comments/$result->{postid}\#comments">$result->{commentcount} $responses</a> 
 | <a href="/abuse/?postid=$result->{postid}">abusive?</a>
 </small>
-</div>
-</div>
+</dd>
 EOfragment
             }
         }
         if ($query->rows > 0) {
-            my $url = ($search_bit ne '') ? '/search/?'.$search_bit.'|' : '/?';
+            my $url = '/?';
+			
+			if ($search_bit ne ''){
+				$url = '/search/?'.$search_bit.'|';
+			}elsif (defined param('interest')){
+				$url = '/bestof/?';
+			}
+			
+			my $older = $page;
             if ($type eq 'summary') {
                 print "</ul>\n";
-                my $older = $page + 6;
-                print "<p align=\"right\"><a href=\"$url$older\">Even older entries</a></p>";
+                $older += 6;
+                print "<p class=\"right\"><a href=\"$url$older\">Even older entries</a></p>";
             } else {
-                my $older = $page + 1;
+				print "</dl>\n";
+                $older += 1;
                 my $newer = $page - 1;
-                print '<p align="center">';
+                print '<p class="center">';
                 if ($newer == 0) {
                     my $fronturl = ($search_bit ne '') ? '/search/?'.$search_bit : '/';
                     print "<a href=\"$fronturl\">front page</a> | ";

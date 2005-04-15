@@ -15,7 +15,7 @@ be deleted. Thanks for your help!</p>
 </div>
 
 <div>
-	<label for="abusereasons">Why should this comment be deleted?<label>
+	<label for="abusereasons">Why should this comment be deleted?</label>
 	<textarea name="body" rows="10" cols="45" id="abusereasons"></textarea>
 
 	<input type="submit" value="Send report" />

@@ -73,7 +73,7 @@ h4, dt{
 }
 
 img{
-	border:0;
+	border: none;
 }
 
 small{
@@ -139,7 +139,7 @@ ul.nav li a{
 ul.nav li a span{
 	color:#B10005;
 }
-ul.nav li a:hover{
+ul.nav li a:hover {
 	color:#000000;
 	border-bottom:2px solid #FF8083;
 }
@@ -275,7 +275,7 @@ p.enlarge{
 }
 
 dd div.trackback{
-	border:0;
+	border: none;
 	background-color: #eeeeee;
 	padding: 5px;
 	margin:0;

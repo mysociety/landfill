@@ -1,22 +1,19 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <title>Not Apathetic<!--#if expr="${page_title}" --> - <!--#echo var="page_title" --><!--#endif --></title>
-<style type="text/css" media="screen">
-/* <![CDATA[ */
-	@import url("/na.css");
-/* ]]> */
-</style>
+<link rel="stylesheet" type="text/css" title="mainscreen" href="/css/notnetscape.css" media="screen, projection" />
+<link rel="stylesheet" type="text/css" title="portable" href="/css/handheld.css" media="handheld" />
 <link rel="shortcut icon" href="/favicon.ico" />
 <link href="/cgi-bin/rss.cgi<!--#if expr="${rss_query}" -->?<!--#echo var="rss_query" --><!--#endif -->" rel="alternate" type="application/rss+xml" title="NotApathetic Reasons" />
 <script type="text/javascript" src="/forms.js"></script>
 </head>
 <body>
-<div id="wrap">
+<div id="wrap"><a name="top"></a>
 <div id="top">
-<h1><a href="/"><img src="/images/na2.png" alt="not apathetic - I'm not voting because..." width="350" height="63" /></a></h1>
-<h3><a href="/"><img src="/images/tagline.png" alt="Tell the world why you're not voting - Don't let your silence go unheard" width="330" height="50" /></a></h3>
+<h1><a href="/">Not Apathetic<span></span></a></h1>
+<h3><a href="/">Tell the world why you're not voting - don't let your silence go unheard<span></span></a></h3>
 </div>
 	
 <ul class="nav main">
@@ -27,7 +24,8 @@
 <li class="last"><a href="/emailfriend/"><span>t</span>ell a friend</a></li>
 </ul>
 <ul class="nav posts">
-<li><a href="/random"><span>r</span>andom post</a></li>
+<li><a href="/recentcomments/"><span>r</span>ecent comments</a></li>
+<li><a href="/random/"><span>r</span>andom</a></li>
 <li><a href="/bestof/"><span>b</span>est posts</a></li>
 <li class="last"><a title="RSS feeds, logos, XML" href="/data/"><span>rss</span>+</a></li>
 </ul>

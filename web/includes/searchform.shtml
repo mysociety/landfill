@@ -1,5 +1,7 @@
 		<h2>Search</h2>
 		<form method="get" action="/cgi-bin/search.cgi" id="search">
+		<fieldset>
 		<input type="text" name="q" id="q" size="30" />
 		<input type="submit" value="Go" class="submit" />
+		</fieldset>
 		</form>

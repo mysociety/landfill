@@ -19,18 +19,44 @@ div#top{
 	height:63px;
 }
 
-h1 {
+h1, h3 {
 	font-size: 200%;
 	padding: 0;
-	color: #ff9900;
 	margin:0;
 	float:left;
-	width:350px;
+	overflow: hidden;
+	position: relative;
+	width: 350px;
+	height: 63px;
 }
+h3 {
+	font-size: 140%;
+	margin:6px 0 0 0;
+	width:330px;
+	height:50px;
+	text-align:right;
+	float:right;
+	font-weight:normal;
+}
+h1 span, h3 span{
+	display: block;
+	position: absolute;
+	cursor:pointer;
+	left:0;top:0;margin:0;padding:0;
+	z-index: 1;
+	width: 350px;
+	height: 63px;
+	background: url("images/na2.png") top left no-repeat;
+}
+h3 span{
+	width: 330px;
+	height: 50px;
+	background: url("images/tagline.png") top left no-repeat;
+}
+
 h2 {
 	font-size: 150%;
 	clear:left;
-	font-family:Georgia, "Times New Roman", Times, serif;
 	margin:1em 0 1em 0;
 	padding:0;
 	font-weight:normal;
@@ -39,18 +65,11 @@ h2 {
 h2 span{
 	color:#B10005;
 }
-h3 {
-	font-size: 140%;
-	padding: 0;
-	width:330px;
-	text-align:right;
-	font-weight:normal;
-	margin:6px 0 0 0;
-	float:right;
-}
-h4{
+
+h4, dt{
 	font-family:Verdana, Arial, Helvetica, sans-serif;
 	margin:0;
+	font-weight:bold;
 }
 
 img{
@@ -203,7 +222,13 @@ input[type=text] {
 textarea {
     border: solid 1px #999999;
 }
-input[type=text]:hover, input[type=text]:focus, #inputBox textarea:hover, #inputBox textarea:focus, form#comment textarea:hover, form#comment textarea:focus, textarea:hover, textarea:focus {
+input[type=text]:hover,
+input[type=text]:focus,
+#inputBox textarea:hover,
+#inputBox textarea:focus,
+form#comment textarea:hover,
+form#comment textarea:focus,
+textarea:hover, textarea:focus {
     border: solid 1px #000000;
 }
 
@@ -217,23 +242,27 @@ input[type=text]:hover, input[type=text]:focus, #inputBox textarea:hover, #input
 	margin:0 0 1em 0;
 }
 
-#main dt{
-margin:0 0 0.5em 0;
-}
-#main dd{
-margin:0;
-padding:0;
-}
 #main img{
 vertical-align:middle;
 margin-right:2px;
 }
 
-div.entry {
-margin: 1em 0 2.5em 0;
-padding:0 0 0.5em 0;
+dt {
+margin: 1em 0 0.1em 0;
+padding:0;
+font-size:100%;
 }
-div.entry h4{font-size:100%;}
+dd{
+	margin: 0 0 2.5em 0;
+	padding: 0 0 0.5em 0;
+}
+dd small{
+	border-top:1px solid #CCCCCC;
+	display:block;
+	margin:-1em 0 0 0;
+	padding: 0.3em 0 0 0;
+}
+
 p{
 	margin:0 0 1em 0;
 	line-height:1.5em;
@@ -244,12 +273,8 @@ p.enlarge{
 	padding:0;
 	text-align:right;
 }
-div.entry div{
-border-top:1px solid #CCCCCC;
-padding:0.2em 0 0 0;
-margin: -0.8em 0 0 0;
-}
-div.entry div.trackback{
+
+dd div.trackback{
 	border:0;
 	background-color: #eeeeee;
 	padding: 5px;

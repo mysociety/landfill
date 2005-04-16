@@ -94,7 +94,7 @@ while (my $q = new CGI::Fast()) {
             #	$more_link= "comments/?$result->{entryid}";
             #}
 
-            $title = $result->{title} || '&lt;No subject&gt;';
+            $title = encode_entities($result->{title}) || '&lt;No subject&gt;';
             $more_link= $result->{link};
             if ($type eq 'summary') {
                 print <<EOfragment;

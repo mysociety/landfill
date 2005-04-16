@@ -19,35 +19,35 @@ div#top{
 	height:63px;
 }
 
-h1, h3 {
+h1 {
 	font-size: 200%;
-	padding: 0;
-	margin:0;
+	padding:0; margin:0;
 	float:left;
-	overflow: hidden;
-	position: relative;
 	width: 350px;
 	height: 63px;
 }
-h3 {
-	font-size: 140%;
-	margin:6px 0 0 0;
-	width:330px;
-	height:50px;
-	text-align:right;
-	float:right;
+h3{
+	font-size: 120%;
 	font-weight:normal;
+	float:right;
+	position:relative;
+	margin:6px 0 0 0; padding:0;
+	/* hide overflow:hidden from IE5/Mac */
+	/* \*/
+	overflow: hidden;
+	/* */
 }
 h3 span{
-	display: block;
-	position: absolute;
-	cursor:pointer;
-	left:0;top:0;margin:0;padding:0;
-	z-index: 1;
-	width: 330px;
-	height: 50px;
-	background: url(../images/tagline.png) top left no-repeat;
+	display:block;
+	position:absolute;
+	top:0; left:0;
+	z-index:1; /*for Opera 5 and 6*/
 }
+#myh3, #myh3 span{
+	height:50px;
+	width:330px;
+	background-image: url("/images/tagline.png");
+} 
 
 h2 {
 	font-size: 150%;

@@ -29,25 +29,21 @@ while (my $q = new CGI::Fast()) {
             $page = $1;
             $search_bit =~ s/\|(\d+)$//;
         }
-        my $search_term = handle_search_term($search_bit); #' 1 = 1 ';
         my $mainlimit = 10;
-		my $brief = 3; #mainlimit x brief entries displayed in the brief listing
-        my $limit = ($type eq 'details') ? $mainlimit : $mainlimit * $brief;
+        my $limit = ($type eq 'details') ? $mainlimit : $mainlimit * 5;
         my $offset = $page * $mainlimit;
 		my $interesting = "";
-		if (defined param('interest')){
-			$interesting = "and (interesting=1 or commentcount >= 5)";
-		}
+
         $offset += $mainlimit if ($type eq 'summary');
 
         my $query=$dbh->prepare("
-                          select *
-                            from posts
-                           where validated=1
-						   		 $interesting
-                             and hidden=0
-                                 $search_term
-                        order by posted
+                          select *, comments.posted as commentsdate
+						    from posts, comments
+						   where posts.postid = comments.postid
+							 and posts.validated=1
+							 and posts.hidden=0
+                             and comments.visible=1
+                        order by comments.posted
                                  desc limit $offset, $limit
                            "); # XXX order by first_seen needs to change
 
@@ -64,16 +60,13 @@ while (my $q = new CGI::Fast()) {
         $search_bit =~ s/\// /g;
         my $title;
         while ($result=$query->fetchrow_hashref) {
-
             if ($printed==0) {
                 $printed = 1;
                 if ($type eq 'summary' || !$search_bit) {
                     if ($page > 0 || $type eq 'summary') {
                         print "<h2><a name=\"older\"></a>Older items:</h2>\n";
-					}elsif (defined param('interest')) {
-                        print "<h2>Best posts</h2>\n";
                     } else {
-                        print "<h2>They're <span>not voting</span> because...</h2>\n";
+                        print "<h2>Recent <span>comments</span></h2>\n";
                     }
                 }
                 if ($type eq 'summary') {
@@ -81,18 +74,7 @@ while (my $q = new CGI::Fast()) {
                 } else {
 					print "<dl>\n";
 				}
-                if ($type eq 'details' && $search_bit ne '') {
-        	    print '<p>Your search for "'.$search_bit.'" yielded the following results:</p>';
-                }
-	    }
-
-            $comments_html= &handle_links($result);
-
-            #if ($result->{content} eq $result->{shortcontent}) {
-            #	$more_link= $result->{link};
-            #} else  {
-            #	$more_link= "comments/?$result->{entryid}";
-            #}
+	    	}
 
             $title = $result->{title} || '&lt;No subject&gt;';
             $more_link= $result->{link};
@@ -101,18 +83,23 @@ while (my $q = new CGI::Fast()) {
 <li><a href="$url_prefix/comments/$result->{postid}">$title</a></li>
 EOfragment
             } else {
-                $someday = UnixDate($result->{posted}, "%E %b %Y");
+				$someday = UnixDate($result->{commentsdate}, "%E %b %Y");
+				my $comment = $result->{comment};
+				$comment =~s/(\r\n){2,}/<\/p> <p>/g;
+				$comment =~s/\r\n/<br \/>/g;
+				if ($comment =~ m/(.{210}.+?\b)/) {
+					$comment = $1 . "...";
+				}
                 my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';
                 print <<EOfragment;
-<dt><a href="$url_prefix/comments/$result->{postid}">$title</a></dt>
-<dd><p>$result->{shortwhy}</p>
-<small>
-written $someday 
-| <a href="$url_prefix/comments/$result->{postid}">read more</a> 
-| <a href="$url_prefix/comments/$result->{postid}\#comments">$result->{commentcount} $responses</a> 
-| <a href="/abuse/?postid=$result->{postid}">abusive?</a>
-</small>
-</dd>
+	<dt><a href="$url_prefix/comments/$result->{postid}">$title</a></dt>
+	<dd><p><em>$result->{name} replies:</em> $comment</p>
+	<small>
+	written $someday
+	| <a href="/abuse/?postid=$result->{postid}&amp;commentid=$result->{commentid}">abusive?</a>
+	| <a href="$url_prefix/comments/$result->{postid}#comment_$result->{commentid}">read comment</a>
+	</small>
+	</dd>
 EOfragment
             }
         }
@@ -128,13 +115,13 @@ EOfragment
 			my $older = $page;
             if ($type eq 'summary') {
                 print "</ul>\n";
-                $older += $brief+1;
-                print "<p align=\"right\"><a href=\"$url$older\">Even older entries</a></p>";
+                $older += 6;
+                print "<p class=\"right\"><a href=\"$url$older\">Even older entries</a></p>";
             } else {
 				print "</dl>\n";
                 $older += 1;
                 my $newer = $page - 1;
-                print '<p align="center">';
+                print '<p class="center">';
                 if ($newer == 0) {
                     my $fronturl = ($search_bit ne '') ? '/search/?'.$search_bit : '/';
                     print "<a href=\"$fronturl\">front page</a> | ";
@@ -190,54 +177,3 @@ sub date_header {
 	my ($year, $month, $day)= $thisday =~ /^(\d{4})(\d{2})(\d{2})/;
 	return "<h2>$day $months[$month] </h2>\n";
 }
-
-
-sub handle_search_term {
-	my $search_path= shift;
-	my @search_fields= ('posts.region',
-			    'posts.why',
-			    'posts.title'
-			    );
-	return ('') if ($search_path eq '');
-
-        my (@or)= split /\//, $search_path;
-
-        my $limiter= ' and ( 1 = 0 '; # skipped by the optimiser but makes
-                                # syntax a lot easier to get right
-
-        foreach my $or (@or) {
-                # a/b/c+d/e
-                # a or b or (c and d) or e
-                next if $or =~ /^\s*$/;
-                my $or_q = $dbh->quote("\%$or\%");
-
-                if ($or =~ /\+/) {
-                        my @and= split /\+/, $or;
-                        $limiter.= " or  ( 1 = 1 ";
-                        foreach my $and (@and) {
-                                my $and_q = $dbh->quote("\%$and\%");
-                                $limiter.= " and ( 1=0 ";
-                                foreach my $field (@search_fields) {
-                                        $limiter.= " or $field like $and_q ";
-                                }
-                                $limiter.= " ) \n";
-                        }
-                        $limiter .= ' ) ';
-                } else  {
-                        $limiter .= " or ( 1=0 " ;
-                                foreach my $field (@search_fields) {
-                                        $limiter.= " or $field like $or_q ";
-                                }
-                        $limiter .= ' ) ';
-                }
-
-        }
-        $limiter .= " )\n\n ";
-
-        return $limiter;
-
-}
-
-
-
-

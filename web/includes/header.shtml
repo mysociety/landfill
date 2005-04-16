@@ -1,10 +1,10 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <title>Not Apathetic<!--#if expr="${page_title}" --> - <!--#echo var="page_title" --><!--#endif --></title>
 <link rel="stylesheet" type="text/css" title="mainscreen" href="/css/notnetscape.css" media="screen, projection" />
-<link rel="stylesheet" type="text/css" title="portable" href="/css/handheld.css" media="handheld" />
+<!-- <link rel="stylesheet" type="text/css" title="portable" href="/css/handheld.css" media="handheld" /> -->
 <link rel="shortcut icon" href="/favicon.ico" />
 <link href="/cgi-bin/rss.cgi<!--#if expr="${rss_query}" -->?<!--#echo var="rss_query" --><!--#endif -->" rel="alternate" type="application/rss+xml" title="NotApathetic Reasons" />
 <script type="text/javascript" src="/forms.js"></script>

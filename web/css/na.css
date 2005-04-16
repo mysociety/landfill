@@ -69,7 +69,7 @@ h4, dt{
 }
 
 img{
-	border:0;
+	border: none;
 }
 
 small{
@@ -284,7 +284,7 @@ p.enlarge{
 }
 
 dd div.trackback{
-	border:0;
+	border: none;
 	background-color: #eeeeee;
 	padding: 5px;
 	margin:0;
@@ -309,8 +309,10 @@ form {
 }
 
 fieldset{
-display:block;
-margin:0;padding:0;border:none;
+    display:block;
+    margin:0;
+    padding:0;
+    border: solid 0 transparent; /* Opera 7.2x fix */
 }
 
 textarea{

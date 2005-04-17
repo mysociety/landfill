@@ -27,15 +27,14 @@ while (new CGI::Fast()) {
                 $Passed_Values{$param}=param($param);
         }
 
-	#&die_cleanly unless defined $Passed_Values{entryid};
 	&die_cleanly unless defined $Passed_Values{from};
 	&die_cleanly unless defined $Passed_Values{to};
 	&die_cleanly unless defined $Passed_Values{name};
-	&die_cleanly unless defined $Passed_Values{entryid} && $Passed_Values{entryid} =~ /^\d+$/; 
+        &die_cleanly if (defined $Passed_Values{entryid} && $Passed_Values{entryid} !~ /^\d+$/);
     
 	my $result;
-	if(defined $Passed_Values{entryid}){
-        my $query=$dbh->prepare("select
+	if (defined $Passed_Values{entryid}) {
+            my $query=$dbh->prepare("select
 									postid, title, shortwhy
 								from
 									posts
@@ -43,9 +42,8 @@ while (new CGI::Fast()) {
 									postid='$Passed_Values{entryid}' and
 									hidden=0 and
 									validated=1"); # XXX order by first_seen needs to change
-        $query->execute;
-
-		$result= $query->fetchrow_hashref;
+            $query->execute;
+            $result= $query->fetchrow_hashref;
 	}
 
 	unless (	(Email::Valid->address(-address => $Passed_Values{"from"},-mxcheck => 1 ))

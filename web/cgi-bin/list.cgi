@@ -30,8 +30,8 @@ while (my $q = new CGI::Fast()) {
             $search_bit =~ s/\|(\d+)$//;
         }
         my $search_term = handle_search_term($search_bit); #' 1 = 1 ';
-        my $mainlimit = 10;
-		my $brief = 3; #mainlimit x brief entries displayed in the brief listing
+        my $mainlimit = 15;
+		my $brief = 1; # mainlimit x brief entries displayed in the brief listing
         my $limit = ($type eq 'details') ? $mainlimit : $mainlimit * $brief;
         my $offset = $page * $mainlimit;
 		my $interesting = "";

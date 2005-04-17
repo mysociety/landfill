@@ -30,14 +30,20 @@ while (my $q = new CGI::Fast()) {
             $search_bit =~ s/\|(\d+)$//;
         }
         my $mainlimit = 10;
-        my $limit = ($type eq 'details') ? $mainlimit : $mainlimit * 5;
+		my $brief = 2; # mainlimit x brief entries displayed in the brief listing
+        my $limit = ($type eq 'details') ? $mainlimit : $mainlimit * $brief;
         my $offset = $page * $mainlimit;
 		my $interesting = "";
 
         $offset += $mainlimit if ($type eq 'summary');
 
         my $query=$dbh->prepare("
-                          select *, comments.posted as commentsdate
+                          select distinct(posts.postid),
+								 posts.title,
+								 comments.comment,
+								 comments.name,
+								 comments.postid,
+								 comments.posted as commentsdate
 						    from posts, comments
 						   where posts.postid = comments.postid
 							 and posts.validated=1
@@ -64,7 +70,7 @@ while (my $q = new CGI::Fast()) {
                 $printed = 1;
                 if ($type eq 'summary' || !$search_bit) {
                     if ($page > 0 || $type eq 'summary') {
-                        print "<h2><a name=\"older\"></a>Older items:</h2>\n";
+                        print "<h2><a name=\"older\"></a>Popular posts:</h2>\n";
                     } else {
                         print "<h2>Recent <span>comments</span></h2>\n";
                     }
@@ -76,7 +82,7 @@ while (my $q = new CGI::Fast()) {
 				}
 	    	}
 
-            $title = $result->{title} || '&lt;No subject&gt;';
+            $title = encode_entities($result->{title}) || '&lt;No subject&gt;';
             $more_link= $result->{link};
             if ($type eq 'summary') {
                 print <<EOfragment;
@@ -87,7 +93,7 @@ EOfragment
 				my $comment = $result->{comment};
 				$comment =~s/(\r\n){2,}/<\/p> <p>/g;
 				$comment =~s/\r\n/<br \/>/g;
-				if ($comment =~ m/(.{210}.+?\b)/) {
+				if ($comment =~ m/(.{100}.+?\b)/) {
 					$comment = $1 . "...";
 				}
                 my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';

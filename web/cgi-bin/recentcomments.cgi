@@ -22,28 +22,26 @@ while (my $q = new CGI::Fast()) {
     };
 
     {
-        my $type = param('type') || 'details';
+        my $type = param('type') || 'summary';
         my $search_bit = param('search') || '';
         my $page = param('page') || 0;
-        if ($search_bit =~ /\|(\d+)$/) {
-            $page = $1;
-            $search_bit =~ s/\|(\d+)$//;
-        }
         my $mainlimit = 10;
 		my $brief = 2; # mainlimit x brief entries displayed in the brief listing
         my $limit = ($type eq 'details') ? $mainlimit : $mainlimit * $brief;
+		my $noduplicates = ($type eq 'details') ? "" : "distinct";
+		my $yeduplicates = ($type eq 'details') ? ",comments.comment,comments.name,comments.commentid" : "";
         my $offset = $page * $mainlimit;
 		my $interesting = "";
 
-        $offset += $mainlimit if ($type eq 'summary');
+        #$offset += $mainlimit if ($type eq 'summary');
 
         my $query=$dbh->prepare("
-                          select distinct(posts.postid),
+                          select $noduplicates posts.postid,
 								 posts.title,
-								 comments.comment,
-								 comments.name,
+								 posts.commentcount,
 								 comments.postid,
 								 comments.posted as commentsdate
+								 $yeduplicates
 						    from posts, comments
 						   where posts.postid = comments.postid
 							 and posts.validated=1
@@ -110,13 +108,7 @@ EOfragment
             }
         }
         if ($query->rows > 0) {
-            my $url = '/?';
-			
-			if ($search_bit ne ''){
-				$url = '/search/?'.$search_bit.'|';
-			}elsif (defined param('interest')){
-				$url = '/bestof/?';
-			}
+            my $url = '/recentcomments/?';
 			
 			my $older = $page;
             if ($type eq 'summary') {

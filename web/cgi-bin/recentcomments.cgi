@@ -121,7 +121,7 @@ EOfragment
 			my $older = $page;
             if ($type eq 'summary') {
                 print "</ul>\n";
-                $older += 6;
+                $older += $brief;
                 print "<p class=\"right\"><a href=\"$url$older\">Even older entries</a></p>";
             } else {
 				print "</dl>\n";

@@ -2,12 +2,12 @@
 
 <form method="post" action="../cgi-bin/comment.cgi" id="comment">
 	<fieldset>
-	<input type="hidden" name="postid" value="$Entry" />
-	
+	<input type="hidden" name="postid" value="<!--#echo var="QUERY_STRING" -->" />
+
 	<div>
 	<label for="author">Your Name</label><input id="author" name="author" type="text" size="20" />
 	</div>
-	
+
 	<div>
 	<label for="email">Email</label><input id="email" name="email" type="text" size="20" />
 	<small>You must give a valid email address, but it will
@@ -15,7 +15,7 @@
 	</div>
 
 	<div>
-    	
+
 	<textarea id="commenttext" name="text" rows="15" cols="30">Write your response...</textarea>
 	<small>We only allow the following html tags:
 		<tt>a cite em strong p br</tt>. Newlines automatically
@@ -28,5 +28,5 @@
 	<input type="submit" name="post" value="Post" id="commentsubmit" />
 	</div>
 	</fieldset>
-	
+
 </form>

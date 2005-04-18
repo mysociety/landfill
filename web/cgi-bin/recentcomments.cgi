@@ -22,35 +22,55 @@ while (my $q = new CGI::Fast()) {
     };
 
     {
-        my $type = param('type') || 'summary';
+        my $type = param('type') || 'details';
         my $search_bit = param('search') || '';
         my $page = param('page') || 0;
-        my $mainlimit = 10;
+        my $mainlimit = 15;
 		my $brief = 2; # mainlimit x brief entries displayed in the brief listing
         my $limit = ($type eq 'details') ? $mainlimit : $mainlimit * $brief;
-		my $noduplicates = ($type eq 'details') ? "" : "distinct";
-		my $yeduplicates = ($type eq 'details') ? ",comments.comment,comments.name,comments.commentid" : "";
-        my $offset = $page * $mainlimit;
+	
+	my $offset = $page * $mainlimit;
 		my $interesting = "";
-
-        #$offset += $mainlimit if ($type eq 'summary');
-
-        my $query=$dbh->prepare("
-                          select $noduplicates posts.postid,
-								 posts.title,
-								 posts.commentcount,
-								 comments.postid,
-								 comments.posted as commentsdate
-								 $yeduplicates
-						    from posts, comments
-						   where posts.postid = comments.postid
-							 and posts.validated=1
-							 and posts.hidden=0
-                             and comments.visible=1
-                        order by comments.posted
-                                 desc limit $offset, $limit
-                           "); # XXX order by first_seen needs to change
-
+        
+	my $query;
+	
+	if ($type eq 'details'){
+		$query=$dbh->prepare("
+		
+			select
+				posts.postid,
+				posts.title,
+				comments.posted as commentsdate,
+				comments.comment,
+				comments.commentid,
+				comments.name
+			from
+				posts, comments	 
+			where
+				posts.postid = comments.postid and
+				posts.validated=1 and
+				posts.hidden=0 and
+                             	comments.visible=1
+			order by
+                        	comments.posted desc
+                        limit
+                        	$offset, $limit
+                           ");
+       	}else{
+       		$query=$dbh->prepare("
+       		
+			select
+				distinct posts.postid,
+				posts.title
+			from
+				(select postid from comments order by posted desc) as d,
+				posts
+			where
+				d.postid = posts.postid
+			limit
+				$offset, $limit    	
+			");
+	}
 
         $query->execute;
         my $result;
@@ -94,7 +114,6 @@ EOfragment
 				if ($comment =~ m/(.{100}.+?\b)/) {
 					$comment = $1 . "...";
 				}
-                my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';
                 print <<EOfragment;
 	<dt><a href="$url_prefix/comments/$result->{postid}">$title</a></dt>
 	<dd><p><em>$result->{name} replies:</em> $comment</p>

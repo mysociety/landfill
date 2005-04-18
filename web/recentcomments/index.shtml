@@ -1,6 +1,6 @@
 <!--#set var="page_title" value="Best comments from those not voting in the 2005 General Election?" -->
 <!--#include virtual="/includes/header.shtml" -->
-<!--#include virtual="/cgi-bin/recentcomments.cgi?page=${QUERY_STRING}&type=details"" -->
+<!--#include virtual="/cgi-bin/recentcomments.cgi?page=${QUERY_STRING}&type=details" -->
 
 </div>
 <div id="inputBox">

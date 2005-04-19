@@ -2,7 +2,7 @@ body {
 	font: 80% Georgia, "Times New Roman", Times, serif;
 	margin: 0 auto;
 	padding: 0;
-	background: #FFFFFF;
+	background: #FFFFFF url("/images/asseen.png") top center no-repeat;
 }
 
 #wrap {
@@ -11,6 +11,7 @@ body {
 	margin: 0 auto;
 	padding: 0;
 	width: 750px;
+	position:relative;
 }
 
 div#top{
@@ -29,25 +30,26 @@ h1 {
 h3{
 	font-size: 120%;
 	font-weight:normal;
-	float:right;
-	position:relative;
+	display:block;
+	position:absolute;
+	left:420px;
 	margin:6px 0 0 0; padding:0;
 	/* hide overflow:hidden from IE5/Mac */
 	/* \*/
 	overflow: hidden;
 	/* */
+	height:56px;
+	width:330px;
 }
 h3 span{
 	display:block;
 	position:absolute;
 	top:0; left:0;
+	background: url("/images/tagline.png") top left no-repeat;
 	z-index:1; /*for Opera 5 and 6*/
-}
-#myh3, #myh3 span{
 	height:50px;
 	width:330px;
-	background-image: url("/images/tagline.png");
-} 
+}
 
 h2 {
 	font-size: 150%;

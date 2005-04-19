@@ -6,7 +6,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: similarity.cgi,v 1.1 2005-04-19 13:13:35 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: similarity.cgi,v 1.2 2005-04-19 14:48:52 chris Exp $';
 
 use strict;
 
@@ -28,14 +28,21 @@ while (my $q = new CGI::Fast()) {
 
     my $userid = $q->cookie(-name => 'notapathetic_userid');
     undef($userid) if (defined($userid) && $userid !~ m#^(0|[1-9]\d*)$#);
-    $userid ||= int(rand(0xffffffff));
+    $userid ||= int(rand(0x7fffffff));
+
+    my $C = $q->cookie(
+                    -name => 'notapathetic_userid',
+                    -value => $userid,
+                    -path => '/',
+                    -domain => 'notapathetic.com'
+                );
 
     # See if the user has given us an answer for the two posts.
     if (defined($q->param('id1')) && defined($q->param('id2'))) {
         foreach (qw(0 1 2)) {
             if (defined($q->param("s$_"))) {
                 $dbh->do('
-                        insert into similarity
+                        replace into similarity
                             (userid, postid1, postid2, similarity)
                         values (?, ?, ?, 0)', {},
                         $userid, $q->param('id1'), $q->param('id2'));
@@ -84,29 +91,63 @@ again:
                     from similarity
                     where userid = ?', {}, $userid);
 
-    print $q->header(
-                -cookie => $q->cookie(
-                                -name => 'notapathetic_userid', -value => $userid
-                            )
-            ), <<EOF;
+    print $q->header(-cookie => $C), <<EOF;
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Not Apathetic - help us understand why people are not voting in the 2005 general election</title>
+<link rel="stylesheet" type="text/css" title="mainscreen" href="/css/notnetscape.css" media="screen, projection" />
+<!-- <link rel="stylesheet" type="text/css" title="portable" href="/css/handheld.css" media="handheld" /> -->
+<link rel="shortcut icon" href="/favicon.ico" />
+<link href="/cgi-bin/rss.cgi" rel="alternate" type="application/rss+xml" title="NotApathetic Reasons" />
+<script type="text/javascript" src="/forms.js"></script>
+</head>
+<body>
+<div id="wrap"><a name="top"></a>
+<div id="top">
+<h1><a href="/"><img src="/images/na2.png" alt="Not Apathetic" /></a></h1>
+<h3 id="myh3"><a href="/">Tell the world why you're not voting - don't let your silence go unheard<span></span></a></h3>
+</div>
+    
+    <ul class="nav main">
+    <li><a href="/"><span>h</span>ome</a></li>
+    <li><a href="/about/"><span>a</span>bout us</a></li>
+    <li><a href="/news/"><span>n</span>ews</a></li>
+    <li><a href="/emailnotify/"><span>e</span>mail alerts</a></li>
+    <li class="last"><a href="/emailfriend/"><span>t</span>ell a friend</a></li>
+    </ul>
+    <ul class="nav posts">
+    <li><a href="/recentcomments/"><span>r</span>ecent comments</a></li>
+    <li><a href="/random"><span>r</span>andom</a></li>
+    <li><a href="/bestof/"><span>b</span>est posts</a></li>
+    <li class="last"><a title="RSS feeds, logos, XML" href="/data/"><span>rss</span>+</a></li>
+    </ul>
+
+<div style="width: 100%" width="100%">
+<style type="text/css">
+    td form         { text-align: center; }
+    td              { vertical-align: top; }
+</style>
+    
 <p>So far you've classified $howmany pairs</p>
 <table width="100%"><tr>
 <td width="33%">
-    <form method="POST">
+    <form method="POST" action="/cgi-bin/similarity.cgi">
         <input type="hidden" name="id1" value="$id1">
         <input type="hidden" name="id2" value="$id2">
         <input type="submit" name="s0" value="Very similar">
     </form>
 </td>
 <td width="33%">
-    <form method="POST">
+    <form method="POST" action="/cgi-bin/similarity.cgi">
         <input type="hidden" name="id1" value="$id1">
         <input type="hidden" name="id2" value="$id2">
         <input type="submit" name="s1" value="Similar">
     </form>
 </td>
 <td width="33%">
-    <form method="POST">
+    <form method="POST" action="/cgi-bin/similarity.cgi">
         <input type="hidden" name="id1" value="$id1">
         <input type="hidden" name="id2" value="$id2">
         <input type="submit" name="s2" value="Different">
@@ -117,5 +158,19 @@ again:
     <td width="50%">$why1</td>
     <td width="50%">$why2</td>
 </tr></table>
+
+</div>
+
+<div id="footer">
+<small>Built by </small><a href="http://www.mysociety.org/"><img src="/images/mysociety.gif" alt="mySociety" /></a>
+<ul class="nav footer"><li><a href="mailto:team\@notapathetic.com"><span>c</span>ontact us</a></li>
+<li><a href="/about/privacy/"><span>p</span>rivacy policy</a></li></ul>
+<div class="hideme"><a href="#top">back to top of page</a></div>
+</div>
+
+</div>
+
+</body>
+</html>
 EOF
 }

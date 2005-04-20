@@ -6,7 +6,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: similarity.cgi,v 1.2 2005-04-19 14:48:52 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: similarity.cgi,v 1.3 2005-04-20 10:21:22 chris Exp $';
 
 use strict;
 
@@ -124,40 +124,65 @@ again:
     <li class="last"><a title="RSS feeds, logos, XML" href="/data/"><span>rss</span>+</a></li>
     </ul>
 
-<div style="width: 100%" width="100%">
+<!--<div style="width: 100%" width="100%">-->
 <style type="text/css">
-    td form         { text-align: center; }
-    td              { vertical-align: top; }
+div#leftColumn  {
+    clear: left;
+    float: left;
+    width: 330px;
+}
+div#rightColumn {
+    width: 330px;
+    float: right;
+}
+
+div#voteButtons {
+    width: 737px;       /* A small prize if you can explain this number -- chris\@mysociety.org */
+    background-color: #ccc;
+    padding: 10px;
+    clear: both;
+    float: left;
+}
+
+div#voteButtons form {
+    display: inline;
+}
+
 </style>
     
-<p>So far you've classified $howmany pairs</p>
-<table width="100%"><tr>
-<td width="33%">
+<div id="voteButtons">
+<p style="font-weight: bold;">So far you've classified $howmany pairs</p>
+<div style="font-weight: bold;">Compare these reasons:
     <form method="POST" action="/cgi-bin/similarity.cgi">
         <input type="hidden" name="id1" value="$id1">
         <input type="hidden" name="id2" value="$id2">
         <input type="submit" name="s0" value="Very similar">
     </form>
-</td>
-<td width="33%">
     <form method="POST" action="/cgi-bin/similarity.cgi">
         <input type="hidden" name="id1" value="$id1">
         <input type="hidden" name="id2" value="$id2">
         <input type="submit" name="s1" value="Similar">
     </form>
-</td>
-<td width="33%">
     <form method="POST" action="/cgi-bin/similarity.cgi">
         <input type="hidden" name="id1" value="$id1">
         <input type="hidden" name="id2" value="$id2">
         <input type="submit" name="s2" value="Different">
     </form>
-</td>
-</tr></table>
-<table width="100%"><tr>
+</div>
+
+</div>
+
+<!--<table width="100%"><tr>
     <td width="50%">$why1</td>
     <td width="50%">$why2</td>
-</tr></table>
+</tr></table>-->
+
+<div id="leftColumn">
+<h2>They're <span>not voting</span> because...</h2>
+$why1</div>
+<div id="rightColumn">
+<h2>They're <span>not voting</span> because...</h2>
+$why2</div>
 
 </div>
 

@@ -6,7 +6,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: similarity.cgi,v 1.3 2005-04-20 10:21:22 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: similarity.cgi,v 1.4 2005-04-20 17:56:34 chris Exp $';
 
 use strict;
 
@@ -34,7 +34,8 @@ while (my $q = new CGI::Fast()) {
                     -name => 'notapathetic_userid',
                     -value => $userid,
                     -path => '/',
-                    -domain => 'notapathetic.com'
+                    -domain => 'notapathetic.com',
+                    -expires => '+365d'
                 );
 
     # See if the user has given us an answer for the two posts.
@@ -44,8 +45,8 @@ while (my $q = new CGI::Fast()) {
                 $dbh->do('
                         replace into similarity
                             (userid, postid1, postid2, similarity)
-                        values (?, ?, ?, 0)', {},
-                        $userid, $q->param('id1'), $q->param('id2'));
+                        values (?, ?, ?, ?)', {},
+                        $userid, $q->param('id1'), $q->param('id2'), $_);
             }
         }
     }
@@ -90,6 +91,17 @@ again:
                     select count(*)
                     from similarity
                     where userid = ?', {}, $userid);
+
+    my $congrats = '';
+    if ($howmany >= 100 && $howmany < 105) {
+        $congrats = q(<p style="font-size: 200%"><b>Well done!</b> You've fulfilled the pledge!);
+    } elsif ($howmany > 105 && $howmany < 200) {
+        $congrats = q(<p>It is hard to express how grateful we are for your dedication to the gathering of statistics</p>);
+    } elsif ($howmany >= 200 && $howmany < 205) {
+        $congrats = q(<p>You are a hero of statistics gathering</p>);
+    } elsif ($howmany >= 300 && $howmany < 305) {
+        $congrats = q(<p>Your text-classification powers are amazing! We are considering bottling you and selling you to Google.</p>);
+    }
 
     print $q->header(-cookie => $C), <<EOF;
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -152,6 +164,7 @@ div#voteButtons form {
     
 <div id="voteButtons">
 <p style="font-weight: bold;">So far you've classified $howmany pairs</p>
+$congrats
 <div style="font-weight: bold;">Compare these reasons:
     <form method="POST" action="/cgi-bin/similarity.cgi">
         <input type="hidden" name="id1" value="$id1">
@@ -179,10 +192,14 @@ div#voteButtons form {
 
 <div id="leftColumn">
 <h2>They're <span>not voting</span> because...</h2>
-$why1</div>
+<div>$why1</div>
+<p style="font-size: 80%;"><a href="/comments/$id1">Link</a></p>
+</div>
 <div id="rightColumn">
 <h2>They're <span>not voting</span> because...</h2>
-$why2</div>
+<div>$why2</div>
+<p style="font-size: 80%;"><a href="/comments/$id2">Link</a></p>
+</div>
 
 </div>
 

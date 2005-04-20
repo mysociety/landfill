@@ -6,7 +6,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: similarity.cgi,v 1.4 2005-04-20 17:56:34 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: similarity.cgi,v 1.5 2005-04-20 18:44:24 matthew Exp $';
 
 use strict;
 
@@ -185,19 +185,14 @@ $congrats
 
 </div>
 
-<!--<table width="100%"><tr>
-    <td width="50%">$why1</td>
-    <td width="50%">$why2</td>
-</tr></table>-->
-
 <div id="leftColumn">
 <h2>They're <span>not voting</span> because...</h2>
-<div>$why1</div>
+<div><p>$why1</p></div>
 <p style="font-size: 80%;"><a href="/comments/$id1">Link</a></p>
 </div>
 <div id="rightColumn">
 <h2>They're <span>not voting</span> because...</h2>
-<div>$why2</div>
+<div><p>$why2</p></div>
 <p style="font-size: 80%;"><a href="/comments/$id2">Link</a></p>
 </div>
 

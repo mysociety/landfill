@@ -49,8 +49,7 @@ while (my $q = new CGI::Fast()) {
                              date_format(posted, \"%H:%i, %e %M\") as posted_formatted
                         from posts
                        where postid=$Entry
-                    order by posted desc
-                       "); # XXX order by first_seen needs to change
+                             and not hidden");
 
 	$query->execute;
 	my $result;

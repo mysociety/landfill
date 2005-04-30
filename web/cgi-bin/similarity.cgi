@@ -6,7 +6,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: similarity.cgi,v 1.5 2005-04-20 18:44:24 matthew Exp $';
+my $rcsid = ''; $rcsid .= '$Id: similarity.cgi,v 1.6 2005-04-30 19:50:31 matthew Exp $';
 
 use strict;
 
@@ -132,7 +132,7 @@ again:
     <ul class="nav posts">
     <li><a href="/recentcomments/"><span>r</span>ecent comments</a></li>
     <li><a href="/random"><span>r</span>andom</a></li>
-    <li><a href="/bestof/"><span>b</span>est posts</a></li>
+    <li><a href="/busiest/"><span>b</span>usiest posts</a></li>
     <li class="last"><a title="RSS feeds, logos, XML" href="/data/"><span>rss</span>+</a></li>
     </ul>
 

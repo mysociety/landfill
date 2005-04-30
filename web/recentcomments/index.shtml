@@ -1,4 +1,4 @@
-<!--#set var="page_title" value="Best comments from those not voting in the 2005 General Election?" -->
+<!--#set var="page_title" value="Most recent comments from those not voting in the 2005 General Election" -->
 <!--#include virtual="/includes/header.shtml" -->
 <!--#include virtual="/cgi-bin/recentcomments.cgi?page=${QUERY_STRING}&type=details" -->
 

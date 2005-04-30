@@ -71,7 +71,7 @@ while (my $q = new CGI::Fast()) {
                     if ($page > 0 || $type eq 'summary') {
                         print "<h2><a name=\"older\"></a>Older items:</h2>\n";
 					}elsif (defined param('interest')) {
-                        print "<h2>Best posts</h2>\n";
+                        print "<h2>Busiest posts</h2>\n";
                     } else {
                         print "<h2>They're <span>not voting</span> because...</h2>\n";
                     }
@@ -122,7 +122,7 @@ EOfragment
 			if ($search_bit ne ''){
 				$url = '/search/?'.$search_bit.'|';
 			}elsif (defined param('interest')){
-				$url = '/bestof/?';
+				$url = '/busiest/?';
 			}
 			
 			my $older = $page;

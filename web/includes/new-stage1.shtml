@@ -1,4 +1,6 @@
-		<h2>I <span>didn't vote</span> because...</h2>
+<h2>If you <span>did vote</span>, <a href="http://ivotedforyoubecause.com/">tell us
+why</a> on our sister site <a href="http://ivotedforyoubecause.com/">I Voted For You Because</a></h2>
+		<h2>If you <span>didn't vote</span> tell us here...</h2>
 		<form method="post" action="/cgi-bin/new-stage1.cgi">
 		<fieldset>
 			<p class="enlarge"><small><a id="growtext" onclick="growTextarea('reasons'); return false" href="/new/">Want more space to write in?</a></small></p>

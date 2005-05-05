@@ -1,7 +1,6 @@
 <!--#set var="page_title" value="New Entry" -->
 <!--#include virtual="/includes/header.shtml" -->
 
-
 <h2>I <span>didn't vote</span> because...</h2>
 
 <form method="post" action="/cgi-bin/new-stage1.cgi">

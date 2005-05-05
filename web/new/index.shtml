@@ -2,7 +2,7 @@
 <!--#include virtual="/includes/header.shtml" -->
 
 
-<h2>I'm <span>not voting</span> because...</h2>
+<h2>I <span>didn't vote</span> because...</h2>
 
 <form method="post" action="/cgi-bin/new-stage1.cgi">
         <textarea name="why" rows="15" cols="70"></textarea>

@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+use mysociety::NotApathetic::Config;
+my $url_prefix= $mysociety::NotApathetic::Config::url;
 print "Location: $url_prefix\n\n";
 exit(0);
 
@@ -17,8 +19,6 @@ use mysociety::NotApathetic::Config;
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
-my $url_prefix= $mysociety::NotApathetic::Config::url;
-
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 my %State; # State variables during display.
 my %Passed_Values;

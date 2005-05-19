@@ -73,7 +73,7 @@ while (my $q = new CGI::Fast()) {
 					}elsif (defined param('interest')) {
                         print "<h2>Busiest posts</h2>\n";
                     } else {
-                        print "<h2>They're <span>not voting</span> because...</h2>\n";
+                        print "<h2>They <span>weren't voting</span> because...</h2>\n";
                     }
                 }
                 if ($type eq 'summary') {

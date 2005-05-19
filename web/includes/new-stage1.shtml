@@ -5,6 +5,7 @@ will remain here indefinitely. Add your name to the mySociety news
 list if you'd like to be told when we publish our analysis, and the
 underlying data</p>
 
-<p> <form method="post" action="http://www.mysociety.org/subscribe.php"> Subscribe for occasional <strong>mySociety news updates</strong> <input type="text" name="subv" value="your e-mail address" onfocus="this.value=''" />
+<p> <form method="post" action="http://www.mysociety.org/subscribe.php"> Subscribe for occasional <strong>mySociety updates</strong>
+<br /><input type="text" name="subv" value="your e-mail address" onfocus="this.value=''" />
     <input type="submit" name="sub" value="go!" />
 </form> </p>

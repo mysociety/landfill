@@ -1,5 +1,9 @@
 #!/usr/bin/perl
 
+print "Location: $url_prefix\n\n";
+exit(0);
+
+
 use warnings;
 use strict;
 use DBI;

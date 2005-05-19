@@ -11,4 +11,5 @@ RewriteRule /down.html / [R]
 
 RewriteRule ^/cgi-bin(.*)   /cgi-bin$1 [R]
 RewriteRule ^random         /cgi-bin/random.cgi [L]
+RewriteRule ^new/           / [R]
 

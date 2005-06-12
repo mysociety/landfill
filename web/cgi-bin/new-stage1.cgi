@@ -1,9 +1,11 @@
 #!/usr/bin/perl
 
-use mysociety::NotApathetic::Config;
-my $url_prefix= $mysociety::NotApathetic::Config::url;
-print "Location: $url_prefix\n\n";
-exit(0);
+## comment out the below lines to turn the script off
+##   when the site closes.
+#use mysociety::NotApathetic::Config;
+#my $url_prefix= $mysociety::NotApathetic::Config::url;
+#print "Location: $url_prefix\n\n";
+#exit(0);
 
 use warnings;
 use strict;

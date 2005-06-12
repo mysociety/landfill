@@ -1,9 +1,11 @@
 #!/usr/bin/perl
 
-use mysociety::NotApathetic::Config;
-my $url_prefix= $mysociety::NotApathetic::Config::url;
-print "Location: $url_prefix\n\n";
-exit(0);
+
+# # to disable comments, uncomment these next 4 lines
+#use mysociety::NotApathetic::Config;
+#my $url_prefix= $mysociety::NotApathetic::Config::url;
+#print "Location: $url_prefix\n\n";
+#exit(0);
 
 
 use warnings;

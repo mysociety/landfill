@@ -16,6 +16,7 @@ my $db_username= $mysociety::NotApathetic::Config::db_username;              # d
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $email_domain= $mysociety::NotApathetic::Config::email_domain;
+my $site_name= $mysociety::NotApathetic::Config::site_name;
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 
 
@@ -55,7 +56,7 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 		}
 		else
 		{
-			print "Location: http://www.notapathetic.com/\r\n\r\n";
+			print "Location: $url_prefix/\r\n\r\n";
 		}
                 next;
 	}
@@ -70,9 +71,9 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 	my %headers;
 	$headers{'To'}= "$to_person" ;
 	if(defined $Passed_Values{entryid}){
-		$headers{"Subject"} = "NotApathetic.com email: $result->{title}";
+		$headers{"Subject"} = "$site_name email: $result->{title}";
 	} else{
-		$headers{"Subject"} = "Have you heard about Not Apathetic?";
+		$headers{"Subject"} = "Have you heard about $site_name ?";
 	}
 	$headers{"From"}= "$from_name <$from_address>";
 	$headers{"X-Originating-IP"}= $ENV{'HTTP_X_FORWARDED_FOR'}  || $ENV{'REMOTE_ADDR'} || return;
@@ -87,7 +88,7 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 	if (defined $Passed_Values{entryid}){
 		print $mailer <<EOmail;
 
-$headers{From} saw this item on NotApathetic.com and
+$headers{From} saw this item on $site_name and
 thought you should see it:
 $message
 
@@ -102,7 +103,7 @@ EOmail
 		{
 			print $mailer <<EOmail;
 
-$headers{From} wanted to tell you about www.notapathetic.com
+$headers{From} wanted to tell you about $site_name
 
 $message
 
@@ -122,6 +123,6 @@ sub die_cleanly {
                 $reason
         Please go back and correct this before submitting again.
         ";
-        exit(0); # XXX HACK!
+        exit(0); 
 }
 

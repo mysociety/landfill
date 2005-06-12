@@ -14,10 +14,11 @@ my %Passed_Values;
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
-my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
+my $site_name= $mysociety::NotApathetic::Config::site_name;         # database password
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $admin_url_prefix= $mysociety::NotApathetic::Config::admin_url;
 my $abuse_address= 'abuse'. $mysociety::NotApathetic::Config::email_domain; 
+my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 	
 
 {
@@ -40,11 +41,11 @@ sub send_email {
     my $mailer= new Mail::Mailer 'sendmail';#, Server => 'mailrouter.mcc.ac.uk';
     my %headers;
     my $address      = $abuse_address;
-    my $name         = 'NotApathetic abuse report';
+    my $name         = "$site_name abuse report";
 
-    $headers{"Subject"}= "NA Report of abuse http://www.notapathetic.com/admin/comments.shtml?$postid#$commentid" ;
+    $headers{"Subject"}= "$site_name of abuse $admin_url_prefix/comments.shtml?$postid#$commentid" ;
     $headers{"To"}= "$name <$address>" ;
-    $headers{'From'}= "Not Apathetic <$abuse_address>" ;
+    $headers{'From'}= "$site_name <$abuse_address>" ;
     $headers{"X-Originating-IP"}= $ENV{'HTTP_X_FORWARDED_FOR'}  || $ENV{'REMOTE_ADDR'} || return;
     $mailer->open(\%headers);
     my $about;

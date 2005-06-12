@@ -18,6 +18,9 @@ use Email::Valid;
 use mysociety::NotApathetic::Config;
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
+my $domain = $mysociety::NotApathetic::Config::domain; # DSN connection string
+my $site_name= $mysociety::NotApathetic::Config::site_name; # DSN connection string
+my $email_noreply= $mysociety::NotApathetic::Config::email_noreply; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
@@ -103,13 +106,13 @@ sub email_comment_to_person {
         return unless ($to_person); # false id or no notification wanted
 
         $headers{'To'}= "$to_person" ;
-        $headers{"From"}= '"NotApathetic.com" <donotreply@notapathetic.com>';
-        $headers{"Subject"}= "Reply to your notapathetic.com post";
+        $headers{"From"}= "\"$site_name\" <$email_noreply\@$domain>";
+        $headers{"Subject"}= "Reply to your $site_name post";
         $mailer->open(\%headers);
 
         print $mailer <<EOmail;
 
-Someone has replied to your www.notapathetic.com post. 
+Someone has replied to your $site_name post. 
 You can view it here:
 
         $url_prefix/comments/$Passed_Values{postid}

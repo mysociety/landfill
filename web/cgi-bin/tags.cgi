@@ -2,7 +2,7 @@
 
 use warnings;
 use strict;
-use CGI::Fast qw/param/;
+use CGI qw/param/;
 use Date::Manip;
 use DBI;
 use HTML::Entities;
@@ -17,14 +17,12 @@ my %State; # State variables during display.
 my $search_term;
 our $url_prefix=$mysociety::NotApathetic::Config::url;
 
-my @stopwords = qw(the to i of a and in is for that not are have it be my they as on you will all with no but we because don't this do if their who there any would or i'm them me an by what so get at when one from am like than can which about has our out up was then should even your can't how some way into those it's very well its where had were may he these isn't such go dont i'd just i'll i've did didn't too far rather most won't wont doesn't
-vote voting party people parties system government
-);
+my @stopwords = qw(the to i of a and in is for that not are have it be my they as on you will all with no but we because don't this do if their who there any would or i'm them me an by what so get at when one from am like than can which about has our out up was then should even your can't how some way into those it's very well its where had were may he these isn't such go dont i'd just i'll i've did didn't too far rather most won't wont doesn't vote voting party people parties system government);
 # my @stopwords = qw();
 my %stopwords;
 for (@stopwords) { $stopwords{$_} = 1 }
 
-while (my $q = new CGI::Fast()) {
+{
     print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
     eval {
             if (!defined($dbh) || !eval { $dbh->ping() }) {
@@ -81,6 +79,6 @@ while (my $q = new CGI::Fast()) {
             }
     };
     if ($@) {
-        print "Oh dear.\n$@";
+        &die_cleanly($@);
     }
 }

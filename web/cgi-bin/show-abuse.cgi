@@ -4,17 +4,17 @@ use warnings;
 use strict;
 use DBI;
 use HTML::Entities;
-use CGI::Fast qw/param/;
-
+use CGI qw/param/;
 use mysociety::NotApathetic::Config;
+
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 
-while (new CGI::Fast()) {
+{
         print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
-    	my $postid= param('postid') || next;
+    	my $postid= param('postid') || exit(0);
     	my $commentid= param('commentid') || '';
 
 	print "<input type=\"hidden\" name=\"postid\" value=\"$postid\" />\n";

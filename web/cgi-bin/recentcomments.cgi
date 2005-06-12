@@ -2,7 +2,7 @@
 
 use warnings;
 use strict;
-use CGI::Fast qw/param/;
+use CGI qw/param/;
 use Date::Manip;
 use DBI;
 use HTML::Entities;
@@ -15,8 +15,7 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 my %State; # State variables during display.
 our $url_prefix=$mysociety::NotApathetic::Config::url;
 
-while (my $q = new CGI::Fast()) {
-
+{
     if (defined $ENV{REQUEST_METHOD}) {
         print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
     };

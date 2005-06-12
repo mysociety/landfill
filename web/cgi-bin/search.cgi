@@ -3,12 +3,11 @@
 use warnings;
 use strict;
 use mysociety::NotApathetic::Config;
-use CGI::Fast qw/param/;
-my $query;
+use CGI qw/param/;
 our $url_prefix=$mysociety::NotApathetic::Config::url;
 
-while (new CGI::Fast()) {
-        $query=param("q")|| '';
+{
+        my $query=param("q")|| '';
         $query=~ s#("\S*)\s+(\S*")#$1+$2#g;
         $query=~ s#"# #g;
         $query=~ s# #/#g;

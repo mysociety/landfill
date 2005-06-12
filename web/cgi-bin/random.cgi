@@ -2,22 +2,17 @@
 
 use warnings;
 use strict;
-use CGI::Fast;
+use CGI;
 use DBI;
 use mysociety::NotApathetic::Config;
-
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
-my $dbh;
 our $url_prefix=$mysociety::NotApathetic::Config::url;
 
-while (my $q = new CGI::Fast()) {
-    eval {
-            if (!defined($dbh) || !eval { $dbh->ping() }) {
-                $dbh = DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
-            }
+{
+            my $dbh = DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 
             my $query=$dbh->prepare("
                           select postid
@@ -29,8 +24,4 @@ while (my $q = new CGI::Fast()) {
             $query->execute();
             my ($postid)= $query->fetchrow_array;
             print "Location: $url_prefix/comments/$postid\n\n";
-    };
-    if ($@) {
-        print "Oh dear.\n$@";
-    }
 }

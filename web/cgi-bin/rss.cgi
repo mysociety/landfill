@@ -6,7 +6,6 @@ use DBI;
 use HTML::Entities;
 use XML::RSS;
 use mysociety::NotApathetic::Config;
-use CGI::Fast;
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $email_domain= $mysociety::NotApathetic::Config::email_domain;
 
@@ -22,8 +21,8 @@ my %State; # State variables during display.
 my $search_term = &handle_search_term(); #' 1 = 1 ';
 
 
-while (new CGI::Fast()) {
-print "Content-Type: text/xml\r\n\r\n";
+{
+        print "Content-Type: text/xml\r\n\r\n";
 	my $query=$dbh->prepare("
 	              select postid,
 			     posts.title as title,

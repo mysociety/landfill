@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 use DBI;
-use CGI::Fast qw/:standard/;
+use CGI qw/:standard/;
 use HTML::Scrubber;
 use mysociety::NotApathetic::Config;
 
@@ -13,10 +13,9 @@ my $db_password= $mysociety::NotApathetic::Config::db_password;         # databa
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 my %Passed_Values;
 my %quoted;
+        
 
-begin:
-
-while (new CGI::Fast()) {
+{
         foreach my $param (param()) {
                 $Passed_Values{$param}=param($param);
         }
@@ -83,5 +82,5 @@ EOcomment
 sub die_cleanly {
 	my $error= shift || 'unknown';
 	print "Content-Type: text/plain\r\n\r\n<error>1</error><message>it went wrong</message>\n";
-	goto begin;
+        exit(0);
 }

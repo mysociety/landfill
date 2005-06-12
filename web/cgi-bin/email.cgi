@@ -8,7 +8,6 @@ use HTML::Scrubber;
 use Email::Valid;
 use Text::Wrap;
 use Mail::Mailer qw(sendmail);
-use CGI::Fast;
 use CGI qw/param/;
 use mysociety::NotApathetic::Config;
 
@@ -20,7 +19,7 @@ my $email_domain= $mysociety::NotApathetic::Config::email_domain;
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 
 
-while (new CGI::Fast()) {
+{
 	my %Passed_Values;
 	my $mailer= new Mail::Mailer 'sendmail';
         foreach my $param (param()) {
@@ -114,6 +113,7 @@ EOmail
 	print "Location: $url_prefix/emailfriend/emailsent.shtml?$Passed_Values{entryid}\r\n\r\n";
 
 }
+
 sub die_cleanly {
         my $reason=shift || '';
         print "Content-Type: text/plain\r\n\r\n
@@ -122,6 +122,6 @@ sub die_cleanly {
                 $reason
         Please go back and correct this before submitting again.
         ";
-        goto begin; # XXX HACK!
+        exit(0); # XXX HACK!
 }
 

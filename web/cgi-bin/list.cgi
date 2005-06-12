@@ -2,7 +2,7 @@
 
 use warnings;
 use strict;
-use CGI::Fast qw/param/;
+use CGI qw/param/;
 use Date::Manip;
 use DBI;
 use HTML::Entities;
@@ -15,8 +15,8 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 my %State; # State variables during display.
 our $url_prefix=$mysociety::NotApathetic::Config::url;
 
-while (my $q = new CGI::Fast()) {
 
+{
     if (defined $ENV{REQUEST_METHOD}) {
         print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
     };
@@ -68,9 +68,10 @@ while (my $q = new CGI::Fast()) {
             if ($printed==0) {
                 $printed = 1;
                 if ($type eq 'summary' || !$search_bit) {
+
                     if ($page > 0 || $type eq 'summary') {
                         print "<h2><a name=\"older\"></a>Older items:</h2>\n";
-					}elsif (defined param('interest')) {
+	  	    }elsif (defined param('interest')) {
                         print "<h2>Busiest posts</h2>\n";
                     } else {
                         print "<h2>They <span>weren't voting</span> because...</h2>\n";
@@ -80,7 +81,7 @@ while (my $q = new CGI::Fast()) {
                     print "<ul>\n";
                 } else {
 					print "<dl>\n";
-				}
+	        }
                 if ($type eq 'details' && $search_bit ne '') {
         	    print '<p>Your search for "'.$search_bit.'" yielded the following results:</p>';
                 }

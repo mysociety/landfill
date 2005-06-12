@@ -6,20 +6,16 @@ use DBI;
 use HTML::Entities;
 use XML::RSS;
 use mysociety::NotApathetic::Config;
-use CGI::Fast;
 
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $email_domain= $mysociety::NotApathetic::Config::email_domain;
-
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
-
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 my %State; # State variables during display.
 
-
-while (new CGI::Fast()) {
+{
     my $Entry=$ENV{QUERY_STRING};
     if (($Entry ne '') and ($Entry !~ /^\d+$/)) {
             print "Location: $url_prefix\r\n\r\n";

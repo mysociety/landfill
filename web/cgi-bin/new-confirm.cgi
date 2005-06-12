@@ -6,7 +6,7 @@ use DBI;
 use HTML::Entities;
 use HTML::Scrubber;
 use Email::Valid;
-use CGI::Fast qw/param/;
+use CGI qw/param/;
 
 use mysociety::NotApathetic::Config;
 
@@ -16,9 +16,7 @@ my $db_password= $mysociety::NotApathetic::Config::db_password;         # databa
 my $dbh;
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 
-begin:
-
-while (new CGI::Fast()) {
+{
     eval {
         if (!defined($dbh) || !eval { $dbh->ping() }) {
             $dbh = DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
@@ -65,7 +63,7 @@ while (new CGI::Fast()) {
         }
     };
     if ($@) {
-        print "Content-Type: text/plain\r\nStatus: 500\r\n\r\nSorry, something went wrong.\n$@\n";
+        &die_cleanly($@);
     }
 }
 

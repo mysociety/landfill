@@ -6,10 +6,10 @@ use DBI;
 use HTML::Entities;
 use HTML::Scrubber;
 use Email::Valid;
-use CGI::Fast qw/param/;
+use CGI qw/param/;
+use Text::Wrap;
 use mysociety::NotApathetic::Config;
 my %Passed_Values;
-use Text::Wrap;
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
@@ -18,11 +18,10 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $admin_url_prefix= $mysociety::NotApathetic::Config::admin_url;
 my $abuse_address= 'abuse'. $mysociety::NotApathetic::Config::email_domain; 
+	
 
-begin:
-
-while (new CGI::Fast()) {
-	foreach my $param (param()) {
+{
+        foreach my $param (param()) {
 		$Passed_Values{$param}=param($param);
 		$Passed_Values{$param}=~ s#\n# #gsi;
 	}
@@ -86,7 +85,7 @@ sub die_cleanly {
 		$reason
 	Please go back and correct this before submitting again.
 	";
-	goto begin;
+	exit(0);
 }
 
 

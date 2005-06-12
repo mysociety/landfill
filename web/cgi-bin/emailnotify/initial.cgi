@@ -8,7 +8,7 @@ use HTML::Scrubber;
 use Email::Valid;
 use Text::Wrap;
 use Mail::Mailer qw(sendmail);
-use CGI::Fast qw/param/;
+use CGI qw/param/;
 use mysociety::NotApathetic::Config;
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
@@ -16,9 +16,8 @@ my $db_username= $mysociety::NotApathetic::Config::db_username;              # d
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 
-begin:
 
-while (new CGI::Fast()) {
+{
 	my %Passed_Values;
 	my $mailer= new Mail::Mailer 'sendmail';
         foreach my $param (param()) {
@@ -83,6 +82,7 @@ EOmail
 	print "Location: $url_prefix/emailnotify/emailsent/\n\n";
 
 }
+
 sub die_cleanly {
         my $reason=shift || '';
         print "Content-Type: text/plain\n\n
@@ -91,5 +91,5 @@ sub die_cleanly {
                 $reason
         Please go back and correct this before submitting again.
         ";
-        goto begin;
+        exit(0);
 }

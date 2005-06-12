@@ -7,7 +7,7 @@ use DBI;
 use HTML::Entities;
 use HTML::Scrubber;
 use Email::Valid;
-use CGI::Fast qw/param/;
+use CGI qw/param/;
 use mysociety::NotApathetic::Config;
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
@@ -16,9 +16,8 @@ my $db_password= $mysociety::NotApathetic::Config::db_password;         # databa
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 my %Passed_Values;
 
-begin:
 
-while (new CGI::Fast()) {
+{
 	print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
         my $notifyid_q = $dbh->quote(param('u'));
         my $auth_code_q = $dbh->quote(param('c'));
@@ -60,6 +59,6 @@ sub die_cleanly {
                 $reason
         Please go back and correct this before submitting again.
         ";
-        goto begin;
+        exit(0):
 }
 

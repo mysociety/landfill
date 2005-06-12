@@ -59,7 +59,7 @@ our $url_prefix=$mysociety::NotApathetic::Config::url;
         while ($result=$query->fetchrow_hashref) {
 
             if ($printed==0) {
-                $printed = 1f ;
+                $printed = 1 ;
                 if ($type eq 'summary' || !$search_bit) {
                     if ($page > 0 || $type eq 'summary') {
                         print "<h2><a name=\"older\"></a>Older items:</h2>\n";

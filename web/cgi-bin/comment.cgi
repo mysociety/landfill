@@ -15,7 +15,6 @@ use HTML::Entities;
 use HTML::Scrubber;
 use Mail::Mailer qw/sendmail/;
 use Email::Valid;
-use CGI::Fast qw/param/;
 use mysociety::NotApathetic::Config;
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
@@ -25,9 +24,7 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 my %State; # State variables during display.
 my %Passed_Values;
 
-begin:
-
-while (new CGI::Fast()) {
+{
 	foreach my $param (param()) {
 		$Passed_Values{$param}=param($param);
 	}
@@ -90,7 +87,7 @@ sub die_cleanly {
 		$reason
 	Please go back and correct this before submitting again.
 	";
-	goto begin;
+        exit(0);
 }
 
 

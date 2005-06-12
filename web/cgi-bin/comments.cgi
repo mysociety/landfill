@@ -19,7 +19,7 @@ my $dbh;
 my %State; # State variables during display.
 
 
-while (my $q = new CGI::Fast()) {
+{
         if (!defined($dbh) || !eval { $dbh->ping() }) {
             $dbh = DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
         }

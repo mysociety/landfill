@@ -1,14 +1,6 @@
-<h2>About Not Apathetic</h2>
-<p>NotApathetic was built so that people who are planning not to vote
-in the <acronym title="United Kingdom">UK</acronym> General Election
-on May 5th can tell the world why. We won't try to persuade you that
-voting is a good or a bad idea - we're just here to record and share
-your explanations. Whether ideological,	practical or other, any	reason
-will do.</p>
+<h2>About Your Site</h2>
 
-<p><a href="/cgi-bin/similarity.cgi">Help us spot patterns in submitted reasons</a> (by telling us whether two posts are similar or not)</p>
-
-<small>A lot of users would like us to
-mention that if you spoil your ballot paper, it <em>will</em>
-be counted. So if you want to record a vote for "none of the
-above", you can.</small>
+<p>
+    you need to edit includes/description.shtml to
+    include a description of your site.
+</p>

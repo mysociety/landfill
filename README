@@ -1,0 +1,55 @@
+
+This is the MySociety.org NotApathetic.com code
+repository.
+
+To run NotApathetic.com, you need an Apache webserver
+MySQL database (although it should be relatively easy
+to port to another database if necessary).
+
+Perl modules needed are:
+        Mail::Mailer;
+        XML::RSS;
+        CGI;
+        DBI;
+        Date::Manip;
+        Email::Valid;
+        HTML::Entities;
+        HTML::Scrubber;
+        Mail::Mailer;
+        Text::Wrap;
+        XML::Simple;
+many of them are installed by default with Perl.
+
+Files that you need to edit
+    copy 
+        cgi-bin/mysociety/NotApathetic/Config.pm-incvs
+    to 
+         cgi-bin/mysociety/NotApathetic/Config.pm
+and edit the relevant lines.
+
+There are a selection of SSI files which need editing:
+    includes/header.shtml
+    includes/footer.shtml
+All design of the site is controlled through those files,
+along with the stylesheet
+    /na.css
+You may find grep useful when trying to track down
+some of the includes. Please let us know where 
+NotApathetic.com is hardcode into the site, so we
+can remove it for the people who follow you.
+
+Pages which will need rewriting for each site are:
+    about/index.shtml
+    news/index.shtml
+
+Similarly, some images in /images/ and favicon.ico
+will need editing and replacing with your images.
+
+Finally, email mysociety-na@mysociety.org to us about
+your site so we can take a look at what you've done.
+We are always willing to accept diffs which add 
+non-site-specific functionality.
+
+
+Sam Smith 
+    email: s@msmith.net

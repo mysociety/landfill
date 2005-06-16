@@ -1,42 +1,14 @@
 <!--#set var="page_title" value="News" -->
 <!--#include virtual="/includes/header.shtml" -->
 
-<h2><span>News</span> from NotApathetic.com</h2>
-<h4>19<sup>th</sup> May 2005</h4>
-<p>We've closed Not Apathetic to new submissions - we will be
-publishing an analysis on this site soon, and making the data
-(minus email addresses) available for study. The explanations
-and responses will remain here indefinitely.
-</p>
-<h4>13th April 2005</h4>
 <p>
-There's a new pledge on PledgeBank - we're looking for more people to deliver
-leaflets about NotApathetic. Please put your name to
-<a href="http://www.pledgebank.com/naleaflets2">this pledge</a> and you can help
-spread the word.</p>
-
-<h4>7th April 2005</h4>
-<p>
-NotApathetic launches! Coverage in The Register mean we have quite a busy day.</p>
-
-<h4>6th April 2005</h4>
-<p>
-NotApathetic needs your help to make an impact. Please
-put your name to <a href="http://www.pledgebank.com/naleaflets">this pledge</a> (powered by our next site, PledgeBank),
- to help us spread the word. We're only asking for about 20 minutes
- of your time, and it could make a real difference.
+You should put some site news here.
 </p>
 
-<h4>5th April 2005</h4>
 <p>
-The election's just been called, and we're down to
-polishing mode. Looks like Thursday is probably our launch day.</p>
-
-<h4>14th March 2005 </h4>
-<p>
-Site still under construction. If you've any
-     thoughts on how NotApathetic might be spread through the election
-     campaign, please let us know!
+There's no reason you can't replace this with a feed from
+blog entries or a whole blog. We simply didn't need to 
+&mdash; we posted 3 entries here.
 </p>
 
 <!--#include virtual="/includes/footer.shtml" -->

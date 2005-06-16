@@ -15,6 +15,7 @@ my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $url_prefix= $mysociety::NotApathetic::Config::url;
+my $site_name= $mysociety::NotApathetic::Config::site_name;              # database username
 my $dbh;
 my %State; # State variables during display.
 
@@ -83,7 +84,7 @@ my %State; # State variables during display.
     dc:title="$result->{title}"
     dc:identifier="$url_prefix/comments/$result->{postid}"
     dc:description="$result->{shortwhy}"
-    dc:creator="NotApathetic.com"
+    dc:creator="$site_name"
 	/>
 </rdf:RDF>
 -->

@@ -12,7 +12,9 @@ use CGI qw/param/;
 use mysociety::NotApathetic::Config;
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
+my $site_name= $mysociety::NotApathetic::Config::site_name;
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
+my $email_noreply= $mysociety::NotApathetic::Config::email_noreply;
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 
@@ -56,8 +58,8 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 	my $to_person = $Passed_Values{"email"} ;
 
 	$headers{'To'}= "$to_person" ;
-	$headers{"From"}= '"NotApathetic.com" <donotreply@notapathetic.com>';
-	$headers{"Subject"}= "Confirm request for Updates from NotApathetic.com";
+        $headers{"From"}= "\"$site_name\" <$email_noreply>" ;
+	$headers{"Subject"}= "Confirm request for Updates from $site_name";
 	$headers{"X-Originating-IP"}= $ENV{'HTTP_X_FORWARDED_FOR'}  || $ENV{'REMOTE_ADDR'} || return;
 	$mailer->open(\%headers);
 
@@ -65,15 +67,14 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 print $mailer <<EOmail;
 
 We've had a request for this address to receive notifications
-of new posts on NotApathetic.com .
+of new posts on $site_name .
 
 If you wish to confirm this, please click the below link:
-	$url_prefix/emailnotify/confirm?u=$rowid;c=$Passed_Values{authcode}
+	$url_prefix/emailnotify/confirm?u=$rowid\&c=$Passed_Values{authcode}
 
 If you didn't request this (or have changed your mind), just
 ignore this message. If you wish to report it, forward it to
-team\@notapathetic.com
-
+$catch_all_address
 
 EOmail
 

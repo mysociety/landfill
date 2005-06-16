@@ -21,6 +21,7 @@ my $db_username= $mysociety::NotApathetic::Config::db_username;              # d
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 my $url_prefix= $mysociety::NotApathetic::Config::url;
+my $site_name= $mysociety::NotApathetic::Config::site_name;
 my $email_domain= $mysociety::NotApathetic::Config::email_domain; 
 my %Passed_Values;
 
@@ -100,9 +101,9 @@ sub send_email {
     my $address      = $Passed_Values{"email"} || 'nobody' . $email_domain;
     my $name         = $Passed_Values{"name"} || '';
 
-    $headers{"Subject"}= 'Request to post to NotApathetic.com';
+    $headers{"Subject"}= 'Request to post to $site_name';
     $headers{"To"}= "$name <$address>" ;
-    $headers{'From'}= "Not Apathetic <team$email_domain>";
+    $headers{'From'}= "$site_name <team$email_domain>";
     $headers{"X-Originating-IP"}= $ENV{'HTTP_X_FORWARDED_FOR'}  || $ENV{'REMOTE_ADDR'} || return;
     $mailer->open(\%headers);
 
@@ -111,7 +112,7 @@ sub send_email {
 
 Hi,
 
-Someone has tried to post to NotApathetic.com using this address
+Someone has tried to post to $site_name using this address
 on the topic of $Passed_Values{title}
 
 If it wasn't you, just ignore it.
@@ -121,7 +122,7 @@ the following link
         $url_prefix/cgi-bin/new-confirm.cgi?u=$Passed_Values{rowid};c=$Passed_Values{authcode}
 
 Thank you
-NotApathetic.com
+$site_name
 
 EOmail
 

@@ -8,6 +8,7 @@ use XML::RSS;
 use mysociety::NotApathetic::Config;
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $email_domain= $mysociety::NotApathetic::Config::email_domain;
+my $site_name= $mysociety::NotApathetic::Config::site_name;
 
 if ((defined $ENV{QUERY_STRING}) and ($ENV{QUERY_STRING} =~/^\d+$/)){
 	print "Location: $url_prefix/cgi-bin/rss-comments.cgi?$ENV{QUERY_STRING}\r\n\r\n";
@@ -46,9 +47,9 @@ my $search_term = &handle_search_term(); #' 1 = 1 ';
  use XML::RSS;
  my $rss = new XML::RSS (version => '1');
  $rss->channel(
-   title        => "NotApathetic.com",
+   title        => "$site_name",
    link         => "$url_prefix",
-   description  => "New posts on $url_prefix .",
+   description  => "New posts on $site_name",
    dc => {
      creator    => "team$email_domain",
      publisher  => "team$email_domain",

@@ -13,6 +13,8 @@ my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $url_prefix= $mysociety::NotApathetic::Config::url;
+my $site_name= $mysociety::NotApathetic::Config::site_name;
+my $email_noreply= $mysociety::NotApathetic::Config::email_noreply;
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 my %Passed_Values;
 
@@ -56,8 +58,8 @@ sub send_notify_email {
 	my $mailer= new Mail::Mailer 'sendmail';
 
         $headers{'To'}= "$to_person" ;
-        $headers{"From"}= '"NotApathetic.com" <donotreply@notapathetic.com>' ;
-        $headers{"Subject"}= "Cancelled Updates from NotApathetic.com";
+        $headers{"From"}= "\"$site_name\" <$email_noreply>" ;
+        $headers{"Subject"}= "Cancelled Updates from $site_name";
         $headers{"X-Originating-IP"}= $ENV{'HTTP_X_FORWARDED_FOR'}  || $ENV{'REMOTE_ADDR'} || return;
         $mailer->open(\%headers);
 
@@ -65,7 +67,7 @@ sub send_notify_email {
 print $mailer <<EOmail;
 
 We've had a request for this address to cancel a notification
-of new posts on NotApathetic.com .
+of new posts on $site_name.
 
 If you didn't request this (or have changed your mind), you can 
 reregister by following the below link

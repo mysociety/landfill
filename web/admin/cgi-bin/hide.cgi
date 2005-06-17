@@ -17,7 +17,7 @@ my $db_password= $mysociety::NotApathetic::Config::db_password;         # databa
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $admin_url_prefix= $mysociety::NotApathetic::Config::admin_url;
-my $abuse_address= 'abuse'. $mysociety::NotApathetic::Config::email_domain; 
+my $abuse_address= $mysociety::NotApathetic::Config::abuse_address;
 my $site_name= $mysociety::NotApathetic::Config::site_name;
 
 

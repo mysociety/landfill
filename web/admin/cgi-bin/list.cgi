@@ -14,6 +14,7 @@ my $db_password= $mysociety::NotApathetic::Config::db_password;         # databa
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 my %State; # State variables during display.
 our $url_prefix=$mysociety::NotApathetic::Config::url;
+my $abuse_address= $mysociety::NotApathetic::Config::abuse_address;
 our $admin_url_prefix=$mysociety::NotApathetic::Config::admin_url;
 
 print "Content-type: text/html\n\n";

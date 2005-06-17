@@ -31,19 +31,30 @@ There are a selection of SSI files which need editing:
     includes/header.shtml
     includes/footer.shtml
 All design of the site is controlled through those files,
-along with the stylesheet
-    /na.css
-You may find grep useful when trying to track down
+along with the stylesheet /na.css
+You may find grep useful when trying to track throyugh
 some of the includes. Please let us know where 
 NotApathetic.com is hardcode into the site, so we
 can remove it for the people who follow you.
 
-Pages which will need rewriting for each site are:
-    about/index.shtml
+
+Pages which will need rewriting for each site are: 
+    about/index.shtml (including email address)
     news/index.shtml
+    includes/description.shtml
 
 Similarly, some images in /images/ and favicon.ico
-will need editing and replacing with your images.
+will need replacing with your images.
+
+
+Site admin interface
+
+You will need to edit /admin/.htaccess
+to point it at a .htpasswd file. The username that 
+performs admin functions is included in the notifications.
+
+
+
 
 Finally, email mysociety-na@mysociety.org to us about
 your site so we can take a look at what you've done.
@@ -52,4 +63,5 @@ non-site-specific functionality.
 
 
 Sam Smith 
-    email: s@msmith.net
+    personal email: s@msmith.net
+

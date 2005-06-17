@@ -28,8 +28,11 @@ our $admin_url='https://secure.notapathetic.com/admin'; # XXX still needs fixing
 # where automated messages that don't need a reply come from
 our $email_noreply='donotreply@' . $domain;
 
-# the people who run the website. Used for abuse stuff amongst other things
+# the people who run the website. 
 our $catch_all_address='team@' . $domain;
+
+# who deals with abuse reports. May or may not be the same as the above
+our $abuse_address='abuse@' . $domain;
 
 our $email_domain='@' . $domain; #used. May want to remove it eventually.
 our $url='http://www.' . $domain; # absolute URL. No slash on the end

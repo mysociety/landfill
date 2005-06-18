@@ -25,7 +25,7 @@ our $url_prefix=$mysociety::NotApathetic::Config::url;
         my $search_bit = param('search') || '';
         my $page = param('page') || 0;
         my $mainlimit = 15;
-		my $brief = 2; # mainlimit x brief entries displayed in the brief listing
+	my $brief = 2; # mainlimit x brief entries displayed in the brief listing
         my $limit = ($type eq 'details') ? $mainlimit : $mainlimit * $brief;
 	
 	my $offset = $page * $mainlimit;
@@ -126,12 +126,11 @@ EOfragment
             }
         }
         if ($query->rows > 0) {
-            my $url = '/recentcomments/?';
-			
-			my $older = $page;
+            my $url = '/oldercomments/';
+		my $older = $page;
             if ($type eq 'summary') {
                 print "</ul>\n";
-                $older += $brief;
+                $older++;
                 print "<p class=\"right\"><a href=\"$url$older\">Even older entries</a></p>";
             } else {
 				print "</dl>\n";
@@ -139,7 +138,7 @@ EOfragment
                 my $newer = $page - 1;
                 print '<p class="center">';
                 if ($newer == 0) {
-                    my $fronturl = ($search_bit ne '') ? '/search/?'.$search_bit : '/';
+                    my $fronturl = ($search_bit ne '') ? '/oldersearch/'.$search_bit : '/';
                     print "<a href=\"$fronturl\">front page</a> | ";
                 } elsif ($newer > 0) {
                     print "<a href=\"$url$newer\">newer $mainlimit entries</a> | ";

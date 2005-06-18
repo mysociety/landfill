@@ -46,20 +46,23 @@ Pages which will need rewriting for each site are:
 Similarly, some images in /images/ and favicon.ico
 will need replacing with your images.
 
+If you get error messages from Apache immediately on installation,
+you may need to edit the .htaccess files for your local server. The
+defaults will probably work.
 
-Site admin interface
 
-You will need to edit /admin/.htaccess
+For the site admin interface, you will need to edit /admin/.htaccess
 to point it at a .htpasswd file. The username that 
-performs admin functions is included in the notifications.
+performs admin functions is included in the notifications. You might
+want to put it on a SSL server or similar.
 
 
 
 
-Finally, email mysociety-na@mysociety.org to us about
-your site so we can take a look at what you've done.
-We are always willing to accept diffs which add 
-non-site-specific functionality.
+Finally, once it's working, please email mysociety-na@mysociety.org to 
+tell us about your site so we can take a look at what you've done.
+We are also willing to accept diffs which add non-site-specific
+functionality which make life easier for those who install it after you.
 
 
 Sam Smith 

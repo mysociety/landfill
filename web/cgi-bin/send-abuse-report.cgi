@@ -79,14 +79,7 @@ EOmail
 
 
 sub die_cleanly {
-	my $reason=shift;
-	print "Content-Type: text/plain\r\n\r\n
-
-	Your submission failed:
-		$reason
-	Please go back and correct this before submitting again.
-	";
-	exit(0);
+        &mysociety::NotApathetic::Config::die_cleanly(@_);
 }
 
 

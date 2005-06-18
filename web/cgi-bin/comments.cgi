@@ -28,9 +28,7 @@ my %State; # State variables during display.
         $Entry=$ENV{QUERY_STRING} || '';
 
         if ($Entry !~ /^\d+$/) {
-                print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
-                print "$Entry Error - no entry id passed in\r\n\r\n";
-                next;
+                &die_cleanly ("$Entry Error - no entry id passed in\r\n\r\n");
         }
 
         my $query=$dbh->prepare("
@@ -130,4 +128,9 @@ EOhtml
 	
 	$html .="</dl>";
 	return $html;
+}
+
+sub die_cleanly {
+      &mysociety::NotApathetic::Config::die_cleanly(@_);
+
 }

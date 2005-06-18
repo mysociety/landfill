@@ -32,9 +32,9 @@ There are a selection of SSI files which need editing:
     includes/footer.shtml
 All design of the site is controlled through those files,
 along with the stylesheet /na.css
-You may find grep useful when trying to track throyugh
+You may find grep useful when trying to track through
 some of the includes. Please let us know where 
-NotApathetic.com is hardcode into the site, so we
+NotApathetic.com is hardcoded into the site, so we
 can remove it for the people who follow you.
 
 

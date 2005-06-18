@@ -37,3 +37,11 @@ our $abuse_address='abuse@' . $domain;
 our $email_domain='@' . $domain; #used. May want to remove it eventually.
 our $url='http://www.' . $domain; # absolute URL. No slash on the end
 
+
+
+# when a script dies, serve aredirect
+sub die_cleanly {
+        my $error= shift || 'no error given';
+        print "Location: $url/error/?$error\n\n";
+}
+

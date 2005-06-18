@@ -9,17 +9,17 @@ use HTML::Entities;
 use mysociety::NotApathetic::Config;
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
-my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
-my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
-my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
+my $db_username= $mysociety::NotApathetic::Config::db_username; # database username
+my $db_password= $mysociety::NotApathetic::Config::db_password; # database password
+my $dbh=DBI->connect($dsn, $db_username, $db_password);
 my %State; # State variables during display.
 our $url_prefix=$mysociety::NotApathetic::Config::url;
 
 
 {
-    if (defined $ENV{REQUEST_METHOD}) {
-        print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
-    };
+     if (defined $ENV{REQUEST_METHOD}) {
+         print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
+     }
 
     {
         my $type = param('type') || 'details';
@@ -118,15 +118,17 @@ EOfragment
             }
         }
         if ($query->rows > 0) {
-            my $url = '/?';
+            my $url = '/older/';
 			
-			if ($search_bit ne ''){
-				$url = '/search/?'.$search_bit.'|';
-			}elsif (defined param('interest')){
-				$url = '/busiest/?';
-			}
+	    if ($search_bit ne ''){
+			$url = '/oldersearch/'.$search_bit.'|';
+	    }elsif (defined param('interest')){
+			$url = '/olderbusiest/';
+	    }
 			
-			my $older = $page;
+	    my $older = $page;
+
+
             if ($type eq 'summary') {
                 print "</ul>\n";
                 $older += $brief+1;
@@ -137,7 +139,7 @@ EOfragment
                 my $newer = $page - 1;
                 print '<p align="center">';
                 if ($newer == 0) {
-                    my $fronturl = ($search_bit ne '') ? '/search/?'.$search_bit : '/';
+                    my $fronturl = ($search_bit ne '') ? '/oldersearch/'.$search_bit : '/';
                     print "<a href=\"$fronturl\">front page</a> | ";
                 } elsif ($newer > 0) {
                     print "<a href=\"$url$newer\">newer $mainlimit entries</a> | ";

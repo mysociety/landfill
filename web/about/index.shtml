@@ -10,7 +10,11 @@
 		<h2>Contact Us</h2>
 		<p>Our email address is: <a href="mailto:team@example.com">team@example.com</a>.
 		Tell us what you think of the site.</p>
-		<!--#include virtual="/includes/searchform.shtml" -->
+                <!--#include virtual="/includes/searchform.shtml" -->
 
+                <p>
+                Original site built by :<br />
+                <a href="http://www.mysociety.org/"><img src="/images/mysociety.gif" alt="mySociety" /></a>
+                </p>
 <!--#include virtual="/includes/footer.shtml" -->
 

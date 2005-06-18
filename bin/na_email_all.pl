@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -I/path/to/webroot/cgi-bin/
 
 use warnings;
 use strict;
@@ -7,9 +7,12 @@ use Text::Wrap;
 use Mail::Mailer qw(sendmail);
 $Text::Wrap::columns = 65;
 
-my $dsn = 'DBI:mysql:notapathetic:localhost'; # DSN connection string
-my $db_username= 'notapathetic';              # database username
-my $db_password= '';         # database password
+my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
+my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
+my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
+my $url_prefix= $mysociety::NotApathetic::Config::url;
+my $email_noreply= $mysociety::NotApathetic::Config::email_noreply;
+my $site_name= $mysociety::NotApathetic::Config::site_name;
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 my %State; # State variables during display.
 my %Passed_Values;
@@ -48,18 +51,18 @@ sub send_email {
 	my %headers; 
 
         $headers{'To'}= "$to_person" ;
-        $headers{"From"}= '"Notapathetic.com" <donotreply@notapathetic.com>';
-        $headers{"Subject"}= "Yesterday on NotApathetic.com";
+        $headers{"From"}= "\"$site_name\" <$email_noreply>";
+        $headers{"Subject"}= "Yesterday on $site_name";
         $mailer->open(\%headers);
 
 	if ($details->{search} ne '') {
-		$limiter_text=" matching http://www.NotApathetic.com/?$details->{search}.\n";
+		$limiter_text=" matching $url/?$details->{search}.\n";
 	}
 
 
 print $mailer <<EOfragment;
 
-Yesterday on NotApathetic.com$limiter_text
+Yesterday on $site_name
 
 EOfragment
 
@@ -69,7 +72,7 @@ EOfragment
 		print $mailer <<EOfragment;
      $result->{title}
        $desc
-       http://www.notapathetic.com/comments/$result->{postid}
+       $url/comments/$result->{postid}
 
 EOfragment
 	}
@@ -79,7 +82,7 @@ EOfragment
 
 
 To cancel your notifications, visit this URL:
-  http://www.notapathetic.com/emailnotify/cancel?u=$details->{notifyid};c=$details->{authcode}
+  $url/emailnotify/cancel?u=$details->{notifyid}&c=$details->{authcode}
 
 EOfooter
         $mailer->close;

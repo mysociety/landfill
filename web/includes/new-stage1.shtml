@@ -1,11 +1,12 @@
-<p>Not Apathetic is now closed to new submissions - we will be
-publishing an analysis on this site soon, and making the data (minus
-email addresses) available for study. The explanations and responses
-will remain here indefinitely. Add your name to the mySociety news
-list if you'd like to be told when we publish our analysis, and the
-underlying data</p>
+		<h2>I <span>didn't vote</span> because...</h2>
+		<form method="post" action="/cgi-bin/new-stage1.cgi">
+		<fieldset>
+			<p class="enlarge"><small><a id="growtext" onclick="growTextarea('reasons'); return false" href="/new/">Want more space to write in?</a></small></p>
+				<textarea name="why" rows="8" cols="24" id="reasons">Write your reasons here...</textarea>
+				<label for="emailreason">Email address (<a href="/about/privacy/">why do we need this?</a>)</label>
+				<input type="text" name="email" id="emailreason" size="30" />
+				<input type="submit" value="Submit" />
+		</fieldset>
+		</form>
 
-<p> <form method="post" action="http://www.mysociety.org/subscribe.php"> Subscribe for occasional <strong>mySociety updates</strong>
-<br /><input type="text" name="subv" value="your e-mail address" onfocus="this.value=''" />
-    <input type="submit" name="sub" value="go!" />
-</form> </p>
+

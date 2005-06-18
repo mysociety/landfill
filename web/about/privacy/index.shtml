@@ -2,28 +2,6 @@
 <!--#include virtual="/includes/header.shtml" -->
 
 <h2>Privacy Policy</h2>
-<p>Your email address will not be:
-<ul>
-	<li>displayed on the website</li>
-	<li>used to send unsolicited (spam) email</li>
-        <li>sold, or passed on to other organisations</li>
-</ul></p>
 
-<p>Your email address is <strong>required</strong> for the purposes of validating as we believe in responsibility and to prevent fraudulent use of the website.</p>
-
-<p>Your email address is available to the site administrators.</p>
-
-<p>Data entered in the text boxes on the site &mdash; <em>except for email addresses</em> &mdash; <strong>is</strong> visible to viewers of the website once the post has been confirmed.</p>
-
-<p>Additional data is collected for the purposes of anonymised statistics which may or may not be made available to:
-<ul>
-	<li>visitors of the website</li>
-	<li>developers</li>
-	<li>targeted interest groups</li>
-	<li>funding organisations</li>
-	<li><a href="http://www.electoralcommission.org.uk/">The Electoral Commission</a></li>
-</ul>
-
-<p>The site operates as a project of <a href="http://www.mysociety.org">mySociety</a>, part of registered charity <a href="http://www.democracy.org.uk"><acronym title="UK Citizens Online Democracy">UKCOD</acronym></a>.</p>
-
+<p>Your privacy policy goes here</p>
 <!--#include virtual="/includes/footer.shtml" -->

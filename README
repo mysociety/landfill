@@ -42,6 +42,7 @@ Pages which will need rewriting for each site are:
     about/index.shtml (including email address)
     news/index.shtml
     includes/description.shtml
+    about/privacy/index.shtml
 
 Similarly, some images in /images/ and favicon.ico
 will need replacing with your images.

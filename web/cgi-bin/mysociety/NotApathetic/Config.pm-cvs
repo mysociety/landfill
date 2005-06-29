@@ -18,6 +18,10 @@ our $db_password= 'wearenottellingyou';        # database password
 our $domain='notapathetic.com';
 
 
+# when comments/posts are turned off, change this to 0.
+our $site_open_for_additions=1;
+
+
 #what's the name of the website - not necessarily the domain
 our $site_name='NotApathetic.com';
 

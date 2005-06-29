@@ -1,13 +1,5 @@
 #!/usr/bin/perl
 
-
-# # to disable comments, uncomment these next 4 lines
-#use mysociety::NotApathetic::Config;
-#my $url_prefix= $mysociety::NotApathetic::Config::url;
-#print "Location: $url_prefix\n\n";
-#exit(0);
-
-
 use warnings;
 use strict;
 use DBI;
@@ -17,12 +9,18 @@ use Mail::Mailer qw/sendmail/;
 use Email::Valid;
 use mysociety::NotApathetic::Config;
 
+if ($mysociety::NotApathetic::Config::site_open_for_additions == 0) {
+    print "Location: $mysociety::NotApathetic::Config::url\n\n";
+    exit(0);
+}
+
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $domain = $mysociety::NotApathetic::Config::domain; # DSN connection string
 my $site_name= $mysociety::NotApathetic::Config::site_name; # DSN connection string
 my $email_noreply= $mysociety::NotApathetic::Config::email_noreply; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
+my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 my %State; # State variables during display.
 my %Passed_Values;

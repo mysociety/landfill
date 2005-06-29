@@ -1,11 +1,5 @@
 #!/usr/bin/perl
 
-## comment out the below lines to turn the script off
-##   when the site closes.
-#use mysociety::NotApathetic::Config;
-#my $url_prefix= $mysociety::NotApathetic::Config::url;
-#print "Location: $url_prefix\n\n";
-#exit(0);
 
 use warnings;
 use strict;
@@ -15,6 +9,13 @@ use HTML::Scrubber;
 use Email::Valid;
 use CGI qw/param/;
 use mysociety::NotApathetic::Config;
+
+if ($mysociety::NotApathetic::Config::site_open_for_additions == 0) {
+    print "Location: $mysociety::NotApathetic::Config::url\n\n";
+    exit(0);
+}
+
+
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username

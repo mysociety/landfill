@@ -7,6 +7,12 @@ use CGI qw/:standard/;
 use HTML::Scrubber;
 use mysociety::NotApathetic::Config;
 
+if ($mysociety::NotApathetic::Config::site_open_for_additions == 0) {
+    print "Location: $mysociety::NotApathetic::Config::url\n\n";
+    exit(0);
+}
+
+
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password

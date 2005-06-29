@@ -55,7 +55,14 @@ defaults will probably work.
 For the site admin interface, you will need to edit /admin/.htaccess
 to point it at a .htpasswd file. The username that 
 performs admin functions is included in the notifications. You might
-want to put it on a SSL server or similar.
+want to put it on a SSL server or similar.  You should
+create a new virtual host for the installaion - there are
+significant amount of hardcoded references to /cgi-bin and
+other paths. If you need to run the site as part of another domain,
+we recommend you first install it under it's own virtual host, and then
+do a second install on your site once you're familiar with the processes,
+and you have a working site to compare to.
+
 
 
 

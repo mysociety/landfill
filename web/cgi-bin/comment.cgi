@@ -6,6 +6,7 @@ use DBI;
 use HTML::Entities;
 use HTML::Scrubber;
 use Mail::Mailer qw/sendmail/;
+use CGI qw/param/;
 use Email::Valid;
 use mysociety::NotApathetic::Config;
 

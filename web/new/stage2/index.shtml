@@ -64,7 +64,7 @@
 			Ever voted?
 		</td>
 		<td>
-			<select name="region">
+			<select name="evervoted">
 				<option value=""></option>
 				<option value="yes">yes</option>
 				<option value="notlast">Yes, but not last time</option>

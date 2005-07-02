@@ -1,5 +1,6 @@
 <!--#set var="page_title" value="Busiest comments from those not voting in the 2005 General Election" -->
 <!--#include virtual="/includes/header.shtml" -->
+<h2>Busiest Posts</h2>
 <!--#include virtual="/cgi-bin/list.cgi?interest=true&page=${QUERY_STRING}" -->
 
 </div>

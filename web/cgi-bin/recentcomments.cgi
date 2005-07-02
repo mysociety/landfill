@@ -62,10 +62,11 @@ our $url_prefix=$mysociety::NotApathetic::Config::url;
 				distinct posts.postid,
 				posts.title
 			from
-				(select postid from comments order by posted desc) as d,
+				comments,
 				posts
 			where
 				d.postid = posts.postid
+			order by comments.posted desc
 			limit
 				$offset, $limit    	
 			");

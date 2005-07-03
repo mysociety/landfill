@@ -47,5 +47,6 @@ our $url='http://www.' . $domain; # absolute URL. No slash on the end
 sub die_cleanly {
         my $error= shift || 'no error given';
         print "Location: $url/error/?$error\n\n";
+	exit(0);
 }
 

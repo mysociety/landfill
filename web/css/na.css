@@ -332,3 +332,7 @@ width:450px;
 div#adminMain h2{
 margin-top:0;
 }
+
+span.i {
+    font-size: 0;
+}

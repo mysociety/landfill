@@ -27,7 +27,7 @@ download a live RSS feed of your keywords.</p>
 <p>
 	If you wish to make your own searches in a 'del.icio.us'ish 
 	style manner, you can enter arbitrary search criteria:
-	<tt>http://www.notapathetic.com/search/?/one/two/three+four/five</tt>
+        <tt>http://www.notapathetic.com/search/?/<span class="i"> </span>one/<span class="i"> </span>two/<span class="i"> </span>three+four/<span class="i"> </span>five</tt>
 	will search for (one or two or (three and four) or five).
 </p>
 

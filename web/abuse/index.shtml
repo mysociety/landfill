@@ -11,7 +11,7 @@ be deleted. Thanks for your help!</p>
 
 <div>
 	<label for="emailt">Email address:</label>
-	<input type="text" name="emailt" id="email" value="" maxlength="100" size="30" class="form" />
+	<input type="text" name="email" id="email" value="" maxlength="100" size="30" class="form" />
 </div>
 
 <div>

@@ -20,13 +20,13 @@ be deleted. Thanks for your help!</p>
 
 	<input type="submit" value="Send report" />
 </div>
-</form>
 </div>
 
 <div id="inputBox">
 <h2>The comment you're reporting</h2>
 
 <!--#include virtual="/cgi-bin/show-abuse.cgi?${QUERY_STRING}" -->
+</form>
 
 <!--#include virtual="/includes/footer.shtml" -->
 

@@ -26,6 +26,7 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 		&output_post($postid,$commentid);
 	
 	}
+	print "</form>";
 }
 
 sub output_comment {
@@ -40,6 +41,7 @@ sub output_comment {
 
 	$result->{comment} =~ s#\r\n#</p>\n\n<p>\n#g;
 	$result->{comment} =~ s#<p>\n</p>\n\n<p>\n#<p>\n#g;
+
 	print <<EOentry;
 	<div class="entry">
 		$result->{comment}

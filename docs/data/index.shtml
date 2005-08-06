@@ -1,0 +1,26 @@
+<!--#set var="no_right_map" value="yes" -->
+<!--#set var="page_title" value="RSS, XML and CSV feeds" -->
+<!--#include virtual="../includes/header.shtml" -->
+
+<h2><span>RSS</span>, XML and CSV feeds</h2>
+
+<p>If you've got here, you probably already know what RSS is. If you don't, read <a href="http://en.wikipedia.org/wiki/RSS_%28file_format%29">Wikipedia's entry on RSS</a>.</p>
+
+<dl>
+<dd><a href="/cgi-bin/rss.cgi"><img src="/images/rss.gif" alt="rss "/>people's reasons</a></dd>
+<dd><a href="/cgi-bin/rss-comments.cgi"><img src="/images/rss.gif" alt="rss "/>people's comments</a></dd>
+<dd><a href="/cgi-bin/postsxml.cgi"><img src="/images/xml.gif" alt="xml "/>all data</a></dd>
+</dl>
+
+</div>
+<div id="inputBox">
+<h2>Not Apathetic logos</h2>
+<ul>
+<li><a href="/images/nasmall.png" />small logo</a></li>
+<li><a href="/images/na2.png" />medium logo</a></li>
+<li><a href="/images/nalarge.png" />big logo</a></li>
+</ul>
+</div>
+
+<!--#include virtual="../includes/footer.shtml" -->
+

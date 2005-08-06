@@ -1,0 +1,10 @@
+<!--#set var="no_right_map" value="yes" -->
+<!--#set var="page_title" value="New Entry" -->
+<!--#include virtual="/includes/header.shtml" -->
+
+<h2>I <span>didn't vote</span> because...</h2>
+
+<!--#include virtual="/includes/new-stage1.shtml" -->
+
+<!--#include virtual="/includes/footer.shtml" -->
+

@@ -1,0 +1,29 @@
+<!--#set var="no_right_map" value="yes" -->
+<!--#set var="page_title" value="About Us" -->
+<!--#include virtual="/includes/header.shtml" -->
+
+<p>
+    More stuff about your website
+</p>
+
+
+<p>
+	Users of Google Earth can find out KML file
+	<a href="/cgi-bin/kml.cgi/yourhistoryhere.kml">for flying
+	purposes</a>.
+</p>
+
+</div>
+<div id="inputBox">
+		<!--#include virtual="/includes/new-stage1.shtml" -->
+		<h2>Contact Us</h2>
+		<p>Our email address is: <a href="mailto:team@example.com">team@example.com</a>.
+		Tell us what you think of the site.</p>
+                <!--#include virtual="/includes/searchform.shtml" -->
+
+                <p>
+                Original site built by :<br />
+                <a href="http://www.mysociety.org/"><img src="/images/mysociety.gif" alt="mySociety" /></a>
+                </p>
+<!--#include virtual="/includes/footer.shtml" -->
+

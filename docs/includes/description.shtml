@@ -1,0 +1,18 @@
+<p>
+<h4>About the site</h4>
+	Leave notes about history in your area, and let others see.
+</p>
+
+<p>
+	TODO: 
+	<ul>
+		<li>search by geography using a map.</li>
+		<li>Map on front page.</li>
+		<li>"edit this entry" module</li>
+		<li><a href="/api/">full API</a>.</li>
+		<li>map on front page.</li>
+		<li>fix big red box.</li>
+		<li>Track down problems with precision.</li>
+		<li>add site= to all queries and a config file option.</li>
+	</ul>
+</p>

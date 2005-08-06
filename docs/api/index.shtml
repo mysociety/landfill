@@ -1,0 +1,53 @@
+<!--#set var="page_title" value="not voting in the 2005 general election?" -->
+<!--#include virtual="/includes/header.shtml" -->
+
+<h2>API</h2>
+
+<p>
+	We intend to have a full web service API. Using GET/POST requests,
+	you should be able to submit/receive informaton which interacts
+	the same way our web pages do. All data will be available via XML
+	for reuse.
+</p>
+
+<h4>Get posts out</h4>
+<p>
+	All post data is available via xml: <a href="/cgi-bin/postsxml.cgi">here</a>. We also have a <a href="/cgi-bin/kml.cgi/yourhistoryhere.kml">KML</a> file for use with Google Earth.
+	<br />
+	TODO: Need access to comments yet.
+</p>
+
+
+<h4>Submit data</h4>
+<p>
+	Two stage. Fake the form effectively. 
+	need to add code for target="xml" output XML not an HTTP redirect.
+</p>
+
+<h4>Search</h4>
+<p>
+	Have a target=xml flag to search box. 
+</p>
+
+<h4>Search within</h4>
+<p>
+	Make a GET request to <a href="/cgi-bin/kml.cgi/searchwithin.kml">/cgi-bin/kml.cgi</a> 
+	with parameters of lat/long
+	of the top left and bottom right corners. Parameters are
+	named:
+	<tt>topleft_lat</tt>,
+	<tt>topleft_long</tt>,
+	<tt>topright_lat</tt>,
+	<tt>topright_long</tt>.
+</p>
+
+</div>
+<div id="inputBox">
+<a name="input"></a>
+<div class="hideme"><a href="#top">back to top of page</a></div>
+<!--#include virtual="/includes/new-stage1.shtml" -->
+<!--#include virtual="/includes/description.shtml" -->
+<!--#include virtual="/includes/searchform.shtml" -->
+<!--#include virtual="/cgi-bin/recentcomments.cgi?type=summary" -->
+<!--#include virtual="/includes/footer.shtml" -->
+

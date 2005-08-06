@@ -1,0 +1,17 @@
+	<!--#include virtual="/includes/header.shtml" -->
+
+	<h2>Find your <span>place</span>...</h2>
+
+
+<p>
+	Use the map to find view the area you wish to search within,
+	and then click search
+</p>
+		<!--#include virtual="/includes/geography/google/geosearch.shtml" -->
+
+	</div>
+	<div id="inputBox">
+		<!--#include virtual="/includes/commentform.shtml" -->
+		<!--#include virtual="/includes/searchform.shtml" -->
+
+	<!--#include virtual="/includes/footer.shtml" -->

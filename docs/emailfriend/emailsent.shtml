@@ -1,0 +1,10 @@
+<!--#include virtual="/includes/header.shtml" -->
+
+<h2>Email sent succesfully</h2>
+
+<p>
+	We've now sent your e-mail to the address you provided.
+</p>
+
+<!--#include virtual="/includes/footer.shtml" -->
+

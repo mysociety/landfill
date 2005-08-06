@@ -1,0 +1,11 @@
+<!--#set var="page_title" value="Please check your email" -->
+<!--#include virtual="/includes/header.shtml" -->
+
+<p>
+    Something went wrong. 
+</p>
+
+
+
+<!--#include virtual="/includes/footer.shtml" -->
+

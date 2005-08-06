@@ -1,0 +1,53 @@
+<!-- appears at www.example.com/http://www.yourhistoryhere.com/new/stage1/ -->
+
+    <tr> 
+     <td colspan="2">
+      <script src="http://maps.google.com/maps?file=api&v=1&key=ABQIAAAAbXzhWwipU_Uy7amV7gZQXxSE-Ta92V6AkXVjBeIeKXUNI1q2WhQsQBpGJCOSQbtuKJU7Y6ZZP-EuIg" type="text/javascript"></script>
+    
+    Use the map to find your place. Click on it to store the coordinates to the
+    form and then click submit<br />
+    Where: <span id="where">none selected</span><br />
+    <input type="hidden" name="location" id="location" />
+
+
+    <div id="map" style="width: 500px; height: 400px">
+    </div>
+    <script type="text/javascript">
+    //<![CDATA[
+
+    var map = new GMap(document.getElementById("map"));
+    map.centerAndZoom(new GPoint(-4.218750, 54.724620), 12);
+    map.setMapType( _HYBRID_TYPE )
+    map.addControl(new GLargeMapControl());
+    map.addControl(new GMapTypeControl());
+
+
+function onLoad() {
+    // centre map on location of a click
+    GEvent.addListener(map, "moveend", function() {
+      var center = map.getCenterLatLng();
+      var latLngStr =  "lat=" + center.x + ";long=" + center.y + "";
+      document.getElementById('where').innerHTML = latLngStr;
+      document.getElementById('location').value = latLngStr;
+    });
+
+GEvent.addListener(map, 'click', function(overlay, point) {
+  if (overlay) {
+    map.removeOverlay(overlay);
+  } else if (point) {
+    map.addOverlay(new GMarker(point));
+  }
+});
+
+}
+GEvent.addListener(map, 'click', function() {
+      var center = map.getCenterLatLng();
+      var latLngStr =  "lat=" + center.x + ";long=" + center.y + "";
+      document.getElementById('where').innerHTML = latLngStr;
+      document.getElementById('location').value = latLngStr;
+});
+    //]]>
+    </script>
+     </td> 
+   <tr> 
+

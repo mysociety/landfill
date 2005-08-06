@@ -1,0 +1,20 @@
+<!--#set var="no_right_map" value="yes" -->
+<!--#set var="page_title" value="Email a friend" -->
+	<!--#include virtual="/includes/header.shtml" -->
+
+	<h2><span>Tell</span> a friend about Not Apathetic</h2>
+
+
+	<form method="post" action="/cgi-bin/email.cgi" id="comment">
+	
+		<label for="toaddress">Friend's email address</label><input type="text" name="to" id="toaddress" />
+					
+		<label for="youraddress">Your email address</label><input type="text" name="from" id="youraddress" />
+	
+		<label for="yourname">Your name</label><input type="text" maxlength="120" name="name" />
+		
+		<textarea cols="40" rows="9" name="message" id="commenttext">Write your message here...</textarea>
+		<input type="submit" value="Send" />
+	</form>
+
+	<!--#include virtual="/includes/footer.shtml" -->

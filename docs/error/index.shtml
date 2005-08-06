@@ -1,0 +1,9 @@
+<!--#set var="no_right_map" value="yes" -->
+<!--#set var="page_title" value="About Us" -->
+<!--#include virtual="/includes/header.shtml" -->
+
+<p>
+Something went wrong - <!--#echo var="QUERY_STRING" -->
+</p>
+<!--#include virtual="/includes/footer.shtml" -->
+

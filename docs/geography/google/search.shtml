@@ -1,0 +1,47 @@
+
+<!-- appears as www.example.com/comments/XX -->
+<!-- but doesn't any longer due to Google Braindeadness -->
+
+      <script src="http://maps.google.com/maps?file=api&v=1&key=ABQIAAAAbXzhWwipU_Uy7amV7gZQXxQIgIcOHi8fKqvZv44gwAtktPry_hQxkdqfP-zBO-_NWm6Z5p5pJDwANg" type="text/javascript"></script>
+    
+    Use the map to find your place. Click on it to store the coordinates to the
+    form and then click submit<br /> This isn't finished:
+    <!-- Where: <span id="where">none selected</span><br /> -->
+    <input type="hidden" name="location" id="forsubmit" />
+
+
+    <div id="searchmap" style="width: 300px; height: 300px">
+    </div>
+    <script type="text/javascript">
+    //<![CDATA[
+
+    var searchmap = new GMap(document.getElementById("searchmap"));
+    searchmap.centerAndZoom(new GPoint(-4.218750, 54.724620), 12);
+
+    searchmap.addControl(new GSmallMapControl());
+    searchmap.addControl(new GMapTypeControl());
+    searchmap.setMapType( _HYBRID_TYPE );
+
+
+function onLoad() {
+    // centre map on location of a click
+    GEvent.addListener(searchmap, "moveend", function() {
+      var center = searchmap.getCenterLatLng();
+      var latLngStr = '(' + center.y + ', ' + center.x + ')';
+      document.getElementById('message').innerHTML = latLngStr;
+      var status =  "x=" + center.x + ";y=" + center.y + "";
+      document.getElementById("where").innerHTML = status;
+    });
+
+GEvent.addListener(searchmap, 'click', function(overlay, point) {
+  if (overlay) {
+    searchmap.removeOverlay(overlay);
+  } else if (point) {
+    searchmap.addOverlay(new GMarker(point));
+  }
+});
+
+}
+    //]]>
+    </script>
+

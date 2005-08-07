@@ -7,8 +7,8 @@
 <div id="inputBox">
 <a name="input"></a>
 <div class="hideme"><a href="#top">back to top of page</a></div>
-<!--#include virtual="/includes/new-stage1.shtml" -->
 <!--#include virtual="/includes/searchform.shtml" -->
+<!--#include virtual="/includes/new-stage1.shtml" -->
 <!--#include virtual="/includes/description.shtml" -->
 <!--#include virtual="/cgi-bin/recentcomments.cgi?type=summary" -->
 <!--#include virtual="/includes/footer.shtml" -->

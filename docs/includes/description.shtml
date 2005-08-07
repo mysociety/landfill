@@ -6,13 +6,10 @@
 <p>
 	TODO: 
 	<ul>
-		<li>search by geography using a map.</li>
-		<li>Map on front page.</li>
+		<li>search by geography using map on front page.</li>
 		<li>"edit this entry" module</li>
 		<li><a href="/api/">full API</a>.</li>
-		<li>map on front page.</li>
-		<li>fix big red box.</li>
-		<li>Track down problems with precision.</li>
-		<li>add site= to all queries and a config file option.</li>
+                <li><strong>Track down problems with precision</strong>.</li>
+                <li>add category= to search queries.</li>
 	</ul>
 </p>

@@ -11,7 +11,7 @@ no-repeat;*/
 	vertical-align: middle;
 	margin: 0 auto;
 	padding: 0;
-	width: 750px;
+	width: 95%;
 	position:relative;
 }
 
@@ -109,10 +109,10 @@ display:block;
 ul.nav.main{
 clear:left;
 float:left;
-width:350px;
+width:50%;
 }
 ul.nav.posts{
-float:right;
+/* float:right; */
 clear:right;
 width:330px;
 }
@@ -146,7 +146,8 @@ ul.nav li a{
 ul.nav li a span{
 	color:#B10005;
 }
-ul.nav li a:hover{
+
+ul.nav li a:hover {
 	color:#000000;
 	border-bottom:2px solid #FF8083;
 }
@@ -197,18 +198,18 @@ form#comment textarea{
 div#main {
 clear:left;
 float:left;
-width:350px;
+width:50%;
 overflow:hidden;
 }
 div#inputBox {
-width:330px;
-float:right;
-padding: 0;
-background-color:#FFFFFF;
+    width:330px;
+    float:right;
+    text-align: left;
+    padding: 0;
+    background-color:#FFFFFF;
 }
 #inputBox form{
-margin:-0.5em 0 1em 0;
-
+    margin:-0.5em 0 1em 0;
 }
 #inputBox a#bigBox{
 	display:block;
@@ -337,9 +338,6 @@ margin-top:0;
     color: #ff0000;
     background-color: #ffcccc;
     border: solid 2px #990000;
-    padding: 3px;
-}
-#browserwontwork {
     margin: 1em auto 0;
     width: 80%;
     padding: 10px;

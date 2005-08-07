@@ -7,10 +7,10 @@
     Use the map to find your place. Click on it to store the coordinates to the
     form and then click submit<br /> This isn't finished:
     <!-- Where: <span id="where">none selected</span><br /> -->
-    <input type="hidden" name="location" id="forsubmit" />
+    <input type="hidden" name="search_where" id="search_where" />
 
 
-    <div id="searchmap" style="width: 300px; height: 300px">
+    <div id="searchmap" style="width: 300px; height: 375px">
     </div>
     <script type="text/javascript">
     //<![CDATA[
@@ -30,7 +30,7 @@ function onLoad() {
       var latLngStr = '(' + center.y + ', ' + center.x + ')';
       document.getElementById('message').innerHTML = latLngStr;
       var status =  "x=" + center.x + ";y=" + center.y + "";
-      document.getElementById("where").innerHTML = status;
+      document.getElementById("search_where").innerHTML = status;
     });
 
 GEvent.addListener(searchmap, 'click', function(overlay, point) {

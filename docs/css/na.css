@@ -1,3 +1,13 @@
+/*
+
+    YHH green:  #A6B439
+    YHH blue:   #4091C2
+
+    older colours:
+        NA green:    A6B439
+        NA red: 4091C2
+*/
+
 body {
 	font: 80% Georgia, "Times New Roman", Times, serif;
 	margin: 0 auto;
@@ -18,15 +28,13 @@ no-repeat;*/
 div#top{
 	text-align: left;
 	margin: 10px 0 20px 0;
-	height:63px;
+	height:40px;
 }
 
 h1 {
 	font-size: 200%;
 	padding:0; margin:0;
 	float:left;
-	width: 350px;
-	height: 63px;
 }
 h3{
 	font-size: 120%;
@@ -46,7 +54,6 @@ h3 span{
 	display:block;
 	position:absolute;
 	top:0; left:0;
-	background: url("/images/tagline.png") top left no-repeat;
 	z-index:1; /*for Opera 5 and 6*/
 	height:50px;
 	width:330px;
@@ -61,7 +68,7 @@ h2 {
 	border-bottom:1px solid #CCCCCC;
 }
 h2 span{
-	color:#B10005;
+	color:#4091C2;
 }
 
 h4, dt{
@@ -79,9 +86,9 @@ small{
 font-family:Verdana, Arial, Helvetica, sans-serif;
 }
 
-a:link { color: #009999; }
-a:visited { color: #006B6B }
-a:hover, a:active { color: #809FFF; }
+a:link { color: #A6B439; }
+a:visited { color: #A6B439 }
+a:hover, a:active { color: #A6B439; }
 
 input[type=submit]{
 	border:1px solid #999999;
@@ -144,7 +151,7 @@ ul.nav li a{
 	border-bottom:2px solid #CCCCCC;
 }
 ul.nav li a span{
-	color:#B10005;
+	color:#4091C2;
 }
 
 ul.nav li a:hover {

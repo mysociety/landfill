@@ -1,15 +1,15 @@
 <!--#set var="page_title" value="where's your place?" -->
 <!--#include virtual="/includes/header.shtml" -->
-<div class="hideme"><a href="#input">Write your own reason</a></div>
-<h2>Submitted <span>Places</span></h2>
-<!--#include virtual="/cgi-bin/list.cgi?page=${QUERY_STRING}" -->
-</div>
-<div id="inputBox">
-<a name="input"></a>
-<div class="hideme"><a href="#top">back to top of page</a></div>
 <!--#include virtual="/includes/searchform.shtml" -->
-<!--#include virtual="/includes/new-stage1.shtml" -->
 <!--#include virtual="/includes/description.shtml" -->
 <!--#include virtual="/cgi-bin/recentcomments.cgi?type=summary" -->
+</div>
+<a name="input"></a>
+<div id="inputBox">
+<!--#include virtual="/includes/new-stage1.shtml" -->
+<div class="right"><h2>Submitted <span>Places</span></h2>
+<!--#include virtual="/cgi-bin/list.cgi?page=${QUERY_STRING}" -->
+</div>
+<div class="hideme"><a href="#top">back to top of page</a></div>
 <!--#include virtual="/includes/footer.shtml" -->
 

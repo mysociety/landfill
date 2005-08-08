@@ -15,7 +15,7 @@ my $db_password= $mysociety::NotApathetic::Config::db_password; # database passw
 my $dbh=DBI->connect($dsn, $db_username, $db_password);
 my %State; # State variables during display.
 our $url_prefix=$mysociety::NotApathetic::Config::url;
-
+my $Js='';
 
 {
     #if (defined $ENV{REQUEST_METHOD}) {
@@ -64,8 +64,8 @@ our $url_prefix=$mysociety::NotApathetic::Config::url;
         my $printed = 0;
         $search_bit =~ s/\// /g;
         my $title;
+        my $pointindex=1;
         while ($result=$query->fetchrow_hashref) {
-
             if ($printed==0) {
                 $printed = 1;
                 if ($type eq 'summary') {
@@ -106,6 +106,21 @@ written $someday
 </small>
 </dd>
 EOfragment
+                $Js.=<<EOjs;
+    var point_$pointindex = new GPoint($result->{google_lat}, $result->{google_long});
+    var marker_$pointindex= new GMarker(point_$pointindex);
+    GEvent.addListener(marker_$pointindex, "click", function() {
+            marker_$pointindex.openInfoWindowHtml("<a href=\\"/comments.shtml?$result->{postid}\\" >$title</a>")
+            });
+    GEvent.bind(marker_$pointindex, "mouseover", function() {
+            marker_$pointindex.openInfoWindowHtml("<a href=\\"/comments.shtml?$result->{postid}\\" >$title</a>")
+            });
+    searchmap.addOverlay(marker_$pointindex);
+
+EOjs
+                #   // var listener_$pointindex = GEvent.addListener(point_$pointindex, "mouseover", searchmap.openInfoWindowHtml("<a href=\\"/comments.shtml?$result->{postid}\\" >$title</a><p>$result->{shortwhy}</p>") );
+                # // GEvent.removeListener(point_$pointindex, "mouseout", );
+                $pointindex++;
             }
         }
         if ($query->rows > 0) {
@@ -139,11 +154,13 @@ EOfragment
                     print "<a href=\"$url$older\">older $mainlimit entries</a>";
                 }
                 print '</p>';
+
             }
         } elsif ($type eq 'details' && $search_bit ne '') {
             print "<p>Your search for " . $search_bit . " yielded no results.</p>";
         }
     }
+            print "<script type=\"text/javascript\">$Js</script>";
 }
 
 

@@ -2,16 +2,15 @@
 <!-- appears as www.example.com/comments/XX -->
 <!-- but doesn't any longer due to Google Braindeadness -->
 
-      <script src="http://maps.google.com/maps?file=api&v=1&key=ABQIAAAAbXzhWwipU_Uy7amV7gZQXxQIgIcOHi8fKqvZv44gwAtktPry_hQxkdqfP-zBO-_NWm6Z5p5pJDwANg" type="text/javascript"></script>
-    
-    Use the map to find your place. Click on it to store the coordinates to the
-    form and then click submit<br /> This isn't finished:
+<script src="http://maps.google.com/maps?file=api&v=1&key=ABQIAAAAbXzhWwipU_Uy7amV7gZQXxQIgIcOHi8fKqvZv44gwAtktPry_hQxkdqfP-zBO-_NWm6Z5p5pJDwANg" type="text/javascript"></script>
     <!-- Where: <span id="where">none selected</span><br /> -->
+    <p>
     <input type="hidden" name="search_where" id="search_where" />
+    </p>
 
-
-    <div id="searchmap" style="width: 300px; height: 375px">
+    <div id="searchmap" style="width: 400px; height: 400px">
     </div>
+    <p><small>Need instructions</small></p>
     <script type="text/javascript">
     //<![CDATA[
 

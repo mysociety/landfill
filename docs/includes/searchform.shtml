@@ -1,12 +1,8 @@
-		<h2>Search</h2>
 		<form method="get" action="/cgi-bin/search.cgi" id="search">
 		<fieldset>
-		<input type="text" name="q" id="q" size="30" />
+		<input type="text" name="q" id="q" size="30" value="Search" onclick="this.value='';" />
 		<input type="submit" value="Go" class="submit" />
 		</fieldset>
-                <a href="/geosearch/">Search by Geography</a>
-
-
     <!--#if expr="${title}" -->
       <!-- no map search -->
     <!--#else -->

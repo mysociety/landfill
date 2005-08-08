@@ -1,4 +1,5 @@
-		<h2>Add <span>your place</span>...</h2>
+<div class="hidden" id="hiddenadd">
+        <h2>Add <span>your place</span>...</h2>
 		<form method="post" action="/cgi-bin/new-stage1.cgi">
 		<fieldset>
 			<p class="enlarge"><small><a id="growtext" onclick="growTextarea('reasons'); return false" href="/new/">Want more space to write in?</a></small></p>
@@ -9,5 +10,4 @@
 				<input type="submit" value="Submit" />
 		</fieldset>
 		</form>
-
-
+</div>

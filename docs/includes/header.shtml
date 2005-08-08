@@ -18,18 +18,20 @@
 
 <div id="wrap"><a name="top"></a>
 <div id="top">
-<h1><a href="/">YourHistoryHere.com</a></h1>
-<h3 id="myh3"><a href="/">Your History. Here. </a></h4>
+    <h1><a href="/"><img src="/images/yhh.png" height="110" width="275" style="float:left;" alt="your history here.com"  /></a></h1>
 </div>
 
 <ul class="nav">
-<li><a href="/"><span>h</span>ome</a></li>
+<!-- <li><a href="/"><span>h</span>ome</a></li>
 <li><a href="/about/"><span>a</span>bout us</a></li>
-<li><a href="/news/"><span>n</span>ews</a></li>
-<li><a href="/emailnotify/"><span>e</span>mail alerts</a></li>
-<li><a href="/emailfriend/"><span>t</span>ell a friend</a></li>
-<li><a href="/recentcomments/"><span>r</span>ecent comments</a></li>
-<li><a href="/random"><span>r</span>andom</a></li>
+<li><a href="/news/"><span>n</span>ews</a></li> -->
+<li><a href="/"><span>H</span>ome</a></li>
+<li><a href="/"><span>A</span>dd your place</a></li>
+<li><a href="/emailnotify/"><span>E</span>mail alerts</a></li>
+<li><a href="/emailfriend/"><span>T</span>ell a friend</a></li>
+<li><a href="/recentcomments/"><span>R</span>ecent comments</a></li>
+<li><a href="/random"><span>R</span>andom place</a></li>
+<li><a href="/random"><span>N</span>ews</a></li>
 </ul>
 
 <div id="main">

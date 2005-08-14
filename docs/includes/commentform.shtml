@@ -1,4 +1,4 @@
-<h2><a name="commentbox"></a> Respond</h2>
+<h2><a name="commentbox"></a>Comment</h2>
 
 <form method="post" action="../cgi-bin/comment.cgi" id="comment">
 	<fieldset>

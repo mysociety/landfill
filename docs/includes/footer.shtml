@@ -1,10 +1,17 @@
 </div>
-
 <div id="footer">
-<ul class="nav footer"><li><a href="mailto:team@notapathetic.com"><span>c</span>ontact us</a></li>
-<li><a href="/about/privacy/"><span>p</span>rivacy policy</a></li></ul>
-<div class="hideme"><a href="#top">back to top of page</a></div>
-<a href="http://www.mysociety.org/"><img border="0" src="/images/mysociety.gif" width="156" height="36" alt="mysociety.org"></a>
+        <ul class="footer">
+                <li>
+                        <a href="mailto:team@yourhistoryhere.com">contact us</a>
+                </li>
+                <li>
+                        <a id="mysocietylink" href="http://www.mysociety.org/"><span class="hidden">My Society</span></a>
+                </li>
+                <li>
+                        <a href="/about/privacy/">privacy policy</a>
+                </li>
+        </ul>
+        <a class="hidden" href="#top">back to top of page</a>
 </div>
 
 </div>

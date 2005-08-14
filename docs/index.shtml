@@ -2,14 +2,17 @@
 <!--#include virtual="/includes/header.shtml" -->
 <!--#include virtual="/includes/searchform.shtml" -->
 <!--#include virtual="/includes/description.shtml" -->
-<!--#include virtual="/cgi-bin/recentcomments.cgi?type=summary" -->
 </div>
 <a name="input"></a>
 <div id="inputBox">
 <!--#include virtual="/includes/new-stage1.shtml" -->
-<div class="right"><h2>Submitted <span>Places</span></h2>
-<!--#include virtual="/cgi-bin/list.cgi?page=${QUERY_STRING}" -->
+<div class="right">
+    <h3 class="green">These Places</h3>
+    <!--#include virtual="/cgi-bin/list.cgi?page=${QUERY_STRING}" -->
+
+
+    <h3 class="blue">Recent comments</h3>
+    <!--#include virtual="/cgi-bin/recentcomments.cgi?type=summary" -->
 </div>
-<div class="hideme"><a href="#top">back to top of page</a></div>
 <!--#include virtual="/includes/footer.shtml" -->
 

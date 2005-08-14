@@ -8,7 +8,7 @@
     <input type="hidden" name="search_where" id="search_where" />
     </p>
 
-    <div id="searchmap" style="width: 400px; height: 400px">
+    <div id="searchmap">
     </div>
     <p><small>Need instructions</small></p>
     <script type="text/javascript">

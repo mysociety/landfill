@@ -1,78 +1,70 @@
-/*
-
-    YHH green:  #A6B439
-    YHH blue:   #4091C2
-
-    older colours:
-        NA green:    A6B439
-        NA red: 4091C2
-*/
-
 body {
-	font: 80% Georgia, "Times New Roman", Times, serif;
+	font-size: 80%;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
 	margin: 0 auto;
 	padding: 0;
-/*	background: #FFFFFF url("/images/asseen.png") top center 
-no-repeat;*/
+	background: #90916d url("../images/background.png") top center repeat-x;
 }
 
-#wrap {
+#wrap 
+{
+	background:#fff;
 	text-align: left;
 	vertical-align: middle;
-	margin: 0 auto;
+	margin: 10px auto;
 	padding: 0;
-	width: 95%;
+	width: 745px;
 	position:relative;
+	border:solid 1px #698856;
 }
 
 div#top{
 	text-align: left;
-	margin: 10px 0 20px 0;
-	height:40px;
+	margin:0;
+	padding:0;
+}
+div#top h1, div#top h2 
+{
+		margin:0;
+		padding:0;
+
+}
+div#top h1 a
+{
+		display:block;
+		height: 81px;
+		width:741px;
+		background: url(../images/header.png);
+	margin:0;
+	padding:0;
+}
+div#top h2 
+{
+	display:none;
 }
 
-h1 {
-	font-size: 200%;
-	padding:0; margin:0;
-	float:left;
-}
 h3{
-	font-size: 120%;
+	font-size: 15px;
+	padding: 4px 6px;
 	font-weight:normal;
-	display:block;
-	position:absolute;
-	left:420px;
-	margin:6px 0 0 0; padding:0;
+	color:White;
+	margin:0 0 0 0; 
 	/* hide overflow:hidden from IE5/Mac */
 	/* \*/
 	overflow: hidden;
 	/* */
-	height:56px;
-	width:330px;
-}
-h3 span{
-	display:block;
-	position:absolute;
-	top:0; left:0;
-	z-index:1; /*for Opera 5 and 6*/
-	height:50px;
-	width:330px;
 }
 
-h2 {
-	font-size: 150%;
-	clear:left;
-	margin:1em 0 1em 0;
-	padding:0;
-	font-weight:normal;
-	border-bottom:1px solid #CCCCCC;
+h3.green
+{
+	background-color:#698856;
 }
-h2 span{
-	color:#4091C2;
+h3.blue
+{
+	background-color:#332f5c;
 }
 
-h4, dt{
-	font-family:Verdana, Arial, Helvetica, sans-serif;
+dt{
 	margin:0;
 	font-size:100%;
 	font-weight:bold;
@@ -82,13 +74,9 @@ img{
 	border: none;
 }
 
-small{
-font-family:Verdana, Arial, Helvetica, sans-serif;
-}
-
-a:link { color: #A6B439; }
-a:visited { color: #A6B439 }
-a:hover, a:active { color: #A6B439; }
+a:link { color: #698856; text-decoration:none; }
+a:visited { color: #698856; text-decoration:none;}
+a:hover, a:active { color: #698856; text-decoration:underline; }
 
 input[type=submit]{
 	border:1px solid #999999;
@@ -103,36 +91,81 @@ margin:0;
 li{
 line-height:1.5em;
 margin:0;
-list-style-type:circle;
+list-style-type:none;
+}
+ul.pins li
+{
+	background: url(../images/pin.png) 0 0 no-repeat;
+	padding-left:30px;
+	padding-top:4px;
+	height:40px;
 }
 
-ul.nav {
+
+/* map */
+div#searchmap 
+{
+	margin-bottom:2px;	
+	width: 368px; height: 366px;
+}
+
+/* nav menu */
+ul.nav 
+{
+background:url(../images/menubackground.png) ;
 list-style:none;
 padding:0;
-margin:0.5em 0 1.5em 0;
-min-height:32px;
+margin:0 2px;
+min-height:37px;
 display:block;
+font-size:18px;
 }
 ul.nav.main{
 clear:left;
 float:left;
-width:50%;
 }
+
 ul.nav.posts{
-/* float:right; */
 clear:right;
 width:330px;
 }
+
 ul.nav.footer{
 margin:0 0 0 38%;padding:0;
 }
 
 ul.nav li{
-margin:0 12px 0 0;
+margin:0;
 padding:0;
 float:left;
 list-style:none;
 }
+
+ul.nav li a
+{
+	display:block;
+	width:190px;
+	height:32px;
+	margin:0;
+	padding:4px 0 0 45px;
+}
+ul.nav li#add a
+{
+	background:url(../images/add.png) 0 0 no-repeat;
+}
+ul.nav li#add a:hover
+{
+	background:url(../images/add.png) 0 -38px no-repeat;
+}
+ul.nav li#random a
+{
+		background:url(../images/random.png) 0 0 no-repeat;
+}
+ul.nav li#random a:hover
+{
+		background:url(../images/random.png) 0 -38px no-repeat;
+}
+
 ul.nav.footer li{
 float:left;
 }
@@ -145,19 +178,17 @@ margin:0 100px 0 0;
 }
 ul.nav li a{
 	display:block;
-	font:120% Georgia, "Times New Roman", Times, serif;
 	text-decoration:none;
-	color:#000000;
-	border-bottom:2px solid #CCCCCC;
-}
-ul.nav li a span{
-	color:#4091C2;
+	color:#fff;
 }
 
 ul.nav li a:hover {
-	color:#000000;
-	border-bottom:2px solid #FF8083;
+
 }
+
+ul.nav form {float:left;padding:4px 0 0 15px;}
+
+
 
 #emailBox{
 	clear:right;
@@ -202,18 +233,20 @@ form#comment textarea{
 	clear:left;
 }
 
-div#main {
+div#main 
+{
 clear:left;
 float:left;
-width:50%;
-overflow:hidden;
+width:372px;
+
+padding:2px 2px 0 2px;
 }
 div#inputBox {
-    width:400px;
+    width:365px;
+	padding:2px 2px 0 2px;
     float:right;
     text-align: left;
-    padding: 0;
-    background-color:#FFFFFF;
+    margin:0;
 }
 #inputBox form{
     margin:-0.5em 0 1em 0;
@@ -270,8 +303,8 @@ margin: 1em 0 0.1em 0;
 padding:0;
 }
 dd{
-	margin: 0 0 2.5em 0;
-	padding: 0 0 0.5em 0;
+	margin: 0;
+	padding: 0
 }
 dd small{
 	border-top:1px solid #CCCCCC;
@@ -302,17 +335,34 @@ dd div.trackback{
 }
 
 #footer{
-	padding:60px 0 10px 0;
 	clear:both;
 	text-align:center;
 	float:none;
 	width:100%;
 }
-
-#footer img{
-	vertical-align:middle;
+#footer  ul 
+{
+	height:50px;
+	margin-left:200px;
 }
-
+#footer #mysocietylink
+{
+	display:block;
+	width:156px;
+	height:36px;
+	background: url(../images/mysociety.png) no-repeat;
+}
+#footer  ul li
+{
+	padding: 0 6px;
+	list-style-type:none;
+	text-align:center;
+}
+#footer  ul li a
+{
+	padding-top:5px;
+	float:left;
+}
 form {
 	text-align:left;
 	margin:0;

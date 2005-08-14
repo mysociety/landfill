@@ -207,7 +207,9 @@ sub handle_search_term {
 	my $search_path= shift;
 	my @search_fields= ('posts.region',
 			    'posts.why',
-			    'posts.title'
+			    'posts.title',
+			    'google_lat',
+			    'google_long'
 			    );
 	return ('') if ($search_path eq '');
 

@@ -3,7 +3,7 @@
 <!-- but doesn't any longer due to Google Braindeadness -->
 
 <script src="http://maps.google.com/maps?file=api&v=1&key=ABQIAAAAbXzhWwipU_Uy7amV7gZQXxQIgIcOHi8fKqvZv44gwAtktPry_hQxkdqfP-zBO-_NWm6Z5p5pJDwANg" type="text/javascript"></script>
-    <!-- Where: <span id="where">none selected</span><br /> -->
+    Where: <span id="where">none selected</span><br />
     <p>
     <input type="hidden" name="search_where" id="search_where" />
     </p>

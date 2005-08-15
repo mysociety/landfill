@@ -4,7 +4,7 @@
 		<form method="post" action="/cgi-bin/new-stage1.cgi">
 		<fieldset>
 			<p class="enlarge"><small><a id="growtext" onclick="growTextarea('reasons'); return false" href="/new/">Want more space to write in?</a></small></p>
-                        <textarea name="why" rows="8" cols="40" onclick="this.value='';"  id="reasons">Add your description here...</textarea>
+                        <textarea name="why" rows="8" cols="40" onclick="if (this.value == 'Add your description here...'){ this.value='';}"  id="reasons">Add your description here...</textarea>
                         <br />
 				<label for="emailreason">Email address (<a href="/about/privacy/">why do we need this?</a>)</label>
 				<input type="text" name="email" id="emailreason" size="30" /><br />

@@ -1,12 +1,11 @@
 	<!--#include virtual="/includes/header.shtml" -->
 
-	<h2>Your <span>place</span>...</h2>
+	<h2>Your place...</h2>
 	<!--#include virtual="/cgi-bin/comments.cgi?${QUERY_STRING}" -->
-	<!--#include virtual="/geography/google/comments.shtml" -->
-
+		<!--#include virtual="/includes/commentform.shtml" -->
 	</div>
 	<div id="inputBox">
-		<!--#include virtual="/includes/commentform.shtml" -->
+	        <!--#include virtual="/geography/google/comments.shtml" -->
 		<!--#include virtual="/includes/searchform.shtml" -->
 		<!--#include virtual="/includes/description.shtml" -->
 		<!--#include virtual="/includes/new-stage1.shtml" -->

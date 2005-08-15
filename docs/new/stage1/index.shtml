@@ -1,6 +1,5 @@
 <!--#set var="page_title" value="You've told us about your place" -->
 <!--#include virtual="/includes/header.shtml" -->
-</div>
 <form method="post" action="/cgi-bin/new-stage1-geography.cgi">
 <table border="0">
     <tr>

@@ -1,0 +1,13 @@
+<p>
+<h3 class="green">About the site</h3>
+<h4>News</h4>
+<ul id="sitelinks" class="pins">
+        <li><a href="http://en.wikipedia.org/">Wikipedia</a></li>
+</ul>
+
+<h4>To Do</h4>
+<ul id="sitenews">
+                <li>RHS based on map on LHS.</li>
+                <li>keyword search.</li>
+</ul>
+</p>

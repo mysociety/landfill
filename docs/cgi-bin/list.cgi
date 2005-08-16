@@ -18,20 +18,37 @@ our $url_prefix=$mysociety::NotApathetic::Config::url;
 my $Js='';
 
 {
-    #if (defined $ENV{REQUEST_METHOD}) {
+    if (defined $ENV{REQUEST_METHOD}) {
          print "Content-Type: text/html\n\n";
-         #}
+    }
 
     {
         my $type = param('type') || 'details';
         my $search_bit = param('search') || '';
         my $page = param('page') || 0;
+	my $topleft_lat=param('topleft_lat');
+	my $topleft_long=param('topleft_long');
+	my $bottomright_lat=param('bottomright_lat');
+	my $bottomright_long=param('bottomright_long');
+
         if ($search_bit =~ /\|(\d+)$/) {
             $page = $1;
             $search_bit =~ s/\|(\d+)$//;
         }
         my $search_term = handle_search_term($search_bit); #' 1 = 1 ';
-        my $mainlimit = 15;
+	my $geog_limiter='';
+        if ( defined($topleft_lat) and defined($topleft_long) and
+             defined($bottomright_lat) and defined($bottomright_long)) {
+             $topleft_lat=~ s#[^-\.\d]##g;
+             $topleft_long=~ s#[^-\.\d]##g;
+             $bottomright_lat=~ s#[^-\.\d]##g;
+             $bottomright_long=~ s#[^-\.\d]##g;
+                $geog_limiter= <<EOSQL;
+        and google_lat >= $topleft_lat and google_lat <= $bottomright_lat
+        and google_long >= $topleft_long and google_long <= $bottomright_long
+EOSQL
+        }
+         my $mainlimit = 15;
 		my $brief = 1; # mainlimit x brief entries displayed in the brief listing
         my $limit = ($type eq 'details') ? $mainlimit : $mainlimit * $brief;
         my $offset = $page * $mainlimit;
@@ -45,8 +62,9 @@ my $Js='';
                           select *
                             from posts
                            where validated=1
-						   		 $interesting
+		   		 $interesting
                              and hidden=0
+				 $geog_limiter
                                  $search_term
                         order by posted
                                  desc limit $offset, $limit

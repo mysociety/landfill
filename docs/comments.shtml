@@ -7,6 +7,7 @@
 	<div id="inputBox">
             <!--#include virtual="/geography/google/comments.shtml" -->
             <small>Accuracy currently around 150 yards</small>
+            <h3 class="blue">Area Search</h3>
 		<!--#include virtual="/includes/searchform.shtml" -->
 		<!--#include virtual="/includes/description.shtml" -->
 		<!--#include virtual="/includes/new-stage1.shtml" -->

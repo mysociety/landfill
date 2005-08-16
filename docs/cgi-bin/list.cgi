@@ -105,12 +105,17 @@ written $someday
 | <a href="/abuse/?postid=$result->{postid}">abusive?</a>
 </small>
 </dd>
+
 EOfragment
+
+                $title=~s#[\n]##mcg;
+
                 $Js.=<<EOjs;
     var point_$pointindex = new GPoint($result->{google_lat}, $result->{google_long});
     var marker_$pointindex= new GMarker(point_$pointindex);
     GEvent.addListener(marker_$pointindex, "click", function() {
-            marker_$pointindex.openInfoWindowHtml("<a href=\\"/comments.shtml?$result->{postid}\\" >$title</a>")
+            document.location="http://www.yourhistoryhere.com/comments.shtml?$result->{postid}";
+            //marker_$pointindex.openInfoWindowHtml("<a href=\\"/comments.shtml?$result->{postid}\\" >$title</a>")
             });
     GEvent.bind(marker_$pointindex, "mouseover", function() {
             marker_$pointindex.openInfoWindowHtml("<a href=\\"/comments.shtml?$result->{postid}\\" >$title</a>")

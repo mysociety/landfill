@@ -9,9 +9,7 @@
 <h4>To Do</h4>
 <ul id="sitenews">
 		<li>search by detail/geography using map on front page.</li>
-		<li>"edit this entry" module</li>
-		<li>Email all editors on changes.</li>
+                <li>"edit this entry" module.  Email all editors on changes.</li>
 		<li><a href="/api/">full API</a>.</li>
-                <li><strong>Track down problems with precision</strong>.</li>
 </ul>
 </p>

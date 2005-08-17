@@ -2,11 +2,13 @@
 
 <div id="search_container">
 
-            <form method="get" action="/cgi-bin/search.cgi" id="search">
+    <form method="get" action="/cgi-bin/search.cgi" id="search">
+    <!--
 		<fieldset>
 		<input type="text" name="q" id="q" size="30" value="Search" onclick="this.value='';" />
 		<input type="submit" value="Search" class="submit" />
-		</fieldset>
+            </fieldset>
+            -->
     <!--#if expr="${title}" -->
       <!-- no map search -->
     <!--#else -->

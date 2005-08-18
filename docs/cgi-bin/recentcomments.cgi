@@ -11,6 +11,7 @@ use mysociety::NotApathetic::Config;
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
+my $site_name= $mysociety::NotApathetic::Config::site_name;
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 my %State; # State variables during display.
 our $url_prefix=$mysociety::NotApathetic::Config::url;
@@ -50,6 +51,8 @@ our $url_prefix=$mysociety::NotApathetic::Config::url;
 				posts.validated=1 and
 				posts.hidden=0 and
                              	comments.visible=1
+				and site='$site_name'
+
 			order by
                         	comments.posted desc
                         limit
@@ -66,6 +69,7 @@ our $url_prefix=$mysociety::NotApathetic::Config::url;
 				posts
 			where
 				comments.postid = posts.postid
+				and site='$site_name'
 			order by comments.posted desc
 			limit
 				$offset, $limit    	

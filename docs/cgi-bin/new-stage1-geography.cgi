@@ -69,6 +69,7 @@ sub handle_comment {
 		       google_long=$quoted{google_long}
 		 where postid=$quoted{postid}
   		   and authcode=$quoted{authcode}
+		   and site='$site_name'
 	");
 
 	$query->execute;

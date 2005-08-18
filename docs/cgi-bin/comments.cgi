@@ -36,6 +36,7 @@ my %State; # State variables during display.
                              date_format(posted, \"%H:%i, %e %M\") as posted_formatted
                         from posts
                        where postid=$Entry
+		       	     and site='$site_name'
                              and not hidden");
 
 	$query->execute;

@@ -13,6 +13,7 @@ my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
+my $site_name= $mysociety::NotApathetic::Config::site_name;
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 my %Passed_Values;
 
@@ -63,6 +64,8 @@ sub handle_comment {
 		       google_long=$quoted{google_long}
 		 where postid=$quoted{postid}
   		   and authcode=$quoted{authcode}
+		   and site='$site_name'
+
 	");
 
 	$query->execute;

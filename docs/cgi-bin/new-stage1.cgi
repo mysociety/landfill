@@ -88,6 +88,7 @@ sub handle_comment {
 		       title=$quoted{title} ,
 		       posted=now(),
 		       authcode=$auth_code_q
+		       and site='$site_name'
 	");
 
 	$query->execute;

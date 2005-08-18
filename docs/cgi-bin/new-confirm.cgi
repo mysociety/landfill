@@ -13,6 +13,7 @@ use mysociety::NotApathetic::Config;
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
+my $site_name= $mysociety::NotApathetic::Config::site_name;
 my $dbh;
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 
@@ -27,14 +28,18 @@ my $url_prefix= $mysociety::NotApathetic::Config::url;
         my $query=$dbh->prepare ("select * from posts
                                     where postid= $postid_q
                                       and validated = 0 
-                                      and authcode = $auth_code_q");
+                                      and authcode = $auth_code_q
+				      and site='$site_name'
+				");
 
         $query->execute;
 
         if ($query->rows != 1 ) {
             $query=$dbh->prepare ("select * from posts
                                     where postid= $postid_q
-                                      and validated = 1 ");
+                                      and validated = 1 
+				      and site='$site_name'
+				 ");
             $query->execute;
 
             if ($query->rows == 1 ) {
@@ -52,6 +57,7 @@ my $url_prefix= $mysociety::NotApathetic::Config::url;
 					 posted		= now()
                                    where postid         = $postid_q
                                      and authcode       = $auth_code_q
+				     and site='$site_name'
                                 ");
                 $query->execute || &die_cleanly("sql error");
                 if ($query->rows == 1 ) { 

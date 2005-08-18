@@ -6,8 +6,9 @@
 <div id="inputBox">
 <div class="right">
     <h3 class="green">These Places</h3>
-    <!--#include virtual="/cgi-bin/list.cgi?page=${QUERY_STRING}" -->
-
+    <div id="list_of_places">
+	<!--#include virtual="/cgi-bin/list.cgi?page=${QUERY_STRING}" -->
+    </div>
 
     <h3 class="blue">Recent comments</h3>
     <!--#include virtual="/cgi-bin/recentcomments.cgi?type=summary" -->

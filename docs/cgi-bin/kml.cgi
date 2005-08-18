@@ -11,6 +11,8 @@ use mysociety::NotApathetic::Config;
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
+my $site_name= $mysociety::NotApathetic::Config::site_name;
+
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 my %State; # State variables during display.
 my $search_term = &handle_search_term(); #' 1 = 1 ';
@@ -42,6 +44,7 @@ EOSQL
 			from posts
 	 	       where validated=1
 			 and hidden=0
+                         and site='$site_name'
 			     $search_term
 			     $limiter
 		    order by posted

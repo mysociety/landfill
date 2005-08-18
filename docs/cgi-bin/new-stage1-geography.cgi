@@ -29,7 +29,8 @@ my %Passed_Values;
 	$Passed_Values{category} ||= 'general';
 	($Passed_Values{google_lat})= $Passed_Values{location} =~ m#lat=([-\.\d]+)#;
 	($Passed_Values{google_long})= $Passed_Values{location} =~ m#long=([-\.\d]+)#;
-
+print STDERR "lat: $Passed_Values{google_lat}\n";
+print STDERR "long: $Passed_Values{google_long}\n";
 	&handle_comment;
 	&send_email();
 

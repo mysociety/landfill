@@ -16,6 +16,7 @@ if ($mysociety::NotApathetic::Config::site_open_for_additions == 0) {
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
+my $site_name= $mysociety::NotApathetic::Config::site_name;
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 my %Passed_Values;
 my %quoted;
@@ -75,7 +76,8 @@ EOcomment
 	   	  email='',
 	   	  name='trackback',
 		  postid=$quoted{postid},
-	   	  istrackback=1
+	   	  istrackback=1,
+                  site='$site_name'
 	");
 	$query->execute;
 

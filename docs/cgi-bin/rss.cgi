@@ -17,6 +17,7 @@ if ((defined $ENV{QUERY_STRING}) and ($ENV{QUERY_STRING} =~/^\d+$/)){
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
+my $site_name= $mysociety::NotApathetic::Config::site_name;
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 my %State; # State variables during display.
 my $search_term = &handle_search_term(); #' 1 = 1 ';
@@ -32,7 +33,8 @@ my $search_term = &handle_search_term(); #' 1 = 1 ';
 			     date_format(posted, \"%H:%i, %e %M\") as posted_formatted 
 			from posts
 	 	       where validated=1
-                             and hidden=0
+                         and hidden=0
+                         and site='$site_name'
 			     $search_term
 		    order by posted
 			desc limit 50

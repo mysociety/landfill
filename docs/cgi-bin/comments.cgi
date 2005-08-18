@@ -78,9 +78,9 @@ my %State; # State variables during display.
 	<dl>
 	<dt>$result->{title}</dt>
 	<dd><p>$why</p>
-	<small>
-        Lat: <span id="google_lat">$result->{google_lat}</span> | Long: <span id="google_long">$result->{google_long}</span> <br />
-	written on $someday by $result->{name} | <a href="../email/$result->{postid}">Email this to a friend</a> | <a href="/abuse/?postid=$result->{postid}">abusive?</a>
+        <small>
+        Lat: <span id="google_lat">$result->{google_lat}</span> | Long: <span id="google_long">$result->{google_long}</span>
+        <br /> written on $someday by $result->{name} | <a href="../email/$result->{postid}">Email this to a friend</a> | <a href="/abuse/?postid=$result->{postid}">abusive?</a><br />
 	</small>
 	</dd>
 	</dl>

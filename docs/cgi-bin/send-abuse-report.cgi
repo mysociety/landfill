@@ -90,7 +90,9 @@ sub output_comment {
 
         my $query=$dbh->prepare("
                       select * from comments
-                       where postid=? and commentid=? ");
+                       where postid=? and commentid=?
+                         and site='$site_name'
+                       ");
         $query->execute ($postid, $commentid);
         my $result=$query->fetchrow_hashref;
 
@@ -102,7 +104,9 @@ sub output_post {
 
         my $query=$dbh->prepare("
                       select * from posts
-                       where postid=?");
+                       where postid=?
+                         and site='$site_name'
+                       ");
         $query->execute ($postid);
         my $result=$query->fetchrow_hashref;
         return "$result->{title}\n$result->{why}";

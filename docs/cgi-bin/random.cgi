@@ -9,6 +9,7 @@ use mysociety::NotApathetic::Config;
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
+my $site_name= $mysociety::NotApathetic::Config::site_name;
 our $url_prefix=$mysociety::NotApathetic::Config::url;
 
 {
@@ -19,6 +20,7 @@ our $url_prefix=$mysociety::NotApathetic::Config::url;
                             from posts
                            where validated=1
                              and hidden=0
+                             and site='$site_name'
                            order by rand() desc limit 1
                            ");
             $query->execute();

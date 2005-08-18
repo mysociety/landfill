@@ -12,6 +12,7 @@ use mysociety::NotApathetic::Config;
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username; # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password; # database password
+my $site_name= $mysociety::NotApathetic::Config::site_name;
 my $dbh=DBI->connect($dsn, $db_username, $db_password);
 my %State; # State variables during display.
 our $url_prefix=$mysociety::NotApathetic::Config::url;
@@ -64,6 +65,7 @@ EOSQL
                            where validated=1
 		   		 $interesting
                              and hidden=0
+                             and site='$site_name'
 				 $geog_limiter
                                  $search_term
                         order by posted
@@ -126,7 +128,7 @@ written $someday
 
 EOfragment
 
-                $title=~s#[\n]##mcg;
+                $title=~s#[\n]##mg;
 
                 $Js.=<<EOjs;
     var point_$pointindex = new GPoint($result->{google_lat}, $result->{google_long});

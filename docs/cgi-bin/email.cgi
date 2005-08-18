@@ -12,7 +12,6 @@ use CGI qw/param/;
 use mysociety::NotApathetic::Config;
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
-my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $email_domain= $mysociety::NotApathetic::Config::email_domain;
@@ -34,14 +33,14 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
     
 	my $result;
 	if (defined $Passed_Values{entryid}) {
-            my $query=$dbh->prepare("select
-									postid, title, shortwhy
-								from
-									posts
-								where
-									postid='$Passed_Values{entryid}' and
-									hidden=0 and
-									validated=1"); # XXX order by first_seen needs to change
+            my $query=$dbh->prepare("
+                        select  postid, title, shortwhy
+			  from  posts
+		  	 where  postid='$Passed_Values{entryid}'
+                           and hidden=0
+                           and site='$site_name' 
+                           and validated=1
+                       "); # XXX order by first_seen needs to change
             $query->execute;
             $result= $query->fetchrow_hashref;
 	}

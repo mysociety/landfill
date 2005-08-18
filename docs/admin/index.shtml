@@ -1,4 +1,4 @@
-<!--#include virtual="/includes/header.shtml" -->
+<!--#include virtual="includes/header.shtml" -->
 
 <h2>Admin Interface</h2>
 <p>
@@ -6,8 +6,8 @@
 	If you're not supposed to be here, go away.
 </p>
 
-<!--#include virtual="/admin/cgi-bin/list.cgi" -->
+<!--#include virtual="cgi-bin/list.cgi" -->
 
 
-<!--#include virtual="/includes/footer.shtml" -->
+<!--#include virtual="includes/footer.shtml" -->
 

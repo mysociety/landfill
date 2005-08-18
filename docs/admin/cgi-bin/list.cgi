@@ -45,9 +45,9 @@ print "Content-type: text/html\n\n";
 		my $someday = UnixDate($result->{posted}, "%E %b %Y");
 		print <<EOfragment;
 	<div class="entry">
-		<h4><a href="$admin_url_prefix/comments/$result->{postid}">$result->{title}</a></h4>
+		<h4><a href="$admin_url_prefix/comments?$result->{postid}">$result->{title}</a></h4>
 		$result->{shortwhy}
-	<form method="post" action="$admin_url_prefix/cgi-bin/$hideorshow.cgi" />
+	<form method="post" action="cgi-bin/$hideorshow.cgi" />
 		<input type="hidden" name="postid" value="$result->{postid}" />
 		<input type="submit" value="$hideorshow this post" />
 	</form>

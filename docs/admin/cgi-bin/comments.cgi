@@ -19,6 +19,7 @@ my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $url_prefix= $mysociety::NotApathetic::Config::url;
+my $site_name= $mysociety::NotApathetic::Config::site_name;
 my $admin_url_prefix= $mysociety::NotApathetic::Config::admin_url;
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 my %State; # State variables during display.
@@ -41,6 +42,7 @@ print "Content-Type: text/html\n\n";
 			     date_format(posted, \"%H:%i, %e %M\") as posted_formatted
 			from posts
 		       where postid=$Entry
+  			 and site='$site_name'
 		    order by posted desc
 		       "); # XXX order by first_seen needs to change
 
@@ -80,7 +82,11 @@ sub show_comments {
 	my $html=" <h2>Comments</h2>";
 
 	my $query=$dbh->prepare(
-	  " select * from comments where postid=$Entry and visible<2");
+	  " select * from comments 
+               where postid=$Entry
+                 and visible<2
+  		 and site='$site_name'
+");
 
 	my $result;
 

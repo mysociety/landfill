@@ -1,14 +1,18 @@
+RewriteEngine On
 
-# you need to change the below line to 
-# wherever your .htpasswd file is
-AuthUserFile /dev/null
+RewriteCond %{HTTP_HOST}   !secure.mysociety.org
+RewriteRule ^	https://secure.mysociety.org/admin/yhh/ [R]
 
-# user names from that file appear in notifications sent to 
-# the abuse@ address.
-
-# You can probably leave the below.
-AuthGroupFile /dev/null
-AuthName "Admin"
-AuthType Basic
-Require valid-user
-
+## you need to change the below line to 
+## wherever your .htpasswd file is
+#AuthUserFile /dev/null
+#
+## user names from that file appear in notifications sent to 
+## the abuse@ address.
+#
+## You can probably leave the below.
+#AuthGroupFile /dev/null
+#AuthName "Admin"
+#AuthType Basic
+#Require valid-user
+#

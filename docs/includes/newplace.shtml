@@ -1,0 +1,49 @@
+<div id="hiddenadd" class="hidden">
+<form method="post" id="f" action="/cgi-bin/new-stage1.cgi">
+    <h3 class="blue">Add new place</h3>
+    <script>
+        <!--
+        function sf(){document.f.q.focus();}
+
+        function rwt(el,ct,cd,sg){
+            el.href="/cgi-bin/suggest.cgi?url="+escape(el.href).replace(/\+/g,"%2B")+"&sg="+sg; 
+            el.onmousedown="";
+            return true;
+        }
+
+        function qs(el) {if (window.RegExp && window.encodeURIComponent) {
+            var ue=el.href;
+            var qe=encodeURIComponent(document.f.q.value);
+            if(ue.indexOf("q=")!=-1){
+                el.href=ue.replace(new RegExp("q=[^&$]*"),"q="+qe);
+            } else {
+                el.href=ue+"&q="+qe;
+            }
+        }
+        return 1;
+        }
+        // -->
+    </script>
+<p>
+Select <a href="http://en.wikipedia.org/">Wikipedia</a> Topic:  <input autocomplete="off"  maxLength="1024" size="30" name="q">
+</p>
+<script src="/js/ac.js" type="text/javascript"></script>
+<script>
+InstallAC(document.getElementById("f"),document.getElementById("f").q,document.getElementById("f").btnG,"/cgi-bin/suggest.cgi","en");
+</script>
+<p>
+<!--#include virtual="/geography/google/stage1.shtml"  --> 
+</p>
+
+
+<p>
+            <label for="emailreason">Email address (<a href="/about/privacy /">why do we need this?</a>)</label>
+            <input type="text" name="email" id="emailreason" size="30" /><br />
+
+
+            <label for="emailname">Your Name(<a href="/about/privacy /">why do we need this?</a>)</label>
+            <input type="text" name="name" id="emailname" size="30" /><br />
+            <input type="submit" value="Submit" />
+</p>
+</form>
+</div>

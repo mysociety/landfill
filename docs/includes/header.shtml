@@ -7,7 +7,6 @@
 <!-- <link rel="stylesheet" type="text/css" title="portable" href="/css/handheld.css" media="handheld" /> -->
 <link rel="shortcut icon" href="/favicon.ico" />
 <link href="/cgi-bin/rss.cgi<!--#if expr="${rss_query}" -->?<!--#echo var="rss_query" --><!--#endif -->" rel="alternate" type="application/rss+xml" title="YourHistory Here places" />
-<script type="text/javascript" src="/forms.js"></script>
 </head>
 <body>
 <p id="browserwontwork" class="hidden">

@@ -120,8 +120,7 @@ EOfragment
 <dd><p>$result->{shortwhy}</p>
 <small>
 written $someday 
-| <a href="$url_prefix/comments/$result->{postid}">read more</a> 
-| <a href="$url_prefix/comments/$result->{postid}\#comments">$result->{commentcount} $responses</a> 
+| <a href="$url_prefix/comments.shtml?$result->{postid}">read more</a> 
 | <a href="/abuse/?postid=$result->{postid}">abusive?</a>
 </small>
 </dd>

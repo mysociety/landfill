@@ -1,0 +1,11 @@
+	<!--#include virtual="/includes/header.shtml" -->
+
+	<!--#include virtual="/cgi-bin/comments.cgi?${QUERY_STRING}" -->
+        <!--#include virtual="/geography/google/comments.shtml" -->
+        <small>Accuracy currently around 150 yards</small>
+	</div>
+	<div id="inputBox">
+		<!--#include virtual="/includes/newplace.shtml" -->
+		<!--#include virtual="/includes/description.shtml" -->
+
+	<!--#include virtual="/includes/footer.shtml" -->

@@ -106,7 +106,8 @@ ul.pins li
 div#searchmap 
 {
 	margin-bottom:2px;	
-	width: 368px; height: 366px;
+	width: 450px;
+ 	height: 366px;
 }
 
 /* nav menu */
@@ -127,7 +128,7 @@ float:left;
 
 ul.nav.posts{
 clear:right;
-width:330px;
+width:200px;
 }
 
 ul.nav.footer{
@@ -194,7 +195,7 @@ ul.nav form {float:left;padding:4px 0 0 15px;}
 	clear:right;
 	float:left;
 	margin:0 0 2em 0;
-	width:330px;
+	width:200px;
 	font-weight:bold;
 	min-height:32px;
 	text-align:right;
@@ -237,12 +238,12 @@ div#main
 {
 clear:left;
 float:left;
-width:372px;
+width:450px;
 
 padding:2px 2px 0 2px;
 }
 div#inputBox {
-    width:365px;
+    width:250px;
 	padding:2px 2px 0 2px;
     float:right;
     text-align: left;

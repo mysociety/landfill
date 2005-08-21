@@ -210,7 +210,7 @@ function installACPartTwo(){
     setCookie("qu","",0,_completeSearchString,null,null)
   }
 
-  _documentForm.onsubmit=Fa;
+  //_documentForm.onsubmit=Fa;
   _inputField.autocomplete="off";
   _inputField.onblur=onBlurHandler;
   if(_inputField.createTextRange) {
@@ -218,7 +218,7 @@ function installACPartTwo(){
   } else {
     _inputField.onkeyup=okuh;
   }
-  _inputField.onsubmit=Fa;
+  //_inputField.onsubmit=Fa;
   _currentInputFieldValue=_inputField.value;
   _oldInputFieldValue=_currentInputFieldValue;
   _completeDiv=document.createElement("DIV");
@@ -456,7 +456,7 @@ function xb(eb) {
     setTimeout(Tb,10);
     return false
   } else if(eb=="query"){
-    _documentForm.submit();
+    //_documentForm.submit();
     return true
   }
 }

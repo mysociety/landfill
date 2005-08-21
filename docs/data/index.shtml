@@ -1,0 +1,32 @@
+<!--#set var="page_title" value="not voting in the 2005 general election?" -->
+<!--#include virtual="/includes/header.shtml" -->
+
+<h2>API</h2>
+
+<h4>Get posts out</h4>
+<p>
+	All post data is available via <a href="/cgi-bin/postsxml.cgi">xml</a>, 
+	with an <a href="/cgi-bin/rss.cgi/placeopedia.com">RSS feed</a>.
+	We also have a <a href="/cgi-bin/kml.cgi/placeopedia.kml">KML</a> file for use with Google Earth,
+	although this currently doesn't work.
+</p>
+
+<h4>Search within</h4>
+<p>
+	Make a GET request to <a href="/cgi-bin/kml.cgi/searchwithin.kml">/cgi-bin/kml.cgi</a> 
+	with parameters of lat/long
+	of the top left and bottom right corners. Parameters are
+	named:
+	<tt>topleft_lat</tt>,
+	<tt>topleft_long</tt>,
+	<tt>topright_lat</tt>,
+	<tt>topright_long</tt>.
+</p>
+
+</div>
+<div id="inputBox">
+<a name="input"></a>
+<div class="hideme"><a href="#top">back to top of page</a></div>
+<!--#include virtual="/includes/description.shtml" -->
+<!--#include virtual="/includes/footer.shtml" -->
+

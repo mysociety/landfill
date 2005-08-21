@@ -12,26 +12,44 @@ use mysociety::NotApathetic::Config;
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username; # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password; # database password
+my $site_name= $mysociety::NotApathetic::Config::site_name;
 my $dbh=DBI->connect($dsn, $db_username, $db_password);
 my %State; # State variables during display.
 our $url_prefix=$mysociety::NotApathetic::Config::url;
 my $Js='';
 
 {
-    #if (defined $ENV{REQUEST_METHOD}) {
+    if (defined $ENV{REQUEST_METHOD}) {
          print "Content-Type: text/html\n\n";
-         #}
+    }
 
     {
         my $type = param('type') || 'details';
         my $search_bit = param('search') || '';
         my $page = param('page') || 0;
+	my $topleft_lat=param('topleft_lat');
+	my $topleft_long=param('topleft_long');
+	my $bottomright_lat=param('bottomright_lat');
+	my $bottomright_long=param('bottomright_long');
+
         if ($search_bit =~ /\|(\d+)$/) {
             $page = $1;
             $search_bit =~ s/\|(\d+)$//;
         }
         my $search_term = handle_search_term($search_bit); #' 1 = 1 ';
-        my $mainlimit = 15;
+	my $geog_limiter='';
+        if ( defined($topleft_lat) and defined($topleft_long) and
+             defined($bottomright_lat) and defined($bottomright_long)) {
+             $topleft_lat=~ s#[^-\.\d]##g;
+             $topleft_long=~ s#[^-\.\d]##g;
+             $bottomright_lat=~ s#[^-\.\d]##g;
+             $bottomright_long=~ s#[^-\.\d]##g;
+                $geog_limiter= <<EOSQL;
+        and google_lat >= $topleft_lat and google_lat <= $bottomright_lat
+        and google_long >= $topleft_long and google_long <= $bottomright_long
+EOSQL
+        }
+         my $mainlimit = 15;
 		my $brief = 1; # mainlimit x brief entries displayed in the brief listing
         my $limit = ($type eq 'details') ? $mainlimit : $mainlimit * $brief;
         my $offset = $page * $mainlimit;
@@ -45,8 +63,10 @@ my $Js='';
                           select *
                             from posts
                            where validated=1
-						   		 $interesting
+		   		 $interesting
                              and hidden=0
+                             and site='$site_name'
+				 $geog_limiter
                                  $search_term
                         order by posted
                                  desc limit $offset, $limit
@@ -105,12 +125,17 @@ written $someday
 | <a href="/abuse/?postid=$result->{postid}">abusive?</a>
 </small>
 </dd>
+
 EOfragment
+
+                $title=~s#[\n]##mg;
+
                 $Js.=<<EOjs;
     var point_$pointindex = new GPoint($result->{google_lat}, $result->{google_long});
     var marker_$pointindex= new GMarker(point_$pointindex);
     GEvent.addListener(marker_$pointindex, "click", function() {
-            marker_$pointindex.openInfoWindowHtml("<a href=\\"/comments.shtml?$result->{postid}\\" >$title</a>")
+            document.location="http://www.yourhistoryhere.com/comments.shtml?$result->{postid}";
+            //marker_$pointindex.openInfoWindowHtml("<a href=\\"/comments.shtml?$result->{postid}\\" >$title</a>")
             });
     GEvent.bind(marker_$pointindex, "mouseover", function() {
             marker_$pointindex.openInfoWindowHtml("<a href=\\"/comments.shtml?$result->{postid}\\" >$title</a>")

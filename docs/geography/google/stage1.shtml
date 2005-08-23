@@ -9,17 +9,25 @@
     Where: <span id="where">none selected</span><br />
     <input type="hidden" name="location" id="location" />
 
-    <div id="map" style="width: 450px; height:300px;">
+    <div id="map" style="width: 450px; height:400px;">
     </div>
     <script type="text/javascript">
     //<![CDATA[
 
+function create_map() {
     var map = new GMap(document.getElementById("map"));
     map.centerAndZoom(new GPoint(-4.218750, 54.724620), 12);
     map.setMapType( _HYBRID_TYPE )
     map.addControl(new GLargeMapControl());
     map.addControl(new GMapTypeControl());
 
+GEvent.addListener(map, 'click', function() {
+      var center = map.getCenterLatLng();
+      var latLngStr =  "lat=" + center.x + ";long=" + center.y + "";
+      document.getElementById('where').innerHTML = latLngStr;
+      document.getElementById('location').value = latLngStr;
+});
+}
 
 function onLoad() {
     // centre map on location of a click
@@ -39,12 +47,6 @@ GEvent.addListener(map, 'click', function(overlay, point) {
 });
 
 }
-GEvent.addListener(map, 'click', function() {
-      var center = map.getCenterLatLng();
-      var latLngStr =  "lat=" + center.x + ";long=" + center.y + "";
-      document.getElementById('where').innerHTML = latLngStr;
-      document.getElementById('location').value = latLngStr;
-});
     //]]>
     </script>
      </td> 

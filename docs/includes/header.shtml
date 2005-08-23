@@ -23,7 +23,7 @@
 </div>
 
 <ul class="nav">
-    <li id="add"><a href="#" onclick="document.getElementById('search_container').className='hidden'; document.getElementById('hiddenadd').className='';">Add your place</a></li>
+    <li id="add"><a href="#" onclick="document.getElementById('search_container').className='hidden'; document.getElementById('hiddenadd').className='';create_map();">Add your place</a></li>
         <li id="random"><a href="/random">Random place</a></li>
         <li>
                 <form method="get" action="/cgi-bin/search.cgi" id="search">

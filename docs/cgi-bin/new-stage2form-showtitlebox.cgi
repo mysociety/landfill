@@ -48,13 +48,6 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 			<input type="text" width="30" name="title" value="$title" />
 		</td>
 	</tr>
-	<tr>
-		<td>
-		</td>
-		<td>
-			$shortwhy
-		</td>
-	</tr>
 EOfragment
 
 }

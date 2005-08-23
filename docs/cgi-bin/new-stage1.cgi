@@ -87,8 +87,8 @@ sub handle_comment {
 		       shortwhy=$quoted{shortwhy} ,
 		       title=$quoted{title} ,
 		       posted=now(),
-		       authcode=$auth_code_q
-		       and site='$site_name'
+		       authcode=$auth_code_q,
+		       site='$site_name'
 	");
 
 	$query->execute;

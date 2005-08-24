@@ -3,9 +3,12 @@
     <tr> 
      <td colspan="2">
       <script src="http://maps.google.com/maps?file=api&v=1&key=ABQIAAAAbXzhWwipU_Uy7amV7gZQXxSE-Ta92V6AkXVjBeIeKXUNI1q2WhQsQBpGJCOSQbtuKJU7Y6ZZP-EuIg" type="text/javascript"></script>
-    
-    Use the map to find your place. Click on it to store the coordinates to the
-    form and then click submit<br />
+
+	Use the controls on the map to find the location you want to 
+	mark as your place. When you have found it roughly, double click to
+	position the place exactly, then click submit below the map to add 
+	your place to the website.
+<br />
     Where: <span id="where">none selected</span><br />
     <input type="hidden" name="location" id="location" />
 

@@ -42,7 +42,7 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 	<input type="hidden" name="authcode" value="$authcode" />
 	<tr>
 		<td>
-			Title
+			Title (1-4 words)
 		</td>
 		<td>
 			<input type="text" width="30" name="title" value="$title" />

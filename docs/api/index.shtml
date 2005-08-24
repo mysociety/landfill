@@ -1,4 +1,4 @@
-<!--#set var="page_title" value="not voting in the 2005 general election?" -->
+<!--#set var="page_title" value="where's your place?" -->
 <!--#include virtual="/includes/header.shtml" -->
 
 <h2>API</h2>
@@ -6,13 +6,13 @@
 <p>
 	We intend to have a full web service API. Using GET/POST requests,
 	you should be able to submit/receive informaton which interacts
-	the same way our web pages do. All data is be available via XML
+	the same way our web pages do. All data is available via XML
 	for reuse. 
 </p>
 
 <h4>Get posts out</h4>
 <p>
-	All post data is available via xml: <a href="/cgi-bin/postsxml.cgi">here</a>. We 
+    All post data is <a href="/cgi-bin/postsxml.cgi">available via xml</a>. We 
 	also have a <a href="/cgi-bin/kml.cgi/yourhistoryhere.kml">KML</a> file for use with Google Earth.
 	<br />
 </p>

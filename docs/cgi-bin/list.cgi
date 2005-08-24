@@ -120,7 +120,7 @@ EOfragment
 <dd><p>$result->{shortwhy}</p>
 <small>
 written $someday 
-| <a href="http://en.wikipedia.org/wiki/$result->{title}">read more</a> 
+| <a href="http://en.wikipedia.org/wiki/$result->{title}">Wikipedia Article</a> 
 | <a href="/abuse/?postid=$result->{postid}">abusive?</a>
 </small>
 </dd>

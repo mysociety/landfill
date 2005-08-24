@@ -77,7 +77,7 @@ my %State; # State variables during display.
 -->
 	
 	<dl>
-	<dt>$result->{title}</dt>
+	<dt><a href="http://en.wikipedia.org/wiki/$result->{title}">$result->{title}</a></dt>
 	<dd><p>$why</p>
         <small>
         Lat: <span id="google_lat">$result->{google_lat}</span> | Long: <span id="google_long">$result->{google_long}</span>

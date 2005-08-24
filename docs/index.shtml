@@ -5,7 +5,7 @@
 </div>
 <div id="inputBox">
 <div class="right">
-    <h3 class="green">These Places</h3>
+    <h3 class="green">Recently Added Places</h3>
     <!--#include virtual="/cgi-bin/list.cgi?page=${QUERY_STRING}" -->
 </div>
 <!--#include virtual="/includes/footer.shtml" -->

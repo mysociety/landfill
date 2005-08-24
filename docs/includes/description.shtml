@@ -2,11 +2,13 @@
 <h3 class="green">About the site</h3>
 <h4>News</h4>
 <ul id="sitelinks" class="pins">
-        <li><a href="http://en.wikipedia.org/">Wikipedia</a></li>
+        <li>
+Hello, and welcome to Placeopedia, a simple site where you can connect Wikipedia articles with places, and then make use of our database either to browse, or 
+syndicate the whole lot. We hope that lots of people will connect
+places they know with their corresponding Wikipedia article, and then
+our syndicated data can be used as a general geographic lookup table
+for Wikipedia.          
+	</li>
 </ul>
 
-<h4>To Do</h4>
-<ul id="sitenews">
-                <li>RHS based on map on LHS.</li>
-</ul>
 </p>

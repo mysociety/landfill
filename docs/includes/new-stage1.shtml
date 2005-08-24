@@ -9,7 +9,7 @@
 				<label for="emailreason">Email address (<a href="/about/privacy/">why do we need this?</a>)</label>
 				<input type="text" name="email" id="emailreason" size="30" /><br />
 				Location will be requested on the next screen.
-				<input type="submit" value="Submit" />
+				<input type="submit" value="Next" />
 		</fieldset>
 		</form>
 </div>

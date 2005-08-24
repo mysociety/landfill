@@ -1,4 +1,5 @@
-<h2><a name="commentbox"></a>Comment</h2>
+<a name="commentbox"></a>
+<h2>Know about this place?</h2>
 
 <form method="post" action="../cgi-bin/comment.cgi" id="comment">
 	<fieldset>
@@ -11,7 +12,7 @@
 	<div>
 	<label for="email">Email</label><input id="email" name="email" type="text" size="20" />
 	<small>You must give a valid email address, but it will
-    	<em>not</em> be displayed to the public.</small>
+    	<em>not</em> be displayed to the public or used for evil spamming<sup>TM</sup>.</small>
 	</div>
 
 	<div>

@@ -6,22 +6,22 @@
 <p>
 	We intend to have a full web service API. Using GET/POST requests,
 	you should be able to submit/receive informaton which interacts
-	the same way our web pages do. All data will be available via XML
-	for reuse.
+	the same way our web pages do. All data is be available via XML
+	for reuse. 
 </p>
 
 <h4>Get posts out</h4>
 <p>
-	All post data is available via xml: <a href="/cgi-bin/postsxml.cgi">here</a>. We also have a <a href="/cgi-bin/kml.cgi/yourhistoryhere.kml">KML</a> file for use with Google Earth.
+	All post data is available via xml: <a href="/cgi-bin/postsxml.cgi">here</a>. We 
+	also have a <a href="/cgi-bin/kml.cgi/yourhistoryhere.kml">KML</a> file for use with Google Earth.
 	<br />
-	TODO: Need access to comments yet.
 </p>
 
 
 <h4>Submit data</h4>
 <p>
-	Two stage. Fake the form effectively. 
-	need to add code for target="xml" output XML not an HTTP redirect.
+	Fake the form effectively. 
+	Currently output will be a HTTP redirect. You get sent to /error/?MESSAGE_GOES_HERE for errors.
 </p>
 
 <h4>Search</h4>

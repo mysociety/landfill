@@ -5,6 +5,9 @@
                         <a href="mailto:team@yourhistoryhere.com">contact us</a>
                 </li>
                 <li>
+                        <a href="/api/">Data</a>
+                </li>
+                <li>
                         <a id="mysocietylink" href="http://www.mysociety.org/"><span class="hidden">My Society</span></a>
                 </li>
                 <li>

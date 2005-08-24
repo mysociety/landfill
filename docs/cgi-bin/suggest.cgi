@@ -18,7 +18,15 @@ our $url_prefix=$mysociety::NotApathetic::Config::url;
    	print "Content-type: text/html\n\n";
         my $dbh = DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 	my $entry= param('qu') || 'West';
+	my $n_entry;
+	foreach (split /[ _]/, $entry) {
+		$n_entry.= ucfirst($_) . ' ';
+	}
+	$entry=$n_entry;
+	$entry =~ s/ *$//;
 	$entry =~ tr/ /_/;
+	$entry =~ tr/'/?/;
+	$entry =~ tr/;/?/;
         my $query=$dbh->prepare("
                           select cur_title
                             from cur

@@ -47,7 +47,7 @@ function onLoad() {
     function update_place_list(bounds) {
 	//var bounds = searchmap.getBoundsLatLng();
         var r = GXmlHttp.create(); 
-        r.open("GET", "http://www.yourhistoryhere.com/cgi-bin/list.cgi?topleft_lat=" + bounds.maxY + ";topleft_long="+ bounds.minX + ";bottomright_lat=" + bounds.minY + ";bottomright_long=" + bounds.maxX, true);
+        r.open("GET", "http://www.placeopedia.com/cgi-bin/list.cgi?topleft_lat=" + bounds.maxY + ";topleft_long="+ bounds.minX + ";bottomright_lat=" + bounds.minY + ";bottomright_long=" + bounds.maxX, true);
         r.onreadystatechange = function(){
 	     if (r.readyState ==4) {
 		     document.getElementById('list_of_places').innerHTML = r.responseText; 

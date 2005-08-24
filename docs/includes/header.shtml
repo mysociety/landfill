@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Your History Here . com<!--#if expr="${page_title}" --> - <!--#echo var="page_title" --><!--#endif --></title>
+<title>Placeopedia.com - Connecting Wikipedia articles with their locations</title>
 <link rel="stylesheet" type="text/css" title="mainscreen" href="/css/style.css" media="screen, projection" />
 <!-- <link rel="stylesheet" type="text/css" title="portable" href="/css/handheld.css" media="handheld" /> -->
 <link rel="shortcut icon" href="/favicon.ico" />

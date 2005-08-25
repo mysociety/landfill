@@ -39,6 +39,7 @@
 	<tt>topleft_long</tt>,
 	<tt>topright_lat</tt>,
 	<tt>topright_long</tt>.
+	All co-ordinates are WGS84.
 </p>
 
 </div>

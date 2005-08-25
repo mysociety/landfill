@@ -8,7 +8,9 @@
 <link rel="shortcut icon" href="/favicon.ico" />
 <link href="/cgi-bin/rss.cgi<!--#if expr="${rss_query}" -->?<!--#echo var="rss_query" --><!--#endif -->" rel="alternate" type="application/rss+xml" title="YourHistory Here places" />
 <script type="text/javascript" src="/forms.js"></script>
+<!--#if expr="${api_key}" -->
 <script src="http://maps.google.com/maps?file=api&v=1&key=<!--#echo var="api_key" -->" type="text/javascript"></script>
+<!--#endif -->
 </head>
 <body>
 <p id="browserwontwork" class="hidden">

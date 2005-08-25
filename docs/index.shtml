@@ -1,4 +1,5 @@
 <!--#set var="page_title" value="where's your place?" -->
+<!--#set var="api_key" value="ABQIAAAAbXzhWwipU_Uy7amV7gZQXxQIgIcOHi8fKqvZv44gwAtktPry_hQxkdqfP-zBO-_NWm6Z5p5pJDwANg" -->
 <!--#include virtual="/includes/header.shtml" -->
 <!--#include virtual="/includes/searchform.shtml" -->
 <!--#include virtual="/includes/description.shtml" -->
@@ -14,4 +15,7 @@
     <!--#include virtual="/cgi-bin/recentcomments.cgi?type=summary" -->
 </div>
 <!--#include virtual="/includes/footer.shtml" -->
-
+	<script type="text/javascript">
+	<!--#include virtual="/geography/google/search.js" -->
+	<!--#include virtual="/cgi-bin/list-js.cgi" -->
+</script>

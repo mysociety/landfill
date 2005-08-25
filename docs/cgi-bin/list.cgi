@@ -184,7 +184,6 @@ EOjs
             print "<p>Your search for " . $search_bit . " yielded no results.</p>";
         }
     }
-            print "<script type=\"text/javascript\">$Js</script>";
 }
 
 

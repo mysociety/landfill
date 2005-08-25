@@ -1,6 +1,5 @@
 <!--#set var="api_key" value="ABQIAAAAbXzhWwipU_Uy7amV7gZQXxQIgIcOHi8fKqvZv44gwAtktPry_hQxkdqfP-zBO-_NWm6Z5p5pJDwANg" -->
-
-	<!--#include virtual="/includes/header.shtml" -->
+<!--#include virtual="/includes/header.shtml" -->
 
 	<h2>About This Place...</h2>
 	<!--#include virtual="/cgi-bin/comments.cgi?${QUERY_STRING}" -->
@@ -9,9 +8,11 @@
 	<div id="inputBox">
             <!--#include virtual="/geography/google/comments.shtml" -->
             <small>Accuracy currently around 150 yards</small>
-            <h3 class="blue">Area Search</h3>
-		<!--#include virtual="/includes/searchform.shtml" -->
 		<!--#include virtual="/includes/description.shtml" -->
 		<!--#include virtual="/includes/new-stage1.shtml" -->
 
 	<!--#include virtual="/includes/footer.shtml" -->
+
+	<script type="text/javascript">
+	<!--#include virtual="/geography/google/comments.js" -->
+	</script>

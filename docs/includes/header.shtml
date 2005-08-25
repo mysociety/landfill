@@ -20,9 +20,11 @@
 
 <div id="wrap"><a name="top"></a>
 <div id="top">
+<a href="/">
+<h1><img src="/images/placeopedia.jpg" width="75" height="72">Placeopedia.com</h1></a>
+
      <!-- <h1><a href="/"><span class="hidden">Your History Here</span></a></h1>
      <h2><span class="hidden">Mapping Britain's Hidden History</span></h2> -->
-     <h1>Placeopedia.com</h1>
 </div>
 
 <ul class="nav">

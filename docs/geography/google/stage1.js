@@ -29,4 +29,3 @@ GEvent.addListener(map, 'click', function() {
       document.getElementById('where').innerHTML = latLngStr;
       document.getElementById('location').value = latLngStr;
 });
-    //]]>

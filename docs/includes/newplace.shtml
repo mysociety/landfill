@@ -25,7 +25,7 @@
         // -->
     </script>
 <p>
-Enter <a href="http://en.wikipedia.org/">Wikipedia</a> Article Name:  <input autocomplete="off"  maxLength="1024" size="30" name="q"> (case sensitive).
+Enter <a href="http://en.wikipedia.org/">Wikipedia</a> Article Name:  <input autocomplete="off"  maxLength="1024" size="30" name="q">
 
 	    <br />
 

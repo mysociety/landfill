@@ -14,5 +14,8 @@
 	<!--#include virtual="/geography/google/search.js" -->
 	<!--#include virtual="/geography/google/stage1.js" -->
 	<!--#include virtual="/cgi-bin/list-js.cgi" -->
+	InstallAC(document.getElementById("f"),document.getElementById("f").q,document.getElementById("f").btnG,"/cgi-bin/suggest.cgi","en");
 </script>
+<script src="/js/ac.js" type="text/javascript"></script>
+
 

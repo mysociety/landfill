@@ -1,8 +1,7 @@
 <div id="hiddenadd" class="hidden">
 <form method="post" id="f" action="/cgi-bin/new-stage1.cgi">
     <h3 class="blue">Add new place</h3>
-    <script>
-        <!--
+    <script type="text/javascript">
         function sf(){document.f.q.focus();}
 
         function rwt(el,ct,cd,sg){
@@ -22,7 +21,6 @@
         }
         return 1;
         }
-        // -->
     </script>
 <p>
 Enter <a href="http://en.wikipedia.org/">Wikipedia</a> Article Name:  <input autocomplete="off"  maxLength="1024" size="30" name="q">
@@ -37,10 +35,6 @@ Enter <a href="http://en.wikipedia.org/">Wikipedia</a> Article Name:  <input aut
             <input type="text" name="name" id="emailname" size="30" /><br />
 </p>
 
-<script src="/js/ac.js" type="text/javascript"></script>
-<script>
-InstallAC(document.getElementById("f"),document.getElementById("f").q,document.getElementById("f").btnG,"/cgi-bin/suggest.cgi","en");
-</script>
 <p>
 <!--#include virtual="/geography/google/stage1.shtml"  --> 
 </p>

@@ -1,4 +1,5 @@
 <!--#set var="page_title" value="You've told us about your place" -->
+<!--#set var="api_key" value="ABQIAAAAbXzhWwipU_Uy7amV7gZQXxSE-Ta92V6AkXVjBeIeKXUNI1q2WhQsQBpGJCOSQbtuKJU7Y6ZZP-EuIg" -->
 <!--#include virtual="/includes/header.shtml" -->
 <form method="post" action="/cgi-bin/new-stage1-geography.cgi">
 <table border="0">

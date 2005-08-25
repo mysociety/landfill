@@ -1,3 +1,4 @@
+	<!--#set var="api_key" value="ABQIAAAA8N0lvXAsUc4OGoWFst6idhQ08MtMjoXxyp9SXQd6LIaB84SUmBRUeUi1liAZDjkRIrTSC1tpDWgPtQ" -->
 	<!--#include virtual="/includes/header.shtml" -->
 
 	<!--#include virtual="/cgi-bin/comments.cgi?${QUERY_STRING}" -->
@@ -9,3 +10,7 @@
 		<!--#include virtual="/includes/description.shtml" -->
 
 	<!--#include virtual="/includes/footer.shtml" -->
+	<script type="text/javascript">
+        <!--#include virtual="/geography/google/comments.js" -->
+	</script>
+

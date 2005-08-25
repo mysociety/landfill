@@ -1,4 +1,5 @@
 <!--#set var="page_title" value="Placeopedia" -->
+<!--#set var="api_key" value="ABQIAAAA8N0lvXAsUc4OGoWFst6idhQ08MtMjoXxyp9SXQd6LIaB84SUmBRUeUi1liAZDjkRIrTSC1tpDWgPtQ" -->
 <!--#include virtual="/includes/header.shtml" -->
 <!--#include virtual="/geography/search.shtml" -->
 <!--#include virtual="/includes/description.shtml" -->
@@ -9,4 +10,9 @@
     <!--#include virtual="/cgi-bin/list.cgi?page=${QUERY_STRING}" -->
 </div>
 <!--#include virtual="/includes/footer.shtml" -->
+<script type="text/javascript">
+	<!--#include virtual="/geography/google/search.js" -->
+	<!--#include virtual="/geography/google/stage1.js" -->
+	<!--#include virtual="/cgi-bin/list-js.cgi" -->
+</script>
 

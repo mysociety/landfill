@@ -45,4 +45,6 @@
 
 
 <!--#include virtual="/includes/footer.shtml" -->
-
+	<script type="text/javascript">
+	<!--#include virtual="/geography/google/stage1.js" -->
+	</script>

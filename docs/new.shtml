@@ -1,0 +1,20 @@
+<!--#set var="page_title" value="Placeopedia" -->
+<!--#set var="api_key" value="ABQIAAAA8N0lvXAsUc4OGoWFst6idhQ08MtMjoXxyp9SXQd6LIaB84SUmBRUeUi1liAZDjkRIrTSC1tpDWgPtQ" -->
+<!--#include virtual="/includes/header.shtml" -->
+<!--#include virtual="/includes/newplace.shtml" -->
+<!--#include virtual="/includes/description.shtml" -->
+</div>
+<div id="inputBox">
+<div class="right">
+    <h3 class="green">Recently Added Places</h3>
+    <!--#include virtual="/cgi-bin/list.cgi?page=${QUERY_STRING}" -->
+</div>
+<!--#include virtual="/includes/footer.shtml" -->
+<script src="/js/ac.js" type="text/javascript"></script>
+<script type="text/javascript">
+	<!--#include virtual="/geography/google/stage1.js" -->
+	<!--#include virtual="/cgi-bin/list-js.cgi" -->
+	InstallAC(document.getElementById("f"),document.getElementById("f").q,document.getElementById("f").btnG,"/cgi-bin/suggest.cgi","en");
+</script>
+
+

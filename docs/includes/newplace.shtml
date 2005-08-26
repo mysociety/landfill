@@ -1,4 +1,4 @@
-<div id="hiddenadd" class="hidden">
+<!-- <div id="hiddenadd" class="hidden"> -->
 <form method="post" id="f" action="/cgi-bin/new-stage1.cgi">
     <h3 class="blue">Add new place</h3>
     <script type="text/javascript">
@@ -42,4 +42,4 @@ Enter <a href="http://en.wikipedia.org/">Wikipedia</a> Article Name:  <input aut
 
 
 </form>
-</div>
+<!-- </div> -->

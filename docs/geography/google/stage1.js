@@ -1,6 +1,7 @@
  
 function draw_adding_map () {
-
+	document.location="/";
+	return;
     var map = new GMap(document.getElementById("map"));
     map.centerAndZoom(new GPoint(-4.218750, 54.724620), 12);
     map.setMapType( _HYBRID_TYPE )

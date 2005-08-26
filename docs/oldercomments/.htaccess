@@ -1,2 +1,2 @@
 RewriteEngine On
-RewriteRule ^(.*)	/recentcomments.shtml?$1 [L]
+RewriteRule ^(.*)	/recentcomments.shtml?$1 [R]

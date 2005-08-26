@@ -69,6 +69,7 @@ our $url_prefix=$mysociety::NotApathetic::Config::url;
 				posts
 			where
 				comments.postid = posts.postid
+				and posts.hidden=0
 				and site='$site_name'
 			order by comments.posted desc
 			limit

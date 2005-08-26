@@ -1,3 +1,8 @@
+if (GBrowserIsCompatible()) {
+    // do nothing
+} else {
+    document.getElementById('browserwontwork').className = '';
+}
 
     var searchmap = new GMap(document.getElementById("searchmap"));
 

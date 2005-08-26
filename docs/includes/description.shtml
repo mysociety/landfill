@@ -6,7 +6,7 @@
 Hello, and welcome to Placeopedia, a simple site where you can connect Wikipedia articles with places, and then make use of our database either to browse, or 
 syndicate the whole lot. We hope that lots of people will connect
 places they know with their corresponding Wikipedia article, and then
-our syndicated data can be used as a general geographic lookup table
+our <a href="/data/">syndicated data</a> can be used as a general geographic lookup table
 for Wikipedia.          
 	</li>
 </ul>

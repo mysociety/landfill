@@ -11,7 +11,7 @@
 		<input type="input" name="name" />
 	</td>
     </tr>
-    <tr>
+    <!-- <tr>
 	<td>
 		Category
 	</td>
@@ -22,7 +22,7 @@
 			<option value="history_blueplaques">Historical Sites with a Blue Plaque</option>
 		</select>
 	</td>
-    </tr>
+    </tr> -->
 	<!--#include virtual="/cgi-bin/new-stage2form-showtitlebox.cgi?${QUERY_STRING}" -->
         <tr>
                 <td>

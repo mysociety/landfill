@@ -7,7 +7,6 @@ use CGI::Carp qw/fatalsToBrowser/;
 use Date::Manip;
 use DBI;
 use HTML::Entities;
-use URI::Escape;
 use mysociety::NotApathetic::Config;
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
@@ -87,51 +86,15 @@ EOSQL
         my $title;
         my $pointindex=1;
         while ($result=$query->fetchrow_hashref) {
-            if ($printed==0) {
-                $printed = 1;
-                if ($type eq 'summary') {
-                    print "<ul>\n";
-                } else {
-					print "<dl>\n";
-	        }
-                if ($type eq 'details' && $search_bit ne '') {
-        	    print '<p>Your search for "'.$search_bit.'" yielded the following results:</p>';
-                }
-	    }
-
-            $comments_html= &handle_links($result);
 
             #if ($result->{content} eq $result->{shortcontent}) {
             #	$more_link= $result->{link};
             #} else  {
             #	$more_link= "comments/?$result->{entryid}";
             #}
-
             $title = encode_entities($result->{title}) || '&lt;No subject&gt;';
-            $more_link= $result->{link};
-            if ($type eq 'summary') {
-                print <<EOfragment;
-<li><a href="$url_prefix/comments/$result->{postid}">$title</a></li>
-EOfragment
-            } else {
-                $someday = UnixDate($result->{posted}, "%E %b %Y");
-                my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';
-                my $wikiuri = $result->{title};
-                $wikiuri =~ tr/ /_/;
-                $wikiuri = uri_escape($wikiuri);
-                print <<EOfragment;
-<dt><a href="$url_prefix/comments/$result->{postid}">$title</a></dt>
-<dd><p>$result->{shortwhy}</p>
-<small>
-written $someday 
-| <a href="http://en.wikipedia.org/wiki/$wikiuri">Wikipedia Article</a> 
-| <a href="/abuse/?postid=$result->{postid}">abusive?</a>
-</small>
-</dd>
+	    $title=~s#[\n]##mg;
 
-EOfragment
-
-                $title=~s#[\n]##mg;
 
                 $Js.=<<EOjs;
     var point_$pointindex = new GPoint($result->{google_lat}, $result->{google_long});
@@ -151,43 +114,7 @@ EOjs
                 $pointindex++;
             }
         }
-        if ($query->rows > 0) {
-            my $url = '/older/';
-			
-	    if ($search_bit ne ''){
-			$url = '/oldersearch/'.$search_bit.'|';
-	    }elsif (defined param('interest')){
-			$url = '/olderbusiest/';
-	    }
-			
-	    my $older = $page;
-
-
-            if ($type eq 'summary') {
-                print "</ul>\n";
-                $older += $brief+1;
-                print "<p align=\"right\"><a href=\"$url$older\">Even older entries</a></p>";
-            } else {
-				print "</dl>\n";
-                $older += 1;
-                my $newer = $page - 1;
-                print '<p align="center">';
-                if ($newer == 0) {
-                    my $fronturl = ($search_bit ne '') ? '/oldersearch/'.$search_bit : '/';
-                    print "<a href=\"$fronturl\">front page</a> | ";
-                } elsif ($newer > 0) {
-                    print "<a href=\"$url$newer\">newer $mainlimit entries</a> | ";
-                }
-                if ($type eq 'summary' || $query->rows eq $limit) {
-                    print "<a href=\"$url$older\">older $mainlimit entries</a>";
-                }
-                print '</p>';
-
-            }
-        } elsif ($type eq 'details' && $search_bit ne '') {
-            print "<p>Your search for " . $search_bit . " yielded no results.</p>";
-        }
-    }
+	print $Js;
 }
 
 

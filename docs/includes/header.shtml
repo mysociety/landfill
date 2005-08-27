@@ -8,7 +8,7 @@
 <link rel="shortcut icon" href="/favicon.ico" />
 <link href="/cgi-bin/rss.cgi<!--#if expr="${rss_query}" -->?<!--#echo var="rss_query" --><!--#endif -->" rel="alternate" type="application/rss+xml" title="YourHistory Here places" />
 <!--#if expr="${api_key}" -->
-<script src="http://maps.google.com/maps?file=api&v=1&key=<!--#echo var="api_key" -->" type="text/javascript"></script>
+<script src="http://maps.google.com/maps?file=api&amp;v=1&amp;key=<!--#echo var="api_key" -->" type="text/javascript"></script>
 <!--#endif -->
 </head>
 <body>
@@ -20,8 +20,7 @@
 
 <div id="wrap"><a name="top"></a>
 <div id="top">
-<a href="/">
-<h1><img src="/images/placeopedia.jpg" width="75" height="72">Placeopedia.com</h1></a>
+<h1><a href="/"><img alt="" src="/images/placeopedia.jpg" width="75" height="72" />Placeopedia.com</a></h1>
 
      <!-- <h1><a href="/"><span class="hidden">Your History Here</span></a></h1>
      <h2><span class="hidden">Mapping Britain's Hidden History</span></h2> -->

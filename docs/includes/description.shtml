@@ -1,4 +1,3 @@
-<p>
 <h3 class="green">About the site</h3>
 <h4>News</h4>
 <ul id="sitelinks" class="pins">
@@ -10,5 +9,3 @@ our <a href="/data/">syndicated data</a> can be used as a general geographic loo
 for Wikipedia.          
 	</li>
 </ul>
-
-</p>

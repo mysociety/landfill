@@ -7,6 +7,7 @@ use CGI::Carp qw/fatalsToBrowser/;
 use Date::Manip;
 use DBI;
 use HTML::Entities;
+use URI::Escape;
 use mysociety::NotApathetic::Config;
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
@@ -115,12 +116,15 @@ EOfragment
             } else {
                 $someday = UnixDate($result->{posted}, "%E %b %Y");
                 my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';
+                my $wikiuri = $result->{title};
+                $wikiuri =~ tr/ /_/;
+                $wikiuri = uri_escape($wikiuri);
                 print <<EOfragment;
 <dt><a href="$url_prefix/comments/$result->{postid}">$title</a></dt>
 <dd><p>$result->{shortwhy}</p>
 <small>
 written $someday 
-| <a href="http://en.wikipedia.org/wiki/$result->{title}">Wikipedia Article</a> 
+| <a href="http://en.wikipedia.org/wiki/$wikiuri">Wikipedia Article</a> 
 | <a href="/abuse/?postid=$result->{postid}">abusive?</a>
 </small>
 </dd>

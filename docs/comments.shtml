@@ -6,7 +6,6 @@
         	<!--#include virtual="/geography/google/comments.shtml" -->
         	<small>Accuracy currently around 150 yards</small>
 	</div>	
-	<!--#include virtual="/includes/newplace.shtml" -->
 </div>
 	<div id="inputBox">
 		<!--#include virtual="/includes/description.shtml" -->
@@ -15,8 +14,6 @@
 <script src="/js/ac.js" type="text/javascript"></script>
 <script type="text/javascript">
 //<![CDATA[
-	InstallAC(document.getElementById("f"),document.getElementById("f").q,document.getElementById("f").btnG,"/cgi-bin/suggest.cgi","en");
-	<!--#include virtual="/geography/google/stage1.js" -->
         <!--#include virtual="/geography/google/comments.js" -->
 //]]>
 </script>

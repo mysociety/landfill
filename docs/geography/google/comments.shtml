@@ -2,6 +2,6 @@
 <!-- appears as www.example.com/comments/XX -->
 <!-- but doesn't any longer due to Google Braindeadness -->
 
-      <div id="map" style="width: 368px; height: 366px;">
+      <div id="map" style="width: 450px; height: 400px;">
     </div>
 

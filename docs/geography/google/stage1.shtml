@@ -3,7 +3,7 @@
     <tr> 
      <td colspan="2">
 
-    Use the arrow and zoom controls on the map to find the location which corresponds to the Wikipedia article. When you have found the rough area, double click to position the place exactly, then click submit below the map to submit your geographical information.
+    Use the arrow and zoom controls on the map to find the location which corresponds to the Wikipedia article. When you have found the rough area, click to position the place exactly, then click submit below the map to submit your geographical information.
 <br />
     Where: <span id="where">none selected</span><br />
     <input type="hidden" name="location" id="location" />

@@ -23,9 +23,11 @@ GEvent.addListener(map, 'click', function(overlay, point) {
 });
 
 }
-GEvent.addListener(map, 'click', function() {
-      var center = map.getCenterLatLng();
-      var latLngStr =  "lat=" + center.x + ";long=" + center.y + "";
+GEvent.addListener(map, 'click', function(overlay, point) {
+    if (!point) {
+        point = map.getCenterLatLng();
+    }
+      var latLngStr =  "lat=" + point.x + ";long=" + point.y + "";
       document.getElementById('where').innerHTML = latLngStr;
       document.getElementById('location').value = latLngStr;
 });

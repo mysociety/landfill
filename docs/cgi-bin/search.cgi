@@ -12,5 +12,5 @@ our $url_prefix=$mysociety::NotApathetic::Config::url;
         $query=~ s#"# #g;
         $query=~ s# #/#g;
         $query=~ s#//+#/#g;
-        print "Location: ".$url_prefix."/search/?$query\r\n\r\n";
+        print "Location: ".$url_prefix."/search?$query\r\n\r\n";
 }

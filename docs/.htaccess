@@ -13,6 +13,9 @@ RewriteRule ^/cgi-bin(.*)   /cgi-bin$1 [R]
 RewriteRule ^random         /cgi-bin/random.cgi [L]
 #RewriteRule ^new/           / [R]
 
+# SHTML files can be referred without SHTML
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}.shtml -f
+RewriteRule ^(.+) /$1.shtml [PT]
 
 DirectoryIndex index.html index.shtml
 

@@ -41,6 +41,7 @@ our $url_prefix=$mysociety::NotApathetic::Config::url;
 	my $title;
 	my @titles;
         while ($title= $query->fetchrow_hashref)  {
+            $title->{cur_title} =~ tr/_/ /;
 		push @titles, '"' . encode('utf-8', $title->{cur_title}) . '"';
 	}
     

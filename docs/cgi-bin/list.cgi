@@ -131,7 +131,7 @@ EOfragment
                 $title=~s#[\n]##mg;
 
                 $Js.=<<EOjs;
-    var point_$pointindex = new GPoint($result->{google_lat}, $result->{google_long});
+    var point_$pointindex = new GPoint($result->{google_long}, $result->{google_lat});
     var marker_$pointindex= new GMarker(point_$pointindex);
     GEvent.addListener(marker_$pointindex, "click", function() {
             document.location="http://www.yourhistoryhere.com/comments.shtml?$result->{postid}";

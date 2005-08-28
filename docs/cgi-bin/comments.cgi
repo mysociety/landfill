@@ -51,7 +51,7 @@ my %State; # State variables during display.
         print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
 
 	$result=$query->fetchrow_hashref;
-	my $why = $result->{why};
+	my $why = $result->{why} || '';
 	$someday = UnixDate($result->{posted}, "%E %b %Y");
 
 	$why=~s/(\r\n){2,}/<\/p> <p>/g;

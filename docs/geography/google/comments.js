@@ -8,7 +8,7 @@ var map = new GMap(document.getElementById("map"));
 var google_lat = document.getElementById("google_lat").innerHTML;
 var google_long = document.getElementById("google_long").innerHTML;
 // map.centerAndZoom(new GPoint(-4.218750, 54.724620), 12);
-var target= new GPoint(google_lat, google_long);
+var target= new GPoint(google_long, google_lat);
 
 map.centerAndZoom(target, 1);
     

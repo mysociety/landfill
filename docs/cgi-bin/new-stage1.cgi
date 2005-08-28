@@ -31,7 +31,8 @@ my %Passed_Values;
 	}
 	$Passed_Values{email} ||= '';
 	$Passed_Values{title} = $Passed_Values{"q"};
-	$Passed_Values{why} ||= ''; # need to pull this from the DB
+	#$Passed_Values{why} ||= &fetch_wikipedia($Passed_Values{title});
+	$Passed_Values{why} ||= '';
 	($Passed_Values{google_lat})= $Passed_Values{location} =~ m#lat=(-?\d+\.\d+);#;
 	($Passed_Values{google_long})= $Passed_Values{location} =~ m#long=(-?\d+\.\d+)#;
 
@@ -53,13 +54,13 @@ sub handle_comment {
 	$scrubber->allow(qw[a em strong p br]);
 	$scrubber->comment(0);
 
-	my $query= $dbh->prepare ("select cur_text from cur where cur_title like ? limit 1");
-	$query->execute("$Passed_Values{'title'}%");
-	my $cur_text;
-	($cur_text)= $query->fetchrow_array;
+	#my $query= $dbh->prepare ("select cur_text from cur where cur_title like ? limit 1");
+	#$query->execute("$Passed_Values{'title'}%");
+	#my $cur_text;
+	#($cur_text)= $query->fetchrow_array;
 
- 	$cur_text =~ /^(.{75}.*?\.)/;
-	$Passed_Values{shortwhy}=  $cur_text;
+ 	#$cur_text =~ /^(.{75}.*?\.)/;
+	#$Passed_Values{shortwhy}=  $cur_text;
 
 	foreach my $pv (keys %Passed_Values) {
 		$Passed_Values{$pv}= $scrubber->scrub($Passed_Values{$pv});
@@ -78,10 +79,11 @@ sub handle_comment {
 	$quoted{"title"} =~ s#_# #g;
 
 
-	$query=$dbh->prepare("
+	my $query=$dbh->prepare("
 		insert into posts
 		   set email=$quoted{email} ,
 		       title=$quoted{title} ,
+		       why=$quoted{why} ,
 		       posted=now(),
 		       name=$quoted{name},
 		       google_lat=$quoted{google_lat},
@@ -136,4 +138,35 @@ EOmail
 sub die_cleanly {
         &mysociety::NotApathetic::Config::die_cleanly(@_);
 
+}
+
+
+sub fetch_wikipedia {
+use HTTP::Request;
+use LWP::UserAgent;
+use HTML::Scrubber;
+         my $topic= shift;
+         my $scrubber= HTML::Scrubber->new(allow => []);
+         my $ua = LWP::UserAgent->new;
+         $ua->agent("Placeopedia.com");
+         my $req = HTTP::Request->new(GET => 'http://en.wikipedia.org/wiki/'.$topic);
+         $req->header('Accept' => 'text/html');
+
+
+         # send request
+         my $res = $ua->request($req);
+         my $snippet;
+         # check the outcome
+         if ($res->is_success) {
+            my $content= $res->decoded_content;
+            $content=~ s#[^M\n]# #mgi;
+            ($snippet)= $content=~ m#start content\s*-->\s*<p>(.{1000})#mi;
+            $snippet= $scrubber->scrub($snippet);
+            my ($last)= $snippet=~ m#^(.*?\.)#;
+		print STDERR $snippet;
+            return ($last);
+         }
+         else {
+            return '';
+         }
 }

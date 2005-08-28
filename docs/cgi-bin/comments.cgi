@@ -66,10 +66,10 @@ my %State; # State variables during display.
          xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/"
          xmlns:dc="http://purl.org/dc/elements/1.1/">
 <rdf:Description
-    rdf:about="$url_prefix/comments/$result->{postid}"
+    rdf:about="$url_prefix/comments?$result->{postid}"
     trackback:ping="$url_prefix/cgi-bin/trackback.cgi/$result->{postid}"
     dc:title="$result->{title}"
-    dc:identifier="$url_prefix/comments/$result->{postid}"
+    dc:identifier="$url_prefix/comments?$result->{postid}"
     dc:description="$result->{shortwhy}"
     dc:creator="$site_name"
 	/>
@@ -81,7 +81,7 @@ my %State; # State variables during display.
 	<dd><p>$why</p>
         <small>
         Lat: <span id="google_lat">$result->{google_lat}</span> | Long: <span id="google_long">$result->{google_long}</span>
-        <br /> written on $someday by $result->{name} | <a href="../email/$result->{postid}">Email this to a friend</a> | <a href="/abuse/?postid=$result->{postid}">abusive?</a><br />
+        <br /> added on $someday by $result->{name} | <a href="../email/$result->{postid}">Email this to a friend</a> | <a href="/abuse/?postid=$result->{postid}">abusive?</a><br />
 	</small>
 	</dd>
 	</dl>

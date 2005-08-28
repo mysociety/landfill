@@ -8,6 +8,8 @@ use Date::Manip;
 use DBI;
 use HTML::Entities;
 use mysociety::NotApathetic::Config;
+use Text::Wrap;
+use URI::Escape;
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username; # database username
@@ -92,19 +94,22 @@ EOSQL
             #} else  {
             #	$more_link= "comments/?$result->{entryid}";
             #}
-            $title = encode_entities($result->{title}) || '&lt;No subject&gt;';
-	    $title=~s#[\n]##mg;
-
-
+            $Text::Wrap::columns = 32;
+            $title = $result->{title} || '<No subject>';
+            $title =~ s/\s+/ /g;
+            $title = wrap('', '', $title);
+            $title = encode_entities($title);
+            $title =~ s/\n/<br>/g;
+            my $wikiuri = $result->{title};
+            $wikiuri =~ tr/ /_/;
+            $wikiuri = uri_escape($wikiuri);
+            my $bubble = "<b>$title</b><p><a href=\\\"http://en.wikipedia.org/wiki/$wikiuri\\\">Wikipedia article</a></p>";
                 $Js.=<<EOjs;
     var point_$pointindex = new GPoint($result->{google_long}, $result->{google_lat});
     var marker_$pointindex= new GMarker(point_$pointindex);
     GEvent.addListener(marker_$pointindex, "click", function() {
-            document.location="http://www.placeopedia.com/comments.shtml?$result->{postid}";
-            //marker_$pointindex.openInfoWindowHtml("<a href=\\"/comments.shtml?$result->{postid}\\" >$title</a>")
-            });
-    GEvent.bind(marker_$pointindex, "mouseover", function() {
-            marker_$pointindex.openInfoWindowHtml("<a href=\\"/comments.shtml?$result->{postid}\\" >$title</a>")
+            //document.location="http://www.placeopedia.com/comments.shtml?$result->{postid}";
+            marker_$pointindex.openInfoWindowHtml("$bubble")
             });
     searchmap.addOverlay(marker_$pointindex);
 

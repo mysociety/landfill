@@ -104,14 +104,14 @@ EOSQL
             #if ($result->{content} eq $result->{shortcontent}) {
             #	$more_link= $result->{link};
             #} else  {
-            #	$more_link= "comments/?$result->{entryid}";
+            #	$more_link= "comments?$result->{entryid}";
             #}
 
             $title = encode_entities($result->{title}) || '&lt;No subject&gt;';
             $more_link= $result->{link};
             if ($type eq 'summary') {
                 print <<EOfragment;
-<li><a href="$url_prefix/comments/$result->{postid}">$title</a></li>
+<li><a href="$url_prefix/comments?$result->{postid}">$title</a></li>
 EOfragment
             } else {
                 $someday = UnixDate($result->{posted}, "%E %b %Y");
@@ -120,10 +120,10 @@ EOfragment
                 $wikiuri =~ tr/ /_/;
                 $wikiuri = uri_escape($wikiuri);
                 print <<EOfragment;
-<dt><a href="$url_prefix/comments/$result->{postid}">$title</a></dt>
+<dt><a href="$url_prefix/comments?$result->{postid}">$title</a></dt>
 <dd><p>$result->{shortwhy}</p>
 <small>
-written $someday 
+added $someday 
 | <a href="http://en.wikipedia.org/wiki/$wikiuri">Wikipedia Article</a> 
 | <a href="/abuse/?postid=$result->{postid}">abusive?</a>
 </small>
@@ -137,16 +137,16 @@ EOfragment
     var point_$pointindex = new GPoint($result->{google_long}, $result->{google_lat});
     var marker_$pointindex= new GMarker(point_$pointindex);
     GEvent.addListener(marker_$pointindex, "click", function() {
-            document.location="http://www.placeopedia.com/comments.shtml?$result->{postid}";
-            //marker_$pointindex.openInfoWindowHtml("<a href=\\"/comments.shtml?$result->{postid}\\" >$title</a>")
+            document.location="http://www.placeopedia.com/comments?$result->{postid}";
+            //marker_$pointindex.openInfoWindowHtml("<a href=\\"/comments?$result->{postid}\\" >$title</a>")
             });
     GEvent.bind(marker_$pointindex, "mouseover", function() {
-            marker_$pointindex.openInfoWindowHtml("<a href=\\"/comments.shtml?$result->{postid}\\" >$title</a>")
+            marker_$pointindex.openInfoWindowHtml("<a href=\\"/comments?$result->{postid}\\" >$title</a>")
             });
     searchmap.addOverlay(marker_$pointindex);
 
 EOjs
-                #   // var listener_$pointindex = GEvent.addListener(point_$pointindex, "mouseover", searchmap.openInfoWindowHtml("<a href=\\"/comments.shtml?$result->{postid}\\" >$title</a><p>$result->{shortwhy}</p>") );
+                #   // var listener_$pointindex = GEvent.addListener(point_$pointindex, "mouseover", searchmap.openInfoWindowHtml("<a href=\\"/comments?$result->{postid}\\" >$title</a><p>$result->{shortwhy}</p>") );
                 # // GEvent.removeListener(point_$pointindex, "mouseout", );
                 $pointindex++;
             }
@@ -200,7 +200,7 @@ sub handle_links {
 	$google_terms=~ s# #\+#;
 
 	my $html.=<<EOhtml;
-	<a href="$url_prefix/na/comments/$item->{postid}">Comment ($item->{commentcount}),
+	<a href="$url_prefix/na/comments?$item->{postid}">Comment ($item->{commentcount}),
 	Trackback</a>,
 	<a href="$url_prefix/na/email/$item->{postid}">Email this</a>.
 EOhtml

@@ -54,7 +54,7 @@ sub handle_comment {
 	$scrubber->allow(qw[a em strong p br]);
 	$scrubber->comment(0);
 
-	#my $query= $dbh->prepare ("select cur_text from cur where cur_title like ? limit 1");
+	#my $query= $dbh->prepare ("select cur_text from cur where cur_title like ? and cur_namespace = 0 limit 1");
 	#$query->execute("$Passed_Values{'title'}%");
 	#my $cur_text;
 	#($cur_text)= $query->fetchrow_array;

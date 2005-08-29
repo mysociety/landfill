@@ -35,6 +35,7 @@ our $url_prefix=$mysociety::NotApathetic::Config::url;
                           select cur_title
                             from cur
                            where cur_title like $q_entry
+                             and cur_namespace = 0
                            limit 10
                            ");
         $query->execute();

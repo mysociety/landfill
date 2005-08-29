@@ -58,6 +58,7 @@ sub handle_comment {
 	#$query->execute("$Passed_Values{'title'}%");
 	#my $cur_text;
 	#($cur_text)= $query->fetchrow_array;
+        #$Passed_Values{why} = $cur_text;
 
  	#$cur_text =~ /^(.{75}.*?\.)/;
 	#$Passed_Values{shortwhy}=  $cur_text;
@@ -149,8 +150,8 @@ use HTML::Scrubber;
          my $scrubber= HTML::Scrubber->new(allow => []);
          my $ua = LWP::UserAgent->new;
          $ua->agent("Placeopedia.com");
-         my $req = HTTP::Request->new(GET => 'http://en.wikipedia.org/wiki/'.$topic);
-         $req->header('Accept' => 'text/html');
+         my $req = HTTP::Request->new(GET => 'http://en.wikipedia.org/wiki/Special:Export/'.$topic);
+         $req->header('Accept' => 'application/xml');
 
 
          # send request
@@ -160,9 +161,9 @@ use HTML::Scrubber;
          if ($res->is_success) {
             my $content= $res->decoded_content;
             $content=~ s#[^M\n]# #mgi;
-            ($snippet)= $content=~ m#start content\s*-->\s*<p>(.{1000})#mi;
+            ($snippet) = $content =~ m#<text xml:space="preserve">(.*?)</text>#s;
             $snippet= $scrubber->scrub($snippet);
-            my ($last)= $snippet=~ m#^(.*?\.)#;
+            my ($last)= $snippet=~ /^(.{1000}.*?\.)/;
 		print STDERR $snippet;
             return ($last);
          }

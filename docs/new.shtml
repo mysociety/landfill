@@ -14,7 +14,7 @@
 <script type="text/javascript">
 //<![CDATA[
 	<!--#include virtual="/geography/google/stage1.js" -->
-        InstallAC(document.getElementById("f"),document.getElementById("f").q,document.getElementById("f").btnG,"/cgi-bin/suggest.cgi","en");
+        InstallAC(document.getElementById("f"),document.getElementById("f").q,document.getElementById("f").btnG,"/cgi-bin/suggest.cgi","en", true);
 //]]>
 </script>
 </body>

@@ -15,7 +15,7 @@ body {
 	padding: 0;
 	width: 745px;
 	position:relative;
-	border:solid 1px #698856;
+	border:solid 1px #96C479;
 }
 
 div#top{
@@ -36,6 +36,8 @@ div#top h1 a
 		width:741px;
 	margin:0;
 	padding:0;
+	background: url(../images/header.png);
+
 }
 div#top h2 
 {
@@ -56,11 +58,11 @@ h3{
 
 h3.green
 {
-	background-color:#698856;
+	background-color:#96C479;
 }
 h3.blue
 {
-	background-color:#332f5c;
+	background-color:#89A9C9;
 }
 
 dt{
@@ -73,9 +75,9 @@ img{
 	border: none;
 }
 
-a:link { color: #698856; text-decoration:none; }
-a:visited { color: #698856; text-decoration:none;}
-a:hover, a:active { color: #698856; text-decoration:underline; }
+a:link { color: #96C479; text-decoration:none; }
+a:visited { color: #96C479; text-decoration:none;}
+a:hover, a:active { color: #96C479; text-decoration:underline; }
 
 input[type=submit]{
 	border:1px solid #999999;

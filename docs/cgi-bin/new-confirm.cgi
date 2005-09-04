@@ -63,7 +63,7 @@ my $url_prefix= $mysociety::NotApathetic::Config::url;
                 if ($query->rows == 1 ) { 
 			my $postid= $postid_q;
 			$postid=~ s#'##g;
-                        print "Location: $url_prefix/comments/$postid\r\n\r\n";      
+                        print "Location: $url_prefix/comments?$postid\r\n\r\n";      
                 } else {
                         print "Location: $url_prefix/new/checkemail/failed.shtml\r\n\r\n";       
                 }

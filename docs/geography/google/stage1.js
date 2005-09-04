@@ -9,7 +9,7 @@ function onLoad() {
     // centre map on location of a click
     GEvent.addListener(map, "moveend", function() {
       var center = map.getCenterLatLng();
-      var latLngStr =  "lat=" + center.x + ";long=" + center.y + "";
+      var latLngStr =  "lat=" + center.y + ";long=" + center.x + "";
       document.getElementById('where').innerHTML = latLngStr;
       document.getElementById('location').value = latLngStr;
     });
@@ -27,7 +27,7 @@ GEvent.addListener(map, 'click', function(overlay, point) {
     if (!point) {
         point = map.getCenterLatLng();
     }
-      var latLngStr =  "lat=" + point.x + ";long=" + point.y + "";
+      var latLngStr =  "lat=" + point.y + ";long=" + point.x + "";
       document.getElementById('where').innerHTML = latLngStr;
       document.getElementById('location').value = latLngStr;
 });

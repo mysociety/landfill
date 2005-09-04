@@ -91,7 +91,7 @@ EOSQL
             #if ($result->{why} eq $result->{shortwhy}) {
             #	$more_link= $result->{link};
             #} else  {
-            #	$more_link= "comments/?$result->{entryid}";
+            #	$more_link= "comments?$result->{entryid}";
             #}
             $Text::Wrap::columns = 32;
             $title = $result->{title} || '<No subject>';
@@ -137,7 +137,7 @@ sub handle_links {
 	$google_terms=~ s# #\+#;
 
 	my $html.=<<EOhtml;
-	<a href="$url_prefix/na/comments/$item->{postid}">Comment ($item->{commentcount}),
+	<a href="$url_prefix/na/comments?$item->{postid}">Comment ($item->{commentcount}),
 	Trackback</a>,
 	<a href="$url_prefix/na/email/$item->{postid}">Email this</a>.
 EOhtml

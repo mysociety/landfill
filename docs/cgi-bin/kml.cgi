@@ -58,7 +58,7 @@ EOSQL
         print '<kml xmlns="http://earth.google.com/kml/2.0">' . "\r\n\r\n";
 	while ($result=$query->fetchrow_hashref() ) {
 		print "<Placemark>\n";
-		print "\t<description><![CDATA[$result->{shortwhy} <a href=\"/comments/$result->{postid}\">more</a>.]]></description>\n";
+		print "\t<description><![CDATA[$result->{shortwhy} <a href=\"/comments?$result->{postid}\">more</a>.]]></description>\n";
 		print "\t<name>$result->{title}</name>\n";
 		print "\t<LookAt>\n";
 		print "\t\t<longitude>$result->{google_long}</longitude>\n";

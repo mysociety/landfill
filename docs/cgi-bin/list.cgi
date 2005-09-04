@@ -103,25 +103,25 @@ EOSQL
             #if ($result->{content} eq $result->{shortcontent}) {
             #	$more_link= $result->{link};
             #} else  {
-            #	$more_link= "comments/?$result->{entryid}";
+            #	$more_link= "comments?$result->{entryid}";
             #}
 
             $title = encode_entities($result->{title}) || '&lt;No subject&gt;';
             $more_link= $result->{link};
             if ($type eq 'summary') {
                 print <<EOfragment;
-<li><a href="$url_prefix/comments/$result->{postid}">$title</a></li>
+<li><a href="$url_prefix/comments?$result->{postid}">$title</a></li>
 EOfragment
             } else {
                 $someday = UnixDate($result->{posted}, "%E %b %Y");
                 my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';
                 print <<EOfragment;
-<dt><a href="$url_prefix/comments/$result->{postid}">$title</a></dt>
+<dt><a href="$url_prefix/comments?$result->{postid}">$title</a></dt>
 <dd><p>$result->{shortwhy}</p>
 <small>
 written $someday 
-| <a href="$url_prefix/comments/$result->{postid}">read more</a> 
-| <a href="$url_prefix/comments/$result->{postid}\#comments">$result->{commentcount} $responses</a> 
+| <a href="$url_prefix/comments?$result->{postid}">read more</a> 
+| <a href="$url_prefix/comments?$result->{postid}\#comments">$result->{commentcount} $responses</a> 
 | <a href="/abuse/?postid=$result->{postid}">abusive?</a>
 </small>
 </dd>
@@ -198,7 +198,7 @@ sub handle_links {
 	$google_terms=~ s# #\+#;
 
 	my $html.=<<EOhtml;
-	<a href="$url_prefix/na/comments/$item->{postid}">Comment ($item->{commentcount}),
+	<a href="$url_prefix/na/comments?$item->{postid}">Comment ($item->{commentcount}),
 	Trackback</a>,
 	<a href="$url_prefix/na/email/$item->{postid}">Email this</a>.
 EOhtml

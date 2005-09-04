@@ -70,7 +70,7 @@ my $search_term = &handle_search_term(); #' 1 = 1 ';
 	while ($result=$query->fetchrow_hashref) {
             $rss->add_item(
  		       title => "$result->{title}",
-                       link => "$url_prefix/comments/$result->{postid}",
+                       link => "$url_prefix/comments?$result->{postid}",
                        description=> "$result->{shortwhy}",
 		       geo => {lat => "$result->{google_lat}",
 		       	       long => "$result->{google_long}"},

@@ -77,7 +77,7 @@ sub handle_comment {
 	$dbh->do(" update posts set commentcount=commentcount+1 where postid=$quoted{postid} ");
 
         &email_comment_to_person();
-	print "Location: $url_prefix/comments/$Passed_Values{postid}\r\n\r\n";
+	print "Location: $url_prefix/comments?$Passed_Values{postid}\r\n\r\n";
 }
 
 
@@ -107,7 +107,7 @@ sub email_comment_to_person {
 Someone has replied to your $site_name post. 
 You can view it here:
 
-        $url_prefix/comments/$Passed_Values{postid}
+        $url_prefix/comments?$Passed_Values{postid}
 
 EOmail
 

@@ -28,7 +28,7 @@ our $url_prefix=$mysociety::NotApathetic::Config::url;
         my $result;
         while ($result=$query->fetchrow_hashref) {
                 print <<EOfragment;
-<dt><a href="$url_prefix/comments/$result->{postid}">$result->{title}</a></dt><dd><p>$result->{why}</p></dd>
+<dt><a href="$url_prefix/comments?$result->{postid}">$result->{title}</a></dt><dd><p>$result->{why}</p></dd>
 EOfragment
             }
 }

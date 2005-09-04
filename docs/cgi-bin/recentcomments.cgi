@@ -109,7 +109,7 @@ our $url_prefix=$mysociety::NotApathetic::Config::url;
             $more_link= $result->{link};
             if ($type eq 'summary') {
                 print <<EOfragment;
-<li><a href="$url_prefix/comments/$result->{postid}">$title</a></li>
+<li><a href="$url_prefix/comments?$result->{postid}">$title</a></li>
 EOfragment
             } else {
 				$someday = UnixDate($result->{commentsdate}, "%E %b %Y");
@@ -120,12 +120,12 @@ EOfragment
 					$comment = $1 . "...";
 				}
                 print <<EOfragment;
-	<dt><a href="$url_prefix/comments/$result->{postid}">$title</a></dt>
+	<dt><a href="$url_prefix/comments?$result->{postid}">$title</a></dt>
 	<dd><p><em>$result->{name} replies:</em> $comment</p>
 	<small>
 	written $someday
 	| <a href="/abuse/?postid=$result->{postid}&amp;commentid=$result->{commentid}">abusive?</a>
-	| <a href="$url_prefix/comments/$result->{postid}#comment_$result->{commentid}">read comment</a>
+	| <a href="$url_prefix/comments?$result->{postid}#comment_$result->{commentid}">read comment</a>
 	</small>
 	</dd>
 EOfragment
@@ -170,7 +170,7 @@ sub handle_links {
 	$google_terms=~ s# #\+#;
 
 	my $html.=<<EOhtml;
-	<a href="$url_prefix/na/comments/$item->{postid}">Comment ($item->{commentcount}),
+	<a href="$url_prefix/na/comments?$item->{postid}">Comment ($item->{commentcount}),
 	Trackback</a>,
 	<a href="$url_prefix/na/email/$item->{postid}">Email this</a>.
 EOhtml

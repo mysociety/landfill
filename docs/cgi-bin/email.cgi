@@ -95,7 +95,7 @@ $message
 
      $shortwhy
 
-     $url_prefix/comments/$Passed_Values{entryid}
+     $url_prefix/comments?$Passed_Values{entryid}
 EOmail
 		}
 		else

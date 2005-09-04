@@ -75,7 +75,7 @@ my %State; # State variables during display.
 	while ($result=$query->fetchrow_hashref) {
             $rss->add_item(
                        title => "$result->{title}",
-                       link => "$url_prefix/comments/$result->{postid}#comment_$result->{commentid}",
+                       link => "$url_prefix/comments?$result->{postid}#comment_$result->{commentid}",
                        description=> "$result->{comment}"
                 );
         }

@@ -3,7 +3,8 @@
 <ul id="sitelinks" class="pins">
     <li><a href="/emailnotify/">Sign up for email alerts</a></li>
     <li><a href="/emailfriend/">Tell a friend</a></li>
-    <li><p>"Hello, and welcome to
+</ul>
+    <p>"Hello, and welcome to
 YourHistoryHere, the place where you can share your knowledge about
 those unusual places, buildings or things that make places interesting
 to live. This site is on limited circulation at the moment, and is
@@ -15,8 +16,7 @@ format, so you can use the yummy local data people leave for your own
 purposes. We're building two sites that show how this can be useful,
 this one and Placeopedia.com, and we'd love to share the code for
 other ideas. Anyone want to built WhereIHadMyFirstKiss.com? Tom
-Steinberg, mySociety Director - 23/08/2005"</p></li>
-</ul>
+Steinberg, mySociety Director - 23/08/2005"</p>
 
 <!-- <h4>To Do</h4>
 <ul id="sitenews">

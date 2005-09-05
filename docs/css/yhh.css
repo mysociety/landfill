@@ -16,6 +16,7 @@ body {
 	width: 745px;
 	position:relative;
 	border:solid 1px #698856;
+        min-height:600px;
 }
 
 div#top{
@@ -185,7 +186,7 @@ ul.nav li a:hover {
 
 }
 
-ul.nav form {float:left;padding:4px 0 0 15px;}
+ul.nav form {float:left;padding:4px 0 0 5px;}
 
 
 
@@ -212,8 +213,11 @@ form#comment input{
 	float:left;
 	margin-bottom:4px;
 }
-* html input#commentsubmit{
+ input#commentsubmit{
 	float:none;
+     width:330px;
+     height:2em;
+     font-size:2em;
 }
 
 form#comment p, form#comment small{
@@ -262,7 +266,7 @@ div#inputBox {
 	margin-top:0.2em;
 	font-family:inherit;
 	font-size:100%;
-	background:#F0F9FC;
+	background:#E6EFE0;
 }
 input[type=text] {
     border: 1px solid #999999;
@@ -303,7 +307,7 @@ padding:0;
 }
 dd{
 	margin: 0;
-	padding: 0
+	padding: 0 4px 0 0;
 }
 dd small{
 	border-top:1px solid #CCCCCC;

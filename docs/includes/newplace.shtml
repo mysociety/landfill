@@ -2,6 +2,7 @@
 <form method="post" id="f" action="/cgi-bin/new-stage1.cgi">
     <h3 class="blue">Add new place</h3>
     <script type="text/javascript">
+        //<![CDATA[
         function sf(){document.f.q.focus();}
 
         function rwt(el,ct,cd,sg){
@@ -21,9 +22,11 @@
         }
         return 1;
         }
+//]]>
     </script>
 <p>
-Enter <a href="http://en.wikipedia.org/">Wikipedia</a> Article Name:  <input autocomplete="off"  maxLength="1024" size="30" name="q">
+Enter <a href="http://en.wikipedia.org/">Wikipedia</a> Article Name:
+<input type="text" autocomplete="off"  maxLength="1024" size="30" name="q" />
 
 	    <br />
 
@@ -35,11 +38,8 @@ Enter <a href="http://en.wikipedia.org/">Wikipedia</a> Article Name:  <input aut
             <input type="text" name="name" id="emailname" size="30" /><br />
 </p>
 
-<p>
 <!--#include virtual="/geography/google/stage1.shtml"  --> 
-</p>
-            <input type="submit" value="Submit" />
-
+<p><input type="submit" value="Submit" /></p>
 
 </form>
 <!-- </div> -->

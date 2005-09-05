@@ -1,17 +1,11 @@
 <!-- appears at www.example.com/http://www.yourhistoryhere.com/new/stage1/ -->
 
-    <tr> 
-     <td colspan="2">
-
+<p>
     Use the arrow and zoom controls on the map to find the location which corresponds to the Wikipedia article. When you have found the rough area, click to position the place exactly, then click submit below the map to submit your geographical information.
 <br />
-    Where: <span id="where">none selected</span><br />
+Where: <span id="where">none selected</span>
     <input type="hidden" name="location" id="location" />
-
+</p>
     <div id="map" style="width: 450px; height:400px;">
     </div>
-
-
-     </td> 
-   <tr> 
 

@@ -24,13 +24,18 @@ GEvent.addListener(map, 'click', function(overlay, point) {
 });
 
 }
+
+var marker = 0
 GEvent.addListener(map, 'click', function(overlay, point) {
     if (!point) {
         point = map.getCenterLatLng();
     }
-      var latLngStr =  "lat=" + point.y + ";long=" + point.x + "";
-      document.getElementById('where').innerHTML = latLngStr;
-      document.getElementById('location').value = latLngStr;
+    var latLngStr =  "lat=" + point.y + ";long=" + point.x + "";
+    document.getElementById('where').innerHTML = latLngStr;
+    document.getElementById('location').value = latLngStr;
+    if (marker) map.removeOverlay(marker)
+    marker = new GMarker(point)
+    map.addOverlay(marker)
 });
 
 

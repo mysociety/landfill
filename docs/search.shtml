@@ -1,8 +1,12 @@
+<!--#set var="api_key" value="ABQIAAAAbXzhWwipU_Uy7amV7gZQXxQIgIcOHi8fKqvZv44gwAtktPry_hQxkdqfP-zBO-_NWm6Z5p5pJDwANg" -->
 <!--#set var="page_title" value="Search results" -->
 <!--#set var="rss_query" value="${QUERY_STRING}" -->
 <!--#include virtual="/includes/header.shtml" -->
 
 <h2>Search results</h2>
+<h3 class="blue">Geo-search</h3>
+<!--#include virtual="/lookup.php?q=${QUERY_STRING}" -->
+<h3 class="blue">Entries</h3>
 <!--#include virtual="/cgi-bin/list.cgi?search=${QUERY_STRING}" -->
 
 </div>
@@ -14,14 +18,14 @@ the keyword(s), then please <a href="/emailnotify/?<!--#echo var="QUERY_STRING"-
 <p>We also offer custom-tailored RSS feeds -
 <a href="/cgi-bin/rss.cgi?<!--#echo var="QUERY_STRING"-->">click here</a> to get
 download a live RSS feed of your keywords.</p>
-<h2>Search again</h2>
+<!-- <h2>Search again</h2>
 
 <form method="get" action="/cgi-bin/search.cgi">
 			<input type="text" name="q" />
 			<input type="submit" value="Go" />
 </form>
 
-
+-->
 
 <h4>Advanced Searchers</h4>
 <p>
@@ -34,4 +38,15 @@ download a live RSS feed of your keywords.</p>
 <!--#include virtual="/cgi-bin/list.cgi?type=summary&search=${QUERY_STRING}" -->
 
 
-	<!--#include virtual="/includes/footer.shtml" -->
+<!--#include virtual="/includes/footer.shtml" -->
+<script type="text/javascript">
+    if (scx && scy) {
+        var searchmap = new GMap(document.getElementById('searchmap'));
+        searchmap.centerAndZoom(new GPoint(scx, scy), 4);
+        searchmap.addControl(new GLargeMapControl());
+        searchmap.addControl(new GMapTypeControl());
+
+        <!--#include virtual="/cgi-bin/list-js.cgi" -->
+
+    }
+</script>

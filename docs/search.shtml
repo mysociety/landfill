@@ -12,7 +12,9 @@
 </div>
 
 <div id="inputBox">
-<h2>Email notification and RSS</h2>
+<!--#include virtual="/geography/google/search.shtml" -->
+
+<h3 class="green">Email notification and RSS</h3>
 <p>If you would like to be notified of future posts containing
 the keyword(s), then please <a href="/emailnotify/?<!--#echo var="QUERY_STRING"-->">click here</a></p>
 <p>We also offer custom-tailored RSS feeds -
@@ -40,13 +42,13 @@ download a live RSS feed of your keywords.</p>
 
 <!--#include virtual="/includes/footer.shtml" -->
 <script type="text/javascript">
-    if (scx && scy) {
         var searchmap = new GMap(document.getElementById('searchmap'));
-        searchmap.centerAndZoom(new GPoint(scx, scy), 4);
+        // searchmap.centerAndZoom(new GPoint(scx, scy), 4);
+	searchmap.centerAndZoom(new GPoint(-4.218750, 54.724620), 12);
+
         searchmap.addControl(new GLargeMapControl());
         searchmap.addControl(new GMapTypeControl());
 
-        <!--#include virtual="/cgi-bin/list-js.cgi" -->
+        <!--#include virtual="/cgi-bin/list-js.cgi?search=${QUERY_STRING}" -->
 
-    }
 </script>

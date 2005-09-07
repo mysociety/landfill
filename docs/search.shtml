@@ -12,7 +12,7 @@
 </div>
 
 <div id="inputBox">
-<!--#include virtual="/geography/google/search.shtml" -->
+<!--#include virtual="/geography/google/comments.shtml" -->
 
 <h3 class="green">Email notification and RSS</h3>
 <p>If you would like to be notified of future posts containing
@@ -42,7 +42,7 @@ download a live RSS feed of your keywords.</p>
 
 <!--#include virtual="/includes/footer.shtml" -->
 <script type="text/javascript">
-        var searchmap = new GMap(document.getElementById('searchmap'));
+        var searchmap = new GMap(document.getElementById('map'));
         // searchmap.centerAndZoom(new GPoint(scx, scy), 4);
 	searchmap.centerAndZoom(new GPoint(-4.218750, 54.724620), 12);
 

@@ -6,7 +6,7 @@
 -- Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 -- Email: francis@mysociety.org; WWW: http://www.mysociety.org/
 --
--- $Id: schema.sql,v 1.1 2005-09-09 08:47:27 francis Exp $
+-- $Id: schema.sql,v 1.2 2005-09-09 09:03:08 danieljean Exp $
 --
 
 CREATE TABLE `comments` (
@@ -19,7 +19,7 @@ CREATE TABLE `comments` (
   `istrackback` tinyint(3) unsigned NOT NULL default '0',
   `name` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`commentid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 CREATE TABLE `cur` (
   `cur_id` int(8) unsigned NOT NULL auto_increment,
@@ -48,7 +48,7 @@ CREATE TABLE `cur` (
   KEY `usertext_timestamp` (`cur_user_text`,`inverse_timestamp`),
   KEY `jamesspecialpages` (`cur_is_redirect`,`cur_namespace`,`cur_title`,`cur_timestamp`),
   KEY `id_title_ns_red` (`cur_id`,`cur_title`,`cur_namespace`,`cur_is_redirect`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 PACK_KEYS=1
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 PACK_KEYS=1;
 
 
 CREATE TABLE `emailnotify` (
@@ -61,7 +61,7 @@ CREATE TABLE `emailnotify` (
   `validated` tinyint(3) unsigned NOT NULL default '0',
   `cancelled` tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY  (`notifyid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 CREATE TABLE `posts` (
   `postid` int(10) unsigned NOT NULL auto_increment,
@@ -87,5 +87,5 @@ CREATE TABLE `posts` (
   `site` varchar(20) NOT NULL default 'missing',
   PRIMARY KEY  (`postid`),
   KEY `site` (`site`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 

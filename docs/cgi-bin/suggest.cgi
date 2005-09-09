@@ -36,6 +36,7 @@ our $url_prefix=$mysociety::NotApathetic::Config::url;
                             from cur
                            where cur_title like $q_entry
                              and cur_namespace = 0
+                             and cur_is_redirect = 0
                            limit 10
                            ");
         $query->execute();

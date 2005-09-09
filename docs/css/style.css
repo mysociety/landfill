@@ -92,7 +92,7 @@ margin:0;
 li{
 line-height:1.5em;
 margin:0;
-list-style-type:none;
+/* list-style-type:none; */
 }
 ul.pins li
 {
@@ -250,7 +250,7 @@ div#inputBox {
     margin:0;
 }
 #inputBox form{
-    margin:-0.5em 0 1em 0;
+/*    margin:-0.5em 0 1em 0; */
 }
 #inputBox a#bigBox{
 	display:block;
@@ -289,7 +289,7 @@ textarea:hover, textarea:focus {
 	text-decoration:none;
 }
 #inputBox input, #mainInput input{
-	margin:0 0 1em 0;
+	margin:0 0 0 0;
 }
 
 #main img{
@@ -406,3 +406,19 @@ margin-top:0;
 .hidden {
         display:    none;
 }
+
+#search_results {
+    display: none;
+    padding: 3px;
+    margin-bottom: 1em;
+    border: solid 2px #D06B65;
+    border-top-width: 0;
+}
+
+#titleerror, #emailerror {
+    text-align: right;
+    color: #ff0000;
+    background-color: #ffffff;
+    display: block;
+}
+

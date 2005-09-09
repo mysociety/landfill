@@ -7,6 +7,7 @@ use CGI::Carp qw/fatalsToBrowser/;
 use Date::Manip;
 use DBI;
 use HTML::Entities;
+use Text::Wrap;
 use URI::Escape;
 use mysociety::NotApathetic::Config;
 
@@ -20,12 +21,17 @@ our $url_prefix=$mysociety::NotApathetic::Config::url;
 my $Js='';
 
 {
+    my $type = param('type') || 'details';
     if (defined $ENV{REQUEST_METHOD}) {
-         print "Content-Type: text/html\n\n";
+        if ($type eq 'xml') {
+            print "Content-Type: application/xml\n\n";
+        } else {
+            print "Content-Type: text/html\n\n";
+        }
     }
 
     {
-        my $type = param('type') || 'details';
+        my $id = param('show') || 0;
         my $search_bit = param('search') || '';
         my $page = param('page') || 0;
 	my $topleft_lat=param('topleft_lat');
@@ -46,11 +52,15 @@ my $Js='';
              $bottomright_lat=~ s#[^-\.\d]##g;
              $bottomright_long=~ s#[^-\.\d]##g;
                 $geog_limiter= <<EOSQL;
-        and google_lat >= $topleft_lat and google_lat <= $bottomright_lat
+        and google_lat <= $topleft_lat and google_lat >= $bottomright_lat
         and google_long >= $topleft_long and google_long <= $bottomright_long
 EOSQL
         }
-         my $mainlimit = 15;
+        my $include_show = '';
+        if ($id) {
+            $include_show = ' OR postid='.$dbh->quote($id);
+        }
+        my $mainlimit = 15;
 		my $brief = 1; # mainlimit x brief entries displayed in the brief listing
         my $limit = ($type eq 'details') ? $mainlimit : $mainlimit * $brief;
         my $offset = $page * $mainlimit;
@@ -63,12 +73,13 @@ EOSQL
         my $query=$dbh->prepare("
                           select *
                             from posts
-                           where validated=1
+                           where (validated=1
 		   		 $interesting
                              and hidden=0
                              and site='$site_name'
 				 $geog_limiter
-                                 $search_term
+                                 $search_term)
+                                 $include_show
                         order by posted
                                  desc limit $offset, $limit
                            "); # XXX order by first_seen needs to change
@@ -85,15 +96,17 @@ EOSQL
         my $printed = 0;
         $search_bit =~ s/\// /g;
         my $title;
-        my $pointindex=1;
+        my $pointindex=0;
         while ($result=$query->fetchrow_hashref) {
             if ($printed==0) {
                 $printed = 1;
                 if ($type eq 'summary') {
                     print "<ul>\n";
-                } else {
-					print "<dl>\n";
-	        }
+                } elsif ($type eq 'details') {
+		    print "<dl>\n";
+	        } elsif ($type eq 'xml') {
+                    print "<results>\n";
+                }
                 if ($type eq 'details' && $search_bit ne '') {
         	    print '<p>Your search for "'.$search_bit.'" yielded the following results:</p>';
                 }
@@ -111,44 +124,41 @@ EOSQL
             $more_link= $result->{link};
             if ($type eq 'summary') {
                 print <<EOfragment;
-<li><a href="$url_prefix/comments?$result->{postid}">$title</a></li>
+<li><a href="#needsJS" onclick="show_post(marker[$pointindex], '$result->{postid}')">$title</a></li>
 EOfragment
-            } else {
+            } elsif ($type eq 'details') {
                 $someday = UnixDate($result->{posted}, "%E %b %Y");
                 my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';
                 my $wikiuri = $result->{title};
                 $wikiuri =~ tr/ /_/;
                 $wikiuri = uri_escape($wikiuri);
                 print <<EOfragment;
-<dt><a href="$url_prefix/comments?$result->{postid}">$title</a></dt>
+<dt><a href="#needsJS" onclick="show_post(marker[$pointindex], '$result->{postid}')">$title</a></dt>
 <dd><p>$result->{shortwhy}</p>
 <small>
 added $someday 
 | <a href="http://en.wikipedia.org/wiki/$wikiuri">Wikipedia Article</a> 
-| <a href="/abuse/?postid=$result->{postid}">abusive?</a>
+<!-- | <a href="/abuse/?postid=$result->{postid}">abusive?</a> -->
 </small>
 </dd>
 
 EOfragment
-
-                $title=~s#[\n]##mg;
-
+                $Text::Wrap::columns = 32;
+                $title = $result->{title} || '<No subject>';
+                $title =~ s/\s+/ /g;
+                $title = wrap('', '', $title);
+                $title = encode_entities($title);
+                $title =~ s/\n/<br>/g;
+                my $zoomlevel = $result->{google_zoom} || 2;
+                my $bubble = "<b>$title</b><p><a href=\\\"http://en.wikipedia.org/wiki/$wikiuri\\\">Wikipedia article</a></p>";
                 $Js.=<<EOjs;
-    var point_$pointindex = new GPoint($result->{google_long}, $result->{google_lat});
-    var marker_$pointindex= new GMarker(point_$pointindex);
-    GEvent.addListener(marker_$pointindex, "click", function() {
-            document.location="http://www.placeopedia.com/comments?$result->{postid}";
-            //marker_$pointindex.openInfoWindowHtml("<a href=\\"/comments?$result->{postid}\\" >$title</a>")
-            });
-    GEvent.bind(marker_$pointindex, "mouseover", function() {
-            marker_$pointindex.openInfoWindowHtml("<a href=\\"/comments?$result->{postid}\\" >$title</a>")
-            });
-    searchmap.addOverlay(marker_$pointindex);
-
+marker[$pointindex] = createPin(new GPoint($result->{google_long}, $result->{google_lat}), $zoomlevel, "$bubble")
 EOjs
                 #   // var listener_$pointindex = GEvent.addListener(point_$pointindex, "mouseover", searchmap.openInfoWindowHtml("<a href=\\"/comments?$result->{postid}\\" >$title</a><p>$result->{shortwhy}</p>") );
                 # // GEvent.removeListener(point_$pointindex, "mouseout", );
                 $pointindex++;
+            } elsif ($type eq 'xml') {
+                print '<result lat="'.$result->{google_lat}.'" lng="'.$result->{google_long}.'" zoom="'.$result->{google_zoom}.'"></result>';
             }
         }
         if ($query->rows > 0) {
@@ -167,7 +177,7 @@ EOjs
                 print "</ul>\n";
                 $older += $brief+1;
                 print "<p align=\"right\"><a href=\"$url$older\">Even older entries</a></p>";
-            } else {
+            } elsif ($type eq 'details') {
 				print "</dl>\n";
                 $older += 1;
                 my $newer = $page - 1;
@@ -183,9 +193,14 @@ EOjs
                 }
                 print '</p>';
 
+            } elsif ($type eq 'xml') {
+                print '</results>';
             }
         } elsif ($type eq 'details' && $search_bit ne '') {
             print "<p>Your search for " . $search_bit . " yielded no results.</p>";
+        }
+        if ($type ne 'xml') {
+            print "<script type=\"text/javascript\"> var marker = [];\n".$Js.'</script>';
         }
     }
 }

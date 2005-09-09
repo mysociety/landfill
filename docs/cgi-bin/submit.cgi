@@ -9,12 +9,10 @@ use Email::Valid;
 use CGI qw/param/;
 use mysociety::NotApathetic::Config;
 
-if ($mysociety::NotApathetic::Config::site_open_for_additions == 0) {
-    print "Location: $mysociety::NotApathetic::Config::url\n\n";
-    exit(0);
-}
-
-
+# if ($mysociety::NotApathetic::Config::site_open_for_additions == 0) {
+#     print "Location: $mysociety::NotApathetic::Config::url\n\n";
+#     exit(0);
+# }
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
@@ -30,79 +28,78 @@ my %Passed_Values;
 		$Passed_Values{$param}=param($param);
 	}
 	$Passed_Values{email} ||= '';
-	$Passed_Values{title} = $Passed_Values{"q"};
-	#$Passed_Values{why} ||= &fetch_wikipedia($Passed_Values{title});
-	$Passed_Values{why} ||= '';
-	($Passed_Values{google_lat})= $Passed_Values{location} =~ m#lat=(-?\d+\.\d+);#;
-	($Passed_Values{google_long})= $Passed_Values{location} =~ m#long=(-?\d+\.\d+)#;
+	$Passed_Values{title} ||= '';
 
 	&handle_comment;
-
-	&send_email;
-	print "Location: $url_prefix/new/checkemail/\r\n\r\n";
+#	print "Location: $url_prefix/new/checkemail/\r\n\r\n";
 }
 
+sub error {
+    my ($field,$error) = @_;
+    print "<error field=\"$field\">$error</error>\n";
+}
 
 sub handle_comment {
-	my %quoted;
-	unless (Email::Valid->address( -address => $Passed_Values{email})) {
-		&die_cleanly("Email address invalid");
-	}
+    my %quoted;
+    my $error = 0;
+    print CGI->header('application/xml');
+    print "<submission>\n";
+    unless (Email::Valid->address( -address => $Passed_Values{email})) {
+        $error = 1;
+        error('email', 'Email address invalid');
+    }
 
+    my $scrubber= HTML::Scrubber->new();
+    $scrubber->allow(qw[a em strong p br]);
+    $scrubber->comment(0);
 
-	my $scrubber= HTML::Scrubber->new();
-	$scrubber->allow(qw[a em strong p br]);
-	$scrubber->comment(0);
-
-	#my $query= $dbh->prepare ("select cur_text from cur where cur_title like ? and cur_namespace = 0 limit 1");
-	#$query->execute("$Passed_Values{'title'}%");
-	#my $cur_text;
-	#($cur_text)= $query->fetchrow_array;
-        #$Passed_Values{why} = $cur_text;
-
- 	#$cur_text =~ /^(.{75}.*?\.)/;
-	#$Passed_Values{shortwhy}=  $cur_text;
-
-	foreach my $pv (keys %Passed_Values) {
-		$Passed_Values{$pv}= $scrubber->scrub($Passed_Values{$pv});
-                $Passed_Values{$pv} =~ s/[\x80-\x9f]//g;
-		$quoted{$pv}= $dbh->quote($Passed_Values{$pv});
-	}
-
-
-        #unless ($Passed_Values{why} && $Passed_Values{why} ne 'Write your reasons here...') {
-        #&die_cleanly("Please give a reason.");
-        #}
+    my $wikititle = $Passed_Values{'title'};
+    $wikititle =~ s/ /_/g;
+    my $query= $dbh->prepare ("select cur_text from cur where cur_title = ? and cur_namespace = 0 and cur_is_redirect = 0 limit 1");
+    $query->execute($wikititle);
+    my($cur_text) = $query->fetchrow_array;
+    if (!$cur_text) {
+        $error = 1;
+        error('q', 'Wikipedia article doesn\'t exist');
+    }
+#    $Passed_Values{why} = $cur_text;
+ 
+    if (!$error) {
+        foreach my $pv (keys %Passed_Values) {
+            $Passed_Values{$pv}= $scrubber->scrub($Passed_Values{$pv});
+            $Passed_Values{$pv} =~ s/[\x80-\x9f]//g;
+            $quoted{$pv}= $dbh->quote($Passed_Values{$pv});
+        }
 
         my $randomness = rand(); $randomness=~ s/^0\.(\d+)/$1/;
-	$Passed_Values{authcode}= $randomness;
-	my $auth_code_q= $dbh->quote($randomness);
-	$quoted{"title"} =~ s#_# #g;
-
-
-	my $query=$dbh->prepare("
+        $Passed_Values{authcode}= $randomness;
+        my $auth_code_q= $dbh->quote($randomness);
+        $quoted{"title"} =~ s#_# #g;
+        my $query=$dbh->prepare("
 		insert into posts
-		   set email=$quoted{email} ,
-		       title=$quoted{title} ,
-		       why=$quoted{why} ,
+		   set email=$quoted{email},
+		       title=$quoted{title},
+		       why='',
 		       posted=now(),
 		       name=$quoted{name},
-		       google_lat=$quoted{google_lat},
-		       google_long=$quoted{google_long},
+		       google_lat=$quoted{lat},
+		       google_long=$quoted{lng},
+                       google_zoom=$quoted{zoom},
 		       authcode=$auth_code_q,
 		       site='$site_name'
-	");
-
-	$query->execute;
-	$Passed_Values{rowid}= $dbh->{insertid};
-
+        ");
+        $query->execute;
+        $Passed_Values{rowid}= $dbh->{insertid};
+	&send_email;
+    }
+    print "</submission>\n";
 }
 
 sub send_email {
     use Mail::Mailer;
-    my $mailer= new Mail::Mailer 'sendmail';#, Server => 'mailrouter.mcc.ac.uk';
+    my $mailer= new Mail::Mailer 'sendmail';
     my %headers;
-    my $address      = $Passed_Values{"email"} || 'nobody' . $email_domain;
+    my $address      = $Passed_Values{"email"};
     my $name         = $Passed_Values{"name"} || '';
 
     $headers{"Subject"}= "Request to post to $site_name";
@@ -110,7 +107,6 @@ sub send_email {
     $headers{'From'}= "$site_name <team$email_domain>";
     $headers{"X-Originating-IP"}= $ENV{'HTTP_X_FORWARDED_FOR'}  || $ENV{'REMOTE_ADDR'} || return;
     $mailer->open(\%headers);
-
 
     print $mailer <<EOmail;
 
@@ -131,16 +127,12 @@ $site_name
 EOmail
 
     $mailer->close;
-
     return;
 }
 
-
 sub die_cleanly {
         &mysociety::NotApathetic::Config::die_cleanly(@_);
-
 }
-
 
 sub fetch_wikipedia {
 use HTTP::Request;
@@ -152,7 +144,6 @@ use HTML::Scrubber;
          $ua->agent("Placeopedia.com");
          my $req = HTTP::Request->new(GET => 'http://en.wikipedia.org/wiki/Special:Export/'.$topic);
          $req->header('Accept' => 'application/xml');
-
 
          # send request
          my $res = $ua->request($req);

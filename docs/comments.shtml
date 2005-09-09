@@ -3,8 +3,7 @@
 
 	<div id="search_container">
 		<!--#include virtual="/cgi-bin/comments.cgi?${QUERY_STRING}" -->
-        	<!--#include virtual="/geography/google/comments.shtml" -->
-        	<small>Accuracy currently around 150 yards</small>
+      <div id="map" style="width: 450px; height: 400px;"></div>
 	</div>	
 </div>
 	<div id="inputBox">

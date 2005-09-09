@@ -7,6 +7,8 @@ use CGI qw/param/;
 use HTML::Entities;
 use Date::Manip;
 use mysociety::NotApathetic::Config;
+use Text::Wrap;
+use URI::Escape;
 
 my $commentcount;
 my $Entry;
@@ -26,7 +28,6 @@ my %State; # State variables during display.
         }
 
         $Entry=$ENV{QUERY_STRING} || '';
-
         if ($Entry !~ /^\d+$/) {
                 &die_cleanly ("$Entry Error - no entry id passed in\r\n\r\n");
         }
@@ -52,13 +53,22 @@ my %State; # State variables during display.
 
 	$result=$query->fetchrow_hashref;
 	my $why = $result->{why};
+	$why =~ s/(\r\n){2,}/<\/p> <p>/g;
+	$why =~ s/\r\n/<br \/>/g;
 	$someday = UnixDate($result->{posted}, "%E %b %Y");
+        $Text::Wrap::columns = 32;
+        my $title = $result->{title} || '<No subject>';
+        $title =~ s/\s+/ /g;
+        $title = wrap('', '', $title);
+        $title = encode_entities($title);
+        $title =~ s/\n/<br>/g;
+        my $zoomlevel = $result->{google_zoom} || 2;
+        my $wikiuri = $result->{title};
+        $wikiuri =~ tr/ /_/;
+        $wikiuri = uri_escape($wikiuri);
+        my $bubble = "<b>$title</b><p><a href=\\\"http://en.wikipedia.org/wiki/$wikiuri\\\">Wikipedia article</a></p>";
 
-	$why=~s/(\r\n){2,}/<\/p> <p>/g;
-	$why=~s/\r\n/<br \/>/g;
-
-	# $why =~ s/(\r?\n){2,}/</p> <p>/g;
-        # $why =~ s/\r?\n/<br />/g;
+        $title = encode_entities($result->{title}) || '&lt;No subject&gt;';
 
 	print <<EOfragment;
 <!--
@@ -68,7 +78,7 @@ my %State; # State variables during display.
 <rdf:Description
     rdf:about="$url_prefix/comments?$result->{postid}"
     trackback:ping="$url_prefix/cgi-bin/trackback.cgi/$result->{postid}"
-    dc:title="$result->{title}"
+    dc:title="$title"
     dc:identifier="$url_prefix/comments?$result->{postid}"
     dc:description="$result->{shortwhy}"
     dc:creator="$site_name"
@@ -77,14 +87,17 @@ my %State; # State variables during display.
 -->
 	
 	<dl>
-	<dt><a href="http://en.wikipedia.org/wiki/$result->{title}">$result->{title}</a></dt>
+	<dt><a href="http://en.wikipedia.org/wiki/$wikiuri">$title</a></dt>
 	<dd><p>$why</p>
         <small>
         Lat: <span id="google_lat">$result->{google_lat}</span> | Long: <span id="google_long">$result->{google_long}</span>
-        <br /> added on $someday by $result->{name} | <a href="../email/$result->{postid}">Email this to a friend</a> | <a href="/abuse/?postid=$result->{postid}">abusive?</a><br />
+        <br /> added on $someday by $result->{name}<!-- | <a href="../email/$result->{postid}">Email this to a friend</a> | <a href="/abuse/?postid=$result->{postid}">abusive?</a> --><br />
 	</small>
 	</dd>
 	</dl>
+<script type="text/javascript">
+    marker = createPin(new GPoint($result->{google_long}, $result->{google_lat}), $zoomlevel, "$bubble")
+</script>
 EOfragment
 	if ($result->{commentcount} > 0) {print &show_comments();}
 }

@@ -1,21 +1,47 @@
 <!--#set var="page_title" value="Placeopedia" -->
 <!--#set var="api_key" value="ABQIAAAA8N0lvXAsUc4OGoWFst6idhQ08MtMjoXxyp9SXQd6LIaB84SUmBRUeUi1liAZDjkRIrTSC1tpDWgPtQ" -->
 <!--#include virtual="/includes/header.shtml" -->
-<!--#include virtual="/geography/search.shtml" -->
+<div id="search_container">
+<div id="searchmap"></div>
+<p style="display: none" id="where"><small>Where: <span id="show_where">none selected</span></small></p>
+</div>
 <!--#include virtual="/includes/description.shtml" -->
 </div>
 <div id="inputBox">
-<div class="right">
+
+<div id="search_results"></div>
+
+<div id="recent_places">
     <h3 class="green">Recently Added Places</h3>
-    <!--#include virtual="/cgi-bin/list.cgi?page=${QUERY_STRING}" -->
+    <!--#include virtual="/cgi-bin/list.cgi?show=${QUERY_STRING}" -->
 </div>
+
+<div id="add_place" style="display: none">
+    <form method="post" id="f" onsubmit="add_place(this); return false;">
+        <h3 class="blue">Add new place</h3>
+        <p>To find a place on the map, either use the arrow and zoom controls, or enter a place name in the search box above. When you have found the rough area, click to put a yellow pin over the exact place corresponding with the Wikipedia article, fill in your details and click submit.</p>
+        <p>Enter <a href="http://en.wikipedia.org/">Wikipedia</a> Article Name:
+        <small>(this will auto-complete; might take a short time to respond)</small>
+        <input type="text" autocomplete="off" maxLength="1024" size="30" name="q" />
+        <span id="titleerror"></span>
+        <label for="emailname">Your Name:</label>
+        <input type="text" name="name" id="emailname" size="30" />
+        <label for="emailreason">Email address:</label>
+        <input type="text" name="email" id="emailreason" size="30" />
+        <span id="emailerror"></span>
+        </p>
+        <p><input id="add_submit" type="submit" value="Submit" /></p>
+    </form>
+    <p><a onclick="remove_place_form(); return false" href="#needsJS">Back to recently added places</a></p>
+</div>
+
+<div id="add_success" style="display:none">
+<h3 class="blue">Add new place</h3>
+<p>Thanks for creating that entry - now please check your email to confirm your post.</p>
+<p><a href="#needsJS" onclick="add_place_form(); return false;">Add another</a></p>
+</div>
+
 <!--#include virtual="/includes/footer.shtml" -->
 <script src="/js/ac.js" type="text/javascript"></script>
-<script type="text/javascript">
-//<![CDATA[
-	<!--#include virtual="/geography/google/search.js" -->
-        <!--#include virtual="/cgi-bin/list-js.cgi" -->
-//]]>
-</script>
 </body>
 </html>

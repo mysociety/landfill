@@ -2,23 +2,24 @@
 
 use warnings;
 use strict;
-use DBI;
+use FindBin;
+use lib "$FindBin::Bin/../../perllib";
+use lib "$FindBin::Bin/../../../perllib";
+use mySociety::Config;
+BEGIN {
+    mySociety::Config::set_file("$FindBin::Bin/../../conf/general");
+}
+use PoP;
 use HTML::Entities;
 use XML::RSS;
-use mysociety::NotApathetic::Config;
-my $url_prefix= $mysociety::NotApathetic::Config::url;
-my $email_domain= $mysociety::NotApathetic::Config::email_domain;
-my $site_name= $mysociety::NotApathetic::Config::site_name;
+my $url_prefix= mySociety::Config::get('URL');
+my $email_domain= mySociety::Config::get('EMAIL_DOMAIN');
+my $site_name= mySociety::Config::get('SITE_NAME');
 
 if ((defined $ENV{QUERY_STRING}) and ($ENV{QUERY_STRING} =~/^\d+$/)){
 	print "Location: $url_prefix/cgi-bin/rss-comments.cgi?$ENV{QUERY_STRING}\r\n\r\n";
 }
 
-my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
-my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
-my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
-my $site_name= $mysociety::NotApathetic::Config::site_name;
-my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 my %State; # State variables during display.
 my $search_term = &handle_search_term(); #' 1 = 1 ';
 
@@ -106,7 +107,7 @@ sub date_header {
 
 
 sub handle_search_term {
-	my $search_path= $ENV{"QUERY_STRING"};
+	my $search_path= $ENV{"QUERY_STRING"} || '';
 	my @search_fields= ('posts.why', 
 			    'posts.title');
 	return ('') if ($search_path eq '');

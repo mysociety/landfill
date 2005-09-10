@@ -2,22 +2,24 @@
 
 use warnings;
 use strict;
-use DBI;
+use FindBin;
+use lib "$FindBin::Bin/../../perllib";
+use lib "$FindBin::Bin/../../../perllib";
+use mySociety::Config;
+BEGIN {
+    mySociety::Config::set_file("$FindBin::Bin/../../conf/general");
+}
+use PoP;
 use HTML::Entities;
 use HTML::Scrubber;
 use Email::Valid;
 use Text::Wrap;
 use Mail::Mailer qw(sendmail);
 use CGI qw/param/;
-use mysociety::NotApathetic::Config;
 
-my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
-my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
-my $url_prefix= $mysociety::NotApathetic::Config::url;
-my $email_domain= $mysociety::NotApathetic::Config::email_domain;
-my $site_name= $mysociety::NotApathetic::Config::site_name;
-my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
-
+my $url_prefix= mySociety::Config::get('URL');
+my $email_domain= mySociety::Config::get('EMAIL_DOMAIN');
+my $site_name= mySociety::Config::get('SITE_NAME');
 
 {
 	my %Passed_Values;
@@ -115,6 +117,8 @@ EOmail
 }
 
 sub die_cleanly {
-        &mysociety::NotApathetic::Config::die_cleanly(@_);
+        my $error= shift || 'no error given';
+        print "Location: $url/error/?$error\n\n";
+	exit(0);
 }
 

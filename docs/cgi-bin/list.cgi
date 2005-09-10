@@ -2,22 +2,24 @@
 
 use warnings;
 use strict;
+use FindBin;
+use lib "$FindBin::Bin/../../perllib";
+use lib "$FindBin::Bin/../../../perllib";
+use mySociety::Config;
+BEGIN {
+    mySociety::Config::set_file("$FindBin::Bin/../../conf/general");
+}
+use PoP;
 use CGI qw/param/;
 use CGI::Carp qw/fatalsToBrowser/;
 use Date::Manip;
-use DBI;
 use HTML::Entities;
 use Text::Wrap;
 use URI::Escape;
-use mysociety::NotApathetic::Config;
 
-my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
-my $db_username= $mysociety::NotApathetic::Config::db_username; # database username
-my $db_password= $mysociety::NotApathetic::Config::db_password; # database password
-my $site_name= $mysociety::NotApathetic::Config::site_name;
-my $dbh=DBI->connect($dsn, $db_username, $db_password);
+my $site_name= mySociety::Config::get('SITE_NAME');
 my %State; # State variables during display.
-our $url_prefix=$mysociety::NotApathetic::Config::url;
+our $url_prefix=mySociety::Config::get('URL');
 my $Js='';
 
 {

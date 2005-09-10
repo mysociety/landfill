@@ -2,29 +2,28 @@
 
 use warnings;
 use strict;
-use DBI;
+use FindBin;
+use lib "$FindBin::Bin/../../perllib";
+use lib "$FindBin::Bin/../../../perllib";
+use mySociety::Config;
+BEGIN {
+    mySociety::Config::set_file("$FindBin::Bin/../../conf/general");
+}
+use PoP;
 use HTML::Entities;
 use HTML::Scrubber;
 use Email::Valid;
 use CGI qw/param/;
 
-use mysociety::NotApathetic::Config;
-
-my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
-my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
-my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
-my $site_name= $mysociety::NotApathetic::Config::site_name;
-my $dbh;
-my $url_prefix= $mysociety::NotApathetic::Config::url;
+my $site_name= mySociety::Config::get('SITE_NAME');
+my $url_prefix= mySociety::Config::get('URL');
 
 {
     eval {
-        if (!defined($dbh) || !eval { $dbh->ping() }) {
-            $dbh = DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
-        }
-        my $postid = param('u');
-        my $postid_q = $dbh->quote(param('u'));
-        my $auth_code_q = $dbh->quote(param('c'));
+        my $postid = param('u') || 0;
+        my $postid_q = $dbh->quote($postid);
+        my $auth_code = param('c') || '';
+        my $auth_code_q = $dbh->quote($auth_code);
         my $query=$dbh->prepare ("select * from posts
                                     where postid= $postid_q
                                       and validated = 0 
@@ -59,7 +58,7 @@ my $url_prefix= $mysociety::NotApathetic::Config::url;
                                      and authcode       = $auth_code_q
 				     and site='$site_name'
                                 ");
-                $query->execute || &die_cleanly("sql error");
+                $query->execute;
                 if ($query->rows == 1 ) { 
 			my $postid= $postid_q;
 			$postid=~ s#'##g;
@@ -69,12 +68,5 @@ my $url_prefix= $mysociety::NotApathetic::Config::url;
                 }
         }
     };
-    if ($@) {
-        &die_cleanly($@);
-    }
-}
-
-sub die_cleanly {
-        &mysociety::NotApathetic::Config::die_cleanly(@_);
 }
 

@@ -85,7 +85,7 @@ function add_place(f) {
                 form = document.getElementById('f')
                 for (e=0; e<errors.length; e++) {
                     field = errors[e].getAttribute('field')
-                    error = errors[e].textContent
+                    error = GXml.value(errors[e])
                     var errspan = ''
                     if (field=='q') errspan = 'titleerror'
                     if (field=='email') errspan = 'emailerror'
@@ -125,8 +125,10 @@ function search(s) {
             if (refinements.length) {
                 var out = '<p>More than one match:</p><ul>'
                 for (ref=0; ref<refinements.length; ref++) {
-                    q = refinements[ref].getElementsByTagName('query')[0].textContent
-                    d = refinements[ref].getElementsByTagName('description')[0].textContent
+                    q = refinements[ref].getElementsByTagName('query')[0]
+                    q = GXml.value(q)
+                    d = refinements[ref].getElementsByTagName('description')[0]
+                    d = GXml.value(d)
                     out += '<li><a href="#needsJS" onclick=\'window.search("' + q + '"); return false;\'>' + d + '</a>'
                 }
                 out += '</ul>'
@@ -138,7 +140,7 @@ function search(s) {
             error = x.getElementsByTagName('error')[0]
             if (error) {
                 d = document.getElementById('search_results')
-                d.innerHTML = error.textContent
+                d.innerHTML = GXml.value(error)
                 d.style.display = 'block'
             }
         }

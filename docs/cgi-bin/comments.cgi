@@ -2,31 +2,28 @@
 
 use warnings;
 use strict;
-use DBI;
+use FindBin;
+use lib "$FindBin::Bin/../../perllib";
+use lib "$FindBin::Bin/../../../perllib";
+use mySociety::Config;
+BEGIN {
+    mySociety::Config::set_file("$FindBin::Bin/../../conf/general");
+}
+use PoP;
 use CGI qw/param/;
 use HTML::Entities;
 use Date::Manip;
-use mysociety::NotApathetic::Config;
 use Text::Wrap;
 use URI::Escape;
 
 my $commentcount;
 my $Entry;
 
-my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
-my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
-my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
-my $url_prefix= $mysociety::NotApathetic::Config::url;
-my $site_name= $mysociety::NotApathetic::Config::site_name;              # database username
-my $dbh;
+my $url_prefix= mySociety::Config::get('URL');
+my $site_name= mySociety::Config::get('SITE_NAME');
 my %State; # State variables during display.
 
-
 {
-        if (!defined($dbh) || !eval { $dbh->ping() }) {
-            $dbh = DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
-        }
-
         $Entry=$ENV{QUERY_STRING} || '';
         if ($Entry !~ /^\d+$/) {
                 &die_cleanly ("$Entry Error - no entry id passed in\r\n\r\n");
@@ -133,6 +130,7 @@ EOhtml
 }
 
 sub die_cleanly {
-      &mysociety::NotApathetic::Config::die_cleanly(@_);
-
+        my $error= shift || 'no error given';
+        print "Location: $url/error/?$error\n\n";
+	exit(0);
 }

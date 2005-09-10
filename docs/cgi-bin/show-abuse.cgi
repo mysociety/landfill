@@ -2,16 +2,18 @@
 
 use warnings;
 use strict;
-use DBI;
+use FindBin;
+use lib "$FindBin::Bin/../../perllib";
+use lib "$FindBin::Bin/../../../perllib";
+use mySociety::Config;
+BEGIN {
+    mySociety::Config::set_file("$FindBin::Bin/../../conf/general");
+}
+use PoP;
 use HTML::Entities;
 use CGI qw/param/;
-use mysociety::NotApathetic::Config;
 
-my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
-my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
-my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
-my $site_name= $mysociety::NotApathetic::Config::site_name;
-my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
+my $site_name= mySociety::Config::get('SITE_NAME');
 
 {
         print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";

@@ -2,19 +2,19 @@
 
 use warnings;
 use strict;
-use CGI;
-use DBI;
-use mysociety::NotApathetic::Config;
+use FindBin;
+use lib "$FindBin::Bin/../../perllib";
+use lib "$FindBin::Bin/../../../perllib";
+use mySociety::Config;
+BEGIN {
+    mySociety::Config::set_file("$FindBin::Bin/../../conf/general");
+}
+use PoP;
 
-my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
-my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
-my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
-my $site_name= $mysociety::NotApathetic::Config::site_name;
-our $url_prefix=$mysociety::NotApathetic::Config::url;
+my $site_name= mySociety::Config::get('SITE_NAME');
+our $url_prefix=mySociety::Config::get('URL');
 
 {
-            my $dbh = DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
-
             my $query=$dbh->prepare("
                           select postid
                             from posts

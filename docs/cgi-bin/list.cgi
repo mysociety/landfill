@@ -160,7 +160,18 @@ EOjs
                 # // GEvent.removeListener(point_$pointindex, "mouseout", );
                 $pointindex++;
             } elsif ($type eq 'xml') {
-                print '<result lat="'.$result->{google_lat}.'" lng="'.$result->{google_long}.'" zoom="'.$result->{google_zoom}.'"></result>';
+                my $wikiuri = $result->{title};
+                $wikiuri =~ tr/ /_/;
+                $wikiuri = uri_escape($wikiuri);
+                $Text::Wrap::columns = 32;
+                $title = $result->{title} || '<No subject>';
+                $title =~ s/\s+/ /g;
+                $title = wrap('', '', $title);
+                $title = encode_entities($title);
+                $title =~ s/\n/<br>/g;
+                my $zoomlevel = $result->{google_zoom} || 2;
+                my $bubble = "<b>$title</b><p><a href=\"http://en.wikipedia.org/wiki/$wikiuri\">Wikipedia article</a></p>";
+                print '<result lat="'.$result->{google_lat}.'" lng="'.$result->{google_long}.'" zoom="'.$zoomlevel.'"><![CDATA['.$bubble.']]></result>';
             }
         }
         if ($query->rows > 0) {
@@ -174,15 +185,15 @@ EOjs
 			
 	    my $older = $page;
 
-
             if ($type eq 'summary') {
                 print "</ul>\n";
                 $older += $brief+1;
                 print "<p align=\"right\"><a href=\"$url$older\">Even older entries</a></p>";
             } elsif ($type eq 'details') {
-				print "</dl>\n";
+                print "</dl>\n";
                 $older += 1;
                 my $newer = $page - 1;
+
                 print '<p align="center">';
                 if ($newer == 0) {
                     my $fronturl = ($search_bit ne '') ? '/oldersearch/'.$search_bit : '/';

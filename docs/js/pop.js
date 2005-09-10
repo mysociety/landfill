@@ -125,10 +125,8 @@ function search(s) {
             if (refinements.length) {
                 var out = '<p>More than one match:</p><ul>'
                 for (ref=0; ref<refinements.length; ref++) {
-                    q = refinements[ref].getElementsByTagName('query')[0]
-                    q = GXml.value(q)
-                    d = refinements[ref].getElementsByTagName('description')[0]
-                    d = GXml.value(d)
+                    q = GXml.value(refinements[ref].getElementsByTagName('query')[0])
+                    d = GXml.value(refinements[ref].getElementsByTagName('description')[0])
                     out += '<li><a href="#needsJS" onclick=\'window.search("' + q + '"); return false;\'>' + d + '</a>'
                 }
                 out += '</ul>'
@@ -188,10 +186,11 @@ function update_place_list() {
             }
             marker = []
             for (m=0; m<markers.length; m++) {
-                lat = markers[m].getAttribute('lat')
-                lng = markers[m].getAttribute('lng')
-                zoom = markers[m].getAttribute('zoom')
-                marker[m] = window.createPin(new GPoint(lng, lat), zoom, "Foo")
+                lat = parseFloat(markers[m].getAttribute('lat'))
+                lng = parseFloat(markers[m].getAttribute('lng'))
+                zoom = parseInt(markers[m].getAttribute('zoom'), 10)
+                bubble = GXml.value(markers[m])
+                marker[m] = window.createPin(new GPoint(lng, lat), zoom, bubble)
                 map.addOverlay(marker[m])
             }
 	}

@@ -183,7 +183,10 @@ function update_place_list() {
         if (r.readyState ==4) {
             x = r.responseXML
             markers = x.getElementsByTagName('result');
-            map.clearOverlays()
+            for (m=0; m<marker.length; m++) {
+                map.removeOverlay(marker[m])
+            }
+            marker = []
             for (m=0; m<markers.length; m++) {
                 lat = markers[m].getAttribute('lat')
                 lng = markers[m].getAttribute('lng')

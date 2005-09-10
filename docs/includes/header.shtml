@@ -29,14 +29,14 @@
 <ul class="nav">
     <li id="add"><a onclick="add_place_form(); return false;" href="#needsJS">Add your place</a></li>
     <li id="random"><a href="/random">Random place</a></li>
-        <li>
-            <form onsubmit="search(this.q.value); return false;" method="get" action="" id="search">
-                        <fieldset>
-                                <input  type="text" name="q" id="q" size="25" value="Search" onclick="this.value='';" />
-                                <input type="submit" value="Search" class="submit" id="Submit1" name="Submit1"/>
-                        </fieldset>
-                </form>
-        </li>
+    <li>
+        <form onsubmit="search(this.q.value); return false;" method="get" action="" id="search">
+            <fieldset>
+                <input type="text" name="q" id="q" size="20" value="Search" onclick="if (this.value=='Search') this.value='';" />
+                <input type="submit" value="Search" class="submit" id="Submit1" name="Submit1"/>
+            </fieldset>
+        </form>
+    </li>
 </ul>
 
 <div id="main">

@@ -237,7 +237,7 @@ function onLoad() {
 
     /* Not perfect, but it'll do for now */
     GEvent.addListener(map, 'moveend', keep_adding_pin);
-//    GEvent.addListener(map, 'zoom', update_place_list);
+    GEvent.addListener(map, 'moveend', update_place_list);
 
     for (p=0; p<marker.length; p++)
         map.addOverlay(marker[p])

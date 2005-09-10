@@ -23,7 +23,6 @@ if (preg_match('#<error>(.*?)</error>#', $f, $m)) {
 } elseif (preg_match('#<refinements>(.*?)</refinements>#', $f, $m)) {
     $refine = $m[1];
     if ($xml) {
-        $refine = preg_replace('#(<description>)(.*?)(</description>)#s', '$1$2$3', $refine);
 #        $refine = preg_replace('#(<description>)(.*?)(</description>)#s', '$1<![CDATA[$2]]>$3', $refine);
         $out = $refine;
     } else {

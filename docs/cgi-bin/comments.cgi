@@ -131,6 +131,6 @@ EOhtml
 
 sub die_cleanly {
         my $error= shift || 'no error given';
-        print "Location: $url/error/?$error\n\n";
+        print "Location: $url_prefix/error/?$error\n\n";
 	exit(0);
 }

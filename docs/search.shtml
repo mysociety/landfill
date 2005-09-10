@@ -1,4 +1,4 @@
-<!--#set var="api_key" value="ABQIAAAAbXzhWwipU_Uy7amV7gZQXxQIgIcOHi8fKqvZv44gwAtktPry_hQxkdqfP-zBO-_NWm6Z5p5pJDwANg" -->
+<!--#include virtual="/includes/vars.shtml" -->
 <!--#set var="page_title" value="Search results" -->
 <!--#set var="rss_query" value="${QUERY_STRING}" -->
 <!--#include virtual="/includes/header.shtml" -->

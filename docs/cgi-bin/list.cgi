@@ -46,42 +46,33 @@ my $Js='';
             $search_bit =~ s/\|(\d+)$//;
         }
         my $search_term = handle_search_term($search_bit); #' 1 = 1 ';
-	my $geog_limiter='';
+        my $where = "validated=1 and hidden=0 and site='$site_name' $search_term";
         if ( defined($topleft_lat) and defined($topleft_long) and
              defined($bottomright_lat) and defined($bottomright_long)) {
              $topleft_lat=~ s#[^-\.\d]##g;
              $topleft_long=~ s#[^-\.\d]##g;
              $bottomright_lat=~ s#[^-\.\d]##g;
              $bottomright_long=~ s#[^-\.\d]##g;
-                $geog_limiter= <<EOSQL;
+                $where .= <<EOSQL;
         and google_lat <= $topleft_lat and google_lat >= $bottomright_lat
         and google_long >= $topleft_long and google_long <= $bottomright_long
 EOSQL
         }
-        my $include_show = '';
+        if (defined param('interest')){
+	    $where .= " and (interesting=1 or commentcount >= 5)";
+        }
         if ($id) {
-            $include_show = ' OR postid='.$dbh->quote($id);
+            $where = 'postid = ' . $dbh->quote($id);
         }
         my $mainlimit = 15;
-		my $brief = 1; # mainlimit x brief entries displayed in the brief listing
+	my $brief = 1; # mainlimit x brief entries displayed in the brief listing
         my $limit = ($type eq 'details') ? $mainlimit : $mainlimit * $brief;
         my $offset = $page * $mainlimit;
-		my $interesting = "";
-		if (defined param('interest')){
-			$interesting = "and (interesting=1 or commentcount >= 5)";
-		}
         $offset += $mainlimit if ($type eq 'summary');
-
         my $query=$dbh->prepare("
-                          select *
+                          select *, date_format(posted, \"%H:%i, %e %M\") as posted_formatted
                             from posts
-                           where (validated=1
-		   		 $interesting
-                             and hidden=0
-                             and site='$site_name'
-				 $geog_limiter
-                                 $search_term)
-                                 $include_show
+                           where $where
                         order by posted
                                  desc limit $offset, $limit
                            "); # XXX order by first_seen needs to change
@@ -89,16 +80,12 @@ EOSQL
 
         $query->execute;
         my $result;
-        my $someday;
-        my $google_terms;
-        my $comments_html;
-        my $show_link;
         my $more_link;
 			
         my $printed = 0;
         $search_bit =~ s/\// /g;
-        my $title;
         my $pointindex=0;
+        my $new_html = '';
         while ($result=$query->fetchrow_hashref) {
             if ($printed==0) {
                 $printed = 1;
@@ -114,7 +101,7 @@ EOSQL
                 }
 	    }
 
-            $comments_html= &handle_links($result);
+            my $comments_html= &handle_links($result);
 
             #if ($result->{content} eq $result->{shortcontent}) {
             #	$more_link= $result->{link};
@@ -122,56 +109,33 @@ EOSQL
             #	$more_link= "comments?$result->{entryid}";
             #}
 
-            $title = encode_entities($result->{title}) || '&lt;No subject&gt;';
-            $more_link= $result->{link};
+#            $more_link= $result->{link};
+            my $wikiuri = $result->{title};
+            $wikiuri =~ tr/ /_/;
+            $wikiuri = uri_escape($wikiuri);
+            $Text::Wrap::columns = 32;
+            my $bubble = $result->{title} || '<No subject>';
+            $bubble =~ s/\s+/ /g;
+            $bubble = wrap('', '', $bubble);
+            $bubble = encode_entities($bubble);
+            $bubble =~ s/\n/<br>/g;
+            $bubble = "<b>$bubble</b><p><a href=\"http://en.wikipedia.org/wiki/$wikiuri\">Wikipedia article</a></p>";
+            my $zoomlevel = $result->{google_zoom} || 2;
             if ($type eq 'summary') {
+                my $title = encode_entities($result->{title}) || '&lt;No subject&gt;';
                 print <<EOfragment;
 <li><a href="#needsJS" onclick="show_post(marker[$pointindex], '$result->{postid}')">$title</a></li>
 EOfragment
             } elsif ($type eq 'details') {
-                $someday = UnixDate($result->{posted}, "%E %b %Y");
-                my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';
-                my $wikiuri = $result->{title};
-                $wikiuri =~ tr/ /_/;
-                $wikiuri = uri_escape($wikiuri);
-                print <<EOfragment;
-<dt><a href="#needsJS" onclick="show_post(marker[$pointindex], '$result->{postid}')">$title</a></dt>
-<dd><p>$result->{shortwhy}</p>
-<small>
-added $someday 
-| <a href="http://en.wikipedia.org/wiki/$wikiuri">Wikipedia Article</a> 
-<!-- | <a href="/abuse/?postid=$result->{postid}">abusive?</a> -->
-</small>
-</dd>
-
-EOfragment
-                $Text::Wrap::columns = 32;
-                $title = $result->{title} || '<No subject>';
-                $title =~ s/\s+/ /g;
-                $title = wrap('', '', $title);
-                $title = encode_entities($title);
-                $title =~ s/\n/<br>/g;
-                my $zoomlevel = $result->{google_zoom} || 2;
-                my $bubble = "<b>$title</b><p><a href=\\\"http://en.wikipedia.org/wiki/$wikiuri\\\">Wikipedia article</a></p>";
+                print dt_entry($result, $wikiuri, $pointindex);
+                $bubble =~ s/"/\\"/g;
                 $Js.=<<EOjs;
 marker[$pointindex] = createPin(new GPoint($result->{google_long}, $result->{google_lat}), $zoomlevel, "$bubble")
 EOjs
-                #   // var listener_$pointindex = GEvent.addListener(point_$pointindex, "mouseover", searchmap.openInfoWindowHtml("<a href=\\"/comments?$result->{postid}\\" >$title</a><p>$result->{shortwhy}</p>") );
-                # // GEvent.removeListener(point_$pointindex, "mouseout", );
                 $pointindex++;
             } elsif ($type eq 'xml') {
-                my $wikiuri = $result->{title};
-                $wikiuri =~ tr/ /_/;
-                $wikiuri = uri_escape($wikiuri);
-                $Text::Wrap::columns = 32;
-                $title = $result->{title} || '<No subject>';
-                $title =~ s/\s+/ /g;
-                $title = wrap('', '', $title);
-                $title = encode_entities($title);
-                $title =~ s/\n/<br>/g;
-                my $zoomlevel = $result->{google_zoom} || 2;
-                my $bubble = "<b>$title</b><p><a href=\"http://en.wikipedia.org/wiki/$wikiuri\">Wikipedia article</a></p>";
                 print '<result lat="'.$result->{google_lat}.'" lng="'.$result->{google_long}.'" zoom="'.$zoomlevel.'"><![CDATA['.$bubble.']]></result>';
+                $new_html .= dt_entry($result, $wikiuri, $pointindex)
             }
         }
         if ($query->rows > 0) {
@@ -207,7 +171,7 @@ EOjs
                 print '</p>';
 
             } elsif ($type eq 'xml') {
-                print '</results>';
+                print '<newhtml><![CDATA[<dl>'.$new_html.'</dl>]]></newhtml></results>';
             }
         } elsif ($type eq 'details' && $search_bit ne '') {
             print "<p>Your search for " . $search_bit . " yielded no results.</p>";
@@ -219,6 +183,26 @@ EOjs
 }
 
 
+sub dt_entry {
+    my ($result, $wikiuri, $pointindex) = @_;
+    my $title = encode_entities($result->{title}) || '&lt;No subject&gt;';
+    my $someday = UnixDate($result->{posted}, "%E %b %Y");
+    my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';
+    my $name = encode_entities($result->{name});
+    my $out = <<EOfragment;
+<dt><strong><a href="#needsJS" onclick="show_post(marker[$pointindex], '$result->{postid}')">$title</a></strong>
+<small>(<a href="http://en.wikipedia.org/wiki/$wikiuri">Wikipedia Article</a>)</small></dt>
+<dd><p>$result->{shortwhy}</p>
+<small>
+added $someday by $name
+<!-- | <a href="../email/$result->{postid}">Email this to a friend</a>
+| <a href="/abuse/?postid=$result->{postid}">abusive?</a> -->
+</small>
+</dd>
+
+EOfragment
+    return $out;
+}
 sub handle_links {
 
 	return '' if (defined $ENV{NO_COMMENTING});
@@ -228,7 +212,7 @@ sub handle_links {
 	$google_terms=~ s# #\+#;
 
 	my $html.=<<EOhtml;
-	<a href="$url_prefix/na/comments?$item->{postid}">Comment ($item->{commentcount}),
+	<a href="$url_prefix/?$item->{postid}">Comment ($item->{commentcount}),
 	Trackback</a>,
 	<a href="$url_prefix/na/email/$item->{postid}">Email this</a>.
 EOhtml

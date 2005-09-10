@@ -25,5 +25,5 @@ our $url_prefix=mySociety::Config::get('URL');
                            ");
             $query->execute();
             my ($postid)= $query->fetchrow_array;
-            print "Location: $url_prefix/comments?$postid\n\n";
+            print "Location: $url_prefix/?$postid\n\n";
 }

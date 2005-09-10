@@ -103,11 +103,11 @@ ul.pins li
 
 
 /* map */
-div#searchmap 
+div#map 
 {
 	margin-bottom:2px;	
 	width: 450px;
- 	height: 366px;
+ 	height: 400px;
 }
 
 /* nav menu */
@@ -300,6 +300,7 @@ div.hideme{
 display:none;
 }
 dt {
+font-weight: normal;
 margin: 1em 0 0.1em 0;
 padding:0;
 }

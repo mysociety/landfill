@@ -62,7 +62,7 @@ my $url_prefix= mySociety::Config::get('URL');
                 if ($query->rows == 1 ) { 
 			my $postid= $postid_q;
 			$postid=~ s#'##g;
-                        print "Location: $url_prefix/comments.shtml?$postid\r\n\r\n";      
+                        print "Location: $url_prefix/?$postid\r\n\r\n";      
                 } else {
                         print "Location: $url_prefix/new/checkemail/failed.shtml\r\n\r\n";       
                 }

@@ -67,7 +67,7 @@ if (preg_match('#<error>(.*?)</error>#', $f, $m)) {
     if ($xml) $out .= $m[0];
     else {
         $sp_lat = $m[1]; $sp_lng = $m[2];
-        $out .= "<div id='searchmap'></div> <p><strong>$h_q</strong> : $lat $lng";
+        $out .= "<div id='map'></div> <p><strong>$h_q</strong> : $lat $lng";
         $out .= '<script type="text/javascript">var scy = '.$lat.'; var scx = '.$lng.';</script>';
     }
 }

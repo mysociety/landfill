@@ -180,6 +180,7 @@ function update_place_list() {
     r.onreadystatechange = function(){
         if (r.readyState ==4) {
             x = r.responseXML
+            newhtml = GXml.value(x.getElementsByTagName('newhtml')[0])
             markers = x.getElementsByTagName('result');
             for (m=0; m<marker.length; m++) {
                 map.removeOverlay(marker[m])
@@ -193,6 +194,7 @@ function update_place_list() {
                 marker[m] = window.createPin(new GPoint(lng, lat), zoom, bubble)
                 map.addOverlay(marker[m])
             }
+            document.getElementById('list').innerHTML = newhtml
 	}
     }
     r.send(null)
@@ -218,8 +220,7 @@ function onLoad() {
         document.getElementById('browserwontwork').className= '';
     }
 
-    map = new GMap(document.getElementById("searchmap"));
-    map.centerAndZoom(new GPoint(-4.218750, 54.724620), 12);
+    map = new GMap(document.getElementById("map"));
     map.addControl(new GLargeMapControl());
     map.addControl(new GMapTypeControl());
 //    map.setMapType( _HYBRID_TYPE );
@@ -241,10 +242,19 @@ function onLoad() {
     GEvent.addListener(map, 'moveend', keep_adding_pin);
     GEvent.addListener(map, 'moveend', update_place_list);
 
+    if (marker.length==1) {
+        map.centerAndZoom(marker[0].point, marker[0].zoomlevel);
+    } else {
+        map.centerAndZoom(new GPoint(-4.218750, 54.724620), 12);
+    }
     for (p=0; p<marker.length; p++)
         map.addOverlay(marker[p])
+    if (marker.length==1)
+        GEvent.trigger(marker[0], "click")
 
-    InstallAC(document.getElementById("f"),document.getElementById("f").q,document.getElementById("f").btnG,"/cgi-bin/suggest.cgi","en", true);
+    d = document.getElementById('f')
+    if (d)
+        InstallAC(d,d.q,d.btnG,"/cgi-bin/suggest.cgi","en", true);
 }
 window.onload = onLoad
 

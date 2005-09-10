@@ -2,7 +2,7 @@
 <!--#set var="api_key" value="ABQIAAAA8N0lvXAsUc4OGoWFst6idhQ08MtMjoXxyp9SXQd6LIaB84SUmBRUeUi1liAZDjkRIrTSC1tpDWgPtQ" -->
 <!--#include virtual="/includes/header.shtml" -->
 <div id="search_container">
-<div id="searchmap"></div>
+<div id="map"></div>
 <p style="display: none" id="where"><small>Where: <span id="show_where">none selected</span></small></p>
 </div>
 <!--#include virtual="/includes/description.shtml" -->
@@ -12,8 +12,8 @@
 <div id="search_results"></div>
 
 <div id="recent_places">
-    <h3 class="green">Recently Added Places</h3>
-    <!--#include virtual="/cgi-bin/list.cgi?show=${QUERY_STRING}" -->
+    <h3 class="green">Recent Additions on Map</h3>
+    <div id="list"><!--#include virtual="/cgi-bin/list.cgi?show=${QUERY_STRING}" --></div>
 </div>
 
 <div id="add_place" style="display: none">

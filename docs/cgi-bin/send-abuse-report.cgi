@@ -44,7 +44,7 @@ sub send_email {
     my $address      = $abuse_address;
     my $name         = "$site_name abuse report";
 
-    $headers{"Subject"}= "$site_name of abuse $admin_url_prefix/comments.shtml?$postid#$commentid" ;
+    $headers{"Subject"}= "$site_name of abuse $admin_url_prefix/?$postid#$commentid" ;
     $headers{"To"}= "$name <$address>" ;
     $headers{'From'}= "$site_name <$abuse_address>" ;
     $headers{"X-Originating-IP"}= $ENV{'HTTP_X_FORWARDED_FOR'}  || $ENV{'REMOTE_ADDR'} || return;
@@ -59,7 +59,7 @@ sub send_email {
     $about=wrap('',"    ", $about);
     print $mailer <<EOmail;
 
-Someone thinks $admin_url_prefix/comments.shtml?$postid#$commentid is abusive.
+Someone thinks $admin_url_prefix/?$postid#$commentid is abusive.
 
 IP    :  $ENV{REMOTE_ADDR}
 Name  :  $Passed_Values{name}

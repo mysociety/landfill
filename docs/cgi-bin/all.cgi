@@ -29,7 +29,7 @@ our $url_prefix=mySociety::Config::get('URL');
         my $why = encode_entities($result->{why}) || '';
         my $title = encode_entities($result->{title}) || '&lt;No subject&gt;'; 
         print <<EOfragment;
-<dt><a href="$url_prefix/comments/$result->{postid}">$title</a></dt><dd><p>$why</p></dd>
+<dt><a href="$url_prefix/?$result->{postid}">$title</a></dt><dd><p>$why</p></dd>
 EOfragment
     }
 }

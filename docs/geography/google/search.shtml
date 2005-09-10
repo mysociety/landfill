@@ -8,7 +8,7 @@
 	rumour or tidbit? Share it here, and if you're lucky someone will
         follow up with more info on your place.
     </p> -->
-<script src="http://maps.google.com/maps?file=api&amp;v=1&amp;key=ABQIAAAAbXzhWwipU_Uy7amV7gZQXxQIgIcOHi8fKqvZv44gwAtktPry_hQxkdqfP-zBO-_NWm6Z5p5pJDwANg" type="text/javascript"></script>
+<script src="http://maps.google.com/maps?file=api&amp;v=1&amp;key=<!--#echo var="api_key" -->" type="text/javascript"></script>
 
     <div id="searchmap">
     </div>

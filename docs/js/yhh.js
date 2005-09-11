@@ -181,10 +181,13 @@ function update_place_list() {
                 marker[m] = window.createPin(new GPoint(lng, lat), zoom, bubble)
                 map.addOverlay(marker[m])
             }
-            if (newhtml)
-                document.getElementById('list').innerHTML = newhtml
-            else
-                document.getElementById('list').innerHTML = '<p>None</p>'
+            d = document.getElementById('list')
+            if (d) {
+                if (newhtml)
+                    d.innerHTML = newhtml
+                else
+                    d.innerHTML = '<p>None</p>'
+            }
 	}
     }
     r.send(null)

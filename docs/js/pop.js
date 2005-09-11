@@ -259,8 +259,10 @@ function onLoad() {
 window.onload = onLoad
 
 function revert() {
+    if (!map) return true;
     remove_place_form();
     map.closeInfoWindow()
     map.resetCenterScreen()
     map.centerAndZoom(new GPoint(-4.218750, 54.724620), 12);
+    return false;
 }

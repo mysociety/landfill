@@ -4,15 +4,12 @@
 <!--#include virtual="/includes/header.shtml" -->
 
 <h2>Search results</h2>
-<h3 class="blue">Geo-search</h3>
-<!--#include virtual="/lookup.php?q=${QUERY_STRING}" -->
 <h3 class="blue">Entries</h3>
 <!--#include virtual="/cgi-bin/list.cgi?search=${QUERY_STRING}" -->
-
 </div>
 
 <div id="inputBox">
-<!--#include virtual="/geography/google/comments.shtml" -->
+    <div id="map"></div>               
 
 <h3 class="green">Email notification and RSS</h3>
 <p>If you would like to be notified of future posts containing
@@ -20,14 +17,6 @@ the keyword(s), then please <a href="/emailnotify/?<!--#echo var="QUERY_STRING"-
 <p>We also offer custom-tailored RSS feeds -
 <a href="/cgi-bin/rss.cgi?<!--#echo var="QUERY_STRING"-->">click here</a> to get
 download a live RSS feed of your keywords.</p>
-<!-- <h2>Search again</h2>
-
-<form method="get" action="/cgi-bin/search.cgi">
-			<input type="text" name="q" />
-			<input type="submit" value="Go" />
-</form>
-
--->
 
 <h4>Advanced Searchers</h4>
 <p>
@@ -37,18 +26,6 @@ download a live RSS feed of your keywords.</p>
 	will search for (one or two or (three and four) or five).
 </p>
 
-<!--#include virtual="/cgi-bin/list.cgi?type=summary&search=${QUERY_STRING}" -->
-
-
 <!--#include virtual="/includes/footer.shtml" -->
-<script type="text/javascript">
-        var searchmap = new GMap(document.getElementById('map'));
-        // searchmap.centerAndZoom(new GPoint(scx, scy), 4);
-	searchmap.centerAndZoom(new GPoint(-4.218750, 54.724620), 12);
-
-        searchmap.addControl(new GLargeMapControl());
-        searchmap.addControl(new GMapTypeControl());
-
-        <!--#include virtual="/cgi-bin/list-js.cgi?search=${QUERY_STRING}" -->
-
-</script>
+</body>
+</html>

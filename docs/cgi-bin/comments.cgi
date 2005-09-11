@@ -85,6 +85,9 @@ my %State; # State variables during display.
 	</small>
 	</dd>
 	</dl>
+<script type="text/javascript">
+var marker = []; marker[0] = createPin(new GPoint($result->{google_long}, $result->{google_lat}), 1, "")
+</script>
 EOfragment
 	if ($result->{commentcount} > 0) {print &show_comments();}
 }

@@ -5,6 +5,9 @@
 <!--#include virtual="/includes/description.shtml" -->
 </div>
 <div id="inputBox">
+
+<div id="search_results"></div>
+
 <div class="right">
     <h3 class="green">Recently Added Places</h3>
     <div id="list_of_places">
@@ -15,11 +18,5 @@
     <!--#include virtual="/cgi-bin/recentcomments.cgi?type=summary" -->
 </div>
 <!--#include virtual="/includes/footer.shtml" -->
-<script type="text/javascript">
-//<![CDATA[
-	<!--#include virtual="/geography/google/search.js" -->
-        <!--#include virtual="/cgi-bin/list-js.cgi" -->
-//]]>
-</script>
 </body>
 </html>

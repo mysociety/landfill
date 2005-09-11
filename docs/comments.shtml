@@ -2,20 +2,16 @@
 <!--#include virtual="/includes/header.shtml" -->
 <!--#include virtual="/includes/new-stage1.shtml" -->
 
-	<div id="search_container">
-	<h2>About This Place...</h2>
-	<!--#include virtual="/cgi-bin/comments.cgi?${QUERY_STRING}" -->
-		<!--#include virtual="/includes/commentform.shtml" -->
-	</div>
-	</div>
-	<div id="inputBox">
-            <!--#include virtual="/geography/google/comments.shtml" -->
-            <small>Accuracy currently around 150 yards</small>
-		<!--#include virtual="/includes/description.shtml" -->
-		<!--#include virtual="/includes/new-stage1.shtml" -->
-
-	<!--#include virtual="/includes/footer.shtml" -->
-
-	<script type="text/javascript">
-	<!--#include virtual="/geography/google/comments.js" -->
-	</script>
+<div id="search_container">
+    <h2>About This Place...</h2>
+    <!--#include virtual="/cgi-bin/comments.cgi?${QUERY_STRING}" -->
+    <!--#include virtual="/includes/commentform.shtml" -->
+</div>
+</div>
+<div id="inputBox">
+    <div id="map"></div>
+    <!--#include virtual="/includes/description.shtml" -->
+    <!--#include virtual="/includes/new-stage1.shtml" -->
+<!--#include virtual="/includes/footer.shtml" -->
+</body>
+</html>

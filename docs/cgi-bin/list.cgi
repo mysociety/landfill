@@ -8,6 +8,7 @@ use Date::Manip;
 use DBI;
 use HTML::Entities;
 use mysociety::NotApathetic::Config;
+use Text::Wrap;
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username; # database username
@@ -84,7 +85,7 @@ EOSQL
         my $printed = 0;
         $search_bit =~ s/\// /g;
         my $title;
-        my $pointindex=1;
+        my $pointindex=0;
         while ($result=$query->fetchrow_hashref) {
             if ($printed==0) {
                 $printed = 1;
@@ -108,6 +109,7 @@ EOSQL
 
             $title = encode_entities($result->{title}) || '&lt;No subject&gt;';
             $more_link= $result->{link};
+            my $zoomlevel = $result->{google_zoom} || 2;
             if ($type eq 'summary') {
                 print <<EOfragment;
 <li><a href="$url_prefix/comments?$result->{postid}">$title</a></li>
@@ -128,23 +130,24 @@ written $someday
 
 EOfragment
 
-                $title=~s#[\n]##mg;
-
+                $Text::Wrap::columns = 32;
+                $title = $result->{title} || '<No subject>';
+                $title =~ s/\s+/ /g;
+                $title = wrap('', '', $title);
+                $title = encode_entities($title);
+                $title =~ s/\n/<br>/g;
+                my $content = encode_entities($result->{shortwhy});
+                $content = fill('', '', $content);
+                $content =~ s/\r?\n/<br>/g;
+                if ($result->{why} ne $result->{shortwhy}) {
+                    $content .= " <a href=\\\"comments.shtml?$result->{postid}\\\">more</a>";
+                } else {
+                    $content .= "<br><a href=\\\"comments.shtml?$result->{postid}\\\">comment / permalink</a>";
+                }
+                my $bubble = "<b>$title</b><p>$content</p>";
                 $Js.=<<EOjs;
-    var point_$pointindex = new GPoint($result->{google_long}, $result->{google_lat});
-    var marker_$pointindex= new GMarker(point_$pointindex);
-    GEvent.addListener(marker_$pointindex, "click", function() {
-            document.location="http://www.yourhistoryhere.com/comments.shtml?$result->{postid}";
-            //marker_$pointindex.openInfoWindowHtml("<a href=\\"/comments.shtml?$result->{postid}\\" >$title</a>")
-            });
-    GEvent.bind(marker_$pointindex, "mouseover", function() {
-            marker_$pointindex.openInfoWindowHtml("<a href=\\"/comments.shtml?$result->{postid}\\" >$title</a>")
-            });
-    searchmap.addOverlay(marker_$pointindex);
-
+marker[$pointindex] = createPin(new GPoint($result->{google_long}, $result->{google_lat}), $zoomlevel, "$bubble")
 EOjs
-                #   // var listener_$pointindex = GEvent.addListener(point_$pointindex, "mouseover", searchmap.openInfoWindowHtml("<a href=\\"/comments.shtml?$result->{postid}\\" >$title</a><p>$result->{shortwhy}</p>") );
-                # // GEvent.removeListener(point_$pointindex, "mouseout", );
                 $pointindex++;
             }
         }
@@ -184,8 +187,10 @@ EOjs
         } elsif ($type eq 'details' && $search_bit ne '') {
             print "<p>Your search for " . $search_bit . " yielded no results.</p>";
         }
+        if ($type ne 'xml') {
+            print "<script type=\"text/javascript\"> var marker = []; $Js </script>";
+        }
     }
-            #print "<script type=\"text/javascript\">$Js</script>";
 }
 
 

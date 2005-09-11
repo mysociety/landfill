@@ -6,7 +6,7 @@
 -- Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 -- Email: francis@mysociety.org; WWW: http://www.mysociety.org/
 --
--- $Id: schema.sql,v 1.2 2005-09-09 09:03:08 danieljean Exp $
+-- $Id: schema.sql,v 1.3 2005-09-11 14:03:04 matthew Exp $
 --
 
 CREATE TABLE `comments` (
@@ -82,6 +82,7 @@ CREATE TABLE `posts` (
   `original_geography` varchar(255) NOT NULL default '',
   `google_long` varchar(30) default NULL,
   `google_lat` varchar(30) default NULL,
+  `google_zoom` tinyint(3) unsigned default NULL,
   `name` varchar(255) default NULL,
   `category` varchar(20) default NULL,
   `site` varchar(20) NOT NULL default 'missing',

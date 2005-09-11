@@ -238,10 +238,6 @@ function onLoad() {
         }
     });
 
-    /* Not perfect, but it'll do for now */
-    GEvent.addListener(map, 'moveend', keep_adding_pin);
-    GEvent.addListener(map, 'moveend', update_place_list);
-
     if (marker.length==1) {
         map.centerAndZoom(marker[0].point, marker[0].zoomlevel);
     } else {
@@ -251,6 +247,10 @@ function onLoad() {
         map.addOverlay(marker[p])
     if (marker.length==1)
         GEvent.trigger(marker[0], "click")
+
+    /* Not perfect, but it'll do for now */
+    GEvent.addListener(map, 'moveend', keep_adding_pin);
+    GEvent.addListener(map, 'moveend', update_place_list);
 
     d = document.getElementById('f')
     if (d)

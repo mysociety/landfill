@@ -20,12 +20,16 @@ our $url_prefix=$mysociety::NotApathetic::Config::url;
 my $Js='';
 
 {
+    my $type = param('type') || 'details';
     if (defined $ENV{REQUEST_METHOD}) {
-         print "Content-Type: text/html\n\n";
+        if ($type eq 'xml') {
+            print "Content-Type: application/xml\n\n";
+        } else {
+            print "Content-Type: text/html\n\n";
+        }
     }
 
     {
-        my $type = param('type') || 'details';
         my $search_bit = param('search') || '';
         my $page = param('page') || 0;
 	my $topleft_lat=param('topleft_lat');
@@ -46,7 +50,7 @@ my $Js='';
              $bottomright_lat=~ s#[^-\.\d]##g;
              $bottomright_long=~ s#[^-\.\d]##g;
                 $geog_limiter= <<EOSQL;
-        and google_lat >= $topleft_lat and google_lat <= $bottomright_lat
+        and google_lat <= $topleft_lat and google_lat >= $bottomright_lat
         and google_long >= $topleft_long and google_long <= $bottomright_long
 EOSQL
         }
@@ -81,19 +85,21 @@ EOSQL
         my $comments_html;
         my $show_link;
         my $more_link;
-			
         my $printed = 0;
         $search_bit =~ s/\// /g;
         my $title;
         my $pointindex=0;
+        my $new_html = '';
         while ($result=$query->fetchrow_hashref) {
             if ($printed==0) {
                 $printed = 1;
                 if ($type eq 'summary') {
                     print "<ul>\n";
-                } else {
-					print "<dl>\n";
-	        }
+                } elsif ($type eq 'details') {
+		    print "<dl>\n";
+	        } elsif ($type eq 'xml') {
+                    print "<results>\n";
+                }
                 if ($type eq 'details' && $search_bit ne '') {
         	    print '<p>Your search for "'.$search_bit.'" yielded the following results:</p>';
                 }
@@ -107,49 +113,39 @@ EOSQL
             #	$more_link= "comments?$result->{entryid}";
             #}
 
-            $title = encode_entities($result->{title}) || '&lt;No subject&gt;';
             $more_link= $result->{link};
+            $Text::Wrap::columns = 32;
+            my $bubble = $result->{title} || '<No subject>';
+            $bubble =~ s/\s+/ /g;
+            $bubble = wrap('', '', $bubble);
+            $bubble = encode_entities($bubble);
+            $bubble =~ s/\n/<br>/g;
+            my $content = encode_entities($result->{shortwhy});
+            $content = fill('', '', $content);
+            $content =~ s/\r?\n/<br>/g;
+            if ($result->{why} ne $result->{shortwhy}) {
+                $content .= " <a href=\"comments.shtml?$result->{postid}\">more</a>";
+            } else {
+                $content .= "<br><a href=\"comments.shtml?$result->{postid}\">comment / permalink</a>";
+            }
+            $bubble = "<b>$bubble</b><p>$content</p>";
             my $zoomlevel = $result->{google_zoom} || 2;
             if ($type eq 'summary') {
+                $title = encode_entities($result->{title}) || '&lt;No subject&gt;';
                 print <<EOfragment;
 <li><a href="$url_prefix/comments?$result->{postid}">$title</a></li>
 EOfragment
-            } else {
-                $someday = UnixDate($result->{posted}, "%E %b %Y");
-                my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';
-                print <<EOfragment;
-<dt><a href="$url_prefix/comments?$result->{postid}">$title</a></dt>
-<dd><p>$result->{shortwhy}</p>
-<small>
-written $someday 
-| <a href="$url_prefix/comments?$result->{postid}">read more</a> 
-| <a href="$url_prefix/comments?$result->{postid}\#comments">$result->{commentcount} $responses</a> 
-| <a href="/abuse/?postid=$result->{postid}">abusive?</a>
-</small>
-</dd>
-
-EOfragment
-
-                $Text::Wrap::columns = 32;
-                $title = $result->{title} || '<No subject>';
-                $title =~ s/\s+/ /g;
-                $title = wrap('', '', $title);
-                $title = encode_entities($title);
-                $title =~ s/\n/<br>/g;
-                my $content = encode_entities($result->{shortwhy});
-                $content = fill('', '', $content);
-                $content =~ s/\r?\n/<br>/g;
-                if ($result->{why} ne $result->{shortwhy}) {
-                    $content .= " <a href=\\\"comments.shtml?$result->{postid}\\\">more</a>";
-                } else {
-                    $content .= "<br><a href=\\\"comments.shtml?$result->{postid}\\\">comment / permalink</a>";
-                }
-                my $bubble = "<b>$title</b><p>$content</p>";
+            } elsif ($type eq 'details') {
+                print dt_entry($result, $pointindex);
+                $bubble =~ s/"/\\"/g;
                 $Js.=<<EOjs;
 marker[$pointindex] = createPin(new GPoint($result->{google_long}, $result->{google_lat}), $zoomlevel, "$bubble")
 EOjs
-                $pointindex++;
+            } elsif ($type eq 'xml') {
+                print '<result lat="'.$result->{google_lat}.'" lng="'.$result->{google_long}.'" zoom="'.$zoomlevel.'"><![CDATA['.$bubble.']]></result>';
+                $new_html .= dt_entry($result, $pointindex);
             }
+            $pointindex++;
         }
         if ($query->rows > 0) {
             my $url = '/older/';
@@ -162,13 +158,12 @@ EOjs
 			
 	    my $older = $page;
 
-
             if ($type eq 'summary') {
                 print "</ul>\n";
                 $older += $brief+1;
                 print "<p align=\"right\"><a href=\"$url$older\">Even older entries</a></p>";
-            } else {
-				print "</dl>\n";
+            } elsif ($type eq 'details') {
+		print "</dl>\n";
                 $older += 1;
                 my $newer = $page - 1;
                 print '<p align="center">';
@@ -183,16 +178,38 @@ EOjs
                 }
                 print '</p>';
 
+            } elsif ($type eq 'xml') {
+                print '<newhtml><![CDATA[<dl>'.$new_html.'</dl>]]></newhtml></results>';
             }
         } elsif ($type eq 'details' && $search_bit ne '') {
             print "<p>Your search for " . $search_bit . " yielded no results.</p>";
         }
         if ($type ne 'xml') {
-            print "<script type=\"text/javascript\"> var marker = []; $Js </script>";
+            print "<script type=\"text/javascript\"> var marker = [];\n$Js </script>";
         }
     }
 }
 
+sub dt_entry {
+    my ($result, $pointindex) = @_;
+    my $title = encode_entities($result->{title}) || '&lt;No subject&gt;';
+    my $someday = UnixDate($result->{posted}, "%E %b %Y");
+    my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';
+    my $name = encode_entities($result->{name});
+    my $out = <<EOfragment;
+    <dt><a href="$url_prefix/comments?$result->{postid}">$title</a></dt>
+<dd><p>$result->{shortwhy}</p>
+<small>
+written $someday by $name
+| <a href="$url_prefix/comments?$result->{postid}">read more</a> 
+| <a href="$url_prefix/comments?$result->{postid}\#comments">$result->{commentcount} $responses</a> 
+| <a href="/abuse/?postid=$result->{postid}">abusive?</a>
+</small>
+</dd>
+
+EOfragment
+    return $out;
+}
 
 sub handle_links {
 

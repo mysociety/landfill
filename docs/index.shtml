@@ -10,7 +10,7 @@
 
 <div class="right">
     <h3 class="green">Recently Added Places</h3>
-    <div id="list_of_places">
+    <div id="list">
 	<!--#include virtual="/cgi-bin/list.cgi?page=${QUERY_STRING}" -->
     </div>
 

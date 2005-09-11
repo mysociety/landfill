@@ -226,9 +226,10 @@ if (adding)
 /*
     // Not perfect, but it'll do for now
     GEvent.addListener(map, 'moveend', keep_adding_pin);
-    GEvent.addListener(map, 'moveend', update_place_list);
 */
-    if (typeof marker!=undefined && marker.length==1) {
+    GEvent.addListener(map, 'moveend', update_place_list);
+
+    if (marker.length==1) {
         map.centerAndZoom(marker[0].point, marker[0].zoomlevel);
     } else {
         map.centerAndZoom(new GPoint(-4.218750, 54.724620), 12);

@@ -132,11 +132,11 @@ EOfragment
                 $Js.=<<EOjs;
 marker[$pointindex] = createPin(new GPoint($result->{google_long}, $result->{google_lat}), $zoomlevel, "$bubble")
 EOjs
-                $pointindex++;
             } elsif ($type eq 'xml') {
                 print '<result lat="'.$result->{google_lat}.'" lng="'.$result->{google_long}.'" zoom="'.$zoomlevel.'"><![CDATA['.$bubble.']]></result>';
                 $new_html .= dt_entry($result, $wikiuri, $pointindex)
             }
+            $pointindex++;
         }
         if ($query->rows > 0) {
             my $url = '/older/';
@@ -157,7 +157,6 @@ EOjs
                 print "</dl>\n";
                 $older += 1;
                 my $newer = $page - 1;
-
                 print '<p align="center">';
                 if ($newer == 0) {
                     my $fronturl = ($search_bit ne '') ? '/oldersearch/'.$search_bit : '/';
@@ -177,11 +176,10 @@ EOjs
             print "<p>Your search for " . $search_bit . " yielded no results.</p>";
         }
         if ($type ne 'xml') {
-            print "<script type=\"text/javascript\"> var marker = [];\n".$Js.'</script>';
+            print "<script type=\"text/javascript\"> var marker = [];\n$Js </script>";
         }
     }
 }
-
 
 sub dt_entry {
     my ($result, $wikiuri, $pointindex) = @_;
@@ -203,6 +201,7 @@ added $someday by $name
 EOfragment
     return $out;
 }
+
 sub handle_links {
 
 	return '' if (defined $ENV{NO_COMMENTING});

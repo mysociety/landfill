@@ -65,33 +65,36 @@ function add_place(f) {
         lng = add_marker.point.x
         lat = add_marker.point.y
     }
+    title = f.title.value
     name = f.name.value
     email = f.email.value
-    title = f.q.value
+    emailalert = f.emailalert.checked
+    summary = f.summary.value
+    body = f.why.value
     zoom = map.getZoomLevel()
 
-    if (!name) { pass = false; field_error(f.name) } else field_unerror(f.name)
-    if (!email) { pass = false; field_error(f.email, 'emailerror', 'Please give an email address') } else field_unerror(f.email, 'emailerror')
-    if (!title) { pass = false; field_error(f.q, 'titleerror', 'Please give an article') } else field_unerror(f.q, 'titleerror')
+    if (!name) { pass = false; field_error(f.name, 'nameerror', 'Please give your name') } else field_unerror(f.name, 'nameerror')
+    if (!email) { pass = false; field_error(f.email, 'emailerror', 'Please give your email address') } else field_unerror(f.email, 'emailerror')
+    if (!title) { pass = false; field_error(f.title, 'titleerror', 'Please give a title') } else field_unerror(f.title, 'titleerror')
+    if (!summary) { pass = false; field_error(f.summary, 'summaryerror', 'Please give a summary') } else field_unerror(f.summary, 'summaryerror')
+    if (!body) { pass = false; field_error(f.why, 'bodyerror', 'Please give some text') } else field_unerror(f.why, 'bodyerror')
     if (!pass) return;
 
     document.getElementById('add_submit').value = 'Submitting...'
     var r = GXmlHttp.create();
-    url = "/cgi-bin/submit.cgi?name="+name+";email="+email+";title="+title+";lng="+lng+";lat="+lat+";zoom="+zoom
+    url = "/cgi-bin/submit.cgi?name="+name+";email="+email+";title="+title+";lng="+lng+";lat="+lat+";zoom="+zoom+";body="+body+";summary="+summary+";emailalert="+emailalert
     r.open("GET", url, true);
     r.onreadystatechange = function(){
         if (r.readyState == 4) {
             x = r.responseXML
-            document.getElementById('add_submit').value = 'Submit'
+            document.getElementById('add_submit').value = 'Add place'
             errors = x.getElementsByTagName('error')
             if (errors.length) {
                 form = document.getElementById('f')
                 for (e=0; e<errors.length; e++) {
                     field = errors[e].getAttribute('field')
                     error = GXml.value(errors[e])
-                    var errspan = ''
-                    if (field=='q') errspan = 'titleerror'
-                    if (field=='email') errspan = 'emailerror'
+                    var errspan = field + 'error'
                     field_error(form[field], errspan, error)
                 }
                 return;
@@ -178,7 +181,10 @@ function update_place_list() {
                 marker[m] = window.createPin(new GPoint(lng, lat), zoom, bubble)
                 map.addOverlay(marker[m])
             }
-            document.getElementById('list').innerHTML = newhtml
+            if (newhtml)
+                document.getElementById('list').innerHTML = newhtml
+            else
+                document.getElementById('list').innerHTML = '<p>None</p>'
 	}
     }
     r.send(null)
@@ -209,25 +215,18 @@ function onLoad() {
     map.addControl(new GMapTypeControl());
 //    map.setMapType( _HYBRID_TYPE );
 
-if (adding)
     GEvent.addListener(map, 'click', function(overlay, point) {
         if (!adding) return false
         if (overlay) return false
         else if (point) {
             var latLngStr =  "lat=" + point.y + "; long=" + point.x;
-            document.getElementById('where').innerHTML = latLngStr;
-            document.getElementById('location').value = latLngStr
+            document.getElementById('show_where').innerHTML = latLngStr;
             if (add_marker) map.removeOverlay(add_marker)
             add_marker = new GMarker(point, yellowPin)
             map.addOverlay(add_marker)
-//            keep_adding_pin()
+            keep_adding_pin()
         }
     });
-/*
-    // Not perfect, but it'll do for now
-    GEvent.addListener(map, 'moveend', keep_adding_pin);
-*/
-    GEvent.addListener(map, 'moveend', update_place_list);
 
     if (marker.length==1) {
         map.centerAndZoom(marker[0].point, marker[0].zoomlevel);
@@ -238,6 +237,10 @@ if (adding)
         map.addOverlay(marker[p])
     if (marker.length==1)
         GEvent.trigger(marker[0], "click")
+
+    // Not perfect, but it'll do for now
+    GEvent.addListener(map, 'moveend', keep_adding_pin);
+    GEvent.addListener(map, 'moveend', update_place_list);
 
     d = document.getElementById('f')
     if (d)

@@ -60,6 +60,7 @@ my %State; # State variables during display.
 	# $why =~ s/(\r?\n){2,}/</p> <p>/g;
         # $why =~ s/\r?\n/<br />/g;
 
+        my $zoomlevel = $result->{google_zoom} || 2;
 	print <<EOfragment;
 <!--
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -86,7 +87,7 @@ my %State; # State variables during display.
 	</dd>
 	</dl>
 <script type="text/javascript">
-var marker = []; marker[0] = createPin(new GPoint($result->{google_long}, $result->{google_lat}), 1, "")
+var marker = []; marker[0] = createPin(new GPoint($result->{google_long}, $result->{google_lat}), $zoomlevel, "")
 </script>
 EOfragment
 	if ($result->{commentcount} > 0) {print &show_comments();}

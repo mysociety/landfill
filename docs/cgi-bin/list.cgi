@@ -179,7 +179,8 @@ EOjs
                 print '</p>';
 
             } elsif ($type eq 'xml') {
-                print '<newhtml><![CDATA[<dl>'.$new_html.'</dl>]]></newhtml></results>';
+                $new_html = "<dl>$new_html</dl>" if ($new_html);
+                print '<newhtml><![CDATA['.$new_html.']]></newhtml></results>';
             }
         } elsif ($type eq 'details' && $search_bit ne '') {
             print "<p>Your search for " . $search_bit . " yielded no results.</p>";
@@ -200,7 +201,7 @@ sub dt_entry {
     <dt><a href="$url_prefix/comments?$result->{postid}">$title</a></dt>
 <dd><p>$result->{shortwhy}</p>
 <small>
-written $someday by $name
+added $someday by $name
 | <a href="$url_prefix/comments?$result->{postid}">read more</a> 
 | <a href="$url_prefix/comments?$result->{postid}\#comments">$result->{commentcount} $responses</a> 
 | <a href="/abuse/?postid=$result->{postid}">abusive?</a>

@@ -1,17 +1,17 @@
 <!--#include virtual="/includes/vars.shtml" -->
 <!--#include virtual="/includes/header.shtml" -->
-<!--#include virtual="/includes/new-stage1.shtml" -->
 
+    <div id="map"></div>
 <div id="search_container">
-    <h2>About This Place...</h2>
-    <!--#include virtual="/cgi-bin/comments.cgi?${QUERY_STRING}" -->
-    <!--#include virtual="/includes/commentform.shtml" -->
+    <!--#include virtual="/includes/description.shtml" -->
 </div>
 </div>
 <div id="inputBox">
-    <div id="map"></div>
-    <!--#include virtual="/includes/description.shtml" -->
-    <!--#include virtual="/includes/new-stage1.shtml" -->
+<div id="search_results"></div>
+<h3 class="blue">About This Place...</h3>
+<!--#include virtual="/cgi-bin/comments.cgi?${QUERY_STRING}" -->
+<!--#include virtual="/includes/commentform.shtml" -->
+<!--#include virtual="/includes/new-stage1.shtml" -->
 <!--#include virtual="/includes/footer.shtml" -->
 </body>
 </html>

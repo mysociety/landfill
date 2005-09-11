@@ -252,7 +252,7 @@ div#inputBox {
     margin:0;
 }
 #inputBox form{
-    margin:-0.5em 0 1em 0;
+/*    margin:-0.5em 0 1em 0; */
 }
 #inputBox a#bigBox{
 	display:block;
@@ -291,7 +291,7 @@ textarea:hover, textarea:focus {
 	text-decoration:none;
 }
 #inputBox input, #mainInput input{
-	margin:0 0 1em 0;
+	margin:0 0 0 0;
 }
 
 #main img{
@@ -325,9 +325,8 @@ p.left{text-align:left;}
 p.right{text-align:right;}
 
 p.enlarge{
-	margin:-0.5em 0 0 0;
+	margin: 0 0 0 0;
 	padding:0;
-	text-align:right;
 }
 
 dd div.trackback{
@@ -407,4 +406,13 @@ margin-top:0;
 
 .hidden {
         display:    none;
+}
+
+.error {
+    text-align: right;
+    color: #ff0000;
+    background-color: #ffffff;
+    display: block;
+}
+           
 }

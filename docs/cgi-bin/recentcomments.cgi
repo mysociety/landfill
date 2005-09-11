@@ -92,11 +92,11 @@ our $url_prefix=$mysociety::NotApathetic::Config::url;
             if ($printed==0) {
                 $printed = 1;
                 if ($type eq 'summary' || !$search_bit) {
-                    if ($page > 0 || $type eq 'summary') {
-                        print "<h2><a name=\"older\"></a>Recent <span>Comments</span>:</h2>\n";
-                    } else {
-                        print "<h2>Recent <span>comments</span></h2>\n";
-                    }
+#                    if ($page > 0 || $type eq 'summary') {
+#                        print "<h2><a name=\"older\"></a>Recent <span>Comments</span>:</h2>\n";
+#                    } else {
+#                        print "<h2>Recent <span>comments</span></h2>\n";
+#                    }
                 }
                 if ($type eq 'summary') {
                     print "<ul>\n";

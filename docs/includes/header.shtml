@@ -28,10 +28,10 @@
 </div>
 
 <ul class="nav">
-    <li id="add"><a title="Do you know something unusual about a place, building or street? Share it here, and can add more info." href="#" onclick="document.getElementById('search_container').className='hidden'; document.getElementById('hiddenadd').className='';">Add your place</a></li>
+    <li id="add"><a title="Do you know something unusual about a place, building or street? Share it here, and can add more info." href="#needsJS" onclick="add_place_form(); return false;">Add your place</a></li>
     <li id="random"><a href="/random">Random place</a></li>
     <li>
-        <form method="get" action="/cgi-bin/search.cgi" id="search">
+        <form onsubmit="search(this.q.value); return false;" method="get" action="" id="search">
             <fieldset>
                 <input type="text" name="q" id="q" size="20" value="Search" onclick="if (this.value=='Search') this.value='';" />
                 <input type="submit" value="Search" class="submit" id="Submit1" name="Submit1"/>
@@ -39,10 +39,11 @@
         </form>
     </li>
 </ul>
-
+<!--
     <p style="font-weight: bold; color: #332f5c;">
 	Do you know something unusual about a place, building or street?
         Some odd factoid, rumour or opinion? Share it here, and others will be able to comment, discuss and maybe even explain.
     </p>
+-->
 <div id="main">
 

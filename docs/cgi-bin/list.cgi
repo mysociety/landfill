@@ -120,7 +120,8 @@ EOSQL
             $bubble = encode_entities($bubble);
             $bubble =~ s/\n/<br>/g;
             $bubble = "<b>$bubble</b><p><a href=\"http://en.wikipedia.org/wiki/$wikiuri\">Wikipedia article</a></p>";
-            my $zoomlevel = $result->{google_zoom} || 2;
+            my $zoomlevel = $result->{google_zoom};
+            $zoomlevel = 2 unless defined($zoomlevel);
             if ($type eq 'summary') {
                 my $title = encode_entities($result->{title}) || '&lt;No subject&gt;';
                 print <<EOfragment;

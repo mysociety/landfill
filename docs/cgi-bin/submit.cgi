@@ -54,7 +54,7 @@ sub handle_comment {
 
     my $scrubber= HTML::Scrubber->new();
     $scrubber->allow(qw[em strong p br]);
-    $scrubber->allow('a' => 'href');
+    $scrubber->rules('a' => { href => 1 });
     $scrubber->comment(0);
 
     if (!$error) {

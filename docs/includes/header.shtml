@@ -28,7 +28,7 @@
 </div>
 
 <ul class="nav">
-    <li id="add"><a title="Do you know something unusual about a place, building or street? Share it here, and can add more info." href="#needsJS" onclick="add_place_form(); return false;">Add your place</a></li>
+    <li id="add"><a title="Do you know something unusual about a place, building or street? Share it here, and can add more info." href="/add" onclick="return add_place_form(0);">Add your place</a></li>
     <li id="random"><a href="/random">Random place</a></li>
     <li>
         <form onsubmit="search(this.q.value); return false;" method="get" action="" id="search">

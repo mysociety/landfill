@@ -30,8 +30,13 @@ my $Js='';
     }
 
     {
+        my $adding = 0;
         my $search_bit = param('search') || '';
         my $page = param('page') || 0;
+        if ($page eq 'add') {
+            $adding = 1;
+            $page = 0;
+        }
 	my $topleft_lat=param('topleft_lat');
 	my $topleft_long=param('topleft_long');
 	my $bottomright_lat=param('bottomright_lat');
@@ -186,7 +191,9 @@ EOjs
             print "<p>Your search for " . $search_bit . " yielded no results.</p>";
         }
         if ($type ne 'xml') {
-            print "<script type=\"text/javascript\"> var marker = [];\n$Js </script>";
+            print "<script type=\"text/javascript\"> var marker = [];\n$Js\n";
+            print "adding = 1\n" if ($adding);
+            print "</script>\n";
         }
     }
 }

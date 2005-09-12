@@ -36,7 +36,7 @@ Your Place to create a new place.</small>
 <p>Thanks for creating that entry - we've sent you an email to confirm your post.
 When you follow the link in that email, your post will appear.</p>
 <h4>If you do not follow the link, your message will not appear</h4>
-<p><a href="#needsJS" onclick="add_place_form(); return false;">Add another</a></p>
+<p><a href="#needsJS" onclick="add_place_form(0); return false;">Add another</a></p>
 </div>
 
 <!--#include virtual="/includes/footer.shtml" -->

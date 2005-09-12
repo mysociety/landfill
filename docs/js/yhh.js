@@ -22,14 +22,16 @@ function createPin(point, zoomLevel, text) {
     return m;
 }
 
-function add_place_form() {
-    if (adding) return
+function add_place_form(override) {
+    if (!document.getElementById('add_place')) return true;
+    if (adding && !override) return false
     adding = 1
     document.getElementById('recent_places').style.display='none';
     document.getElementById('add_success').style.display='none';
     document.getElementById('add_place').style.display='block';
     document.getElementById('where').style.display='block';
     if (add_marker) map.addOverlay(add_marker)
+    return false
 }
 
 function remove_place_form() {
@@ -249,6 +251,8 @@ function onLoad() {
     if (d)
         InstallAC(d,d.q,d.btnG,"/cgi-bin/suggest.cgi","en", true);
 
+    if (adding)
+        add_place_form(1);
 }
 window.onload = onLoad
 

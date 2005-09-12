@@ -60,7 +60,10 @@ my %State; # State variables during display.
 	# $why =~ s/(\r?\n){2,}/</p> <p>/g;
         # $why =~ s/\r?\n/<br />/g;
 
-        my $zoomlevel = $result->{google_zoom} || 2;
+        my $zoomlevel = $result->{google_zoom};
+        $zoomlevel = 2 unless defined($zoomlevel);
+        my $long = sprintf('%.5f', $result->{google_long});
+        my $lat = sprintf('%.5f', $result->{google_lat});
 	print <<EOfragment;
 <!--
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -81,8 +84,8 @@ my %State; # State variables during display.
 	<dt>$result->{title}</dt>
 	<dd><p>$why</p>
         <small>
-        Lat: <span id="google_lat">$result->{google_lat}</span> | Long: <span id="google_long">$result->{google_long}</span>
-        <br /> written on $someday by $result->{name} | <a href="../email/$result->{postid}">Email this to a friend</a> | <a href="/abuse/?postid=$result->{postid}">abusive?</a><br />
+Long. <span id="google_long">$long</span>, Lat. <span id="google_lat">$lat</span>
+| written on $someday by $result->{name} | <a href="../email/$result->{postid}">Email this to a friend</a> | <a href="/abuse/?postid=$result->{postid}">abusive?</a><br />
 	</small>
 	</dd>
 	</dl>

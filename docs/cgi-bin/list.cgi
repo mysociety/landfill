@@ -134,7 +134,8 @@ EOSQL
                 $content .= "<br><a href=\"comments.shtml?$result->{postid}\">comment / permalink</a>";
             }
             $bubble = "<b>$bubble</b><p>$content</p>";
-            my $zoomlevel = $result->{google_zoom} || 2;
+            my $zoomlevel = $result->{google_zoom};
+            $zoomlevel = 2 unless defined($zoomlevel);
             if ($type eq 'summary') {
                 $title = encode_entities($result->{title}) || '&lt;No subject&gt;';
                 print <<EOfragment;

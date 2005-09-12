@@ -4,7 +4,7 @@
     <p align="right"><a onclick="remove_place_form(); return false" href="#needsJS">Back to recent places</a></p>
     <p>To find a place on the map, either use the arrow and zoom controls, or enter a place name in the search box above. When you have found the rough area, click to put
     a yellow pin over the exact place, fill in the form below and click submit.</p>
-    <form method="post" onsubmit="add_place(this); return false;">
+    <form id="f" method="post" onsubmit="add_place(this); return false;">
         <fieldset>
             <label for="title">Title (1-4 words):</label>
             <input type="text" size="30" id="title" name="title" value="" />

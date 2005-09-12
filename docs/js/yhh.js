@@ -84,8 +84,9 @@ function add_place(f) {
 
     document.getElementById('add_submit').value = 'Submitting...'
     var r = GXmlHttp.create();
-    url = "/cgi-bin/submit.cgi?name="+name+";email="+email+";title="+title+";lng="+lng+";lat="+lat+";zoom="+zoom+";body="+body+";summary="+summary+";emailalert="+emailalert
-    r.open("GET", url, true);
+    url = "/cgi-bin/submit.cgi"
+    var post_data = "name="+name+";email="+email+";title="+title+";lng="+lng+";lat="+lat+";zoom="+zoom+";body="+body+";summary="+summary+";emailalert="+emailalert
+    r.open("POST", url, true);
     r.onreadystatechange = function(){
         if (r.readyState == 4) {
             x = r.responseXML
@@ -108,7 +109,7 @@ function add_place(f) {
             map.removeOverlay(add_marker)
         }
     }
-    r.send(null);
+    r.send(post_data);
 }
 
 function search(s) {
@@ -247,9 +248,9 @@ function onLoad() {
     GEvent.addListener(map, 'moveend', keep_adding_pin);
     GEvent.addListener(map, 'moveend', update_place_list);
 
-    d = document.getElementById('f')
-    if (d)
-        InstallAC(d,d.q,d.btnG,"/cgi-bin/suggest.cgi","en", true);
+//    d = document.getElementById('f')
+//    if (d)
+//        InstallAC(d,d.q,d.btnG,"/cgi-bin/suggest.cgi","en", true);
 
     if (adding)
         add_place_form(1);

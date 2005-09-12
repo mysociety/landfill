@@ -74,8 +74,9 @@ function add_place(f) {
 
     document.getElementById('add_submit').value = 'Submitting...'
     var r = GXmlHttp.create();
-    url = "/cgi-bin/submit.cgi?name="+name+";email="+email+";title="+title+";lng="+lng+";lat="+lat+";zoom="+zoom
-    r.open("GET", url, true);
+    url = "/cgi-bin/submit.cgi"
+    var post_data = "name="+name+";email="+email+";title="+title+";lng="+lng+";lat="+lat+";zoom="+zoom
+    r.open("POST", url, true);
     r.onreadystatechange = function(){
         if (r.readyState == 4) {
             x = r.responseXML
@@ -100,7 +101,7 @@ function add_place(f) {
             map.removeOverlay(add_marker)
         }
     }
-    r.send(null);
+    r.send(post_data);
 }
 
 function search(s) {

@@ -51,6 +51,7 @@ sub handle_comment {
 	$Passed_Values{text} =~ s#<\s*a\s+#<a rel="nofollow" #g;
 	my $scrubber= HTML::Scrubber->new();
 	$scrubber->allow(qw[a em strike cite strong p br]);
+        $scrubber->rules(a => { href => 1 });
 	$scrubber->comment(0);
 	$Passed_Values{text}= $scrubber->scrub($Passed_Values{text});
         $Passed_Values{text} =~ s/[\x80-\x9f]//g;

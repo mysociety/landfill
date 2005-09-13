@@ -9,6 +9,7 @@ use mySociety::Config;
 BEGIN {
     mySociety::Config::set_file("$FindBin::Bin/../../conf/general");
 }
+use LWP::Simple;
 use PoP;
 use HTML::Entities;
 use HTML::Scrubber;
@@ -56,8 +57,27 @@ sub handle_comment {
     $query->execute($wikititle);
     my($cur_text) = $query->fetchrow_array;
     if (!$cur_text) {
-        $error = 1;
-        error('q', 'Wikipedia article doesn\'t exist');
+        # Try grabbing the page from Wikipedia instead.
+        my $t = $wikititle;
+        $t =~ s/ /_/g;
+        $t =~ s/([^A-Za-z0-9_])/sprintf('%%%02x', ord($1))/ge;
+        my $url = "http://en.wikipedia.org/wiki/$t";
+        eval {
+            local $SIG{ALRM} = sub { die "alarm\n"; };
+            alarm(10);
+            my @x = head($url);
+            alarm(0);
+            if (!@x) {
+                $error = 1;
+                error('q', "Wikipedia article doesn't exist");
+            }
+        };
+
+        if ($@) {
+            die "$@ in eval" unless ($@) eq "alarm\n";
+            $error = 1;
+            error('q', "Timed out looking up article title on Wikipedia");
+        }
     }
 #    $Passed_Values{why} = $cur_text;
  

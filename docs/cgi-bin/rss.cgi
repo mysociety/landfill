@@ -26,6 +26,22 @@ my $search_term = &handle_search_term(); #' 1 = 1 ';
 
 {
         print "Content-Type: text/xml\r\n\r\n";
+	my $topleft_lat=param('topleft_lat');
+	my $topleft_long=param('topleft_long');
+	my $bottomright_lat=param('bottomright_lat');
+	my $bottomright_long=param('bottomright_long');
+	my $geog_limiter='';
+        if ( defined($topleft_lat) and defined($topleft_long) and
+             defined($bottomright_lat) and defined($bottomright_long)) {
+             $topleft_lat=~ s#[^-\.\d]##g;
+             $topleft_long=~ s#[^-\.\d]##g;
+             $bottomright_lat=~ s#[^-\.\d]##g;
+             $bottomright_long=~ s#[^-\.\d]##g;
+                $geog_limiter= <<EOSQL;
+        and google_lat <= $topleft_lat and google_lat >= $bottomright_lat
+        and google_long >= $topleft_long and google_long <= $bottomright_long
+EOSQL
+        }
 	my $query=$dbh->prepare("
 	              select postid,
 			     posts.title as title,
@@ -37,6 +53,7 @@ my $search_term = &handle_search_term(); #' 1 = 1 ';
                          and hidden=0
                          and site='$site_name'
 			     $search_term
+                             $geog_limiter
 		    order by posted
 			desc limit 50
 		       "); # XXX order by first_seen needs to change

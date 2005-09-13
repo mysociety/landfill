@@ -9,12 +9,14 @@ use mySociety::Config;
 BEGIN {
     mySociety::Config::set_file("$FindBin::Bin/../../conf/general");
 }
-use LWP::Simple;
+use LWP::Simple qw($ua);
 use PoP;
 use HTML::Entities;
 use HTML::Scrubber;
 use Email::Valid;
 use CGI qw/param/;
+
+$ua->agent("Placeopedia, checking for article");
 
 my $url_prefix= mySociety::Config::get('URL');
 my $site_name= mySociety::Config::get('SITE_NAME');
@@ -64,8 +66,8 @@ sub handle_comment {
         my $url = "http://en.wikipedia.org/wiki/$t";
         eval {
             local $SIG{ALRM} = sub { die "alarm\n"; };
-            alarm(10);
-            my @x = head($url);
+            alarm(30);
+            my @x = LWP::Simple::head($url);
             alarm(0);
             if (!@x) {
                 $error = 1;

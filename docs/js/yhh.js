@@ -87,6 +87,7 @@ function add_place(f) {
     url = "/cgi-bin/submit.cgi"
     var post_data = "name="+name+";email="+email+";title="+title+";lng="+lng+";lat="+lat+";zoom="+zoom+";body="+body+";summary="+summary+";emailalert="+emailalert
     r.open("POST", url, true);
+    r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
     r.onreadystatechange = function(){
         if (r.readyState == 4) {
             x = r.responseXML

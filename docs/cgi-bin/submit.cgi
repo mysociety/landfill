@@ -123,7 +123,7 @@ sub send_email {
 
     $headers{"Subject"}= "Request to post to $site_name";
     $headers{"To"}= "$name <$address>" ;
-    $headers{'From'}= "$site_name <team$email_domain>";
+    $headers{'From'}= "\"$site_name\" <team$email_domain>";
     $headers{"X-Originating-IP"}= $ENV{'HTTP_X_FORWARDED_FOR'}  || $ENV{'REMOTE_ADDR'} || return;
     $mailer->open(\%headers);
 

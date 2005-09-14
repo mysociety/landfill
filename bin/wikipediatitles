@@ -11,7 +11,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: wikipediatitles,v 1.3 2005-09-14 14:36:35 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: wikipediatitles,v 1.4 2005-09-14 23:44:24 chris Exp $';
 
 use strict;
 require 5.8.0;
@@ -94,7 +94,7 @@ my $x = new XML::Parser(
                 }
         });
 
-$x->parse(\*STDIN, ProtocolEncoding => 'UTF-16');
+$x->parse(\*STDIN, ProtocolEncoding => 'UTF-8');
 print STDERR "\n";
 
 print STDERR "deleting old articles... ";

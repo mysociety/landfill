@@ -17,11 +17,12 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: ghastly-wikipedia-unicode-filter,v 1.2 2005-09-14 00:00:12 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: ghastly-wikipedia-unicode-filter,v 1.3 2005-09-14 23:44:03 chris Exp $';
 
 use strict;
 require 5.8.0;
 
+use Text::Iconv;    # would use Encode, but it doesn't support UTF-16
 use utf8;
 no warnings 'utf8';
 
@@ -41,13 +42,21 @@ sub utf8bytesof ($) {
     return $char;
 }
 
+Text::Iconv->raise_error(1);
+my $i = new Text::Iconv('UTF-8', 'UCS-4');
+my $j = new Text::Iconv('UCS-4', 'UTF-8');
+
 my $n = 0;
 while (defined($_ = <STDIN>)) {
     ++$n;
     # $_ is now bytes
     # convert &#x....; into their UTF-8 byte sequence equivalents
     $_ =~ s/&#x(....);/utf8bytesof(hex($1))/ge;
-    utf8::decode($_) or die "bad input at line $n";
-    print $_;
+#    utf8::decode($_);
+#    s/[^\x{0000}-\x{8000}]/?/g;
+
+    print $j->convert($i->convert($_));
+
+#    print $_;
 }
 

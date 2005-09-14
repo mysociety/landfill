@@ -1,8 +1,8 @@
 #!/usr/bin/perl -w
 #
 # ghastly-wikipedia-unicode-filter:
-# Absolutely disgusting filter to undo some XML madness in the Wikipedia XML
-# dump files.
+# Absolutely disgusting filter to undo some Unicode madness in the Wikipedia
+# XML dump files.
 #
 # Stop! Stop! It is burning my eyes! The issue here is that the Wikipedia XML
 # dumps include surrogate pairs, even though these should only appear in UTF-16
@@ -17,7 +17,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: ghastly-wikipedia-unicode-filter,v 1.1 2005-09-13 23:58:49 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: ghastly-wikipedia-unicode-filter,v 1.2 2005-09-14 00:00:12 chris Exp $';
 
 use strict;
 require 5.8.0;

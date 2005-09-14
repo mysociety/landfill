@@ -32,11 +32,9 @@ our $url_prefix=mySociety::Config::get('URL');
 	$q_entry =~ tr/;/?/;
 	$q_entry = $dbh->quote($q_entry . '%');
         my $query=$dbh->prepare("
-                          select cur_title
-                            from cur
-                           where cur_title like $q_entry
-                             and cur_namespace = 0
-                             and cur_is_redirect = 0
+                          select title
+                            from wikipedia_article
+                           where title like $q_entry
                            limit 10
                            ");
         $query->execute();

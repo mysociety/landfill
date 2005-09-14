@@ -54,11 +54,7 @@ sub handle_comment {
     $scrubber->comment(0);
 
     my $wikititle = $Passed_Values{'title'};
-    $wikititle =~ s/ /_/g;
-    my $query= $dbh->prepare ("select cur_text from cur where cur_title = ? and cur_namespace = 0 and cur_is_redirect = 0 limit 1");
-    $query->execute($wikititle);
-    my($cur_text) = $query->fetchrow_array;
-    if (!$cur_text) {
+    if (!defined($dbh->selectrow_array('select generation from wikipedia_article where title = ?', {}, $wikititle))) {
         # Try grabbing the page from Wikipedia instead.
         my $t = $wikititle;
         $t =~ s/ /_/g;

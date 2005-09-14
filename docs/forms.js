@@ -66,3 +66,21 @@ function growTextarea(id) {
         if (d && d.innerHTML) d.innerHTML = 'Still want more space to write in?';
     }
 }
+
+//added a variable to be explicit and avoid undefined errors
+var inAddMode = false;
+function toggleAdd() {
+    searchDiv = document.getElementById('searchinstructions');
+    addDiv    = document.getElementById('addform');
+
+    if (inAddMode) {
+        searchDiv.style.display = "block";
+        addDiv.style.display = "none";
+        inAddMode = false;
+    }
+    else {
+        searchDiv.style.display = "none";
+        addDiv.style.display = "block";
+        inAddMode = true;
+    }
+}

@@ -7,7 +7,7 @@
 -- Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 -- Email: matthew@mysociety.org; WWW: http://www.mysociety.org/
 --
--- $Id: schema.sql,v 1.2 2005-09-14 00:13:23 chris Exp $
+-- $Id: schema.sql,v 1.3 2005-09-14 00:16:15 chris Exp $
 --
 
 CREATE TABLE `comments` (
@@ -91,7 +91,13 @@ CREATE TABLE `posts` (
   KEY `site` (`site`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-create table wikipedia_article ( title text not null ) charset 'UTF8';
-create index wikipedia_article_title_idx on wikipedia_article(title(256));
+-- Index of Wikipedia article titles. Generation is used to drop articles which
+-- cease to exist.
+create table wikipedia_article (
+    title text not null,
+    generation integer not null
+) charset 'UTF8';
 
+create index wikipedia_article_title_idx on wikipedia_article(title(256));
+create index wikipedia_article_generation_idx on wikipedia_article(generation);
 

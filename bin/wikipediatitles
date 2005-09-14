@@ -1,23 +1,61 @@
 #!/usr/bin/perl -w
 #
 # wikipediatitles:
-# Extract titles from the Wikipedia XML dump.
+# Extract titles from the Wikipedia XML dump and store them in the POP
+# database.
+#
+# This doesn't really parse the dump properly, but does an acceptable job
+# under the assumption that it's well-formed.
 #
 # Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: wikipediatitles,v 1.1 2005-09-13 23:58:49 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: wikipediatitles,v 1.2 2005-09-14 00:42:17 chris Exp $';
 
 use strict;
+
+use FindBin;
+use lib "$FindBin::Bin/../perllib";
+use lib "$FindBin::Bin/../../perllib";
+use lib "$FindBin::Bin/../../../perllib";
+use mySociety::Config;
+BEGIN {
+    mySociety::Config::set_file("$FindBin::Bin/../conf/general");
+}
 
 use IO::Handle;
 use XML::Parser;
 
-binmode(STDIN, ':bytes');
+use PoP;
+$dbh->{RaiseError} = 1;
+$dbh->do("set character set 'utf8'");
 
+my $new_generation = $dbh->selectrow_array('select max(generation) from wikipedia_article');
+$new_generation ||= 0;
+++$new_generation;
+printf STDERR "new articles will be inserted as generation %d\n", $new_generation;
+
+# store_title TITLE
+# Record the existence of article TITLE in the database.
+sub store_title ($) {
+    my $title = shift;
+    if ($dbh->do('update wikipedia_article set generation = ? where title = ?', {}, $new_generation, $title) == 0) {
+        $dbh->do('insert into wikipedia_article (title, generation) values (?, ?)', {}, $title, $new_generation);
+    }
+}
+
+binmode(STDIN, ':bytes');
+binmode(STDOUT, ':utf8');
+
+my $in_text = 0;
 my $in_title = 0;
 my $title = '';
+my $text = '';
+
+my ($narticles, $nredirects) = (0, 0);
+my ($lastreport, $lastbytes) = (0, 0);
+
 
 my $x = new XML::Parser(
             Style => 'Stream',
@@ -25,20 +63,39 @@ my $x = new XML::Parser(
                 Start => sub ($$%) {
                     my ($x, $tag, %h) = @_;
                     $in_title = 1 if ($tag eq 'title');
+                    $in_text = 1 if ($tag eq 'text');
                 },
                 Char => sub ($$) {
                     my ($x, $str) = @_;
                     $title .= $str if ($in_title);
+                    $text .= $str if ($in_text);
                 },
                 End => sub ($$) {
                     my ($x, $tag) = @_;
-                    if ($tag eq 'title') {
-                        $in_title = 0;
-                        print "$title\n";
-                        $title = '';
+                    $in_title = 0 if ($tag eq 'title');
+                    $in_text = 0 if ($tag eq 'text');
+
+                    if ($tag eq 'page') {
+                        if ($text !~ /^#REDIRECT /) {
+                            store_title($title);
+                            ++$narticles;
+                        } else {
+                            ++$nredirects;
+                        }
+                        $title = $text = '';
+
+                        if (time() > $lastreport + 5) {
+                            printf STDERR "\rParsed %.1fMB (%.1fMB/s): %d articles stored, %d redirects ignored", $x->current_byte() / (1024. * 1024.), ($x->current_byte() - $lastbytes) / (1024. * 1024. * (time() - $lastreport)), $narticles, $nredirects;
+                            $lastreport = time();
+                            $lastbytes = $x->current_byte();
+                        }
                     }
                 }
         });
 
 $x->parse(\*STDIN, ProtocolEncoding => 'UTF-16');
+print STDERR "\n";
 
+print STDERR "deleting old articles... ";
+$dbh->do('delete from wikipedia_article where generation < ?', {}, $new_generation);
+print STDERR "done\n";

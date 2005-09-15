@@ -151,7 +151,7 @@ function search(s) {
 // Auto complete stuff
 function sf(){document.f.q.focus();}
 function rwt(el,ct,cd,sg){
-    el.href="/cgi-bin/suggest.cgi?url="+escape(el.href).replace(/\+/g,"%2B")+"&sg="+sg;
+    el.href="/cgi-bin/suggest.fcg?url="+escape(el.href).replace(/\+/g,"%2B")+"&sg="+sg;
     el.onmousedown="";
     return true;
 }
@@ -256,7 +256,7 @@ function onLoad() {
 
     d = document.getElementById('f')
     if (d)
-        InstallAC(d,d.q,d.btnG,"/cgi-bin/suggest.cgi","en", true);
+        InstallAC(d,d.q,d.btnG,"/cgi-bin/suggest.fcg","en", true);
 }
 window.onload = onLoad
 

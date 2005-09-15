@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: load_wikipedia_article_titles,v 1.1 2005-09-15 10:36:57 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: load_wikipedia_article_titles,v 1.2 2005-09-15 10:39:28 chris Exp $';
 
 use strict;
 require 5.8.0;
@@ -68,18 +68,19 @@ debug "inserting articles at generation $gen\n";
 # skip header line
 $p->getline();
 
-my $n = 0;
+my ($n, $nnew) = (0, 0);
 
 while (defined(my $line = $p->getline())) {
     ++$n;
-    debug "\rprocessed $n articles" if (0 == ($n % 100));
+    debug "\rprocessed $n articles ($nnew new)" if (0 == ($n % 100));
     chomp($line);
     if ($dbh->do('update wikipedia_article set generation = ? where title = ?', {}, $gen, $line) == 0) {
         $dbh->do('insert into wikipedia_article (title, generation) values (?, ?)', {}, $line, $gen);
+        ++$nnew;
     }
 }
 
-debug "\rprocessed $n articles\n";
+debug "\rprocessed $n articles ($nnew new)\n";
 
 if ($p->error()) {
     die "read from pipe: $!";

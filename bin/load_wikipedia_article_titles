@@ -1,0 +1,98 @@
+#!/usr/bin/perl -w
+#
+# load_wikipedia_article_titles:
+# Grab latest article title list from Wikipedia and insert it into our
+# database.
+#
+# Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
+# Email: chris@mysociety.org; WWW: http://www.mysociety.org/
+#
+
+my $rcsid = ''; $rcsid .= '$Id: load_wikipedia_article_titles,v 1.1 2005-09-15 10:36:57 chris Exp $';
+
+use strict;
+require 5.8.0;
+
+use FindBin;
+use lib "$FindBin::Bin/../perllib";
+use lib "$FindBin::Bin/../../perllib";
+use lib "$FindBin::Bin/../../../perllib";
+use mySociety::Config;
+BEGIN {
+    mySociety::Config::set_file("$FindBin::Bin/../conf/general");
+}
+
+use IO::Pipe;
+use POSIX;
+use XML::Parser;
+
+if (-t STDERR) {
+    sub debug (@) { print STDERR @_; }
+} else {
+    sub debug (@) { }
+}
+
+use PoP;
+$dbh->{RaiseError} = 1;
+$dbh->do("set character set 'utf8'");
+
+my $url = "http://download.wikimedia.org/wikipedia/en/all_titles_in_ns0.gz";
+
+my $p = new IO::Pipe();
+
+debug "launching HTTP process... ";
+my $childpid = fork();
+if ($childpid == 0) {
+    $p->writer();
+    POSIX::close(1);
+    POSIX::dup($p->fileno());
+        # XXX what about any Unicode nonsense?
+    exec('/bin/sh', '-c', "fetch -q -o- '$url' | zcat");
+    exit(255);
+}
+debug "done\n";
+
+$p->reader();
+binmode($p, ':utf8');
+
+# find generation number at which to insert new articles
+my $gen = $dbh->selectrow_array('select max(generation) from wikipedia_article');
+if (defined($gen)) {
+    $gen = 1;
+} else {
+    ++$gen;
+}
+
+debug "inserting articles at generation $gen\n";
+
+# skip header line
+$p->getline();
+
+my $n = 0;
+
+while (defined(my $line = $p->getline())) {
+    ++$n;
+    debug "\rprocessed $n articles" if (0 == ($n % 100));
+    chomp($line);
+    if ($dbh->do('update wikipedia_article set generation = ? where title = ?', {}, $gen, $line) == 0) {
+        $dbh->do('insert into wikipedia_article (title, generation) values (?, ?)', {}, $line, $gen);
+    }
+}
+
+debug "\rprocessed $n articles\n";
+
+if ($p->error()) {
+    die "read from pipe: $!";
+} else {
+    wait();
+    if ($? & 127) {
+        die "child process died with signal " . ($? & 127);
+    } elsif ($?) {
+        die "child process exited with error status " . ($? >> 8);
+    }
+}
+
+debug "deleting old articles... ";
+$dbh->do('delete from wikipedia_article where generation < ?', {}, $gen);
+debug "done\n";
+

@@ -3,7 +3,7 @@
 # suggest.cgi:
 # Server side of the suggest-article-titles interface.
 #
-# $Id: suggest.cgi,v 1.10 2005-09-15 10:59:24 chris Exp $
+# $Id: suggest.cgi,v 1.11 2005-09-15 11:23:24 matthew Exp $
 #
 
 use strict;
@@ -17,7 +17,7 @@ BEGIN {
     mySociety::Config::set_file("$FindBin::Bin/../../conf/general");
 }
 
-use CGI;
+use CGI::Fast;
 
 use PoP;
 $dbh->{RaiseError} = 1;
@@ -28,9 +28,7 @@ binmode(STDOUT, ':utf8');
 my $site_name= mySociety::Config::get('SITE_NAME');
 our $url_prefix=mySociety::Config::get('URL');
 
-my $q = new CGI();
-
-{
+while (my $q = new CGI::Fast()) {
     my $res = '';
     my $entry = $q->param('qu') || 'West';
     if ($entry) {

@@ -70,17 +70,23 @@ function growTextarea(id) {
 //added a variable to be explicit and avoid undefined errors
 var inAddMode = false;
 function toggleAdd() {
-    searchDiv = document.getElementById('searchinstructions');
-    addDiv    = document.getElementById('addform');
+    searchDiv     = document.getElementById('searchinstructions');
+    addInstrDiv   = document.getElementById('addinstructions');
+    addDiv        = document.getElementById('addform');
+    resultsDiv    = document.getElementById('recent_places');
 
     if (inAddMode) {
         searchDiv.style.display = "block";
         addDiv.style.display = "none";
-        inAddMode = false;
+        addInstrDiv.style.display = "none";
+        resultsDiv.style.display = "block";
+        inAddMode = false;        
     }
     else {
         searchDiv.style.display = "none";
         addDiv.style.display = "block";
+        addInstrDiv.style.display = "block";
+        resultsDiv.style.display = "none";          
         inAddMode = true;
     }
 }

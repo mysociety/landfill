@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: load_wikipedia_article_titles,v 1.2 2005-09-15 10:39:28 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: load_wikipedia_article_titles,v 1.3 2005-09-15 11:05:11 chris Exp $';
 
 use strict;
 require 5.8.0;
@@ -26,10 +26,12 @@ use IO::Pipe;
 use POSIX;
 use XML::Parser;
 
+sub debug (@);
+
 if (-t STDERR) {
-    sub debug (@) { print STDERR @_; }
+    eval 'sub debug (@) { print STDERR @_; }';
 } else {
-    sub debug (@) { }
+    eval 'sub debug (@) { }';
 }
 
 use PoP;
@@ -58,9 +60,9 @@ binmode($p, ':utf8');
 # find generation number at which to insert new articles
 my $gen = $dbh->selectrow_array('select max(generation) from wikipedia_article');
 if (defined($gen)) {
-    $gen = 1;
-} else {
     ++$gen;
+} else {
+    $gen = 1;
 }
 
 debug "inserting articles at generation $gen\n";

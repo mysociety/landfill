@@ -6,6 +6,7 @@ use DBI;
 use HTML::Entities;
 use XML::Simple;
 use mysociety::NotApathetic::Config;
+use CGI qw/param/;
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
@@ -31,9 +32,10 @@ my $search_term = &handle_search_term(); #' 1 = 1 ';
              $bottomright_lat=~ s#[^-\.\d]##g;
              $bottomright_long=~ s#[^-\.\d]##g;
                 $geog_limiter= <<EOSQL;
-        and google_lat >= $topleft_lat and google_lat <= $bottomright_lat
+        and google_lat <= $topleft_lat and google_lat >= $bottomright_lat
         and google_long >= $topleft_long and google_long <= $bottomright_long
 EOSQL
+        }
 	my $query=$dbh->prepare("
 	              select postid, why, posted,title,commentcount,google_lat, google_long
 			from posts

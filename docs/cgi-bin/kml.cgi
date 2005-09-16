@@ -17,10 +17,7 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 my %State; # State variables during display.
 my $search_term = &handle_search_term(); #' 1 = 1 ';
 
-my $topleft_lat=param('topleft_lat');
-my $topleft_long=param('topleft_long');
-my $bottomright_lat=param('bottomright_lat');
-my $bottomright_long=param('bottomright_long');
+my ($topleft_long, $bottomright_lat, $bottomright_long, $topleft_lat) = param('BBOX');
 my $limiter='';
 
 {
@@ -34,7 +31,7 @@ my $limiter='';
 	     $bottomright_lat=~ s#[^-\.\d]##g;
 	     $bottomright_long=~ s#[^-\.\d]##g;
 		$limiter= <<EOSQL;
-	and google_lat >= $topleft_lat and google_lat <= $bottomright_lat
+	and google_lat <= $topleft_lat and google_lat >= $bottomright_lat
 	and google_long >= $topleft_long and google_long <= $bottomright_long
 EOSQL
 	}
@@ -79,7 +76,7 @@ EOSQL
 
 
 sub handle_search_term {
-	my $search_path= $ENV{"QUERY_STRING"} || '';
+	my $search_path= param('q') || '';
 	my @search_fields= ('posts.region',
 			    'posts.why',
 			    'posts.title'

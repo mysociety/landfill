@@ -14,14 +14,13 @@ my $db_password= $mysociety::NotApathetic::Config::db_password;         # databa
 my $site_name= $mysociety::NotApathetic::Config::site_name;
 
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
-my %State; # State variables during display.
 my $search_term = &handle_search_term(); #' 1 = 1 ';
 
-my ($topleft_long, $bottomright_lat, $bottomright_long, $topleft_lat) = param('BBOX');
+my ($topleft_long,$bottomright_lat,$bottomright_long,$topleft_lat) = split(/,/, param('BBOX')) if (defined(param('BBOX')));
 my $limiter='';
 
 {
-        print "Content-Type: text/xml\r\n\r\n";
+        print "Content-Type: application/vnd.google-earth.kml+xml\r\n\r\n";
 
 
 	if ( defined($topleft_lat) and defined($topleft_long) and
@@ -45,17 +44,18 @@ EOSQL
 			     $search_term
 			     $limiter
 		    order by posted
-			     desc limit 25
+			     desc limit 50
 		       "); # XXX order by first_seen needs to change
 
 
 	$query->execute;
 	my $result;
 	my $results;
-        print '<kml xmlns="http://earth.google.com/kml/2.0">' . "\r\n\r\n";
+        print '<?xml version="1.0" encoding="UTF-8"?>'."\n".'<kml xmlns="http://earth.google.com/kml/2.0">' . "\n<Folder><name>Latest entries on YourHistoryHere</name><description>The 50 latest additions to yourhistoryhere.com</description>\n";
 	while ($result=$query->fetchrow_hashref() ) {
+            my $shortwhy = $result->{shortwhy} || '';
 		print "<Placemark>\n";
-		print "\t<description><![CDATA[$result->{shortwhy} <a href=\"/comments?$result->{postid}\">more</a>.]]></description>\n";
+		print "\t<description><![CDATA[$shortwhy <a href=\"/comments?$result->{postid}\">more</a>.]]></description>\n";
 		print "\t<name>$result->{title}</name>\n";
 		print "\t<LookAt>\n";
 		print "\t\t<longitude>$result->{google_long}</longitude>\n";
@@ -64,13 +64,12 @@ EOSQL
 		print "\t\t<tilt>0</tilt>\n";
 		print "\t\t<heading>3</heading>\n";
 		print "\t</LookAt>\n";
-                #print "\t<Point>\n";
-                #print "\t\t<coordinates>$result->{google_long},$result->{google_lat},0</coordinates>\n";
-                #print "\t</Point>\n";
+                print "\t<Point>\n";
+                print "\t\t<coordinates>$result->{google_long},$result->{google_lat},0</coordinates>\n";
+                print "\t</Point>\n";
 		print "</Placemark>\n";
-	
 	}
-	print "</kml>\n\n";
+	print "</Folder>\n</kml>\n";
 }
 
 

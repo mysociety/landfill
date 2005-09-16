@@ -123,7 +123,7 @@ sub date_header {
 
 
 sub handle_search_term {
-	my $search_path= $ENV{"QUERY_STRING"};
+	my $search_path= param('q') || '';
 	my @search_fields= ('posts.why', 
 			    'posts.title');
 	return ('') if ($search_path eq '');

@@ -10,32 +10,28 @@
 	for reuse. 
 </p>
 
-<h4>Get posts out</h4>
-<p>
-    All post data is <a href="/cgi-bin/postsxml.cgi">available via xml</a>. We 
-    also have a <a href="/cgi-bin/kml.cgi/yourhistoryhere.kml">KML</a> file for use with Google Earth. Both these only show the most recent 25 additions.
-	<br />
+<h3 class="blue">Google Earth</h3>
+<p>To add YourHistoryHere to Google Earth, such that it automatically shows you the latest additions, auto-updating as you move around, please use this <a href="yourhistoryhere.kml">KML file</a>.
+<br />
+
+<h3 class="blue">Feeds of 50 latest additions</h3>
+<ul>
+    <li><a href="/cgi-bin/postsxml.cgi">XML data</a>
+    <li><a href="/cgi-bin/rss.cgi">RSS feed</a>
+    <li><a href="/cgi-bin/kml.cgi/yourhistoryhere.kml">KML file</a> (for Google Earth)</li>
+</ul>
+
+<p>To restrict the RSS feed to a particular geographic area, specify a bounding box in the URL as follows:<br />
+<tt><a href="/cgi-bin/rss.cgi?topleft_long=-1;topleft_lat=54;bottomright_long=1;bottomright_lat=50">http://www.placeopedia.com/cgi-bin/rss.cgi?topleft_long=-1;topleft_lat=54;bottomright_long=1;bottomright_lat=50</a></tt>
 </p>
 
-
 <h4>Submit data</h4>
-<p>
-	Fake the form effectively. 
-	Currently output will be a HTTP redirect. You get sent to /error/?MESSAGE_GOES_HERE for errors.
+<p>Fake the submission form effectively. submit.cgi returns XML of failure or success.
 </p>
 
 <h4>Search</h4>
 <p>
 	Have a target=xml flag to search box. 
-</p>
-
-<h4>Search within</h4>
-<p>
-	Make a GET request to <a href="/cgi-bin/kml.cgi/searchwithin.kml">/cgi-bin/kml.cgi</a> 
-        with a <tt>BBOX</tt> parameter of long/lat
-        of the bottom left and top right corners, separated by commas, e.g.
-        <tt>BBOX=-4.7239,50.1146,4.18819,54.4935</tt>.
-	All co-ordinates are WGS84.
 </p>
 
 </div>

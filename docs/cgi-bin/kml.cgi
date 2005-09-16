@@ -17,7 +17,6 @@ use URI::Escape;
 
 my $site_name= mySociety::Config::get('SITE_NAME');
 
-my %State; # State variables during display.
 my $search_term = &handle_search_term(); #' 1 = 1 ';
 
 my ($topleft_long,$bottomright_lat,$bottomright_long,$topleft_lat) = split(/,/, param('BBOX')) if (defined(param('BBOX')));

@@ -14,13 +14,9 @@
 <h4>Search within</h4>
 <p>
 	Make a GET request to <a href="/cgi-bin/kml.cgi/searchwithin.kml">/cgi-bin/kml.cgi</a> 
-	with parameters of lat/long
-	of the top left and bottom right corners. Parameters are
-	named:
-	<tt>topleft_lat</tt>,
-	<tt>topleft_long</tt>,
-	<tt>topright_lat</tt>,
-	<tt>topright_long</tt>.
+        with a <tt>BBOX</tt> parameter of long/lat
+        of the bottom left and top right corners, separated by commas, e.g.
+        <tt>BBOX=-4.7239,50.1146,4.18819,54.4935</tt>.
 </p>
 
 </div>

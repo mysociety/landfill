@@ -188,10 +188,11 @@ sub dt_entry {
     my $someday = UnixDate($result->{posted}, "%E %b %Y");
     my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';
     my $name = encode_entities($result->{name});
+    my $shortwhy = $result->{shortwhy} || '';
     my $out = <<EOfragment;
 <dt><strong><a href="#needsJS" onclick="show_post(marker[$pointindex], '$result->{postid}')">$title</a></strong>
 <small>(<a href="http://en.wikipedia.org/wiki/$wikiuri">Wikipedia Article</a>)</small></dt>
-<dd><p>$result->{shortwhy}</p>
+<dd><p>$shortwhy</p>
 <small>
 added $someday by $name
 <!-- | <a href="../email/$result->{postid}">Email this to a friend</a>

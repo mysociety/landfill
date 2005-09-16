@@ -3,21 +3,20 @@
 
 <h2>API</h2>
 
-<h4>Get posts out</h4>
-<p>
-	All post data is available via <a href="/cgi-bin/postsxml.cgi">xml</a>, 
-	with an <a href="/cgi-bin/rss.cgi/placeopedia.com">RSS feed</a>.
-	We also have a <a href="/cgi-bin/kml.cgi/placeopedia.kml">KML</a> file for use with Google Earth,
-	although this currently doesn't work.
-</p>
+<p>All data created on Placeopedia and YourHistoryHere is being made freely available under a Creative Commons license for use by whoever is interested. This is part of our effort to offer coders and users an easy, standard system for mapping annotation that interoperates easily with current and future geographic-based tools and systems.</p>
 
-<h4>Search within</h4>
-<p>
-	Make a GET request to <a href="/cgi-bin/kml.cgi/searchwithin.kml">/cgi-bin/kml.cgi</a> 
-        with a <tt>BBOX</tt> parameter of long/lat
-        of the bottom left and top right corners, separated by commas, e.g.
-        <tt>BBOX=-4.7239,50.1146,4.18819,54.4935</tt>.
-</p>
+<h3 class="blue">Google Earth auto-update</h3>
+<p>To add Placeopedia to Google Earth, such that it automatically shows you the latest additions on the map you're looking at, auto-updating as you move around, please use this <a href="placeopedia.kml">KML file</a>.
+<br />
+
+<h3 class="blue">Feeds of 50 latest additions</h3>
+<ul><li><a href="/cgi-bin/postsxml.cgi">XML data</a>
+    <li><a href="/cgi-bin/rss.cgi">RSS feed</a>
+    <li><a href="/cgi-bin/kml.cgi/placeopedia.kml">KML file</a> (for Google Earth)</li>
+</ul>
+
+<p>To restrict the RSS feed to a particular geographic area, specify a bounding box in the URL as follows:<br />
+<tt><a href="/cgi-bin/rss.cgi?topleft_long=-1;topleft_lat=54;bottomright_long=1;bottomright_lat=50">http://www.placeopedia.com/cgi-bin/rss.cgi?topleft_long=-1;topleft_lat=54;bottomright_long=1;bottomright_lat=50</a></tt>
 
 </div>
 <div id="inputBox">

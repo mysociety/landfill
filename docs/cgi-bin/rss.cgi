@@ -12,6 +12,7 @@ BEGIN {
 use PoP;
 use HTML::Entities;
 use XML::RSS;
+use CGI qw/param/;
 my $url_prefix= mySociety::Config::get('URL');
 my $email_domain= mySociety::Config::get('EMAIL_DOMAIN');
 my $site_name= mySociety::Config::get('SITE_NAME');
@@ -124,7 +125,7 @@ sub date_header {
 
 
 sub handle_search_term {
-	my $search_path= $ENV{"QUERY_STRING"} || '';
+	my $search_path= param('q') || '';
 	my @search_fields= ('posts.why', 
 			    'posts.title');
 	return ('') if ($search_path eq '');

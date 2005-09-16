@@ -29,7 +29,7 @@ my $search_term = &handle_search_term(); #' 1 = 1 ';
                          and site='$site_name' 
 			     $search_term
 		    order by posted
-			     desc limit 25
+			     desc limit 50
 		       "); # XXX order by first_seen needs to change
 
 

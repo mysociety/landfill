@@ -3,7 +3,7 @@
 # suggest.cgi:
 # Server side of the suggest-article-titles interface.
 #
-# $Id: suggest.cgi,v 1.11 2005-09-15 11:23:24 matthew Exp $
+# $Id: suggest.cgi,v 1.12 2005-09-16 15:58:46 matthew Exp $
 #
 
 use strict;
@@ -18,7 +18,7 @@ BEGIN {
 }
 
 use CGI::Fast;
-
+use HTML::Entities;
 use PoP;
 $dbh->{RaiseError} = 1;
 $dbh->do("set character set 'utf8'");
@@ -56,9 +56,10 @@ while (my $q = new CGI::Fast()) {
         my @titles;
         
         while ((my $title) = $query->fetchrow_array())  {
+            utf8::decode($title);
             $title =~ tr/_/ /;
             $title =~ s/(["\\])/\\$1/g;
-            push(@titles, qq("$title"));
+            push(@titles, '"' . encode_entities($title) . '"');
         }
         
         $entry =~ s/(["\\])/\\$1/g;

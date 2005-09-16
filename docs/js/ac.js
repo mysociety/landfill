@@ -999,7 +999,7 @@ function callGoogle(Rb){
 // wa is the value to set the inputfield to...
 // was S
 function selectEntry(Wa){
-  _inputField.value=Wa;
+  _inputField.value=Wa.replace('&amp;','&');
   aa=Wa
 }
 

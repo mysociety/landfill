@@ -3,7 +3,7 @@
 # suggest.cgi:
 # Server side of the suggest-article-titles interface.
 #
-# $Id: suggest.cgi,v 1.12 2005-09-16 15:58:46 matthew Exp $
+# $Id: suggest.cgi,v 1.13 2005-09-17 09:41:30 matthew Exp $
 #
 
 use strict;
@@ -22,6 +22,7 @@ use HTML::Entities;
 use PoP;
 $dbh->{RaiseError} = 1;
 $dbh->do("set character set 'utf8'");
+$dbh->do("set names 'utf8'");
 
 binmode(STDOUT, ':utf8');
 
@@ -31,6 +32,7 @@ our $url_prefix=mySociety::Config::get('URL');
 while (my $q = new CGI::Fast()) {
     my $res = '';
     my $entry = $q->param('qu') || 'West';
+    utf8::decode($entry);
     if ($entry) {
         my $n_entry;
         foreach (split /[\s_]/, $entry) {
@@ -59,7 +61,7 @@ while (my $q = new CGI::Fast()) {
             utf8::decode($title);
             $title =~ tr/_/ /;
             $title =~ s/(["\\])/\\$1/g;
-            push(@titles, '"' . encode_entities($title) . '"');
+            push(@titles, '"' . encode_entities($title, '<&>') . '"');
         }
         
         $entry =~ s/(["\\])/\\$1/g;

@@ -149,7 +149,7 @@ function keyDownHandler(event){
 
   // We are backspacing here...
   if(event&&event.keyCode==8){
-    if(X&&(_inputField.createTextRange&&(event.srcElement==a&&(bb(_inputField)==0&&lb(_inputField)==0)))){
+    if(X&&(_inputField.createTextRange&&(event.srcElement==_inputField&&(bb(_inputField)==0&&lb(_inputField)==0)))){
       cc(_inputField);
       event.cancelBubble=true;
       event.returnValue=false;
@@ -199,9 +199,9 @@ function installACPartTwo(){
 
   // pa init'd to false at the top of this file...
   if(pa) {
-    _completeSearchString="/cgi-bin/suggest.cgi";
+    _completeSearchString="/cgi-bin/suggest.fcg";
   } else {
-    _completeSearchString="/cgi-bin/suggest.cgi"+_searchString;
+    _completeSearchString="/cgi-bin/"+_searchString;
   }
 
   _completeSearchEnString=_completeSearchString+"?hl="+_enString;

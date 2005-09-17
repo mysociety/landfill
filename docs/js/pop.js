@@ -256,7 +256,7 @@ function onLoad() {
 
     d = document.getElementById('f')
     if (d)
-        InstallAC(d,d.q,d.btnG,"/cgi-bin/suggest.fcg","en", true);
+        InstallAC(d,d.q,d.btnG,"suggest.fcg","en", true);
 }
 window.onload = onLoad
 

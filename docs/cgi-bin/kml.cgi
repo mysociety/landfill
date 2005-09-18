@@ -62,7 +62,7 @@ EOSQL
             $wikiuri = uri_escape($wikiuri);
             print "<Placemark>\n";
 	    print "\t<description><![CDATA[$shortwhy <a href=\"http://en.wikipedia.org/wiki/$wikiuri\">Wikipedia article</a>.]]></description>\n";
-            print "\t<name>" . encode_entities($result->{title}) . "</name>\n";
+            print "\t<name>" . encode_entities($result->{title}, '<&>') . "</name>\n";
 	    print "\t<LookAt>\n";
 	    print "\t\t<longitude>$result->{google_long}</longitude>\n";
 	    print "\t\t<latitude>$result->{google_lat}</latitude>\n";

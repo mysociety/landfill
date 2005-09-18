@@ -117,13 +117,13 @@ EOSQL
             my $bubble = $result->{title} || '<No subject>';
             $bubble =~ s/\s+/ /g;
             $bubble = wrap('', '', $bubble);
-            $bubble = encode_entities($bubble);
+            $bubble = encode_entities($bubble, '<&>');
             $bubble =~ s/\n/<br>/g;
             $bubble = "<b>$bubble</b><p><a href=\"http://en.wikipedia.org/wiki/$wikiuri\">Wikipedia article</a></p>";
             my $zoomlevel = $result->{google_zoom};
             $zoomlevel = 2 unless defined($zoomlevel);
             if ($type eq 'summary') {
-                my $title = encode_entities($result->{title}) || '&lt;No subject&gt;';
+                my $title = encode_entities($result->{title}, '<&>') || '&lt;No subject&gt;';
                 print <<EOfragment;
 <li><a href="#needsJS" onclick="show_post(marker[$pointindex], '$result->{postid}')">$title</a></li>
 EOfragment
@@ -148,27 +148,27 @@ EOjs
 			$url = '/olderbusiest/';
 	    }
 			
-	    my $older = $page;
+#	    my $older = $page;
 
             if ($type eq 'summary') {
                 print "</ul>\n";
-                $older += $brief+1;
-                print "<p align=\"right\"><a href=\"$url$older\">Even older entries</a></p>";
+#                $older += $brief+1;
+#                print "<p align=\"right\"><a href=\"$url$older\">Even older entries</a></p>";
             } elsif ($type eq 'details') {
                 print "</dl>\n";
-                $older += 1;
-                my $newer = $page - 1;
-                print '<p align="center">';
-                if ($newer == 0) {
-                    my $fronturl = ($search_bit ne '') ? '/oldersearch/'.$search_bit : '/';
-                    print "<a href=\"$fronturl\">front page</a> | ";
-                } elsif ($newer > 0) {
-                    print "<a href=\"$url$newer\">newer $mainlimit entries</a> | ";
-                }
-                if ($type eq 'summary' || $query->rows eq $limit) {
-                    print "<a href=\"$url$older\">older $mainlimit entries</a>";
-                }
-                print '</p>';
+#                $older += 1;
+#                my $newer = $page - 1;
+#                print '<p align="center">';
+#                if ($newer == 0) {
+#                    my $fronturl = ($search_bit ne '') ? '/oldersearch/'.$search_bit : '/';
+#                    print "<a href=\"$fronturl\">front page</a> | ";
+#                } elsif ($newer > 0) {
+#                    print "<a href=\"$url$newer\">newer $mainlimit entries</a> | ";
+#                }
+#                if ($type eq 'summary' || $query->rows eq $limit) {
+#                    print "<a href=\"$url$older\">older $mainlimit entries</a>";
+#                }
+#                print '</p>';
 
             } elsif ($type eq 'xml') {
                 print '<newhtml><![CDATA[<dl>'.$new_html.'</dl>]]></newhtml></results>';
@@ -184,10 +184,10 @@ EOjs
 
 sub dt_entry {
     my ($result, $wikiuri, $pointindex) = @_;
-    my $title = encode_entities($result->{title}) || '&lt;No subject&gt;';
+    my $title = encode_entities($result->{title}, '<&>') || '&lt;No subject&gt;';
     my $someday = UnixDate($result->{posted}, "%E %b %Y");
     my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';
-    my $name = encode_entities($result->{name});
+    my $name = encode_entities($result->{name}, '<&>');
     my $shortwhy = $result->{shortwhy} || '';
     my $out = <<EOfragment;
 <dt><strong><a href="#needsJS" onclick="show_post(marker[$pointindex], '$result->{postid}')">$title</a></strong>

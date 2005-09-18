@@ -185,7 +185,7 @@ EOjs
 sub dt_entry {
     my ($result, $wikiuri, $pointindex) = @_;
     my $title = encode_entities($result->{title}, '<&>') || '&lt;No subject&gt;';
-    my $someday = UnixDate($result->{posted}, "%E %b %Y");
+    my $someday = UnixDate($result->{posted}, "%H:%M, %E %B %Y");
     my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';
     my $name = encode_entities($result->{name}, '<&>');
     my $shortwhy = $result->{shortwhy} || '';
@@ -195,6 +195,7 @@ sub dt_entry {
 <dd><p>$shortwhy</p>
 <small>
 added $someday by $name
+| <a href="/?$result->{postid}">permalink</a>
 <!-- | <a href="../email/$result->{postid}">Email this to a friend</a>
 | <a href="/abuse/?postid=$result->{postid}">abusive?</a> -->
 </small>

@@ -65,12 +65,13 @@ function add_place(f) {
     title = f.q.value
     zoom = map.getZoomLevel()
 
-    if (!name) { pass = false; field_error(f.name, 'nameerror', 'Please give your name') } else field_unerror(f.name)
+    if (!name) { pass = false; field_error(f.name, 'nameerror', 'Please give your name') } else field_unerror(f.name, 'nameerror')
     if (!email) { pass = false; field_error(f.email, 'emailerror', 'Please give your email address') } else field_unerror(f.email, 'emailerror')
     if (!title) { pass = false; field_error(f.q, 'titleerror', 'Please give an article') } else field_unerror(f.q, 'titleerror')
     if (!pass) return;
 
-    document.getElementById('add_submit').value = 'Submitting...'
+    var d = document.getElementById('add_submit')
+    d.value = 'Submitting...'; d.disabled = true
     var r = GXmlHttp.create();
     url = "/cgi-bin/submit.cgi"
     var post_data = "name="+name+";email="+email+";title="+title+";lng="+lng+";lat="+lat+";zoom="+zoom
@@ -79,7 +80,8 @@ function add_place(f) {
     r.onreadystatechange = function(){
         if (r.readyState == 4) {
             x = r.responseXML
-            document.getElementById('add_submit').value = 'Submit'
+            var d = document.getElementById('add_submit')
+            d.value = 'Submit'; d.disabled = false
             errors = x.getElementsByTagName('error')
             if (errors.length) {
                 form = document.getElementById('f')
@@ -103,12 +105,16 @@ function add_place(f) {
 }
 
 function search(s) {
-    document.getElementById('Submit1').value = 'Searching...';
+    var d = document.getElementById('Submit1')
+    d.value = 'Searching...'; d.disabled = true
+    document.getElementById('q').disabled = true
     var r = GXmlHttp.create();
     r.open("GET", "/lookup.php?output=xml&q=" + s, true);
     r.onreadystatechange = function(){
         if (r.readyState == 4) {
-            document.getElementById('Submit1').value = 'Search';
+            var d = document.getElementById('Submit1')
+            d.value = 'Search'; d.disabled = false
+            document.getElementById('q').disabled = false
             x = r.responseXML
             c = x.getElementsByTagName('center')[0]
             s = x.getElementsByTagName('span')[0]

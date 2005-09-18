@@ -56,26 +56,26 @@ sub handle_comment {
     my $wikititle = $Passed_Values{'title'};
     if (!defined($dbh->selectrow_array('select generation from wikipedia_article where title = ?', {}, $wikititle))) {
         # Try grabbing the page from Wikipedia instead.
-        my $t = $wikititle;
-        $t =~ s/ /_/g;
-        $t =~ s/([^A-Za-z0-9_])/sprintf('%%%02x', ord($1))/ge;
-        my $url = "http://en.wikipedia.org/wiki/$t";
-        eval {
-            local $SIG{ALRM} = sub { die "alarm\n"; };
-            alarm(30);
-            my @x = LWP::Simple::head($url);
-            alarm(0);
-            if (!@x) {
+#        my $t = $wikititle;
+#        $t =~ s/ /_/g;
+#        $t =~ s/([^A-Za-z0-9_])/sprintf('%%%02x', ord($1))/ge;
+#        my $url = "http://en.wikipedia.org/wiki/$t";
+#        eval {
+#            local $SIG{ALRM} = sub { die "alarm\n"; };
+#            alarm(30);
+#            my @x = LWP::Simple::head($url);
+#            alarm(0);
+#            if (!@x) {
                 $error = 1;
                 error('q', "Wikipedia article doesn't exist");
-            }
-        };
+#            }
+#        };
 
-        if ($@) {
-            die "$@ in eval" unless ($@) eq "alarm\n";
-            $error = 1;
-            error('q', "Timed out looking up article title on Wikipedia");
-        }
+#        if ($@) {
+#            die "$@ in eval" unless ($@) eq "alarm\n";
+#            $error = 1;
+#            error('q', "Timed out looking up article title on Wikipedia");
+#        }
     }
 #    $Passed_Values{why} = $cur_text;
  

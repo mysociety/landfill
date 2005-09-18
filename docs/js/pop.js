@@ -26,7 +26,6 @@ function add_place_form() {
     document.getElementById('recent_places').style.display='none';
     document.getElementById('add_success').style.display='none';
     document.getElementById('add_place').style.display='block';
-    document.getElementById('where').style.display='block';
     if (add_marker) map.addOverlay(add_marker)
 }
 function remove_place_form() {
@@ -35,7 +34,6 @@ function remove_place_form() {
     document.getElementById('recent_places').style.display='block';
     document.getElementById('add_success').style.display='none';
     document.getElementById('add_place').style.display='none';
-    document.getElementById('where').style.display='none';
     if (add_marker) map.removeOverlay(add_marker)
 }
 
@@ -67,8 +65,8 @@ function add_place(f) {
     title = f.q.value
     zoom = map.getZoomLevel()
 
-    if (!name) { pass = false; field_error(f.name) } else field_unerror(f.name)
-    if (!email) { pass = false; field_error(f.email, 'emailerror', 'Please give an email address') } else field_unerror(f.email, 'emailerror')
+    if (!name) { pass = false; field_error(f.name, 'nameerror', 'Please give your name') } else field_unerror(f.name)
+    if (!email) { pass = false; field_error(f.email, 'emailerror', 'Please give your email address') } else field_unerror(f.email, 'emailerror')
     if (!title) { pass = false; field_error(f.q, 'titleerror', 'Please give an article') } else field_unerror(f.q, 'titleerror')
     if (!pass) return;
 
@@ -97,7 +95,6 @@ function add_place(f) {
             }
             adding = 0
             document.getElementById('add_place').style.display='none'
-            document.getElementById('where').style.display='none'
             document.getElementById('add_success').style.display='block'
             map.removeOverlay(add_marker)
         }
@@ -231,8 +228,8 @@ function onLoad() {
         if (!adding) return false
         if (overlay) return false
         else if (point) {
-            var latLngStr =  "lat=" + point.y + "; long=" + point.x;
-            document.getElementById('show_where').innerHTML = latLngStr;
+            var s= 100000
+            document.getElementById('show_where').innerHTML = "long. = " + Math.round(point.x*s)/s + "; lat. = " + Math.round(point.y*s)/s
             if (add_marker) map.removeOverlay(add_marker)
             add_marker = new GMarker(point, yellowPin)
             map.addOverlay(add_marker)

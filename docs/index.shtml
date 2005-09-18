@@ -3,7 +3,6 @@
 <!--#include virtual="/includes/header.shtml" -->
 <div id="search_container">
 <div id="map"></div>
-<p style="display: none" id="where"><small>Where: <span id="show_where">none selected</span></small></p>
 </div>
 <!--#include virtual="/includes/description.shtml" -->
 </div>
@@ -19,18 +18,29 @@
 <div id="add_place" style="display: none">
     <form method="post" id="f" onsubmit="add_place(this); return false;">
         <h3 class="blue">Add new place</h3>
-        <p>To find a place on the map, either use the arrow and zoom controls, or enter a place name in the search box above. When you have found the rough area, click to put a yellow pin over the exact place corresponding with the Wikipedia article, fill in your details and click submit.</p>
-        <p>Enter <a href="http://en.wikipedia.org/">Wikipedia</a> Article Name:
-        <small>(this will auto-complete; might take a short time to respond)</small>
+
+        <ol>
+            <li><strong>Enter <a href="http://en.wikipedia.org/">Wikipedia</a> article name</strong>
         <input type="text" autocomplete="off" maxLength="1024" size="30" name="q" />
         <span id="titleerror"></span>
-        <label for="emailname">Your Name:</label>
+        <p><small>(this will auto-complete; might take a short time to respond)</small></p>
+        </li>
+        <li><strong>Find the place on the map</strong>
+        <p>Use the arrow and zoom controls, or enter a location or UK postcode in the search box above. When you have found the rough area, click to place a yellow pin over the exact place corresponding with the Wikipedia article. If you click in the wrong place, don't worry &mdash; just click again to move the yellow pin.</p>
+        <p><em>The zoom level of the map is stored along with the location, so do pick an appropriate level for the article &mdash; e.g. very zoomed in for a house, zoomed out for a city.</em></p>
+        <p><small>Location selected:<br /><span id="show_where">none selected</span></small></p>
+        </li>
+        <li><strong>Enter your details</strong>
+        <label for="emailname">Your name:</label>
         <input type="text" name="name" id="emailname" size="30" />
+        <span id="nameerror"></span>
         <label for="emailreason">Email address:</label>
         <input type="text" name="email" id="emailreason" size="30" />
         <span id="emailerror"></span>
-        </p>
-        <p><input id="add_submit" type="submit" value="Submit" /></p>
+        <br />
+        </li>
+        <li><input id="add_submit" type="submit" value="Submit" /></li>
+    </ol>
     </form>
     <p><a onclick="remove_place_form(); return false" href="#needsJS">Back to recently added places</a></p>
 </div>

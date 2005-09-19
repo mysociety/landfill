@@ -54,28 +54,28 @@ sub handle_comment {
     $scrubber->comment(0);
 
     my $wikititle = $Passed_Values{'title'};
+    $wikititle =~ s/ /_/g;
     if (!defined($dbh->selectrow_array('select generation from wikipedia_article where title = ?', {}, $wikititle))) {
         # Try grabbing the page from Wikipedia instead.
-#        my $t = $wikititle;
-#        $t =~ s/ /_/g;
-#        $t =~ s/([^A-Za-z0-9_])/sprintf('%%%02x', ord($1))/ge;
-#        my $url = "http://en.wikipedia.org/wiki/$t";
-#        eval {
-#            local $SIG{ALRM} = sub { die "alarm\n"; };
-#            alarm(30);
-#            my @x = LWP::Simple::head($url);
-#            alarm(0);
-#            if (!@x) {
-                $error = 1;
-                error('q', "Wikipedia article doesn't exist");
-#            }
-#        };
+        my $t = $wikititle;
+        $t =~ s/([^A-Za-z0-9_])/sprintf('%%%02x', ord($1))/ge;
+        my $url = "http://en.wikipedia.org/wiki/Special:Export/$t";
+        eval {
+            local $SIG{ALRM} = sub { die "alarm\n"; };
+            alarm(30);
+            my $x = LWP::Simple::get($url);
+            alarm(0);
+            if (!$x || $x !~ /<page>/) {
+               $error = 1;
+               error('q', "Wikipedia article doesn't exist");
+            }
+        };
 
-#        if ($@) {
-#            die "$@ in eval" unless ($@) eq "alarm\n";
-#            $error = 1;
-#            error('q', "Timed out looking up article title on Wikipedia");
-#        }
+        if ($@) {
+            die "$@ in eval" unless ($@) eq "alarm\n";
+            $error = 1;
+            error('q', "Timed out looking up article title on Wikipedia");
+        }
     }
 #    $Passed_Values{why} = $cur_text;
  
@@ -100,6 +100,8 @@ sub handle_comment {
 		       google_lat=$quoted{lat},
 		       google_long=$quoted{lng},
                        google_zoom=$quoted{zoom},
+                       lat=$quoted{lat},
+                       lon=$quoted{lng},
 		       authcode=$auth_code_q,
 		       site='$site_name'
         ");
@@ -143,33 +145,4 @@ EOmail
 
     $mailer->close;
     return;
-}
-
-sub fetch_wikipedia {
-use HTTP::Request;
-use LWP::UserAgent;
-use HTML::Scrubber;
-         my $topic= shift;
-         my $scrubber= HTML::Scrubber->new(allow => []);
-         my $ua = LWP::UserAgent->new;
-         $ua->agent("Placeopedia.com");
-         my $req = HTTP::Request->new(GET => 'http://en.wikipedia.org/wiki/Special:Export/'.$topic);
-         $req->header('Accept' => 'application/xml');
-
-         # send request
-         my $res = $ua->request($req);
-         my $snippet;
-         # check the outcome
-         if ($res->is_success) {
-            my $content= $res->decoded_content;
-            $content=~ s#[^M\n]# #mgi;
-            ($snippet) = $content =~ m#<text xml:space="preserve">(.*?)</text>#s;
-            $snippet= $scrubber->scrub($snippet);
-            my ($last)= $snippet=~ /^(.{1000}.*?\.)/;
-		print STDERR $snippet;
-            return ($last);
-         }
-         else {
-            return '';
-         }
 }

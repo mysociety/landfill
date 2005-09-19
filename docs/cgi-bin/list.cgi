@@ -10,7 +10,9 @@ BEGIN {
     mySociety::Config::set_file("$FindBin::Bin/../../conf/general");
 }
 use PoP;
-use CGI qw/param/;
+#use CGI qw/param/;
+use CGI;
+use CGI::Fast;
 use CGI::Carp qw/fatalsToBrowser/;
 use Date::Manip;
 use HTML::Entities;
@@ -22,24 +24,23 @@ my %State; # State variables during display.
 our $url_prefix=mySociety::Config::get('URL');
 my $Js='';
 
-{
-    my $type = param('type') || 'details';
-    if (defined $ENV{REQUEST_METHOD}) {
+
+while (my $q = new CGI::Fast()) {
+    my $type = $q->param('type') || 'details';
         if ($type eq 'xml') {
             print "Content-Type: application/xml\n\n";
         } else {
             print "Content-Type: text/html\n\n";
         }
-    }
 
     {
-        my $id = param('show') || 0;
-        my $search_bit = param('search') || '';
-        my $page = param('page') || 0;
-	my $topleft_lat=param('topleft_lat');
-	my $topleft_long=param('topleft_long');
-	my $bottomright_lat=param('bottomright_lat');
-	my $bottomright_long=param('bottomright_long');
+        my $id = $q->param('show') || 0;
+        my $search_bit = $q->param('search') || '';
+        my $page = $q->param('page') || 0;
+	my $topleft_lat=$q->param('topleft_lat');
+	my $topleft_long=$q->param('topleft_long');
+	my $bottomright_lat=$q->param('bottomright_lat');
+	my $bottomright_long=$q->param('bottomright_long');
 
         if ($search_bit =~ /\|(\d+)$/) {
             $page = $1;
@@ -54,11 +55,11 @@ my $Js='';
              $bottomright_lat=~ s#[^-\.\d]##g;
              $bottomright_long=~ s#[^-\.\d]##g;
                 $where .= <<EOSQL;
-        and google_lat <= $topleft_lat and google_lat >= $bottomright_lat
-        and google_long >= $topleft_long and google_long <= $bottomright_long
+        and lat <= $topleft_lat and lat >= $bottomright_lat
+        and lon >= $topleft_long and lon <= $bottomright_long
 EOSQL
         }
-        if (defined param('interest')){
+        if (defined $q->param('interest')){
 	    $where .= " and (interesting=1 or commentcount >= 5)";
         }
         if ($id) {
@@ -144,7 +145,7 @@ EOjs
 			
 	    if ($search_bit ne ''){
 			$url = '/oldersearch/'.$search_bit.'|';
-	    }elsif (defined param('interest')){
+	    }elsif (defined $q->param('interest')){
 			$url = '/olderbusiest/';
 	    }
 			

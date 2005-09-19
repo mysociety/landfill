@@ -90,7 +90,7 @@ EOSQL
             $rss->add_item(
  		       title => "$result->{title}",
                        link => "http://en.wikipedia.org/wiki/$result->{title}",
-                       description=> "$result->{shortwhy}",
+                       description => "Wikipedia article on $result->{title}",
 		       geo => {lat => "$result->{google_lat}",
 		       	       long => "$result->{google_long}"},
                 );

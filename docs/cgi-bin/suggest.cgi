@@ -3,7 +3,7 @@
 # suggest.cgi:
 # Server side of the suggest-article-titles interface.
 #
-# $Id: suggest.cgi,v 1.14 2005-09-17 09:57:18 matthew Exp $
+# $Id: suggest.cgi,v 1.15 2005-09-19 23:17:21 chris Exp $
 #
 
 use strict;
@@ -48,7 +48,7 @@ while (my $q = new CGI::Fast()) {
         $q_entry =~ s/_/\\_/g;
         $q_entry =~ tr/;/?/;    # ?
         my $query=$dbh->prepare("
-                select title
+                select distinct title
                 from wikipedia_article
                 where title like ?
                 limit 10

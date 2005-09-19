@@ -180,7 +180,7 @@ function show_post(marker, id) {
 function update_place_list() {
     var bounds = map.getBoundsLatLng();
     var r = GXmlHttp.create();
-    url = "/cgi-bin/list.cgi?type=xml;topleft_lat=" + bounds.maxY + ";topleft_long="+ bounds.minX + ";bottomright_lat=" + bounds.minY + ";bottomright_long=" + bounds.maxX
+    url = "/cgi-bin/list.fcg?type=xml;topleft_lat=" + bounds.maxY + ";topleft_long="+ bounds.minX + ";bottomright_lat=" + bounds.minY + ";bottomright_long=" + bounds.maxX
     r.open("GET", url, true);
     r.onreadystatechange = function(){
         if (r.readyState ==4) {

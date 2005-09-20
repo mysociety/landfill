@@ -3,7 +3,7 @@
 # suggest.cgi:
 # Server side of the suggest-article-titles interface.
 #
-# $Id: suggest.cgi,v 1.15 2005-09-19 23:17:21 chris Exp $
+# $Id: suggest.cgi,v 1.16 2005-09-20 18:41:40 matthew Exp $
 #
 
 use strict;
@@ -36,8 +36,7 @@ while (my $q = new CGI::Fast()) {
     if ($entry) {
         my $n_entry;
         foreach (split /[\s_]/, $entry) {
-            # XXX is this right?
-            $n_entry .= ucfirst($_) . ' ';
+            $n_entry .= $_ . ' ';
         }
         $entry = $n_entry;
         $entry =~ s/\s+$//;

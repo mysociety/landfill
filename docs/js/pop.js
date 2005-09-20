@@ -99,6 +99,7 @@ function add_place(f) {
             document.getElementById('add_place').style.display='none'
             document.getElementById('add_success').style.display='block'
             map.removeOverlay(add_marker)
+            add_marker = 0
         }
     }
     r.send(post_data);

@@ -67,12 +67,12 @@ function add_place(f) {
         lng = add_marker.point.x
         lat = add_marker.point.y
     }
-    title = f.title.value
-    name = f.name.value
-    email = f.email.value
+    title = encodeURIComponent(f.title.value)
+    name = encodeURIComponent(f.name.value)
+    email = encodeURIComponent(f.email.value)
     emailalert = f.emailalert.checked
-    summary = f.summary.value
-    body = f.why.value
+    summary = encodeURIComponent(f.summary.value)
+    body = encodeURIComponent(f.why.value)
     zoom = map.getZoomLevel()
 
     if (!name) { pass = false; field_error(f.name, 'nameerror', 'Please give your name') } else field_unerror(f.name, 'nameerror')
@@ -116,7 +116,7 @@ function add_place(f) {
 function search(s) {
     document.getElementById('Submit1').value = 'Searching...';
     var r = GXmlHttp.create();
-    r.open("GET", "/lookup.php?output=xml&q=" + s, true);
+    r.open("GET", "/lookup.php?output=xml&q=" + encodeURIComponent(s), true);
     r.onreadystatechange = function(){
         if (r.readyState == 4) {
             document.getElementById('Submit1').value = 'Search';

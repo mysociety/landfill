@@ -87,9 +87,10 @@ EOSQL
 );
 
 	while ($result=$query->fetchrow_hashref) {
+            my $title = encode_entities($result->{title}, '"');
             $rss->add_item(
  		       title => "$result->{title}",
-                       link => "http://en.wikipedia.org/wiki/$result->{title}",
+                       link => "http://en.wikipedia.org/wiki/$title",
                        description => "Wikipedia article on $result->{title}",
 		       geo => {lat => "$result->{google_lat}",
 		       	       long => "$result->{google_long}"},

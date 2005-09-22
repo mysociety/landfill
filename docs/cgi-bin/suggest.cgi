@@ -3,7 +3,7 @@
 # suggest.cgi:
 # Server side of the suggest-article-titles interface.
 #
-# $Id: suggest.cgi,v 1.17 2005-09-20 19:07:00 matthew Exp $
+# $Id: suggest.cgi,v 1.18 2005-09-22 16:58:11 matthew Exp $
 #
 
 use strict;
@@ -32,6 +32,7 @@ our $url_prefix=mySociety::Config::get('URL');
 while (my $q = new CGI::Fast()) {
     my $res = '';
     my $entry = $q->param('qu') || 'West';
+    $entry =~ s#^http://en\.wikipedia\.org/wiki/##i;
     utf8::decode($entry);
     if ($entry) {
         my $n_entry;

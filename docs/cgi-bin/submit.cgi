@@ -53,6 +53,7 @@ sub handle_comment {
     $scrubber->allow(qw[a em strong p br]);
     $scrubber->comment(0);
 
+    $Passed_Values{'title'} =~ s#^http://en\.wikipedia\.org/wiki/##i;
     my $wikititle = $Passed_Values{'title'};
     $wikititle =~ s/ /_/g;
     if (!defined($dbh->selectrow_array('select generation from wikipedia_article where title = ?', {}, $wikititle))) {

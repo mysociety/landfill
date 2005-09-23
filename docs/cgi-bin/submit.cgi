@@ -83,7 +83,6 @@ sub handle_comment {
     if (!$error) {
         foreach my $pv (keys %Passed_Values) {
             $Passed_Values{$pv}= $scrubber->scrub($Passed_Values{$pv});
-            $Passed_Values{$pv} =~ s/[\x80-\x9f]//g;
             $quoted{$pv}= $dbh->quote($Passed_Values{$pv});
         }
 
@@ -123,6 +122,7 @@ sub send_email {
     $headers{"Subject"}= "Request to post to $site_name";
     $headers{"To"}= "$name <$address>" ;
     $headers{'From'}= "\"$site_name\" <team$email_domain>";
+    $headers{'Content-Type'} = 'text/plain; charset=utf-8';
     $headers{"X-Originating-IP"}= $ENV{'HTTP_X_FORWARDED_FOR'}  || $ENV{'REMOTE_ADDR'} || return;
     $mailer->open(\%headers);
 

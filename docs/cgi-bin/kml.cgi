@@ -55,7 +55,7 @@ EOSQL
 	while ($result=$query->fetchrow_hashref() ) {
             my $shortwhy = $result->{shortwhy} || '';
 		print "<Placemark>\n";
-		print "\t<description><![CDATA[$shortwhy <a href=\"/comments?$result->{postid}\">more</a>.]]></description>\n";
+		print "\t<description><![CDATA[$shortwhy <a href=\"http://www.yourhistoryhere.com/comments?$result->{postid}\">more</a>.]]></description>\n";
 		print "\t<name>$result->{title}</name>\n";
 		print "\t<LookAt>\n";
 		print "\t\t<longitude>$result->{google_long}</longitude>\n";

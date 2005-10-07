@@ -1,5 +1,7 @@
 <!--#set var="page_title" value="Placeopedia" -->
-<!--#set var="api_key" value="ABQIAAAA8N0lvXAsUc4OGoWFst6idhQ08MtMjoXxyp9SXQd6LIaB84SUmBRUeUi1liAZDjkRIrTSC1tpDWgPtQ" -->
+<!--#config errmsg="[File config.shtml missing: please copy config.shtml-example and configure]" -->
+<!--#include file="config.shtml" -->
+<!--#config errmsg="[an error occurred while processing this directive]" -->
 <!--#include virtual="/includes/header.shtml" -->
 <div id="search_container">
 <div id="map"></div>
@@ -16,7 +18,7 @@
 </div>
 
 <div id="add_place" style="display: none">
-    <form method="post" id="f" onsubmit="add_place(this); return false;">
+    <form method="post" id="f" onsubmit="add_place(this); return false;" action="#">
         <h3 class="blue">Add new place</h3>
 
         <ol>

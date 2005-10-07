@@ -178,7 +178,7 @@ EOjs
             print "<p>Your search for " . $search_bit . " yielded no results.</p>";
         }
         if ($type ne 'xml') {
-            print "<script type=\"text/javascript\"> var marker = [];\n$Js </script>";
+            print "<script type=\"text/javascript\">//<![CDATA[\n var marker = [];\n$Js\n//]]> </script>";
         }
     }
 }

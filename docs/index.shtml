@@ -44,13 +44,49 @@
         <li><input id="add_submit" type="submit" value="Submit" /></li>
     </ol>
     </form>
-    <p><a onclick="remove_place_form(); return false" href="#needsJS">Back to recently added places</a></p>
+    <p><a onclick="show_recent_places(); return false" href="#needsJS">Back to recently added places</a></p>
 </div>
 
 <div id="add_success" style="display:none">
 <h3 class="blue">Add new place</h3>
 <p>Thanks for creating that entry - now please check your email to confirm your post.</p>
 <p><a href="#needsJS" onclick="add_place_form(); return false;">Add another</a></p>
+</div>
+
+<div id="incorrect_entry" style="display:none">
+    <form method="post" id="f2" onsubmit="report_post(this); return false;">
+        <input type="hidden" name="postid" id="report_id" value="" />
+        <h3 class="blue">Report an incorrect location</h3>
+        <ol>
+            <li>You're reporting the entry:<br />
+            <span id="report_title">ENTRY TITLE</span>
+            for being in the incorrect location.</li>
+            <li>Optionally, please give the correct location on the map. Use the arrow and zoom
+            controls, or enter a location or UK postcode in the search box above. When you have
+            found the rough area, click to place a yellow pin over the exact place corresponding
+            with the Wikipedia article. If you click in the wrong place, don't worry &mdash; just
+            click again to move the yellow pin.
+            <p><small>Location selected:<br /><span id="show_where2">none selected</span></small></p>
+            </li>
+            <li><strong>Enter your details</strong>
+            <label for="emailname2">Your name:</label>
+            <input type="text" name="name" id="emailname2" size="30" />
+            <span id="nameerror2"></span>
+            <label for="emailreason2">Email address:</label>
+            <input type="text" name="email" id="emailreason2" size="30" />
+            <span id="emailerror2"></span>
+            <br />
+            </li>
+            <li><input id="report_submit" type="submit" value="Submit" /></li>
+        </ol>
+    </form>
+    <p><a onclick="show_recent_places(); return false" href="#needsJS">Back to recently added places</a></p>
+</div>
+
+<div id="report_success" style="display:none">
+<h3 class="blue">Report an incorrect location</h3>
+<p>Thanks for reporting that entry - we'll take a look as soon as we can.</p>
+<p><a onclick="show_recent_places(); return false" href="#needsJS">Back to recently added places</a></p>
 </div>
 
 <!--#include virtual="/includes/footer.shtml" -->

@@ -416,7 +416,7 @@ margin-top:0;
     border-top-width: 0;
 }
 
-#nameerror, #titleerror, #emailerror {
+#nameerror, #titleerror, #emailerror, #nameerror2, #emailerror2 {
     text-align: right;
     color: #ff0000;
     background-color: #ffffff;

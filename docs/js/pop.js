@@ -1,4 +1,4 @@
-var adding = 0
+var state = 'recent'
 var add_marker = 0
 var map
 
@@ -11,9 +11,11 @@ basePin.infoWindowAnchor = new GPoint(5,1);
 
 var redPin = new GIcon(basePin);    redPin.image = "/images/pin_red.png";
 var yellowPin = new GIcon(basePin); yellowPin.image = "/images/pin_yellow.png";
-function createPin(point, zoomLevel, text) {
+function createPin(id, point, zoomLevel, text) {
     var m = new GMarker(point, redPin);
     m.zoomlevel = zoomLevel
+    m.id = id
+    m.bubbletext = text
     GEvent.addListener(m, "click", function() {
         m.openInfoWindowHtml(text)
     });
@@ -21,20 +23,35 @@ function createPin(point, zoomLevel, text) {
 }
 
 function add_place_form() {
-    if (adding) return
-    adding = 1
+    if (state=='adding') return
+    state = 'adding'
     document.getElementById('recent_places').style.display='none';
     document.getElementById('add_success').style.display='none';
     document.getElementById('add_place').style.display='block';
+    document.getElementById('report_success').style.display='none'
+    document.getElementById('incorrect_entry').style.display='none'
     if (add_marker) map.addOverlay(add_marker)
 }
-function remove_place_form() {
-    if (!adding) return
-    adding = 0
+function show_recent_places() {
+    if (state=='recent') return
+    state = 'recent'
     document.getElementById('recent_places').style.display='block';
     document.getElementById('add_success').style.display='none';
+    document.getElementById('report_success').style.display='none'
+    document.getElementById('incorrect_entry').style.display='none'
     document.getElementById('add_place').style.display='none';
     if (add_marker) map.removeOverlay(add_marker)
+}
+function report_post_form(marker) {
+    if (state=='reporting') return
+    state = 'reporting'
+    document.getElementById('report_title').innerHTML = marker.bubbletext
+    document.getElementById('report_id').value = marker.id
+    document.getElementById('incorrect_entry').style.display='block'
+    document.getElementById('report_success').style.display='none'
+    document.getElementById('recent_places').style.display='none'
+    document.getElementById('add_success').style.display='none'
+    document.getElementById('add_place').style.display='none'
 }
 
 function field_error(e,errspan,errstr) {
@@ -51,11 +68,13 @@ function field_unerror(e,errspan) {
 }
 
 function add_place(f) {
-    if (!adding) return; /* Not in adding mode, shouldn't be able to submit */
+    if (state!='adding') return; /* Not in adding mode, shouldn't be able to submit */
     pass = true
     if (!add_marker) {
         pass = false
-        document.getElementById('show_where').innerHTML = '<b style="color: #ff0000">Please select somewhere</b>'
+        var str = '<b style="color: #ff0000">Please select somewhere</b>'
+        document.getElementById('show_where').innerHTML = str
+        document.getElementById('show_where2').innerHTML = str
     } else {
         lng = add_marker.point.x
         lat = add_marker.point.y
@@ -95,7 +114,7 @@ function add_place(f) {
                 }
                 return;
             }
-            adding = 0
+            state = 'addingsuccess'
             document.getElementById('add_place').style.display='none'
             document.getElementById('add_success').style.display='block'
             map.removeOverlay(add_marker)
@@ -171,11 +190,66 @@ function qs(el) {if (window.RegExp && window.encodeURIComponent) {
 return 1;
 }
 
-function show_post(marker, id) {
+function show_post(marker) {
     p = marker.point
     z = marker.zoomlevel
     map.centerAndZoom(p, z)
     GEvent.trigger(marker, "click")
+}
+
+function report_post(f) {
+    if (state!='reporting') return; /* Not in reporting mode, shouldn't be able to submit */
+    pass = true
+//    if (!add_marker) {
+//        pass = false
+//        var str = '<b style="color: #ff0000">Please select somewhere</b>'
+//        document.getElementById('show_where').innerHTML = str
+//        document.getElementById('show_where2').innerHTML = str
+//    } else {
+        lng = add_marker.point.x
+        lat = add_marker.point.y
+//    }
+    name = encodeURIComponent(f.name.value)
+    email = encodeURIComponent(f.email.value)
+    report_id = document.getElementById('report_id').value
+    zoom = map.getZoomLevel()
+
+    if (!name) { pass = false; field_error(f.name, 'nameerror', 'Please give your name') } else field_unerror(f.name, 'nameerror')
+    if (!email) { pass = false; field_error(f.email, 'emailerror', 'Please give your email address') } else field_unerror(f.email, 'emailerror')
+    if (!pass) return;
+
+    var d = document.getElementById('report_submit')
+    d.value = 'Submitting...'; d.disabled = true
+    var r = GXmlHttp.create();
+    var url = "/cgi-bin/submit-correction.cgi"
+    var post_data = "name="+name+";email="+email+";id="+report_id+";lng="+lng+";lat="+lat+";zoom="+zoom
+    r.open("POST", url, true);
+    r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
+    r.onreadystatechange = function(){
+        if (r.readyState == 4) {
+            x = r.responseXML
+            var d = document.getElementById('report_submit')
+            d.value = 'Submit'; d.disabled = false
+            errors = x.getElementsByTagName('error')
+            if (errors.length) {
+                form = document.getElementById('f2')
+                for (e=0; e<errors.length; e++) {
+                    field = errors[e].getAttribute('field')
+                    error = GXml.value(errors[e])
+                    var errspan = ''
+                    if (field=='email') errspan = 'emailerror2'
+                    field_error(form[field], errspan, error)
+                }
+                return;
+            }
+            state = 'reportsuccess'
+            document.getElementById('incorrect_entry').style.display='none'
+            document.getElementById('report_success').style.display='block'
+            map.removeOverlay(add_marker)
+            add_marker = 0
+        }
+    }
+    r.send(post_data);
 }
 
 function update_place_list() {
@@ -196,8 +270,9 @@ function update_place_list() {
                 lat = parseFloat(markers[m].getAttribute('lat'))
                 lng = parseFloat(markers[m].getAttribute('lng'))
                 zoom = parseInt(markers[m].getAttribute('zoom'), 10)
+                var id = parseInt(markers[m].getAttribute('id'), 10)
                 bubble = GXml.value(markers[m])
-                marker[m] = window.createPin(new GPoint(lng, lat), zoom, bubble)
+                marker[m] = window.createPin(id, new GPoint(lng, lat), zoom, bubble)
                 map.addOverlay(marker[m])
             }
             document.getElementById('list').innerHTML = newhtml
@@ -207,7 +282,7 @@ function update_place_list() {
 };
 
 function keep_adding_pin() {
-    if (!adding || !add_marker) return
+    if (state=='recent' || !add_marker) return
     var point = add_marker.point
     var p = map.getScreenCoord(point)
     if (p.x>=0&&p.x<=1&&p.y>=0&&p.y<=1) {
@@ -232,11 +307,13 @@ function onLoad() {
 //    map.setMapType( _HYBRID_TYPE );
 
     GEvent.addListener(map, 'click', function(overlay, point) {
-        if (!adding) return false
+        if (state=='recent') return false
         if (overlay) return false
         else if (point) {
             var s= 100000
-            document.getElementById('show_where').innerHTML = "long. = " + Math.round(point.x*s)/s + "; lat. = " + Math.round(point.y*s)/s
+            var str = "long. = " + Math.round(point.x*s)/s + "; lat. = " + Math.round(point.y*s)/s
+            document.getElementById('show_where').innerHTML = str
+            document.getElementById('show_where2').innerHTML = str
             if (add_marker) map.removeOverlay(add_marker)
             add_marker = new GMarker(point, yellowPin)
             map.addOverlay(add_marker)
@@ -266,7 +343,7 @@ window.onload = onLoad
 
 function revert() {
     if (!map) return true;
-    remove_place_form();
+    show_recent_places();
     map.closeInfoWindow()
     map.resetCenterScreen()
     map.centerAndZoom(new GPoint(-4.218750, 54.724620), 12);

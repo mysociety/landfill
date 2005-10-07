@@ -126,16 +126,16 @@ EOSQL
             if ($type eq 'summary') {
                 my $title = encode_entities($result->{title}, '<&>') || '&lt;No subject&gt;';
                 print <<EOfragment;
-<li><a href="#needsJS" onclick="show_post(marker[$pointindex], '$result->{postid}')">$title</a></li>
+<li><a href="#needsJS" onclick="show_post(marker[$pointindex]); return false;">$title</a></li>
 EOfragment
             } elsif ($type eq 'details') {
                 print dt_entry($result, $wikiuri, $pointindex);
                 $bubble =~ s/"/\\"/g;
                 $Js.=<<EOjs;
-marker[$pointindex] = createPin(new GPoint($result->{google_long}, $result->{google_lat}), $zoomlevel, "$bubble")
+marker[$pointindex] = createPin($result->{postid}, new GPoint($result->{google_long}, $result->{google_lat}), $zoomlevel, "$bubble")
 EOjs
             } elsif ($type eq 'xml') {
-                print '<result lat="'.$result->{google_lat}.'" lng="'.$result->{google_long}.'" zoom="'.$zoomlevel.'"><![CDATA['.$bubble.']]></result>';
+                print '<result id="'.$result->{postid}.'" lat="'.$result->{google_lat}.'" lng="'.$result->{google_long}.'" zoom="'.$zoomlevel.'"><![CDATA['.$bubble.']]></result>';
                 $new_html .= dt_entry($result, $wikiuri, $pointindex)
             }
             $pointindex++;
@@ -191,12 +191,13 @@ sub dt_entry {
     my $name = encode_entities($result->{name}, '<&>');
     my $shortwhy = $result->{shortwhy} || '';
     my $out = <<EOfragment;
-<dt><strong><a href="#needsJS" onclick="show_post(marker[$pointindex], '$result->{postid}')">$title</a></strong>
+<dt><strong><a href="#needsJS" onclick="show_post(marker[$pointindex]); return false;">$title</a></strong>
 <small>(<a href="http://en.wikipedia.org/wiki/$wikiuri">Wikipedia Article</a>)</small></dt>
 <dd><p>$shortwhy</p>
 <small>
 added $someday by $name
-| <a href="/?$result->{postid}">permalink</a>
+| <a href="/?$result->{postid}">Permalink</a>
+| <a href="#needsJS" onclick="report_post_form(marker[$pointindex]); return false;">Incorrect?</a>
 <!-- | <a href="../email/$result->{postid}">Email this to a friend</a>
 | <a href="/abuse/?postid=$result->{postid}">abusive?</a> -->
 </small>

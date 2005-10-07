@@ -42,11 +42,14 @@ function show_recent_places() {
     document.getElementById('add_place').style.display='none';
     if (add_marker) map.removeOverlay(add_marker)
 }
+
+var marker_reported = 0
 function report_post_form(marker) {
     if (state=='reporting') return
     state = 'reporting'
     document.getElementById('report_title').innerHTML = marker.bubbletext
     document.getElementById('report_id').value = marker.id
+    marker_reported = marker
     document.getElementById('incorrect_entry').style.display='block'
     document.getElementById('report_success').style.display='none'
     document.getElementById('recent_places').style.display='none'
@@ -201,20 +204,14 @@ function report_post(f) {
     if (state!='reporting') return; /* Not in reporting mode, shouldn't be able to submit */
     pass = true
     if (!add_marker) {
-//        pass = false
-//        var str = '<b style="color: #ff0000">Please select somewhere</b>'
-//        document.getElementById('show_where').innerHTML = str
-//        document.getElementById('show_where2').innerHTML = str
-        lng = ''
-        lat = ''
+        locstr = ''
     } else {
-        lng = add_marker.point.x
-        lat = add_marker.point.y
+        zoom = map.getZoomLevel()
+        locstr = ";lng=" + add_marker.point.x + ";lat=" + add_marker.point.y + ";zoom=" + zoom
     }
     name = encodeURIComponent(f.name.value)
     email = encodeURIComponent(f.email.value)
     report_id = document.getElementById('report_id').value
-    zoom = map.getZoomLevel()
 
     if (!name) { pass = false; field_error(f.name, 'nameerror', 'Please give your name') } else field_unerror(f.name, 'nameerror')
     if (!email) { pass = false; field_error(f.email, 'emailerror', 'Please give your email address') } else field_unerror(f.email, 'emailerror')
@@ -224,7 +221,7 @@ function report_post(f) {
     d.value = 'Submitting...'; d.disabled = true
     var r = GXmlHttp.create();
     var url = "/cgi-bin/submit-correction.cgi"
-    var post_data = "name="+name+";email="+email+";id="+report_id+";lng="+lng+";lat="+lat+";zoom="+zoom
+    var post_data = "name="+name+";email="+email+";id="+report_id + locstr
     r.open("POST", url, true);
     r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
     r.onreadystatechange = function(){
@@ -247,8 +244,14 @@ function report_post(f) {
             state = 'reportsuccess'
             document.getElementById('incorrect_entry').style.display='none'
             document.getElementById('report_success').style.display='block'
-            map.removeOverlay(add_marker)
-            add_marker = 0
+            if (marker_reported) {
+                map.removeOverlay(marker_reported)
+                marker_reported = 0
+            }
+            if (add_marker) {
+                map.removeOverlay(add_marker)
+                add_marker = 0
+            }
         }
     }
     r.send(post_data);
@@ -309,7 +312,7 @@ function onLoad() {
 //    map.setMapType( _HYBRID_TYPE );
 
     GEvent.addListener(map, 'click', function(overlay, point) {
-        if (state=='recent') return false
+        if (state!='adding' && state!='reporting') return false
         if (overlay) return false
         else if (point) {
             var s= 100000

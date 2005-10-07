@@ -24,11 +24,13 @@ my $abuse_address= mySociety::Config::get('EMAIL_ABUSE');
 my $email_domain= mySociety::Config::get('EMAIL_DOMAIN');
 
 {
-        foreach my $param (param()) {
-		$Passed_Values{$param}=param($param);
-		$Passed_Values{$param}=~ s#\n# #gsi;
-	}
-	&handle_comment;
+    foreach my $param (param()) {
+        $Passed_Values{$param}=param($param);
+        $Passed_Values{$param}=~ s#\n# #gsi;
+    }
+    $Passed_Values{name} ||= '';
+    $Passed_Values{email} ||= '';
+    &handle_comment;
 }
 
 sub error {
@@ -39,7 +41,9 @@ sub error {
 sub handle_comment {
     my %quoted;
     my $error = 0;
-    my $id = param('id') || return;
+
+    return if (!$Passed_Values{id});
+
     print CGI->header('application/xml');
     print "<submission>\n";
     unless (Email::Valid->address( -address => $Passed_Values{email})) {
@@ -56,9 +60,21 @@ sub handle_comment {
             $Passed_Values{$pv}= $scrubber->scrub($Passed_Values{$pv});
             $quoted{$pv}= $dbh->quote($Passed_Values{$pv});
         }
-        my $query=$dbh->prepare("update posts set hidden=1 where postid=$quoted{id}");
+        my $query;
+        if (defined($quoted{lat}) && defined($quoted{lng}) && defined($quoted{zoom})) {
+            $query = $dbh->prepare("INSERT INTO incorrect
+            (post_id, name, email, lat, lon, zoom) VALUES
+            ($quoted{id}, $quoted{name}, $quoted{email}, $quoted{lat}, $quoted{lng}, $quoted{zoom})");
+            $query->execute;
+        } else {
+            $query = $dbh->prepare("INSERT INTO incorrect
+            (post_id, name, email) VALUES
+            ($quoted{id}, $quoted{name}, $quoted{email})");
+            $query->execute;
+        }
+        $query = $dbh->prepare("update posts set hidden=1 where postid=$quoted{id}");
         $query->execute;
-	&send_email;
+#       &send_email;
     }
     print "</submission>\n";
 }

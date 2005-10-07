@@ -200,15 +200,17 @@ function show_post(marker) {
 function report_post(f) {
     if (state!='reporting') return; /* Not in reporting mode, shouldn't be able to submit */
     pass = true
-//    if (!add_marker) {
+    if (!add_marker) {
 //        pass = false
 //        var str = '<b style="color: #ff0000">Please select somewhere</b>'
 //        document.getElementById('show_where').innerHTML = str
 //        document.getElementById('show_where2').innerHTML = str
-//    } else {
+        lng = ''
+        lat = ''
+    } else {
         lng = add_marker.point.x
         lat = add_marker.point.y
-//    }
+    }
     name = encodeURIComponent(f.name.value)
     email = encodeURIComponent(f.email.value)
     report_id = document.getElementById('report_id').value
@@ -324,7 +326,7 @@ function onLoad() {
     if (marker.length==1) {
         map.centerAndZoom(marker[0].point, marker[0].zoomlevel);
     } else {
-        map.centerAndZoom(new GPoint(-4.218750, 54.724620), 12);
+        map.centerAndZoom(new GPoint(-4.218750, 34.724620), 16);
     }
     for (p=0; p<marker.length; p++)
         map.addOverlay(marker[p])
@@ -346,6 +348,6 @@ function revert() {
     show_recent_places();
     map.closeInfoWindow()
     map.resetCenterScreen()
-    map.centerAndZoom(new GPoint(-4.218750, 54.724620), 12);
+    map.centerAndZoom(new GPoint(-4.218750, 34.724620), 16);
     return false;
 }

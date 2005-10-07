@@ -7,7 +7,7 @@
 -- Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 -- Email: matthew@mysociety.org; WWW: http://www.mysociety.org/
 --
--- $Id: schema.sql,v 1.4 2005-09-16 22:42:51 chris Exp $
+-- $Id: schema.sql,v 1.5 2005-10-07 19:07:55 matthew Exp $
 --
 
 CREATE TABLE `comments` (
@@ -51,7 +51,6 @@ CREATE TABLE `cur` (
   KEY `id_title_ns_red` (`cur_id`,`cur_title`,`cur_namespace`,`cur_is_redirect`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 PACK_KEYS=1;
 
-
 CREATE TABLE `emailnotify` (
   `notifyid` int(10) unsigned NOT NULL auto_increment,
   `email` varchar(100) default NULL,
@@ -77,27 +76,44 @@ CREATE TABLE `posts` (
   `title` varchar(100) NOT NULL default '',
   `commentcount` int(10) unsigned NOT NULL default '0',
   `authcode` varchar(20) NOT NULL default '',
-  `shortwhy` varchar(255) default '',
+  `shortwhy` text,
   `emailalert` tinyint(3) unsigned NOT NULL default '0',
   `interesting` tinyint(3) unsigned NOT NULL default '0',
   `original_geography` varchar(255) NOT NULL default '',
   `google_long` varchar(30) default NULL,
   `google_lat` varchar(30) default NULL,
   `google_zoom` tinyint(3) unsigned default NULL,
+  `lat` double default NULL,
+  `lon` double default NULL,
   `name` varchar(255) default NULL,
   `category` varchar(20) default NULL,
   `site` varchar(20) NOT NULL default 'missing',
   PRIMARY KEY  (`postid`),
-  KEY `site` (`site`)
+  KEY `site` (`site`),
+  KEY `posts_google_long_idx` (`google_long`),
+  KEY `posts_google_lat_idx` (`google_lat`),
+  KEY `posts_lat_idx` (`lat`),
+  KEY `posts_lon_idx` (`lon`),
+  KEY `testing` (`posted`,`validated`,`hidden`,`site`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- Index of Wikipedia article titles. Generation is used to drop articles which
 -- cease to exist.
-create table wikipedia_article (
-    title text not null,
-    generation integer not null
-) charset 'UTF8' collate 'UTF8_bin';
+CREATE TABLE `wikipedia_article` (
+  `title` text collate utf8_bin NOT NULL,
+  `generation` int(11) NOT NULL default '0',
+  KEY `wikipedia_article2_title_idx` (`title`(256)),
+  KEY `wikipedia_article2_generation_idx` (`generation`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-create index wikipedia_article_title_idx on wikipedia_article(title(256));
-create index wikipedia_article_generation_idx on wikipedia_article(generation);
+CREATE TABLE `incorrect` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `post_id` int(10) unsigned NOT NULL,
+  `name` varchar(255) NOT NULL default '',
+  `email` varchar(255) NOT NULL default '',
+  `lat` double default NULL,
+  `lon` double default NULL,
+  `zoom` tinyint(3) unsigned default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

@@ -60,7 +60,7 @@
         <ol>
             <li>You're reporting the entry:<br />
             <span id="report_title">ENTRY TITLE</span>
-            for being in the incorrect location.</li>
+            for being in the incorrect location, or not being a place.</li>
             <li>Optionally, please give the correct location on the map. Use the arrow and zoom
             controls, or enter a location or UK postcode in the search box above. When you have
             found the rough area, click to place a yellow pin over the exact place corresponding

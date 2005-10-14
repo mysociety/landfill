@@ -5,8 +5,13 @@
 -- Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 -- Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 --
--- $Id: schema.sql,v 1.1 2005-10-14 11:16:35 chris Exp $
+-- $Id: schema.sql,v 1.2 2005-10-14 18:06:29 chris Exp $
 --
+
+create table secret (
+    id integer primary key default(0) check (id = 0),
+    secret text not null
+);
 
 create table category (
     id serial not null primary key,

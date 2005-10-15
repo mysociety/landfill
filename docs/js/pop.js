@@ -127,7 +127,7 @@ function add_place(f) {
     r.send(post_data);
 }
 
-function search(s) {
+function POPsearch(s) {
     var d = document.getElementById('Submit1')
     d.value = 'Searching...'; d.disabled = true
     document.getElementById('q').disabled = true
@@ -172,6 +172,7 @@ function search(s) {
         }
     }
     r.send(null);
+    return false;
 };
 
 // Auto complete stuff

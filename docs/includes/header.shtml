@@ -30,7 +30,7 @@
     <li id="add"><a onclick="add_place_form(); return false;" href="#needsJS">Add your place</a></li>
     <li id="random"><a href="/random">Random place</a></li>
     <li>
-        <form onsubmit="search(this.q.value); return false;" method="get" action="" id="search">
+        <form onsubmit="return POPsearch(this.q.value);" method="get" action="#needsJS" id="search">
             <fieldset>
                 <input type="text" name="q" id="q" size="20" value="Search for a location" onclick="if (this.value=='Search for a location') this.value='';" onblur="if (this.value=='') this.value='Search for a location';" />
                 <input type="submit" value="Search" class="submit" id="Submit1" name="Submit1"/>

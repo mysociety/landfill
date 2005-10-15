@@ -70,6 +70,11 @@ EOSQL
         my $limit = ($type eq 'details') ? $mainlimit : $mainlimit * $brief;
         my $offset = $page * $mainlimit;
         $offset += $mainlimit if ($type eq 'summary');
+
+        my $numposts = $dbh->selectrow_arrayref("SELECT COUNT(*) FROM posts WHERE $where");
+        $numposts = $numposts->[0];
+        my $notshown = $numposts - $limit > 0 ? $numposts - $limit : 0;
+        $Js .= "\ndocument.getElementById('notshown').innerHTML = ', $notshown " . ($notshown==1?'entry':'entries') . " not shown';\n";
         my $query=$dbh->prepare("
                           select *, date_format(posted, \"%H:%i, %e %M\") as posted_formatted
                             from posts
@@ -172,7 +177,9 @@ EOjs
 #                print '</p>';
 
             } elsif ($type eq 'xml') {
-                print '<newhtml><![CDATA[<dl>'.$new_html.'</dl>]]></newhtml></results>';
+                print '<notshown>' . $notshown . '</notshown>';
+                print '<newhtml><![CDATA[<dl>'.$new_html.'</dl>]]></newhtml>';
+                print '</results>';
             }
         } elsif ($type eq 'details' && $search_bit ne '') {
             print "<p>Your search for " . $search_bit . " yielded no results.</p>";

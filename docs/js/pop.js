@@ -266,6 +266,7 @@ function update_place_list() {
         if (r.readyState ==4) {
             x = r.responseXML
             newhtml = GXml.value(x.getElementsByTagName('newhtml')[0])
+            notshown = GXml.value(x.getElementsByTagName('notshown')[0])
             markers = x.getElementsByTagName('result');
             for (m=0; m<marker.length; m++) {
                 map.removeOverlay(marker[m])
@@ -281,6 +282,7 @@ function update_place_list() {
                 map.addOverlay(marker[m])
             }
             document.getElementById('list').innerHTML = newhtml
+            document.getElementById('notshown').innerHTML = ', ' + notshown + ' ' + (notshown==1?'entry':'entries') + ' not shown'
 	}
     }
     r.send(null)
@@ -329,7 +331,7 @@ function onLoad() {
     if (marker.length==1) {
         map.centerAndZoom(marker[0].point, marker[0].zoomlevel);
     } else {
-        map.centerAndZoom(new GPoint(-4.218750, 34.724620), 16);
+        map.centerAndZoom(new GPoint(10, 34.724620), 16);
     }
     for (p=0; p<marker.length; p++)
         map.addOverlay(marker[p])
@@ -351,6 +353,6 @@ function revert() {
     show_recent_places();
     map.closeInfoWindow()
     map.resetCenterScreen()
-    map.centerAndZoom(new GPoint(-4.218750, 34.724620), 16);
+    map.centerAndZoom(new GPoint(10, 34.724620), 16); // -4.218750, 34.724620), 16);
     return false;
 }

@@ -94,6 +94,10 @@ line-height:1.5em;
 margin:0;
 /* list-style-type:none; */
 }
+ul.pins {
+    margin-top: 1em;
+    list-style-type: none;
+}
 ul.pins li
 {
 	background: url(../images/pin.png) 0 0 no-repeat;
@@ -106,8 +110,13 @@ ul.pins li
 div#map 
 {
 	margin-bottom:2px;	
-	width: 450px;
+	width: 510px;
  	height: 400px;
+}
+#mapbanner {
+    font-size: 90%;
+    margin: 0;
+    text-align: right;
 }
 
 /* nav menu */
@@ -238,12 +247,12 @@ div#main
 {
 clear:left;
 float:left;
-width:450px;
+width:510px;
 
 padding:2px 2px 0 2px;
 }
 div#inputBox {
-    width:287px;
+    width:227px;
 	padding:2px 2px 0 2px;
     float:right;
     text-align: left;
@@ -260,7 +269,7 @@ div#inputBox {
 }
 
 #inputBox textarea, form#comment textarea{
-	width:320px;
+	width:260px;
 	margin-top:0.2em;
 	font-family:inherit;
 	font-size:100%;

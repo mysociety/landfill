@@ -5,6 +5,7 @@
 <!--#include virtual="/includes/header.shtml" -->
 <div id="search_container">
 <div id="map"></div>
+<p id="mapbanner">(Map shows latest 15 additions in area shown<span id="notshown"></span>)</p>
 </div>
 <!--#include virtual="/includes/description.shtml" -->
 </div>

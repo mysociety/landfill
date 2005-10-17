@@ -5,7 +5,7 @@
 -- Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 -- Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 --
--- $Id: schema.sql,v 1.2 2005-10-14 18:06:29 chris Exp $
+-- $Id: schema.sql,v 1.3 2005-10-17 12:39:23 chris Exp $
 --
 
 create table secret (
@@ -15,7 +15,7 @@ create table secret (
 
 create table category (
     id serial not null primary key,
-    parent_category_id integer references category(id,
+    parent_category_id integer references category(id),
     name text not null
 );
 
@@ -45,11 +45,11 @@ create table item (
     description text not null,
     location_id integer not null references location(id),
     -- state
-    confirmed boolean default (f),
-    available boolean default (t)
+    confirmed boolean default (false),
+    available boolean default (true)
 );
 
-create index item_donor_email_idx on item(donor_email);
+create index item_email_idx on item(email);
 
 create table acceptor (
     id serial not null primary key,
@@ -57,7 +57,7 @@ create table acceptor (
     name text not null,
     organisation text not null,
     location_id integer not null references location(id),
-    bouncing boolean default (f)
+    bouncing boolean default (false)
 );
 
 create table acceptor_category_interest (
@@ -67,7 +67,7 @@ create table acceptor_category_interest (
 
 create table acceptor_item_interest (
     acceptor_id integer not null,
-    item_id integer not null,
+    item_id integer not null references item(id),
     whensent timestamp not null default current_timestamp,
     whenaccepted timestamp
 );

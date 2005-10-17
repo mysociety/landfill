@@ -1,0 +1,63 @@
+#!/usr/bin/perl -w -I../../../perllib -I../../perllib
+#
+# page:
+# Render pages.
+#
+# Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
+# Email: chris@mysociety.org; WWW: http://www.mysociety.org/
+#
+
+my $rcsid = ''; $rcsid .= '$Id: page,v 1.1 2005-10-17 12:18:02 chris Exp $';
+
+use strict;
+
+require 5.8.0;
+
+BEGIN {
+    use mySociety::Config;
+    mySociety::Config::set_file('../../conf/general');
+}
+
+use GIA;
+use GIA::Web;
+
+my %goodpage;
+my %badpage;
+
+sub internalerror ($) {
+    my $q = shift;
+    print $q->header(-status => '500 Internal error', -type => 'text/html'),
+            "Internal error\n";
+}
+
+while (my $q = new GIA::Web()) {
+    my $page = $q->param('_page');
+    if (!defined($page) || $page !~ m#^[A-Za-z0-9]+(/[A-Za-z0-9]+)*$#) {
+        internalerror($q);
+        next;
+    }
+    $page =~ s#/#::#g;
+    if (exists($badpage{$page})) {
+        internalerror($q);
+        next;
+    } elsif (!exists($goodpage{$page})) {
+        my $f = 0;
+        eval {
+            require "GIA::$page";
+            $f = 1 if (eval "exists &GIA::${page}::render");
+        };
+        if ($f) {
+            $goodpage{$page} = eval "\\&GIA::${page}::render";
+        } else {
+            $badpage{$page} = 1;
+            internalerror($q);
+            next;
+        }
+    }
+
+    my $hdr, $content;
+    # If the page does its own rendering the render function will return false.
+    if (!&{$goodpage{$page}}($q, \$hdr, \$content)) {
+        print $hdr, $content;
+    }
+}

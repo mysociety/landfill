@@ -6,7 +6,7 @@
  * Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
  * Email: francis@mysociety.org. WWW: http://www.mysociety.org
  *
- * $Id: admin-pop.php,v 1.2 2005-10-08 00:22:53 matthew Exp $
+ * $Id: admin-pop.php,v 1.3 2005-10-18 21:34:22 matthew Exp $
  * 
  */
 
@@ -70,10 +70,10 @@ class ADMIN_PAGE_POP_INCORRECTPLACES {
 <form action="" method="post"><input type="hidden" name="page" value="popreports">
 <input type="submit" name="update" value="Use new data of checked entries">
 <table cellpadding="3" cellspacing="0" border="0">
-<tr><th>Article</th><th>Current location</th><th>Creator</th><th>Reporter</th><th>New location</th><th>Status</th><th>Revert</th><th>Replace</th></tr>
+<tr><th>Article</th><th>Current location</th><th>Creator</th><th>Reporter</th><th>Reason</th><th>New location</th><th>Status</th><th>Revert</th><th>Replace</th></tr>
 <?
        $q = db_getAll('SELECT p.postid, p.title, p.lat, p.lon, p.google_zoom, p.name, p.email,
-                            i.id AS report_id, i.name AS reporter_name, i.email AS reporter_email,
+                            i.id AS report_id, i.name AS reporter_name, i.email AS reporter_email, i.reason,
                             i.lat AS new_lat, i.lon AS new_lon, i.zoom AS new_zoom, i.status
                         FROM incorrect AS i,posts AS p
                         WHERE p.postid = i.post_id');
@@ -87,6 +87,7 @@ class ADMIN_PAGE_POP_INCORRECTPLACES {
             print "<tr><td><a href='http://en.wikipedia.org/wiki/$r[title]'>$r[title]</a></td>
             <td><a href='http://www.placeopedia.com/?$r[postid]'>($r[lon], $r[lat], $r[google_zoom])</a></td>
             <td>$r[name]<br>$r[email]</td><td>$r[reporter_name]<br>$r[reporter_email]</td>
+            <td>$r[reason]</td>
             <td>$new_loc</td><td>$r[status]</td><td><input type='submit' name='revert_$r[report_id]' value='Original is correct'></td>";
             if ($update) print "<td><input type='checkbox' name='update_ids[]' value='$r[report_id]'></td>";
             else print '<td>No new location</td>';

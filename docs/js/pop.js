@@ -212,17 +212,19 @@ function report_post(f) {
     }
     name = encodeURIComponent(f.name.value)
     email = encodeURIComponent(f.email.value)
+    explain = encodeURIComponent(f.explain.value)
     report_id = document.getElementById('report_id').value
 
-    if (!name) { pass = false; field_error(f.name, 'nameerror', 'Please give your name') } else field_unerror(f.name, 'nameerror')
-    if (!email) { pass = false; field_error(f.email, 'emailerror', 'Please give your email address') } else field_unerror(f.email, 'emailerror')
+    if (!name) { pass = false; field_error(f.name, 'nameerror2', 'Please give your name') } else field_unerror(f.name, 'nameerror2')
+    if (!email) { pass = false; field_error(f.email, 'emailerror2', 'Please give your email address') } else field_unerror(f.email, 'emailerror2')
+    if (!explain) { pass = false; field_error(f.explain, 'explainerror', 'Please given an explanation') } else field_unerror(f.explain, 'explainerror')
     if (!pass) return;
 
     var d = document.getElementById('report_submit')
     d.value = 'Submitting...'; d.disabled = true
     var r = GXmlHttp.create();
     var url = "/cgi-bin/submit-correction.cgi"
-    var post_data = "name="+name+";email="+email+";id="+report_id + locstr
+    var post_data = "name="+name+";email="+email+";explain="+explain+";id="+report_id + locstr
     r.open("POST", url, true);
     r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
     r.onreadystatechange = function(){

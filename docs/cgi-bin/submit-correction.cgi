@@ -30,6 +30,7 @@ my $email_domain= mySociety::Config::get('EMAIL_DOMAIN');
     }
     $Passed_Values{name} ||= '';
     $Passed_Values{email} ||= '';
+    $Passed_Values{explain} ||= '';
     &handle_comment;
 }
 
@@ -63,13 +64,13 @@ sub handle_comment {
         my $query;
         if (defined($quoted{lat}) && defined($quoted{lng}) && defined($quoted{zoom})) {
             $query = $dbh->prepare("INSERT INTO incorrect
-            (post_id, name, email, lat, lon, zoom) VALUES
-            ($quoted{id}, $quoted{name}, $quoted{email}, $quoted{lat}, $quoted{lng}, $quoted{zoom})");
+            (post_id, name, email, reason, lat, lon, zoom) VALUES
+            ($quoted{id}, $quoted{name}, $quoted{email}, $quoted{explain}, $quoted{lat}, $quoted{lng}, $quoted{zoom})");
             $query->execute;
         } else {
             $query = $dbh->prepare("INSERT INTO incorrect
-            (post_id, name, email) VALUES
-            ($quoted{id}, $quoted{name}, $quoted{email})");
+            (post_id, name, email, reason) VALUES
+            ($quoted{id}, $quoted{name}, $quoted{email}, $quoted{reason})");
             $query->execute;
         }
         $query = $dbh->prepare("update posts set hidden=1 where postid=$quoted{id}");

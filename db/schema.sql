@@ -5,7 +5,7 @@
 -- Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 -- Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 --
--- $Id: schema.sql,v 1.3 2005-10-17 12:39:23 chris Exp $
+-- $Id: schema.sql,v 1.4 2005-10-18 15:04:43 chris Exp $
 --
 
 create table secret (
@@ -30,9 +30,8 @@ insert into category (name) values ('other');
 create table location (
     id serial not null primary key,
     postcode text not null,
-    -- UK only for the moment
-    easting double precision not null,
-    northing double precision not null
+    lat double precision not null,
+    lon double precision not null
 );
 
 create table item (

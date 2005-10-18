@@ -70,7 +70,7 @@ sub handle_comment {
         } else {
             $query = $dbh->prepare("INSERT INTO incorrect
             (post_id, name, email, reason) VALUES
-            ($quoted{id}, $quoted{name}, $quoted{email}, $quoted{reason})");
+            ($quoted{id}, $quoted{name}, $quoted{email}, $quoted{explain})");
             $query->execute;
         }
         $query = $dbh->prepare("update posts set hidden=1 where postid=$quoted{id}");

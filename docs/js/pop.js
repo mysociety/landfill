@@ -155,7 +155,7 @@ function POPsearch(s) {
                 for (ref=0; ref<refinements.length; ref++) {
                     q = GXml.value(refinements[ref].getElementsByTagName('query')[0])
                     d = GXml.value(refinements[ref].getElementsByTagName('description')[0])
-                    out += '<li><a href="#needsJS" onclick=\'window.search("' + q + '"); return false;\'>' + d + '</a>'
+                    out += '<li><a href="#needsJS" onclick=\'POPsearch("' + q + '"); return false;\'>' + d + '</a>'
                 }
                 out += '</ul>'
                 d = document.getElementById('search_results')

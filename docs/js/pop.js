@@ -122,6 +122,7 @@ function add_place(f) {
             document.getElementById('add_success').style.display='block'
             map.removeOverlay(add_marker)
             add_marker = 0
+            update_place_list()
         }
     }
     r.send(post_data);

@@ -6,7 +6,7 @@
 # Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: Web.pm,v 1.2 2005-10-17 15:05:11 chris Exp $
+# $Id: Web.pm,v 1.3 2005-10-18 17:40:43 chris Exp $
 #
 
 package GIA::Web;
@@ -75,8 +75,7 @@ This function may be called several times for one request.
 =cut
 sub Import ($$%) {
     my ($self, $what, %p) = @_;
-
-    my $q = $self->Q();
+    my $q = $self->q();
 
     die "WHAT should be 'p' for parameters, or 'c' for cookies"
         unless ($what =~ m#^[pc]$#);
@@ -84,7 +83,6 @@ sub Import ($$%) {
 
     while (my ($name, $x) = each(%p)) {
         my $val = $p ? $q->param($name) : $q->cookie($name);
-
         if (ref($x) eq 'ARRAY') {
             die "PARAMS->{$_} should be a 2-element list" unless (@$x == 2);
             my ($check, $dfl) = @$x;
@@ -103,18 +101,17 @@ sub Import ($$%) {
             $val = $x if (!defined($val));
         }
 
-
         {
             no strict 'refs';
             ${"q${what}_$name"} = $val;
-            push(@OSRLG::Web::EXPORT, "\$q${what}_$name");
+            push(@GIA::Web::EXPORT, "\$q${what}_$name");
         }
     }
 
     {
         # Black magic.
         local $Exporter::ExportLevel = 1;
-        import OSRLG::Web;
+        import GIA::Web;
     }
 }
 
@@ -129,7 +126,7 @@ supplied by the client.
 =cut
 sub ImportMulti ($%) {
     my ($self, %p) = @_;
-    my $q = $self->Q();
+    my $q = $self->q();
 
     while (my ($name, $check) = each(%p)) {
         my @val;
@@ -144,7 +141,7 @@ sub ImportMulti ($%) {
         {
             no strict 'refs';
             @{"qp_$name"} = @val;
-            push(@OSRLG::Web::EXPORT, "\@qp_$name");
+            push(@GIA::Web::EXPORT, "\@qp_$name");
         }
     }
 

@@ -103,11 +103,12 @@ sub handle_comment {
                        lat=$quoted{lat},
                        lon=$quoted{lng},
 		       authcode=$auth_code_q,
-		       site='$site_name'
+		       site='$site_name',
+                       validated = 1
         ");
         $query->execute;
         $Passed_Values{rowid}= $dbh->{insertid};
-	&send_email;
+#	&send_email;
     }
     print "</submission>\n";
 }

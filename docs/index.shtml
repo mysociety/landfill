@@ -50,7 +50,7 @@
 
 <div id="add_success" style="display:none">
 <h3 class="blue">Add new place</h3>
-<p>Thanks for creating that entry - now please check your email to confirm your post.</p>
+<p>Thanks for creating that entry, it has now been added.</p>
 <p><a href="#needsJS" onclick="add_place_form(); return false;">Add another</a></p>
 </div>
 

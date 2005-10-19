@@ -6,12 +6,14 @@
 # Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: Web.pm,v 1.3 2005-10-18 17:40:43 chris Exp $
+# $Id: Web.pm,v 1.4 2005-10-19 14:11:35 chris Exp $
 #
 
 package GIA::Web;
 
 use strict;
+
+use HTML::Entities;
 
 use GIA;
 
@@ -152,5 +154,34 @@ sub ImportMulti ($%) {
     }
 }
 
+=item FormatText TEXT
+
+Turn TEXT into some sort of HTML.
+
+=cut
+sub FormatText ($$) {
+    my ($q, $text) = @_;
+    
+    $text =~ s/\r\n/\n/g;
+    my @lines = split(/\n/, $text);
+    my $html = '<p>';
+    while (my $l = shift(@lines)) {
+        if ($l =~ m#^\s*$#) {
+            $html .= '</p>';
+            # swallow multiple blank lines.
+            do {
+                $l = shift(@lines);
+            } while (defined($l) && $l =~ m#^\s*$#);
+            last if (!defined($l));
+            $html .= '<p>';
+        }
+
+        $html .= encode_entities($l);
+        $html .= $q->br() if (defined($lines[0]) && $lines[0] !~ m#^\s*$#);
+    }
+
+    $html .= '</p>';
+    return $html;
+}
 
 1;

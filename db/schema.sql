@@ -5,7 +5,7 @@
 -- Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 -- Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 --
--- $Id: schema.sql,v 1.5 2005-10-19 14:09:10 chris Exp $
+-- $Id: schema.sql,v 1.6 2005-10-19 16:16:42 chris Exp $
 --
 
 -- convenience functions
@@ -75,7 +75,8 @@ create table acceptor (
     organisation text not null,
     charity_number text,
     location_id integer not null references location(id),
-    bouncing boolean default (false)
+    bouncing boolean default (false),
+    whenadded timestamp not null default (current_timestamp)
 );
 
 create table acceptor_category_interest (

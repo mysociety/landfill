@@ -52,6 +52,7 @@
 <h3 class="blue">Add new place</h3>
 <p>Thanks for creating that entry, it has now been added.</p>
 <p><a href="#needsJS" onclick="add_place_form(); return false;">Add another</a></p>
+<p><a onclick="show_recent_places(); return false" href="#needsJS">Back to recently added places</a></p>
 </div>
 
 <div id="incorrect_entry" style="display:none">

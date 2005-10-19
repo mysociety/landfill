@@ -6,7 +6,7 @@
 # Copyright (c) 2005 Chris Lightfoot. All rights reserved.
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
-# $Id: Form.pm,v 1.1 2005-10-19 14:11:35 chris Exp $
+# $Id: Form.pm,v 1.2 2005-10-19 17:03:49 chris Exp $
 #
 
 package GIA::Form;
@@ -55,8 +55,9 @@ following items:
 =item field type
 
 One of: hidden, for a state-preserving hidden field; text, for a text field;
-longtext, for a textarea; select, for a drop-down list; button, for a clickable
-button; or html for some literal HTML to include in the output form.
+longtext, for a textarea; select, for a drop-down list; multiselect, for a
+multiple-selection list; button, for a clickable button; or html for some
+literal HTML to include in the output form.
 
 =back
 
@@ -92,7 +93,7 @@ sub new ($@) {
         die "hidden field followed by extra data in element #$i" if ($type eq 'hidden' and @$_ > 3);
 
         if ($type eq 'text' || $type eq 'longtext') {
-            die "text field followed by extra data in element #$i" if (@$_ > 5);
+            die "$type field followed by extra data in element #$i" if (@$_ > 5);
             my ($check, $error) = @{$_}[3 .. 4];
             die "no check for $type field in element #$i" if (!defined($check));
             if (ref($check) eq 'CODE') {
@@ -106,17 +107,17 @@ sub new ($@) {
             } else {
                 die "check for text field should be code ref or regular expression in element #$i";
             }
-        } elsif ($type eq 'select') {
-            die "select field followed by extra data in element #$i" if (@$_ > 4);
+        } elsif ($type eq 'select' || $type eq 'multiselect') {
+            die "$type field followed by extra data in element #$i" if (@$_ > 4);
             my $values = $_->[3];
-            die "values supplied for select field should be reference to list in element #$i"
+            die "values supplied for $type field should be reference to list in element #$i"
                 unless (ref($values) eq 'ARRAY');
             foreach (@$values) {
-                die "each possible value for select field should be reference to list of key and optional description in element #$i"
+                die "each possible value for $type field should be reference to list of key and optional description in element #$i"
                     if (ref($_) ne 'ARRAY' || @$_ < 1 || @$_ > 2);
-                die "value in select item must not be a reference in element #$i"
+                die "value in $type item must not be a reference in element #$i"
                     if (ref($_->[0]));
-                die "description in select item must not be a reference in element #$i"
+                die "description in $type item must not be a reference in element #$i"
                     if (@$_ > 1 && ref($_->[2]) ne '');
             }
         } elsif ($type eq 'button') {
@@ -171,6 +172,10 @@ sub populate ($$) {
         } elsif ($type eq 'select') {
             $self->{errors}->{$name} = 'Please select a value'
                 if (!defined($value) || !grep { $_->[0] eq $value } @{$_->[3]});
+        } elsif ($type eq 'multiselect') {
+            my %allowed = map { $_ => 1 } @{$_->[3]};
+            my @values = grep { exists($allowed{$_}) } $q->param($name);
+            $q->param(-name => $name, -values => \@values);
         } elsif ($type eq 'button') {
             $value = defined($value) ? 1 : 0;
             #$q->param($name) ? 1 : 0;
@@ -348,6 +353,21 @@ sub render ($$;$) {
                                                 grep { @$_ == 2 } @{$_->[3]}
                                         }
                                     )
+                            )
+                        );
+        } elsif ($type eq 'multiselect') {
+            $html .= $q->Tr(
+                            $q->th(ent($description)),
+                            $q->tr(
+                                $q->scrolling_list(
+                                    -name => $name,
+                                    -values => [map { $_->[0] } @{$_->[3]} ],
+                                    -labels => {
+                                        map { $_->[0] => $_->[1] }
+                                            grep { @$_ == 2 } @{$_->[3]}
+                                    },
+                                    -multiple => 1
+                                )
                             )
                         );
         } elsif ($type eq 'button') {

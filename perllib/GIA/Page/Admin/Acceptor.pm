@@ -6,7 +6,7 @@
 # Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: Acceptor.pm,v 1.1 2005-10-19 16:15:43 chris Exp $
+# $Id: Acceptor.pm,v 1.2 2005-10-19 17:10:49 chris Exp $
 #
 
 package GIA::Page::Admin::Acceptor;
@@ -85,6 +85,9 @@ sub render ($$$) {
                     };
                     return $res;
                 }
+            ], ['Interested in categories',
+                'category',  'multiselect',
+                dbh()->selectall_arrayref('select id, name from category order by name')
             ], [$qp_new ? 'Add new acceptor' : 'Update acceptor',
                 'update', 'button'
             ]
@@ -102,6 +105,9 @@ sub render ($$$) {
         foreach (keys %$h) {
             $q->param($_, $h->{$_});
         }
+
+        # Categories.
+        $q->param(-name => 'category', -values => dbh()->selectcol_arrayref('select category_id from acceptor_category_interest where acceptor_id = ?', {}, $qp_acceptorid));
     }
 
     $f->populate($q);
@@ -134,6 +140,12 @@ sub render ($$$) {
                     {},
                     $q->param('postcode'), $lat, $lon, $q->param('locid'));
         }
+
+        dbh()->do('delete from acceptor_category_interest where acceptor_id = ?', {}, $q->param('acceptorid'));
+        foreach ($q->param('category')) {
+            dbh()->do('insert into acceptor_category_interest (acceptor_id, category_id) values (?, ?)', {},  $q->param('acceptorid'), $_);
+        }
+        
         dbh()->commit();
         $$hdr = $q->redirect("Acceptor?acceptorid=$qp_acceptorid");
         $$content = '';

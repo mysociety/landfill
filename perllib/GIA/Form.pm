@@ -6,7 +6,7 @@
 # Copyright (c) 2005 Chris Lightfoot. All rights reserved.
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
-# $Id: Form.pm,v 1.2 2005-10-19 17:03:49 chris Exp $
+# $Id: Form.pm,v 1.3 2005-10-19 17:07:54 chris Exp $
 #
 
 package GIA::Form;
@@ -88,7 +88,7 @@ sub new ($@) {
         die "repeated name '$name' in element #$i" if ($type ne 'html' && exists($havename{$name}));
         $havename{$name} = 1;
         die "type not defined in element #$i" if (!defined($type));
-        die "bad element type '$type' in element #$i" unless ($type =~ m#^(hidden|(long|)text|select|button|html)$#);
+        die "bad element type '$type' in element #$i" unless ($type =~ m#^(hidden|(long|)text|(multi|)select|button|html)$#);
         
         die "hidden field followed by extra data in element #$i" if ($type eq 'hidden' and @$_ > 3);
 
@@ -358,7 +358,7 @@ sub render ($$;$) {
         } elsif ($type eq 'multiselect') {
             $html .= $q->Tr(
                             $q->th(ent($description)),
-                            $q->tr(
+                            $q->td(
                                 $q->scrolling_list(
                                     -name => $name,
                                     -values => [map { $_->[0] } @{$_->[3]} ],

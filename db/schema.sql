@@ -5,7 +5,7 @@
 -- Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 -- Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 --
--- $Id: schema.sql,v 1.6 2005-10-19 16:16:42 chris Exp $
+-- $Id: schema.sql,v 1.7 2005-10-20 09:46:41 chris Exp $
 --
 
 -- convenience functions
@@ -96,6 +96,7 @@ create table acceptor_item_interest (
     item_id integer not null references item(id),
     whensent timestamp not null default current_timestamp,
     whenaccepted timestamp,
+    whendeclined timestamp,
     primary key(acceptor_id, item_id)
 );
 

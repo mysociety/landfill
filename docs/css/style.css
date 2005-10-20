@@ -39,6 +39,10 @@ div#top h1 a
 	background: url(../images/header.png);
 
 }
+div#top h1 a span {
+	display: block; 
+	visibility: hidden;
+}
 div#top h2 
 {
 	display:none;
@@ -126,13 +130,17 @@ div#map
 /* nav menu */
 ul.nav 
 {
-background:url(../images/menubackground.png) ;
+background-image: url(../images/menubackground.png) ;
 list-style:none;
 padding:0;
-margin:0 2px;
+margin:0 2px !important; 
+margin:0 1px;
 min-height:37px;
 display:block;
 font-size:18px;
+float: left;
+width: 740px !important;
+width: auto;
 }
 ul.nav.main{
 clear:left;
@@ -200,8 +208,8 @@ ul.nav li a:hover {
 
 }
 
-ul.nav form {float:left;padding:4px 0 0 15px;}
 
+ul.nav form {float:left;padding:4px 0 0 15px; margin: 0;}
 
 
 #emailBox{
@@ -303,6 +311,12 @@ textarea:hover, textarea:focus {
 }
 #inputBox input, #mainInput input{
 	margin:0 0 0 0;
+}
+#inputBox input#emailname,
+#inputBox input#emailreason,
+#inputBox input#articlename
+ {
+	width: 180px;
 }
 
 #main img{
@@ -436,3 +450,4 @@ margin-top:0;
     display: block;
 }
 
+#add_place { width: 222px; }

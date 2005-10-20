@@ -24,7 +24,7 @@
 
         <ol>
             <li><strong>Enter <a href="http://en.wikipedia.org/">Wikipedia</a> article name</strong>
-        <input type="text" autocomplete="off" maxLength="1024" size="30" name="q" />
+        <input type="text" autocomplete="off" maxLength="1024" size="30" name="q" id="articlename" />
         <span id="titleerror"></span>
         <p><small>(this will auto-complete; might take a short time to respond)</small></p>
         </li>

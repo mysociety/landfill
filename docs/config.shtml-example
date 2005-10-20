@@ -1,5 +1,12 @@
-<!-- Edit this file and copy to config.shtml -->
-<!-- reset the error message to the standard -->
-<!--#config errmsg="[an error occurred while processing this directive]" -->
-<!-- To run this code anywhere but the original placeopedia server, you will need a google API key from http://www.google.com/apis/maps -->
+<!--#config errmsg="[an error occurred while processing this directive]" --> <!--#if expr="" -->
+Configuration required
+
+To run this code anywhere but the original placeopedia server, 
+you will need a google API key from http://www.google.com/apis/maps 
+
+These keys are specific to a particular URL, so you will need one that 
+identifies with your server's location.
+
+Please insert that key in the final line of this file.
+<!--#endif --> 
 <!--#set var="api_key" value="ABQIAAAA8N0lvXAsUc4OGoWFst6idhQ08MtMjoXxyp9SXQd6LIaB84SUmBRUeUi1liAZDjkRIrTSC1tpDWgPtQ" -->

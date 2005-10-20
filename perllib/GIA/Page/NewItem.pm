@@ -6,7 +6,7 @@
 # Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: NewItem.pm,v 1.3 2005-10-19 14:11:35 chris Exp $
+# $Id: NewItem.pm,v 1.4 2005-10-20 13:31:03 chris Exp $
 #
 
 package GIA::Page::NewItem;
@@ -119,6 +119,7 @@ EOF
         $$hdr = $q->header();
         $$content =
             $q->start_html('Donate Item')
+                . $q->p("Got something you'd like to give away to a good cause? Enter your details and we'll copy you into an email to a nearby charity that might be interested.")
                 . $q->start_form(-method => 'POST')
                 . $form->render($q)
                 . $q->end_html();

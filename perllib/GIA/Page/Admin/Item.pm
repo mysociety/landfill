@@ -6,7 +6,7 @@
 # Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: Item.pm,v 1.1 2005-10-19 14:11:35 chris Exp $
+# $Id: Item.pm,v 1.2 2005-10-20 13:31:03 chris Exp $
 #
 
 package GIA::Page::Admin::Item;
@@ -28,7 +28,7 @@ use GIA::Web;
 sub render ($$$) {
     my ($q, $hdr, $content) = @_;
 
-    our ($qp_itemid, $qp_locid);
+    our ($qp_itemid);
     $q->Import('p',
             itemid => [qr/^[1-9]\d*$/, undef]
         );

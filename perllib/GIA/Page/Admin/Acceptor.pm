@@ -6,7 +6,7 @@
 # Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: Acceptor.pm,v 1.2 2005-10-19 17:10:49 chris Exp $
+# $Id: Acceptor.pm,v 1.3 2005-10-20 13:31:03 chris Exp $
 #
 
 package GIA::Page::Admin::Acceptor;
@@ -52,7 +52,6 @@ sub render ($$$) {
     my $f = new GIA::Form([
             ['', 'new', 'hidden'],
             ['', 'acceptorid', 'hidden'],
-            ['', 'locid', 'hidden'],
             ['Contact email address',
                 'email', 'text',
                 sub ($) {
@@ -165,8 +164,80 @@ sub render ($$$) {
 
     $$content =
         $q->start_html("Acceptor $qp_acceptorid")
+        . $q->h2('Acceptor details')
         . $q->start_form(-method => 'POST')
             . $f->render($q)
+        . $q->end_form()
+        . $q->h2('Items offered')
+        . $q->start_table()
+            . $q->Tr($q->th([
+                    '',
+                    'Item',
+                    'When offered',
+                    'Fate'
+                ]));
+
+    # Show items offered, accepted and declined.
+    my $st = dbh()->prepare('select item_id, epoch(whensent), epoch(whenaccepted), epoch(whendeclined), description from acceptor_item_interest, item where item_id = item.id and acceptor_id = ? order by whensent desc');
+    $st->execute($qp_acceptorid);
+
+    my $n = 0;
+    while (my ($itemid, $whensent, $whenaccepted, $whendeclined, $desc) = $st->fetchrow_array()) {
+        my $fate = 'awaiting response';
+        if (defined($whenaccepted)) {
+            $fate = strftime('accepted %Y-%m-%d&nbsp;%H:%M:%S', localtime($whenaccepted));
+        } elsif (defined($whendeclined)) {
+            $fate = strftime('declined %Y-%m-%d&nbsp;%H:%M:%S', localtime($whendeclined));
+        } else {
+            # See if it's been accepted by anyone else.
+            $fate = 'accepted by someone else'
+                if (defined(dbh()->selectrow_array('select acceptor_id from acceptor_item_interest where item_id = ? and whenaccepted is not null', {}, $itemid)));
+            
+        }
+    
+        $$content .= $q->Tr($q->td([
+                            $q->a({ -href => "Item?itemid=$itemid" }, $itemid),
+
+                            $q->FormatText($desc),
+
+                            strftime('%Y-%m-%d&nbsp;%H:%M:%S', localtime($whensent)),
+
+                            $fate
+                        ]));
+        ++$n;
+    }
+
+    $$content .= $q->Tr($q->td({ -colspan => 4 }, $q->em('No items offered yet')))
+        if (!$n);
+
+    $$content .=
+        $q->end_table()
+        . $q->h2('Actions');
+
+    $f = new GIA::Form([
+            ['', 'acceptorid', 'hidden'],
+            ['Delete acceptor permanently', 'delete', 'button']
+        ]);
+
+    $q->param('new', '');
+    $f->populate($q);
+    if ($f->is_valid()) {
+        if ($q->param('delete')) {
+            my $locid = dbh()->selectrow_array('select location_id from acceptor where id = ?', {}, $qp_acceptorid);
+            dbh()->do('delete from acceptor_category_interest where acceptor_id = ?', {}, $qp_acceptorid);
+            dbh()->do('delete from acceptor_item_interest where acceptor_id = ?', {}, $qp_acceptorid);
+            dbh()->do('delete from acceptor where id = ?', {}, $qp_acceptorid);
+            dbh()->do('delete from location where id = ?', {}, $locid);
+            dbh()->commit();
+            $$hdr = $q->redirect('Acceptors');
+            $$content = '';
+            return 0;
+        }
+    }
+    
+    $$content .=
+        $q->start_form(-method => 'POST')
+            . $f->render($q, 1)
         . $q->end_form()
         . $q->end_html();
 

@@ -7,7 +7,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: do-emails,v 1.4 2005-10-21 17:01:50 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: do-emails,v 1.5 2005-10-21 17:25:34 chris Exp $';
 
 use strict;
 require 5.8.0;
@@ -75,7 +75,7 @@ sub send_item_to_next_acceptor ($) {
         
         my $dd = sprintf('%.1f', $distance / 1.61);
 
-        my $token = GIA::token($itemid);
+        my $token = GIA::token("$itemid.$acceptorid");
         my $acceptlink = mySociety::Config::get('BASE_URL') . "/Accept?t=$token";
         my $declinelink = mySociety::Config::get('BASE_URL') . "/Decline?t=$token";
         
@@ -124,7 +124,7 @@ debug("finding items for which notices must be sent... ");
 my $st = dbh()->prepare('
         select id from item
         where whenconfirmed is not null
-            and item_current_acceptor(id) is not null');
+            and item_current_acceptor(id) is null');
 $st->execute();
 debugf("done; found %d items\n", $st->rows());
 while (my ($itemid) = $st->fetchrow_array()) {

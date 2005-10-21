@@ -7,7 +7,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: do-emails,v 1.1 2005-10-21 16:14:56 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: do-emails,v 1.2 2005-10-21 16:37:16 chris Exp $';
 
 use strict;
 require 5.8.0;
@@ -76,8 +76,7 @@ sub send_item_to_next_acceptor ($) {
         
         my $dd = sprintf('%.1f', $distance / 1.61);
 
-        my $random = sprintf("%04x", int(rand(0xffff)));
-        my $token = "$itemid,$random," . substr(sha1_hex(GIA::DB::secret() . ",$random,$itemid"), 0, 8);
+        my $token = GIA::token($itemid);
         my $acceptlink = mySociety::Config::get('BASE_URL') . "/Accept?t=$token";
         my $declinelink = mySociety::Config::get('BASE_URL') . "/Decline?t=$token";
         

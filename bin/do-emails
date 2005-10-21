@@ -1,0 +1,152 @@
+#!/usr/bin/perl -w
+#
+# do-emails:
+# Script to send emails matching up items and acceptors. To be run from cron.
+#
+# Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
+# Email: chris@mysociety.org; WWW: http://www.mysociety.org/
+#
+
+my $rcsid = ''; $rcsid .= '$Id: do-emails,v 1.1 2005-10-21 16:14:56 chris Exp $';
+
+use strict;
+require 5.8.0;
+
+use FindBin;
+use lib "$FindBin::Bin/../perllib";
+use lib "$FindBin::Bin/../../perllib";
+
+use Digest::SHA1 qw(sha1_hex);
+use Error qw(:try);
+
+use mySociety::Config;
+BEGIN {
+    mySociety::Config::set_file("$FindBin::Bin/../conf/general");
+}
+use mySociety::DBHandle qw(dbh);
+use mySociety::EvEl;
+
+use GIA;
+
+sub debug (@);
+if (-t STDERR) {
+    eval 'sub debug (@) { print STDERR @_; }';
+} else {
+    eval 'sub debug (@) { }';
+}
+
+sub debugf (@) {
+    my $fmt = shift;
+    debug(sprintf($fmt, @_));
+}
+
+
+sub send_item_to_next_acceptor ($) {
+    my ($itemid) = @_;
+
+    # Get other item data
+    my ($cat, $lat, $lon) = dbh()->selectrow_array('
+                select category_id, lat, lon from item, location
+                where item.location_id = location.id
+                    and item.id = ?', {}, $itemid);
+
+    my ($acceptorid, $distance) = dbh()->selectrow_array("
+            select acceptor_id,
+                great_circle_distance(?, ?, lat, lon) as distance
+            from acceptor_category_interest, acceptor, location
+            where acceptor.id = acceptor_category_interest.acceptor_id
+                and location.id = acceptor.location_id
+                and category_id = ?
+                and (select acceptor_id
+                    from acceptor_item_interest
+                    where acceptor_item_interest.item_id = ?
+                        and acceptor_item_interest.acceptor_id
+                            = acceptor_category_interest.acceptor_id)
+                        is null
+                    -- XXX can't use alias 'distance' here...
+                and great_circle_distance(?, ?, lat, lon) < 30
+            order by distance",
+            {}, $lat, $lon, $cat, $itemid, $lat, $lon);
+
+    if (defined($acceptorid)) {
+        debugf('sending to acceptor #%d (%.1f km)... ', $acceptorid, $distance);
+        
+        my ($desc, $cat) = dbh()->selectrow_array('select description, category.name from item, category where item.id = ? and category_id = category.id', {}, $itemid);
+        my ($name, $org, $email) = dbh()->selectrow_array('select name, organisation, email from acceptor where id = ?', {}, $acceptorid);
+        
+        my $dd = sprintf('%.1f', $distance / 1.61);
+
+        my $random = sprintf("%04x", int(rand(0xffff)));
+        my $token = "$itemid,$random," . substr(sha1_hex(GIA::DB::secret() . ",$random,$itemid"), 0, 8);
+        my $acceptlink = mySociety::Config::get('BASE_URL') . "/Accept?t=$token";
+        my $declinelink = mySociety::Config::get('BASE_URL') . "/Decline?t=$token";
+        
+        mySociety::EvEl::send({
+                _body_ => <<EOF,
+
+A donor has offfered you the following item (category $cat) through the
+GiveItAway website:
+
+$desc
+
+The item is available to be picked up from $dd miles away.
+
+If you are interested in this item, please click the following link and we'll
+put you in touch with the donor so that you can arrange to collect it:
+
+$acceptlink
+
+Or, if the item isn't any use to you, please click the following link so that
+we can pass the item on to somebody else who may be interested:
+
+$declinelink
+
+If you click neither link we'll give others a chance to collect it in a few
+days' time.
+
+EOF
+                To => [[$email, "$name ($org)"]],
+                From => '"Give It Away!" <noreply@giveitaway.com>',
+                Subject => 'Nearby item'
+            }, $email);
+
+        dbh()->do('insert into acceptor_item_interest (acceptor_id, item_id) values (?, ?)', {}, $acceptorid, $itemid);
+            
+        debug("done");
+    } else {
+        debug("no suitable acceptors found");
+    }
+}
+
+debug("locking table acceptor_item_interest... ");
+dbh()->do('lock table acceptor_item_interest in share mode');
+debug("done\n");
+
+debug("finding items for which notices must be sent... ");
+my $st = dbh()->prepare("
+        select id from item
+        where (select whenaccepted from acceptor_item_interest
+                where item.id = item_id limit 1) is null
+            and (
+                -- things which have never been sent out
+                (select count(acceptor_id) from acceptor_item_interest
+                    where item_id = item.id) = 0
+                -- things which have been declined
+                or (select whendeclined from acceptor_item_interest
+                    where item.id = item_id
+                    order by whensent desc limit 1) is not null
+                -- things which have timed out
+                or (select whensent from acceptor_item_interest
+                    where item.id = item_id
+                    order by whensent desc
+                    limit 1) < current_timestamp - '3 days'::interval
+            )");
+$st->execute();
+debugf("done; found %d items\n", $st->rows());
+while (my ($itemid) = $st->fetchrow_array()) {
+    debug("considering item $itemid... ");
+    send_item_to_next_acceptor($itemid);
+    debug("\n");
+}
+
+dbh()->commit();

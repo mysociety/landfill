@@ -6,7 +6,7 @@
 # Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: Confirm.pm,v 1.2 2005-10-19 14:11:35 chris Exp $
+# $Id: Confirm.pm,v 1.3 2005-10-21 16:36:44 chris Exp $
 #
 
 package GIA::Page::Confirm;
@@ -14,7 +14,6 @@ package GIA::Page::Confirm;
 use strict;
 
 use Error qw(:try);
-use Digest::SHA1 qw(sha1_hex);
 
 use mySociety::DBHandle qw(dbh);
 
@@ -23,22 +22,15 @@ use GIA::Web;
 
 sub render ($$$) {
     my ($q, $hdr, $content) = @_;
-
-    my $t = $q->param('t');
-
-    if (defined($t) && $t =~ /^([1-9]\d*),([0-9a-f]+),([0-9a-f]{8})$/) {
-        my ($itemid, $random, $hash) = ($1, $2, $3);
-
-        if ($hash eq substr(sha1_hex(GIA::DB::secret() . ",$random,$itemid"), 0, 8)) {
-            dbh()->do('update item set whenconfirmed = current_timestamp where id = ?', {}, $itemid);
-            dbh()->commit();
-            $$hdr = $q->header();
-            $$content =
-                $q->start_html('Thank You!')
-                . $q->p('Thanks! We will now pass details of your item on to local charities.')
-                . $q->end_html();
-            return 0;
-        }
+    if (my $itemid = GIA::check_token($q->param('t'))) {
+        dbh()->do('update item set whenconfirmed = current_timestamp where id = ?', {}, $itemid);
+        dbh()->commit();
+        $$hdr = $q->header();
+        $$content =
+            $q->start_html('Thank You!')
+            . $q->p('Thanks! We will now pass details of your item on to local charities.')
+            . $q->end_html();
+        return 0;
     }
     
     # Bad or no token. Just redirect to the home page.

@@ -6,7 +6,7 @@
 # Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: GIA.pm,v 1.1 2005-10-17 12:18:02 chris Exp $
+# $Id: GIA.pm,v 1.2 2005-10-21 16:36:44 chris Exp $
 #
 
 package GIA::Error;
@@ -48,6 +48,35 @@ Return the site shared secret.
 =cut
 sub secret () {
     return scalar(dbh()->selectrow_array('select secret from secret'));
+}
+
+package GIA;
+
+=item token ID
+
+Return a token securely identifying ID.
+
+=cut
+sub token ($) {
+    my ($id) = @_;
+    my $random = sprintf('%04x', int(rand(0xffff)));
+    return "$id,$random," . substr(sha1_hex(GIA::DB::secret() . ",$random,$id"), 0, 8);
+}
+
+=item check_token TOKEN
+
+If TOKEN is valid, return the associated ID; otherwise return undef.
+
+=cut
+sub check_token ($) {
+    my ($token) = @_;
+    return undef if (!defined($token) || $token !~ /^[1-9]\d*,[0-9a-f]+,[0-9a-f]+$/i);
+    my ($id, $random, $hash) = split(/,/, $token);
+    if (substr(sha1_hex(GIA::DB::secret() . ",$random,$id"), 0, 8) eq $hash) {
+        return $id;
+    } else {
+        return undef;
+    }
 }
 
 1;

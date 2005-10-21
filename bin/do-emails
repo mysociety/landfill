@@ -7,7 +7,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: do-emails,v 1.3 2005-10-21 16:44:54 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: do-emails,v 1.4 2005-10-21 17:01:50 chris Exp $';
 
 use strict;
 require 5.8.0;
@@ -121,25 +121,10 @@ dbh()->do('lock table acceptor_item_interest in share mode');
 debug("done\n");
 
 debug("finding items for which notices must be sent... ");
-my $st = dbh()->prepare("
+my $st = dbh()->prepare('
         select id from item
         where whenconfirmed is not null
-            and (select whenaccepted from acceptor_item_interest
-                where item.id = item_id limit 1) is null
-            and (
-                -- things which have never been sent out
-                (select count(acceptor_id) from acceptor_item_interest
-                    where item_id = item.id) = 0
-                -- things which have been declined
-                or (select whendeclined from acceptor_item_interest
-                    where item.id = item_id
-                    order by whensent desc limit 1) is not null
-                -- things which have timed out
-                or (select whensent from acceptor_item_interest
-                    where item.id = item_id
-                    order by whensent desc
-                    limit 1) < current_timestamp - '3 days'::interval
-            )");
+            and item_current_acceptor(id) is not null');
 $st->execute();
 debugf("done; found %d items\n", $st->rows());
 while (my ($itemid) = $st->fetchrow_array()) {

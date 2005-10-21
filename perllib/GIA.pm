@@ -6,7 +6,7 @@
 # Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: GIA.pm,v 1.2 2005-10-21 16:36:44 chris Exp $
+# $Id: GIA.pm,v 1.3 2005-10-21 17:31:51 chris Exp $
 #
 
 package GIA::Error;
@@ -52,6 +52,8 @@ sub secret () {
 
 package GIA;
 
+use Digest::SHA1 qw(sha1_hex);
+
 =item token ID
 
 Return a token securely identifying ID.
@@ -70,7 +72,7 @@ If TOKEN is valid, return the associated ID; otherwise return undef.
 =cut
 sub check_token ($) {
     my ($token) = @_;
-    return undef if (!defined($token) || $token !~ /^[1-9]\d*,[0-9a-f]+,[0-9a-f]+$/i);
+    return undef if (!defined($token) || $token !~ /^[1-9]\d*(\.[1-9]\d*)*,[0-9a-f]+,[0-9a-f]+$/i);
     my ($id, $random, $hash) = split(/,/, $token);
     if (substr(sha1_hex(GIA::DB::secret() . ",$random,$id"), 0, 8) eq $hash) {
         return $id;

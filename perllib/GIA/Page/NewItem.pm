@@ -6,7 +6,7 @@
 # Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: NewItem.pm,v 1.4 2005-10-20 13:31:03 chris Exp $
+# $Id: NewItem.pm,v 1.5 2005-10-21 16:15:08 chris Exp $
 #
 
 package GIA::Page::NewItem;
@@ -101,7 +101,7 @@ email address. Please click on this link:
 $link
 
 EOF
-                To => [$q->param('email'), $q->param('name')],
+                To => [[$q->param('email'), $q->param('name')]],
                 From => 'noreply@giveitaway.com',
                 Subject => 'Confirm your GiveItAway donation'
             }, $q->param('email'));

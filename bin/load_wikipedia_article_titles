@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: load_wikipedia_article_titles,v 1.4 2005-09-16 16:16:33 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: load_wikipedia_article_titles,v 1.5 2005-10-21 09:43:20 wechsler Exp $';
 
 use strict;
 require 5.8.0;
@@ -51,7 +51,12 @@ if ($childpid == 0) {
     POSIX::close(1);
     POSIX::dup($p->fileno());
         # XXX what about any Unicode nonsense?
-    exec('/bin/sh', '-c', "fetch -q -o- '$url' | zcat");
+        # fetch is bsd-only? Use wget if available
+    if(`which fetch`) {
+    	exec('/bin/sh', '-c', "fetch -q -o- '$url' | zcat");
+    } else {
+    	exec('/bin/sh', '-c', "wget -q -O- '$url' | zcat");
+    }
     exit(255);
 }
 debug "done\n";

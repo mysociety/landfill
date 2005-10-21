@@ -5,7 +5,7 @@
 -- Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 -- Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 --
--- $Id: schema.sql,v 1.8 2005-10-21 16:14:38 chris Exp $
+-- $Id: schema.sql,v 1.9 2005-10-21 17:00:12 chris Exp $
 --
 
 -- convenience functions
@@ -105,6 +105,16 @@ create index acceptor_item_interest_acceptor_id_idx
     
 create index acceptor_item_interest_item_id_idx
     on acceptor_item_interest(item_id);
+
+-- item_current_acceptor ITEM
+-- Return the ID of the current acceptor for ITEM, if any.
+create function item_current_acceptor(integer) returns integer as '
+    select acceptor_id
+    from acceptor_item_interest
+    where item_id = $1 and whendeclined is null
+        and whensent > current_timestamp - ''3 days''::interval
+    order by whensent desc limit 1
+' language sql;
 
 -- R_e
 -- Radius of the earth, in km. This is something like 6372.8 km:

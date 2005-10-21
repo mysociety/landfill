@@ -6,7 +6,7 @@
 # Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: NewItem.pm,v 1.5 2005-10-21 16:15:08 chris Exp $
+# $Id: NewItem.pm,v 1.6 2005-10-21 17:32:21 chris Exp $
 #
 
 package GIA::Page::NewItem;
@@ -83,8 +83,7 @@ sub render ($$$) {
         my $desc = $q->param('description');
 
         # Construct a suitable link.
-        my $random = sprintf("%04x", int(rand(0xffff)));
-        my $token = $q->param('itemid') . ",$random," . substr(sha1_hex(GIA::DB::secret() . ",$random," . $q->param('itemid')), 0, 8);
+        my $token = GIA::token($q->param('itemid'));
         my $link = mySociety::Config::get('BASE_URL') . "/Confirm?t=$token";
         
         mySociety::EvEl::send({

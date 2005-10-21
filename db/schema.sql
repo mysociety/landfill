@@ -5,7 +5,7 @@
 -- Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 -- Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 --
--- $Id: schema.sql,v 1.7 2005-10-20 09:46:41 chris Exp $
+-- $Id: schema.sql,v 1.8 2005-10-21 16:14:38 chris Exp $
 --
 
 -- convenience functions
@@ -105,4 +105,21 @@ create index acceptor_item_interest_acceptor_id_idx
     
 create index acceptor_item_interest_item_id_idx
     on acceptor_item_interest(item_id);
+
+-- R_e
+-- Radius of the earth, in km. This is something like 6372.8 km:
+--  http://en.wikipedia.org/wiki/Earth_radius
+create function R_e()
+    returns double precision as 'select 6372.8::double precision;' language sql;
+
+-- great_circle_distance LAT1 LON1 LAT2 LON2
+-- Return the great circle distance between points (LAT1, LON1) and (LAT2,
+-- LON2) in kilometers.
+create function great_circle_distance(double precision, double precision, double precision, double precision) returns double precision as '
+    select R_e() * acos(
+        sin(radians($1)) * sin(radians($3))
+        + cos(radians($1)) * cos(radians($3))
+            * cos(radians($2 - $4))
+        )
+' language sql;
 

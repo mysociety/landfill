@@ -6,7 +6,7 @@
 # Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: NewItem.pm,v 1.6 2005-10-21 17:32:21 chris Exp $
+# $Id: NewItem.pm,v 1.7 2005-10-21 19:22:50 matthew Exp $
 #
 
 package GIA::Page::NewItem;
@@ -121,6 +121,7 @@ EOF
                 . $q->p("Got something you'd like to give away to a good cause? Enter your details and we'll copy you into an email to a nearby charity that might be interested.")
                 . $q->start_form(-method => 'POST')
                 . $form->render($q)
+                . $q->end_form()
                 . $q->end_html();
     }
 

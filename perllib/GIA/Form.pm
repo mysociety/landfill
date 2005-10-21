@@ -4,9 +4,9 @@
 # Web forms.
 #
 # Copyright (c) 2005 Chris Lightfoot. All rights reserved.
-# Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
+# Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: Form.pm,v 1.3 2005-10-19 17:07:54 chris Exp $
+# $Id: Form.pm,v 1.4 2005-10-21 19:22:47 matthew Exp $
 #
 
 package GIA::Form;
@@ -26,7 +26,7 @@ use GIA;
 sub scrub ($;$) {
     my ($x, $multiline) = @_;
     return '' if (!defined($x));
-    $x =~ s/\n/ /gs unless ($multiline);
+    $x =~ s/\r?\n/ /gs unless ($multiline);
     $x =~ s/^\s+//;
     $x =~ s/\s+$//;
     $x =~ s/\s+/ /gs;
@@ -318,67 +318,48 @@ sub render ($$;$) {
     foreach (grep { $_->[2] ne 'hidden' } @{$self->{element}}) {
          my ($description, $name, $type) = @$_;
         if ($type eq 'html') {
-            $html .= $q->Tr($q->td({ -colspan => 2 }, $q->div($description)));
+            $html .= $q->div($description);
         } elsif ($type eq 'text') {
-            $html .= $q->Tr(
-                            $q->th(ent($description)),
-                            $q->td(
-                                $q->textfield(
-                                    -name => $name,
-                                    -size => 25
-                                )
-                            )
-                        );
+            $html .= "<label for='$name'>" . ent($description) . '</label>' .
+                            $q->textfield(
+                                -name => $name,
+                                -size => 25
+                            );
         } elsif ($type eq 'longtext') {
-            $html .= $q->Tr(
-                            $q->th(ent($description)),
-                            $q->td(
-                                $q->textarea(
-                                    -name => $name,
-                                    -columns => 25,
-                                    -rows => 5
-                                )
-                            )
-                        );
+            $html .= "<label for='$name'>" . ent($description) . '</label>' .
+                            $q->textarea(
+                                -name => $name,
+                                -columns => 25,
+                                -rows => 5
+                            );
         } elsif ($type eq 'select') {
-            $html .= $q->Tr(
-                            $q->th(ent($description)),
-                            $q->td(
-                                $q->popup_menu(
-                                    -name => $name,
-                                    -values => [ '', map { $_->[0] } @{$_->[3]} ],
-                                    -labels => {
-                                            '' => '(select one)',
-                                            map { $_->[0] => $_->[1] }
-                                                grep { @$_ == 2 } @{$_->[3]}
-                                        }
-                                    )
-                            )
+            $html .= "<label for='$name'>" . ent($description) . '</label>' .
+                        $q->popup_menu(
+                            -name => $name,
+                            -values => [ '', map { $_->[0] } @{$_->[3]} ],
+                            -labels => {
+                                '' => '(select one)',
+                                map { $_->[0] => $_->[1] }
+                                grep { @$_ == 2 } @{$_->[3]}
+                            }
                         );
         } elsif ($type eq 'multiselect') {
-            $html .= $q->Tr(
-                            $q->th(ent($description)),
-                            $q->td(
-                                $q->scrolling_list(
-                                    -name => $name,
-                                    -values => [map { $_->[0] } @{$_->[3]} ],
-                                    -labels => {
-                                        map { $_->[0] => $_->[1] }
-                                            grep { @$_ == 2 } @{$_->[3]}
-                                    },
-                                    -multiple => 1
-                                )
-                            )
+            $html .= "<label for='$name'>" . ent($description) . '</label>' .
+                        $q->scrolling_list(
+                            -name => $name,
+                            -values => [map { $_->[0] } @{$_->[3]} ],
+                            -labels => {
+                                map { $_->[0] => $_->[1] }
+                                grep { @$_ == 2 } @{$_->[3]}
+                            },
+                            -multiple => 1
                         );
         } elsif ($type eq 'button') {
-            $html .= $q->Tr(
-                            $q->th(''),
-                            $q->td($q->submit(-name => $name, -label => $description))
-                        );
+            $html .= $q->submit(-name => $name, -label => $description);
         }
 
         if (!$noerrors && exists($self->{errors}->{$name})) {
-            $html .= $q->Tr($q->th(), $q->td($q->ul($q->li({ -class => 'giaform_error' }, ent($self->{errors}->{$name})))));
+            $html .= $q->ul($q->li({ -class => 'giaform_error' }, ent($self->{errors}->{$name})));
         }
     }
 

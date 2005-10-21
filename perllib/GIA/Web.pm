@@ -6,7 +6,7 @@
 # Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: Web.pm,v 1.4 2005-10-19 14:11:35 chris Exp $
+# $Id: Web.pm,v 1.5 2005-10-21 19:22:48 matthew Exp $
 #
 
 package GIA::Web;
@@ -17,7 +17,7 @@ use HTML::Entities;
 
 use GIA;
 
-use CGI qw(-nosticky);
+use CGI qw(-nosticky -no_xhtml);
 my $have_cgi_fast = 0;
 eval {
     use CGI::Fast;
@@ -182,6 +182,29 @@ sub FormatText ($$) {
 
     $html .= '</p>';
     return $html;
+}
+
+sub header {
+    return "Content-Type: text/html; charset=utf-8\r\n\r\n";
+}
+sub start_html {
+    my $title = $_[1];
+    $title .= ' - ' if ($title);
+    $title .= 'GiveItAway';
+#    $title = ent($title);
+    return <<EOF;
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en-gb"><head><title>$title</title>
+<style type="text/css">\@import url("/gia.css");</style>
+</head><body><h1>Give It Away</h1>
+<div id="content">
+EOF
+}
+
+sub end_html {
+    return <<EOF;
+</div></body></html>
+EOF
 }
 
 1;

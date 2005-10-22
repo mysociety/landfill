@@ -270,7 +270,7 @@ function update_place_list() {
         if (r.readyState ==4) {
             x = r.responseXML
             newhtml = GXml.value(x.getElementsByTagName('newhtml')[0])
-            notshown = GXml.value(x.getElementsByTagName('notshown')[0])
+            var notshown = GXml.value(x.getElementsByTagName('notshown')[0])
             markers = x.getElementsByTagName('result');
             for (m=0; m<marker.length; m++) {
                 map.removeOverlay(marker[m])

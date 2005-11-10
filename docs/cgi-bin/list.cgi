@@ -35,6 +35,7 @@ while (my $q = new CGI::Fast()) {
 
     {
         my $id = $q->param('show') || 0;
+        $id = 0 unless ($id =~ /^\d+$/);
         my $search_bit = $q->param('search') || '';
         my $page = $q->param('page') || 0;
 	my $topleft_lat=$q->param('topleft_lat');

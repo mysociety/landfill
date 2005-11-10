@@ -349,6 +349,13 @@ function onLoad() {
     d = document.getElementById('f')
     if (d)
         InstallAC(d,d.q,d.btnG,"suggest.fcg","en", true);
+
+    var query_string = location.search.substring(1)
+    if (query_string.substring(0,3) == 'add') {
+        query_string = query_string.substring(8)
+        d.q.value = query_string
+        add_place_form()
+    }
 }
 window.onload = onLoad
 

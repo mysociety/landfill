@@ -17,7 +17,7 @@ my $db_username= $mysociety::NotApathetic::Config::db_username;              # d
 my $email_noreply= $mysociety::NotApathetic::Config::email_noreply;
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
-
+my $catch_all_address = 'team@yourhistoryhere.com';
 
 {
 	my %Passed_Values;

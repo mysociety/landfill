@@ -12,6 +12,7 @@ use CGI qw/param/;
 use mysociety::NotApathetic::Config;
 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
+my $db_username= $mysociety::NotApathetic::Config::db_username;         # database password
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $email_domain= $mysociety::NotApathetic::Config::email_domain;

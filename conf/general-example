@@ -6,7 +6,7 @@
  * Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
  * Email: chris@mysociety.org; WWW: http://www.mysociety.org/
  *
- * $Id: general-example,v 1.3 2005-12-02 21:15:45 chris Exp $
+ * $Id: general-example,v 1.4 2005-12-02 21:18:18 chris Exp $
  * 
  */
 
@@ -30,8 +30,10 @@ define('OPTION_TRACK_COOKIE_NAME', 'mysociety_tracking');
 
 // Domain and path in which it lives.
 define('OPTION_TRACK_COOKIE_DOMAIN', 'track.fishsoupisgoodforyou.com');
+define('OPTION_TRACK_COOKIE_PATH', '/');
 
 // Whether the cookie should be secure-only.
+// XXX to safeguard user privacy, this should be set to 1
 define('OPTION_TRACK_COOKIE_SECURE', 0);
 
 ?>

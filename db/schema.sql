@@ -5,7 +5,7 @@
 -- Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 -- Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 --
--- $Id: schema.sql,v 1.1 2005-12-02 18:03:30 chris Exp $
+-- $Id: schema.sql,v 1.2 2005-12-02 21:15:03 chris Exp $
 --
 
 create table secret (
@@ -25,7 +25,7 @@ create sequence tracking_id_seq;
 create table event (
     id serial not null primary key,
     tracking_id integer not null,
-    when timestamp not null default current_timestamp,
+    whenlogged timestamp not null default current_timestamp,
     ipaddr varchar(17) not null,
     -- XXX some other information inferrable from 
     useragent_id integer references useragent(id),

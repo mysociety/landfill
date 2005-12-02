@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.4 2005-12-02 23:34:21 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.5 2005-12-02 23:44:30 chris Exp $';
 
 use strict;
 
@@ -60,6 +60,9 @@ sub cookie_from_id ($) {
 my %useragent_cache;
 my $n_useragents_cached = 0;        # XXX avoid dumb DoS problem
 
+my $lastcommit = time();
+my $n_since_lastcommit = 0;
+
 while (my $q = new CGI::Fast()) {
     # Do we already have a cookie, and if so, is it valid?
     my $track_cookie = $q->cookie($cookiename);
@@ -108,6 +111,7 @@ while (my $q = new CGI::Fast()) {
     }
 
     # OK, the data are valid.
+    my $docommit = 0;
     my $ua_id;
     if ($ua) {
         $ua_id = $useragent_cache{$ua};
@@ -119,6 +123,8 @@ while (my $q = new CGI::Fast()) {
                 if (!$ua_id) {
                     $ua_id = dbh()->selectrow_array("select nextval('useragent_id_seq')");
                     dbh()->do('insert into useragent (id, useragent) values (?, ?)', {}, $ua_id, $ua);
+                    warn "saw new user-agent '$ua' for first time\n";
+                    $docommit = 1;
                 }
                 if ($n_useragents_cached < 1000) {
                     $useragent_cache{$ua} = $ua_id;
@@ -128,6 +134,15 @@ while (my $q = new CGI::Fast()) {
     }
     
     dbh()->do('insert into event (tracking_id, ipaddr, useragent_id, url, extradata) values (?, ?, ?, ?, ?)', {}, $track_id, $ipaddr, $ua_id, $url, $other);
-    dbh()->commit();
+    ++$n_since_lastcommit;
+
+    # XXX Commits are slow but their cost does not depend very much on the
+    # number of rows committed. So ideally we want to batch them up; however,
+    # might we hit some nasty concurrency issue?
+    if ($docommit || $n_since_lastcommit > 10 || $lastcommit < time() - 10) {
+        dbh()->commit();
+        $lastcommit = time();
+        $n_since_lastcommit = 0;
+    }
 }
 

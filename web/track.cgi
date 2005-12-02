@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.2 2005-12-02 18:51:29 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.3 2005-12-02 21:15:19 chris Exp $';
 
 use strict;
 
@@ -33,6 +33,9 @@ my $private_secret = Track::DB::secret();
 # Secret shared with tracking sites.
 my $secret = mySociety::Config::get('TRACK_SECRET');
 
+# Name of cookie presented to user.
+my $cookiename = mySociety::Config::get('TRACK_COOKIE_NAME', 'track_id');
+
 sub id_from_cookie ($) {
     my $cookie = shift;
     my ($salt, $id, $sign) = split(/,/, $cookie);
@@ -54,7 +57,7 @@ my $n_useragents_cached = 0;        # XXX avoid dumb DoS problem
 
 while (my $q = new CGI::Fast()) {
     # Do we already have a cookie, and if so, is it valid?
-    my $track_cookie = $q->cookie('track_id');
+    my $track_cookie = $q->cookie($cookiename);
     my $track_id;
     if (!$track_cookie || !defined($track_id = id_from_cookie($track_cookie))) {
         # Need new ID and cookie.
@@ -65,7 +68,7 @@ while (my $q = new CGI::Fast()) {
 
     print $q->header(
                 -cookie => $q->cookie(
-                        -name => 'track_id',
+                        -name => $cookiename,
                         -value => $track_cookie,
                         -expires => '+30d',
                         -path => '/',

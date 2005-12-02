@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl -w -I../../perllib -I../perllib
 #
 # track.cgi:
 # Return a web bug image, with a tracking cookie; log any associated
@@ -8,14 +8,19 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.1 2005-12-02 18:35:26 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.2 2005-12-02 18:51:29 chris Exp $';
 
 use strict;
 
+require 5.8.0;
+
+BEGIN {
+    use mySociety::Config;
+    mySociety::Config::set_file('../conf/general');
+}
+
 use CGI::Fast;
 use Digest::SHA1;
-
-use mySociety::Config;
 
 use Track;
 

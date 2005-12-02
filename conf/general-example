@@ -6,7 +6,7 @@
  * Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
  * Email: chris@mysociety.org; WWW: http://www.mysociety.org/
  *
- * $Id: general-example,v 1.1 2005-12-02 18:56:29 chris Exp $
+ * $Id: general-example,v 1.2 2005-12-02 19:55:01 chris Exp $
  * 
  */
 
@@ -16,8 +16,8 @@
 define('OPTION_TRACK_DB_HOST', 'dbhost');
 define('OPTION_TRACK_DB_PORT', '5432');
 */
-define('OPTION_TRACK_DB_NAME', 'gia');
-define('OPTION_TRACK_DB_USER', 'gia');
+define('OPTION_TRACK_DB_NAME', 'track');
+define('OPTION_TRACK_DB_USER', 'track');
 define('OPTION_TRACK_DB_PASS', '');
 
 // Shared secret. This must be known to the sites which use us for tracking;

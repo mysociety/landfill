@@ -1,0 +1,30 @@
+<?php
+/*
+ * general-example:
+ * Configuration for tracking service.
+ * 
+ * Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
+ * Email: chris@mysociety.org; WWW: http://www.mysociety.org/
+ *
+ * $Id: general-example,v 1.1 2005-12-02 18:56:29 chris Exp $
+ * 
+ */
+
+// PostgreSQL database for tracking data
+/*
+// Host and port, if needed.
+define('OPTION_TRACK_DB_HOST', 'dbhost');
+define('OPTION_TRACK_DB_PORT', '5432');
+*/
+define('OPTION_TRACK_DB_NAME', 'gia');
+define('OPTION_TRACK_DB_USER', 'gia');
+define('OPTION_TRACK_DB_PASS', '');
+
+// Shared secret. This must be known to the sites which use us for tracking;
+// this ensures that only authorised sites can record data in our database.
+define('OPTION_TRACK_SECRET', 'your-secret-value-here');
+
+// The name of the cookie which will be sent to clients.
+define('OPTION_TRACK_COOKIE_NAME', 'mysociety_tracking');
+
+?>

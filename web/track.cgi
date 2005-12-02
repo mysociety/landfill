@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.3 2005-12-02 21:15:19 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.4 2005-12-02 23:34:21 chris Exp $';
 
 use strict;
 
@@ -22,6 +22,8 @@ BEGIN {
 use CGI::Fast;
 use Digest::SHA1;
 
+use mySociety::DBHandle qw(dbh);
+
 use Track;
 
 binmode(STDOUT, ':bytes');
@@ -33,8 +35,11 @@ my $private_secret = Track::DB::secret();
 # Secret shared with tracking sites.
 my $secret = mySociety::Config::get('TRACK_SECRET');
 
-# Name of cookie presented to user.
+# Details of cookie presented to user.
 my $cookiename = mySociety::Config::get('TRACK_COOKIE_NAME', 'track_id');
+my $cookiepath = mySociety::Config::get('TRACK_COOKIE_PATH', '/');
+my $cookiedomain = mySociety::Config::get('TRACK_COOKIE_DOMAIN');
+my $cookiesecure = mySociety::Config::get('TRACK_COOKIE_SECURE', 0);
 
 sub id_from_cookie ($) {
     my $cookie = shift;
@@ -61,7 +66,7 @@ while (my $q = new CGI::Fast()) {
     my $track_id;
     if (!$track_cookie || !defined($track_id = id_from_cookie($track_cookie))) {
         # Need new ID and cookie.
-        $track_id = dbh()->selectrow_array("select nextval('track_id_seq')");
+        $track_id = dbh()->selectrow_array("select nextval('tracking_id_seq')");
         $track_cookie = cookie_from_id($track_id);
         dbh()->commit();
     }
@@ -71,9 +76,9 @@ while (my $q = new CGI::Fast()) {
                         -name => $cookiename,
                         -value => $track_cookie,
                         -expires => '+30d',
-                        -path => '/',
-                        -domain => 'mysociety.org',     # XXX
-                        -secure => 0                    # XXX should use SSL
+                        -path => $cookiepath,
+                        -domain => $cookiedomain,
+                        -secure => $cookiesecure
                     ),
                 -type => 'image/png',
                 -content_length => Track::transparent_png_image_length
@@ -95,7 +100,12 @@ while (my $q = new CGI::Fast()) {
     $D->add("$secret\0$salt\0$url\0");
     $D->add("$other\0") if ($other);
 
-    next if ($D->hexdigest() ne $sign);
+    my $sign2 = $D->hexdigest();
+    if (lc($sign2) ne lc($sign)) {
+        # May as well warn here as it may help with debugging.
+        warn "signature does not match (passed $sign vs computed $sign2)\n";
+        next;
+    }
 
     # OK, the data are valid.
     my $ua_id;

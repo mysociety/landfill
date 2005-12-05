@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.5 2005-12-02 23:44:30 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.6 2005-12-05 10:31:36 chris Exp $';
 
 use strict;
 
@@ -86,6 +86,9 @@ while (my $q = new CGI::Fast()) {
                 -type => 'image/png',
                 -content_length => Track::transparent_png_image_length
             ), Track::transparent_png_image;
+
+    # User may opt out of tracking.
+    next if ($track_cookie =~ /\.do-not-track$/);
 
     # Got that over with; now do any data recording we want.
     my $ipaddr = $q->remote_addr();

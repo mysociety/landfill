@@ -24,7 +24,7 @@
 
         <ol>
             <li><strong>Enter <a href="http://en.wikipedia.org/">Wikipedia</a> article name</strong>
-        <input type="text" autocomplete="off" maxLength="1024" size="30" name="q" id="articlename" />
+        <input type="text" autocomplete="off" maxLength="1024" size="25" name="q" />
         <span id="titleerror"></span>
         <p><small>(this will auto-complete; might take a short time to respond)</small></p>
         </li>
@@ -52,7 +52,6 @@
 <h3 class="blue">Add new place</h3>
 <p>Thanks for creating that entry, it has now been added.</p>
 <p><a href="#needsJS" onclick="add_place_form(); return false;">Add another</a></p>
-<p><a onclick="show_recent_places(); return false" href="#needsJS">Back to recently added places</a></p>
 </div>
 
 <div id="incorrect_entry" style="display:none">

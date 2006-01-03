@@ -1,0 +1,51 @@
+/*
+ * track.css:
+ *
+ * Copyright (c) 2006 UK Citizens Online Democract. All rights reserved.
+ * Email: chris@mysociety.org; WWW: http://www.mysociety.org/
+ *
+ * $Id: track.css,v 1.1 2006-01-03 23:14:21 chris Exp $
+ *
+ */
+
+body {
+    background-image: url(cctv-logo.png);
+    background-repeat: no-repeat;
+    margin-left: 136px;
+    margin-top: 160px;
+    padding-top: 0;
+    padding-left: 1em;
+    background-color: white;
+    color: black;
+    line-height: 120%;
+    font-family: sans-serif;
+}
+
+div#top {
+    position: absolute;
+    top: 0px;
+    left: 136px;
+    height: 134px;
+    margin: 0;
+    padding: 0;
+    vertical-align: bottom;
+}
+
+h1 {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    bottom: 0px;
+    text-align: left;
+    color: #006;
+    font-weight: bold;
+    font-style: italic;
+}
+
+h2 {
+    color: #006;
+    font-weight: bold;
+    font-style: italic;
+    border-bottom: 1px solid #08e;
+    margin-left: -0.5em;
+}

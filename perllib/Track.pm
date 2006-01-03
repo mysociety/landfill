@@ -6,7 +6,7 @@
 # Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: Track.pm,v 1.2 2005-12-02 18:51:29 chris Exp $
+# $Id: Track.pm,v 1.3 2006-01-03 16:50:47 chris Exp $
 #
 
 package Track::DB;
@@ -20,11 +20,11 @@ use DBI;
 
 BEGIN {
     mySociety::DBHandle::configure(
-            Name => mySociety::Config::get('TRACK_DB_NAME'),
-            User => mySociety::Config::get('TRACK_DB_USER'),
-            Password => mySociety::Config::get('TRACK_DB_PASS'),
-            Host => mySociety::Config::get('TRACK_DB_HOST', undef),
-            Port => mySociety::Config::get('TRACK_DB_PORT', undef)
+            Name => mySociety::Config::get('TRACKING_DB_NAME'),
+            User => mySociety::Config::get('TRACKING_DB_USER'),
+            Password => mySociety::Config::get('TRACKING_DB_PASS'),
+            Host => mySociety::Config::get('TRACKING_DB_HOST', undef),
+            Port => mySociety::Config::get('TRACKING_DB_PORT', undef)
         );
 
     if (!dbh()->selectrow_array('select secret from secret for update of secret')) {

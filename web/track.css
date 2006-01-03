@@ -4,7 +4,7 @@
  * Copyright (c) 2006 UK Citizens Online Democract. All rights reserved.
  * Email: chris@mysociety.org; WWW: http://www.mysociety.org/
  *
- * $Id: track.css,v 1.1 2006-01-03 23:14:21 chris Exp $
+ * $Id: track.css,v 1.2 2006-01-03 23:15:40 chris Exp $
  *
  */
 
@@ -17,7 +17,7 @@ body {
     padding-left: 1em;
     background-color: white;
     color: black;
-    line-height: 120%;
+    line-height: 150%;
     font-family: sans-serif;
 }
 

@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.7 2006-01-03 10:39:27 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.8 2006-01-03 12:11:26 chris Exp $';
 
 use strict;
 
@@ -71,8 +71,13 @@ sub do_commit () {
 while (my $q = new CGI::Fast()) {
     # Do we already have a cookie, and if so, is it valid?
     my $track_cookie = $q->cookie($cookiename);
+
+    
+
     my $track_id;
-    if (!$track_cookie || !defined($track_id = id_from_cookie($track_cookie))) {
+    if (!$track_cookie
+        || ($track_cookie ne 'do-not-track-me'
+            && !defined($track_id = id_from_cookie($track_cookie))) {
         # Need new ID and cookie.
         $track_id = dbh()->selectrow_array("select nextval('tracking_id_seq')");
         $track_cookie = cookie_from_id($track_id);
@@ -92,8 +97,7 @@ while (my $q = new CGI::Fast()) {
                 -content_length => Track::transparent_png_image_length
             ), Track::transparent_png_image;
 
-    # User may opt out of tracking.
-    next if ($track_cookie =~ /\.do-not-track$/);
+    next if ($track_cookie eq 'do-not-track-me');
 
     # Got that over with; now do any data recording we want.
     my $ipaddr = $q->remote_addr();

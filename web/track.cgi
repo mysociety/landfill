@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.11 2006-01-03 16:50:07 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.12 2006-01-03 16:54:07 chris Exp $';
 
 use strict;
 
@@ -261,7 +261,7 @@ EOF
             ),
             $q->start_html("mySociety User Tracking"),
             $q->h1('mySociety User Tracking'),
-            $actionsform,
+            ($track_cookie eq 'do-not-track-me' ? '' : $actionsform),
             <<EOF,
 <h2>Context</h2>
  
@@ -291,9 +291,12 @@ other users make use of the site. In order to be completely
 transparent (unlike most services) we allow you to see what data has
 been kept on your use of our sites. Nobody else can see this except
 you. Further, you can opt out of user tracking at any time.</p>
-
-$actionsform
-
+EOF
+            ($track_cookie eq 'do-not-track-me'
+                # XXX should have opt back in button
+                ? "<p>You have already opted out of our user tracking.</p>"
+                : $actionsform),
+            <<EOF
 <h2>What data do you use for your analysis?</h2>
 
 <p>We do not use names or email addresses for our analysis &mdash; we are only

@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.10 2006-01-03 13:22:37 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.11 2006-01-03 16:50:07 chris Exp $';
 
 use strict;
 
@@ -22,8 +22,10 @@ BEGIN {
 use CGI::Fast;
 use Digest::SHA1;
 use HTML::Entities;
+use POSIX qw();
 
 use mySociety::DBHandle qw(dbh);
+use mySociety::Tracking;
 
 use Track;
 
@@ -34,13 +36,13 @@ STDOUT->autoflush(1);
 my $private_secret = Track::DB::secret();
 
 # Secret shared with tracking sites.
-my $secret = mySociety::Config::get('TRACK_SECRET');
+my $secret = mySociety::Config::get('TRACKING_SECRET');
 
 # Details of cookie presented to user.
-my $cookiename = mySociety::Config::get('TRACK_COOKIE_NAME', 'track_id');
-my $cookiepath = mySociety::Config::get('TRACK_COOKIE_PATH', '/');
-my $cookiedomain = mySociety::Config::get('TRACK_COOKIE_DOMAIN');
-my $cookiesecure = mySociety::Config::get('TRACK_COOKIE_SECURE', 0);
+my $cookiename = mySociety::Config::get('TRACKING_COOKIE_NAME', 'track_id');
+my $cookiepath = mySociety::Config::get('TRACKING_COOKIE_PATH', '/');
+my $cookiedomain = mySociety::Config::get('TRACKING_COOKIE_DOMAIN');
+my $cookiesecure = mySociety::Config::get('TRACKING_COOKIE_SECURE', 0);
 
 sub id_from_cookie ($) {
     my $cookie = shift;
@@ -97,11 +99,11 @@ sub do_web_bug ($$$) {
     my $sign = $q->param('sign');
     return if (!$salt || !$url || !$sign);
     
-    my $other = $q->param('other');
+    my $extra = $q->param('extra');
     
     my $D = new Digest::SHA1();
-    $D->add("$secret\0$salt\0$url\0");
-    $D->add("$other\0") if ($other);
+    $D->add("$secret\0$salt\0$url");
+    $D->add("\0$extra") if ($extra);
 
     my $sign2 = $D->hexdigest();
     if (lc($sign2) ne lc($sign)) {
@@ -133,7 +135,7 @@ sub do_web_bug ($$$) {
         }
     }
     
-    dbh()->do('insert into event (tracking_id, ipaddr, useragent_id, url, extradata) values (?, ?, ?, ?, ?)', {}, $track_id, $ipaddr, $ua_id, $url, $other);
+    dbh()->do('insert into event (tracking_id, ipaddr, useragent_id, url, extradata) values (?, ?, ?, ?, ?)', {}, $track_id, $ipaddr, $ua_id, $url, $extra);
     ++$n_since_lastcommit;
 
     # XXX Commits are slow but their cost does not depend very much on the
@@ -195,15 +197,14 @@ EOF
                 $q->h2('Track data'),
                 $q->p('This is the data we record centrally about your use of our websites:'),
                 $q->start_table({ -style => 'width: 100%;' }),
-                $q->Tr($q->th(['Event ID', 'When logged', 'Your IP', 'Your user-agent', 'URL visited', 'Other data'])),
-                $q->Tr($q->td({ -colspan => 6 }, "[cookie created]"));
+                $q->Tr($q->th(['Event ID', 'When logged', 'Your IP', 'Your user-agent', 'URL visited', 'Other data']));
 
             my $s = dbh()->prepare('
-                        select event.id, whenlogged, ipaddr, useragent, url,
-                            extradata
-                        from event, useragent
+                        select event.id, extract(epoch from whenlogged),
+                            ipaddr, useragent, url, extradata
+                        from event left join useragent
+                            on event.useragent_id = useragent.id
                         where tracking_id = ?
-                            and event.useragent_id = useragent.id
                         order by event.id');
             $s->execute($track_id);
             my $old_ua;
@@ -215,6 +216,8 @@ EOF
                 } else {
                     encode_entities($ua);
                 }
+
+                $when = POSIX::strftime("%Y-%m-%d %H:%M:%S", localtime($when));
 
                 utf8::encode($extra);
                 $extra =~ s/([^\x20-\x7f])/sprintf('\%02x', ord($1))/ge;
@@ -230,6 +233,7 @@ EOF
                         ]));
             }
             print $q->end_table(),
+                    mySociety::Tracking::code($q, 'track: show recorded data'),
                     $q->end_html();
         } else {
             print <<EOF;
@@ -309,6 +313,7 @@ from the referring page (unless the value of the cookie is "do-not-track-me",
 indicating that the user has opted out).</p>
 
 EOF
+            mySociety::Tracking::code($q, 'track: about'),
             $q->end_html();
     }
 }
@@ -324,7 +329,12 @@ while (my $q = new CGI::Fast()) {
         # Need new ID and cookie.
         $track_id = dbh()->selectrow_array("select nextval('tracking_id_seq')");
         $track_cookie = cookie_from_id($track_id);
-        # XXX should record an event here.
+        dbh()->do('insert into event (tracking_id, ipaddr, url, extradata) values (?, ?, ?, ?)', {},
+                    $track_id,
+                    $q->remote_addr(),
+                    $q->url(),
+                    'track: new tracking id'
+                );
         do_commit();
     }
 

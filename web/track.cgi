@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.6 2005-12-05 10:31:36 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.7 2006-01-03 10:39:27 chris Exp $';
 
 use strict;
 
@@ -62,6 +62,11 @@ my $n_useragents_cached = 0;        # XXX avoid dumb DoS problem
 
 my $lastcommit = time();
 my $n_since_lastcommit = 0;
+sub do_commit () {
+    dbh()->commit();
+    $lastcommit = time();
+    $n_since_lastcommit = 0;
+}
 
 while (my $q = new CGI::Fast()) {
     # Do we already have a cookie, and if so, is it valid?
@@ -71,7 +76,7 @@ while (my $q = new CGI::Fast()) {
         # Need new ID and cookie.
         $track_id = dbh()->selectrow_array("select nextval('tracking_id_seq')");
         $track_cookie = cookie_from_id($track_id);
-        dbh()->commit();
+        do_commit();
     }
 
     print $q->header(
@@ -142,10 +147,7 @@ while (my $q = new CGI::Fast()) {
     # XXX Commits are slow but their cost does not depend very much on the
     # number of rows committed. So ideally we want to batch them up; however,
     # might we hit some nasty concurrency issue?
-    if ($docommit || $n_since_lastcommit > 10 || $lastcommit < time() - 10) {
-        dbh()->commit();
-        $lastcommit = time();
-        $n_since_lastcommit = 0;
-    }
+    do_commit() if ($docommit || $n_since_lastcommit > 10 || $lastcommit < time() - 10);
 }
 
+do_commit() if ($n_since_lastcommit > 0);

@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.12 2006-01-03 16:54:07 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.13 2006-01-03 23:14:32 chris Exp $';
 
 use strict;
 
@@ -144,6 +144,20 @@ sub do_web_bug ($$$) {
     do_commit() if ($docommit || $n_since_lastcommit > 10 || $lastcommit < time() - 10);
 }
 
+sub start_html ($;$) {
+    my ($q, $title) = @_;
+    return $q->start_html(
+                -title => 'mySociety User Tracking: Opt Out',
+                -style => { src => 'track.css' },
+                -encoding => 'utf-8'
+            ) . $q->div({ -id => 'top' },
+                $q->h1(
+                    "mySociety User Tracking"
+                    . ($title ? ": " . encode_entities($title) : '')
+                )
+            );
+}
+
 sub do_ui_page ($$$) {
     my ($q, $track_id, $track_cookie) = @_;
 
@@ -163,10 +177,8 @@ sub do_ui_page ($$$) {
                     ),
                 -type => 'text/html; charset=utf-8'
             ),
-            $q->start_html("mySociety User Tracking: Opt Out"),
+            start_html($q, 'Opt Out'),
             <<EOF,
-<h1>mySociety User Tracking: Opt Out</h1>
-
 <p>You have now opted out of our user tracking, <em>on this computer and web
 browser</em> &mdash; if you use other computers you will need to opt out on
 them as well to ensure that we don't record any more data about you.</p>
@@ -177,14 +189,20 @@ them as well to ensure that we don't record any more data about you.</p>
 "do-not-track-me". The user tracking service does not record any data about
 users whose browsers present a cookie with that value. We have also deleted
 all of the data we held which was associated with your old tracking ID.</p>
+
+<h2>Other ways to opt out</h2>
+
+<p>If you'd prefer not to have a cookie from us at all, you can just remove it
+and tell your browser not to accept another one. Alternatively, if you are
+using a browser which lets you block images from specific sites, you can just
+block images from this site.</p>
 EOF
             $q->end_html();
     } elsif ($q->param('showme')) {
         print $q->header(
                 -type => 'text/html; charset=utf-8'
             ),
-            $q->start_html("mySociety User Tracking: Show My Data"),
-            $q->h1('mySociety User Tracking: Show My Data');
+            start_html($q, "Show Me My Data");
         if (defined($track_id)) {
             print
                 $q->h2('Cookie data'),
@@ -259,10 +277,34 @@ EOF
         print $q->header(
                 -type => 'text/html; charset=utf-8'
             ),
-            $q->start_html("mySociety User Tracking"),
-            $q->h1('mySociety User Tracking'),
-            ($track_cookie eq 'do-not-track-me' ? '' : $actionsform),
+            start_html($q),
             <<EOF,
+<h2>Quick Summary</h2>
+
+<ul>
+<li>We use cookies and a "web bug" to track users, so that we can find out
+which parts of our sites users find confusing, and fix them.</li>
+<li>We will never sell or give away this data.</li>
+<li>We allow anyone to view the data we hold about them, or to opt out of this
+tracking, whenever they want.</li>
+EOF
+
+            (
+                $track_cookie eq 'do-not-track-me'
+                ? <<EOF
+<li>You have opted out of being tracked (on this computer and browser, at
+least). We will not collect any tracking data about you, and have deleted what
+we had stored.</li>
+EOF
+                : <<EOF
+<li>You can view the tracking data that we hold about you, or opt out of being
+tracked in this way, at any time, using these buttons:<br/>
+$actionsform
+</li>
+EOF
+            ), <<EOF,
+</ul>
+
 <h2>Context</h2>
  
 <p>At mySociety we're obsessed with making our sites usable &mdash; our goal is
@@ -286,17 +328,18 @@ to leave the site.</p>
 
 <h2>What does this mean to me?</h2>
 
-<p>Some people might be concerned by the fact that we record how they and
-other users make use of the site. In order to be completely
-transparent (unlike most services) we allow you to see what data has
-been kept on your use of our sites. Nobody else can see this except
-you. Further, you can opt out of user tracking at any time.</p>
+<p>Some people might be concerned by the fact that we record how they and other
+users make use of our sites. In order to be completely transparent (unlike most
+services) we allow our users to see what data has been kept on their use of our
+sites. Nobody else can see this except the user concerned. Further, our users
+can opt out of tracking at any time.</p>
 EOF
             ($track_cookie eq 'do-not-track-me'
                 # XXX should have opt back in button
                 ? "<p>You have already opted out of our user tracking.</p>"
                 : $actionsform),
-            <<EOF
+            <<EOF,
+
 <h2>What data do you use for your analysis?</h2>
 
 <p>We do not use names or email addresses for our analysis &mdash; we are only
@@ -310,10 +353,22 @@ know your postal address if you contact them via WriteToThem.com).</p>
 
 <p>We use a "web bug" &mdash; a tiny, transparent image which can be added to
 any page without altering its appearance, and a cookie containing a unique ID
-number. Each page that uses user-tracking contains a reference to that image,
-and whenever we receive a request for the image, we record some information
-from the referring page (unless the value of the cookie is "do-not-track-me",
-indicating that the user has opted out).</p>
+number which is associated with that image. Each page that uses user-tracking
+contains a reference to that image, and whenever we receive a request for the
+image, we record some information from the referring page (unless the value of
+the cookie is "do-not-track-me", indicating that the user has opted out).</p>
+
+<h2>More information</h2>
+
+<p>The Electronic Frontier Foundation has a
+<a href="http://www.eff.org/Privacy/Marketing/web_bug.html">list of frequently
+asked questions and answers</a> about "web bugs" and user tracking, and
+Wikipedia has <a href="http://en.wikipedia.org/wiki/Web_bug">an article on
+them</a> (though under the less-insidious-sounding name "web beacon").</p>
+
+<p>If you have any questions specifically about mySociety's user tracking
+system, please send them by email to
+<a href="mailto:privacy\@mysociety.org">privacy\@mysociety.org</a>.</p>
 
 EOF
             mySociety::Tracking::code($q, 'track: about'),
@@ -322,6 +377,8 @@ EOF
 }
 
 while (my $q = new CGI::Fast()) {
+    $q->charset('utf-8');
+
     # Do we already have a cookie, and if so, is it valid?
     my $track_cookie = $q->cookie($cookiename);
 

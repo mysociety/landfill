@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.9 2006-01-03 12:52:05 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.10 2006-01-03 13:22:37 chris Exp $';
 
 use strict;
 
@@ -145,9 +145,11 @@ sub do_web_bug ($$$) {
 sub do_ui_page ($$$) {
     my ($q, $track_id, $track_cookie) = @_;
 
-    my $fn = $q->param('fn');
-    $fn ||= '';
-    if ($fn eq 'optout') {
+    if ($q->param('optout')) {
+        if ($track_id) {
+            dbh()->do('delete from event where tracking_id = ?', {}, $track_id);
+            do_commit();
+        }
         print $q->header(
                 -cookie => $q->cookie(
                         -name => $cookiename,
@@ -171,10 +173,11 @@ them as well to ensure that we don't record any more data about you.</p>
 
 <p>We have (tried to) set a cookie in your browser with the value
 "do-not-track-me". The user tracking service does not record any data about
-users whose browsers present a cookie with that value.</p>
+users whose browsers present a cookie with that value. We have also deleted
+all of the data we held which was associated with your old tracking ID.</p>
 EOF
             $q->end_html();
-    } elsif ($fn eq 'showme') {
+    } elsif ($q->param('showme')) {
         print $q->header(
                 -type => 'text/html; charset=utf-8'
             ),
@@ -187,11 +190,13 @@ EOF
                 $q->start_table(),
                 $q->Tr($q->th('Cookie value'), $q->td(encode_entities($track_cookie))),
                 $q->Tr($q->th('Tracking ID'), $q->td($track_id)),
+                $q->end_table(),
 
                 $q->h2('Track data'),
                 $q->p('This is the data we record centrally about your use of our websites:'),
-                $q->start_table(),
-                $q->Tr($q->th(['Event ID', 'When logged', 'Your IP', 'Your user-agent', 'URL visited', 'Other data']));
+                $q->start_table({ -style => 'width: 100%;' }),
+                $q->Tr($q->th(['Event ID', 'When logged', 'Your IP', 'Your user-agent', 'URL visited', 'Other data'])),
+                $q->Tr($q->td({ -colspan => 6 }, "[cookie created]"));
 
             my $s = dbh()->prepare('
                         select event.id, whenlogged, ipaddr, useragent, url,
@@ -200,7 +205,7 @@ EOF
                         where tracking_id = ?
                             and event.useragent_id = useragent.id
                         order by event.id');
-            $s->execute($tracking_id);
+            $s->execute($track_id);
             my $old_ua;
             while (my ($id, $when, $ip, $ua, $url, $extra) = $s->fetchrow_array()) {
                 if (!$ua) {
@@ -235,6 +240,76 @@ browsers &mdash; we record data separately for each one.</p>
 EOF
         }
         print $q->end_html();
+    } else {
+        my $actionsform =
+            $q->start_form(-method => 'POST')
+                . $q->hidden(-name => 'ui')
+                . $q->submit(
+                    -name => 'optout',
+                    -value => 'Opt out of user tracking'
+                ) . ' ' . $q->submit(
+                    -name => 'showme',
+                    -value => 'Show me the data you hold about me'
+                ) . $q->end_form();
+    
+        print $q->header(
+                -type => 'text/html; charset=utf-8'
+            ),
+            $q->start_html("mySociety User Tracking"),
+            $q->h1('mySociety User Tracking'),
+            $actionsform,
+            <<EOF,
+<h2>Context</h2>
+ 
+<p>At mySociety we're obsessed with making our sites usable &mdash; our goal is
+always that by the time people leave one of our sites they've successfully
+squeezed every ounce of goodness out of it.</p>
+
+<p>In order to do this better we're building and rolling out a system
+which allows us to understand where people get confused or lost on our
+sites, and so helps us improve things so more people leave having got
+what they wanted to from our sites.</p>
+
+<h2>How?</h2>
+
+<p>In order to tell if a page is confusing for users, we monitor how many
+users successfully navigate from one page to the next, or how many
+people successfully click on a confirmation link in an email. By
+comparing data from two versions of the same page, or two versions of
+the same email, we can work out which page is better at getting more
+people 'through', and which is more confusing and causes more people
+to leave the site.</p>
+
+<h2>What does this mean to me?</h2>
+
+<p>Some people might be concerned by the fact that we record how they and
+other users make use of the site. In order to be completely
+transparent (unlike most services) we allow you to see what data has
+been kept on your use of our sites. Nobody else can see this except
+you. Further, you can opt out of user tracking at any time.</p>
+
+$actionsform
+
+<h2>What data do you use for your analysis?</h2>
+
+<p>We do not use names or email addresses for our analysis &mdash; we are only
+interested in how users en-masse succeed or fail to use parts of our sites. In
+accordance with the rest of our site's privacy policies, we will never sell or
+give away any name, email or address data you submit to any of our sites,
+except when required to make the sites function (i.e your MP has a right to
+know your postal address if you contact them via WriteToThem.com).</p>
+
+<h2>How does it work, technically?</h2>
+
+<p>We use a "web bug" &mdash; a tiny, transparent image which can be added to
+any page without altering its appearance, and a cookie containing a unique ID
+number. Each page that uses user-tracking contains a reference to that image,
+and whenever we receive a request for the image, we record some information
+from the referring page (unless the value of the cookie is "do-not-track-me",
+indicating that the user has opted out).</p>
+
+EOF
+            $q->end_html();
     }
 }
 
@@ -245,15 +320,15 @@ while (my $q = new CGI::Fast()) {
     my $track_id;
     if (!$track_cookie
         || ($track_cookie ne 'do-not-track-me'
-            && !defined($track_id = id_from_cookie($track_cookie))) {
+            && !defined($track_id = id_from_cookie($track_cookie)))) {
         # Need new ID and cookie.
         $track_id = dbh()->selectrow_array("select nextval('tracking_id_seq')");
         $track_cookie = cookie_from_id($track_id);
+        # XXX should record an event here.
         do_commit();
     }
 
-    my $fn = $q->param('ui');
-    if ($ui) {
+    if ($q->param('ui')) {
         do_ui_page($q, $track_id, $track_cookie);
     } else {
         do_web_bug($q, $track_id, $track_cookie);

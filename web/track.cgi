@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.13 2006-01-03 23:14:32 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.14 2006-01-04 10:59:46 chris Exp $';
 
 use strict;
 
@@ -232,6 +232,7 @@ EOF
                 } elsif ($old_ua && $ua eq $old_ua) {
                     $ua = '&quot;';
                 } else {
+                    $old_ua = $ua;
                     encode_entities($ua);
                 }
 

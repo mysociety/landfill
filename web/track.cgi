@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.14 2006-01-04 10:59:46 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.15 2006-01-04 18:06:09 chris Exp $';
 
 use strict;
 
@@ -147,15 +147,28 @@ sub do_web_bug ($$$) {
 sub start_html ($;$) {
     my ($q, $title) = @_;
     return $q->start_html(
-                -title => 'mySociety User Tracking: Opt Out',
-                -style => { src => 'track.css' },
+                -title => 'mySociety User Tracking'
+                            . ($title ? ": " . encode_entities($title) : ''),
+                -style => { src => 'http://www.mysociety.org/global.css' },
                 -encoding => 'utf-8'
-            ) . $q->div({ -id => 'top' },
-                $q->h1(
-                    "mySociety User Tracking"
+            ) . <<EOF
+<div class="top">
+<div class="masthead"><img src="http://www.mysociety.org/mslogo.gif" alt="mySociety.org"/></div>
+</div>
+<div class="page-body">
+
+<div id="content" class="narrowColumn">
+EOF
+            . $q->h1(
+                    "User Tracking"
                     . ($title ? ": " . encode_entities($title) : '')
-                )
             );
+}
+
+sub end_html ($) {
+    return <<EOF;
+</div></div></body></html>
+EOF
 }
 
 sub do_ui_page ($$$) {
@@ -197,7 +210,7 @@ and tell your browser not to accept another one. Alternatively, if you are
 using a browser which lets you block images from specific sites, you can just
 block images from this site.</p>
 EOF
-            $q->end_html();
+            end_html($q);
     } elsif ($q->param('showme')) {
         print $q->header(
                 -type => 'text/html; charset=utf-8'
@@ -253,7 +266,7 @@ EOF
             }
             print $q->end_table(),
                     mySociety::Tracking::code($q, 'track: show recorded data'),
-                    $q->end_html();
+                    end_html($q);
         } else {
             print <<EOF;
 <p>Your browser didn't send us a cookie with a tracking ID in it, so we can't
@@ -262,10 +275,10 @@ or web browser, you may wish to try this from those other computers or
 browsers &mdash; we record data separately for each one.</p>
 EOF
         }
-        print $q->end_html();
+        print end_html($q);
     } else {
         my $actionsform =
-            $q->start_form(-method => 'POST')
+            $q->start_form(-method => 'POST', -action => './')
                 . $q->hidden(-name => 'ui')
                 . $q->submit(
                     -name => 'optout',
@@ -373,7 +386,7 @@ system, please send them by email to
 
 EOF
             mySociety::Tracking::code($q, 'track: about'),
-            $q->end_html();
+            end_html($q);
     }
 }
 

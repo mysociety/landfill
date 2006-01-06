@@ -10,7 +10,7 @@ BEGIN {
     mySociety::Config::set_file("$FindBin::Bin/../../conf/general");
 }
 use PoP;
-use HTML::Entities;
+use URI::Escape;
 use XML::RSS;
 use CGI qw/param/;
 my $url_prefix= mySociety::Config::get('URL');
@@ -40,8 +40,12 @@ my $search_term = &handle_search_term(); #' 1 = 1 ';
              $bottomright_long=~ s#[^-\.\d]##g;
                 $geog_limiter= <<EOSQL;
         and google_lat <= $topleft_lat and google_lat >= $bottomright_lat
-        and google_long >= $topleft_long and google_long <= $bottomright_long
 EOSQL
+            if ($topleft_long >= 0 && $bottomright_long <= 0) {
+                $geog_limiter .= "\nand (google_long >= $topleft_long or google_long <= $bottomright_long)\n";
+            } else {
+                $geog_limiter .= "\nand google_long >= $topleft_long and google_long <= $bottomright_long\n";
+            }
         }
 	my $query=$dbh->prepare("
 	              select postid,
@@ -87,9 +91,11 @@ EOSQL
 );
 
 	while ($result=$query->fetchrow_hashref) {
-            my $title = encode_entities($result->{title}, '"');
+            my $title = $result->{title};
+            $title =~ tr/ /_/;
+            $title = uri_escape($title);
             $rss->add_item(
- 		       title => "$result->{title}",
+ 		       title => $result->{title},
                        link => "http://en.wikipedia.org/wiki/$title",
                        description => "Wikipedia article on $result->{title}",
 		       geo => {lat => "$result->{google_lat}",

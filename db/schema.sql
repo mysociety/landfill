@@ -5,7 +5,7 @@
 -- Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 -- Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 --
--- $Id: schema.sql,v 1.2 2005-12-02 21:15:03 chris Exp $
+-- $Id: schema.sql,v 1.3 2006-01-12 12:33:03 chris Exp $
 --
 
 create table secret (
@@ -36,6 +36,6 @@ create table event (
 );
 
 create index event_tracking_id_idx on event(tracking_id);
-create index event_when_idx on event(when);
+create index event_when_idx on event(whenlogged);
 create index event_ipaddr_idx on event(ipaddr);
 

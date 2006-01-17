@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.18 2006-01-17 13:25:16 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.19 2006-01-17 13:29:39 chris Exp $';
 
 use strict;
 
@@ -21,6 +21,7 @@ BEGIN {
 
 use CGI::Fast;
 use Digest::SHA1;
+use Error qw(:try);
 use HTML::Entities;
 use POSIX qw();
 
@@ -141,7 +142,12 @@ sub do_web_bug ($$$) {
     # XXX Commits are slow but their cost does not depend very much on the
     # number of rows committed. So ideally we want to batch them up; however,
     # might we hit some nasty concurrency issue?
-    do_commit() if ($docommit || $n_since_lastcommit > 10 || $lastcommit < time() - 10);
+    try {
+        do_commit() if ($docommit || $n_since_lastcommit > 10 || $lastcommit < time() - 10);
+    } catch mySociety::DBHandle::Error with {
+        my $E = shift;
+        warn "database error: " . $E->text() . " committing rows to tracking database";
+    };
 }
 
 sub start_html ($;$) {

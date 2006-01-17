@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.16 2006-01-17 13:21:51 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.17 2006-01-17 13:23:59 chris Exp $';
 
 use strict;
 
@@ -153,7 +153,7 @@ sub start_html ($;$) {
                 -encoding => 'utf-8'
             ) . <<EOF
 <div class="top">
-<div class="masthead"><img src="http://www.mysociety.org/mslogo.gif" alt="mySociety.org"/></div>
+<div class="masthead"><img src="mslogo.gif" alt="mySociety.org"/></div>
 </div>
 <div class="page-body">
 

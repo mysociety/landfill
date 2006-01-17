@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.15 2006-01-04 18:06:09 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.16 2006-01-17 13:21:51 chris Exp $';
 
 use strict;
 
@@ -298,7 +298,7 @@ EOF
 <ul>
 <li>We use cookies and a "web bug" to track users, so that we can find out
 which parts of our sites users find confusing, and fix them.</li>
-<li>We will never sell or give away this data.</li>
+<li>We will never sell, rent, give away or otherwise disseminate this data.</li>
 <li>We allow anyone to view the data we hold about them, or to opt out of this
 tracking, whenever they want.</li>
 EOF
@@ -358,10 +358,12 @@ EOF
 
 <p>We do not use names or email addresses for our analysis &mdash; we are only
 interested in how users en-masse succeed or fail to use parts of our sites. In
-accordance with the rest of our site's privacy policies, we will never sell or
-give away any name, email or address data you submit to any of our sites,
-except when required to make the sites function (i.e your MP has a right to
-know your postal address if you contact them via WriteToThem.com).</p>
+accordance with the rest of our site's privacy policies, we will never sell,
+rent, give away or otherwise disseminate any name, email or address data you
+submit to any of our sites, except with your permission and when required to
+make the sites function (for instance, when you write to an elected
+representative via WriteToThem.com, your name and address are passed to the
+recipient).</p>
 
 <h2>How does it work, technically?</h2>
 

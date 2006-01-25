@@ -1,0 +1,47 @@
+#!/usr/bin/perl -w
+#
+# cvstrac_import_users:
+# Import /etc/passwd users into CVSTrac's database.
+#
+# Sadly this has to run as root (shadow passwords).
+#
+# Copyright (c) 2004 UK Citizens Online Democracy. All rights reserved.
+# Email: chris@mysociety.org; WWW: http://www.mysociety.org/
+#
+
+my $rcsid = ''; $rcsid .= '$Id: cvstrac-import-users,v 1.1 2006-01-25 17:47:38 francis Exp $';
+
+use strict;
+
+use DBI;
+
+sub escape ($) {
+    my $s = shift;
+    $s =~ s#'#''#g;
+    return "'$s'";
+}
+
+my $dbh = DBI->connect('dbi:SQLite2:dbname=/usr/local/cvs/mysociety/mysociety.db', '', '', {RaiseError => 1, AutoCommit => 0});
+
+# Do everything in a transaction. Actually that's how this version of
+# DBD::SQLite behaves anyway.
+
+my $group_members = (getgrnam("cvstrac"))[3];
+foreach my $user (split(/,?\s+/, $group_members)) {
+    my ($name, $passwd, $uid, $gid, $q, $c, $gcos) = getpwnam($user);
+    $gcos =~ s#,.+##;
+
+    if ($dbh->selectrow_array('select count(*) from user where id = ?', {}, $name)) {
+        $dbh->do('update user set passwd = ? where id = ?', {}, $passwd, $name);
+    } else {
+        $dbh->do(q#insert into user (id, name, email, passwd, capabilities)
+                    values (?, ?, ?, ?, 'aijknorsw')#, {},
+                    $name,
+                    $gcos,
+                    "$name\@mysociety.org",
+                    $passwd);
+    }
+}
+
+$dbh->commit();
+

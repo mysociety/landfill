@@ -1,0 +1,19 @@
+Source: cvstrac
+Section: devel
+Priority: optional
+Maintainer: Edelhard Becker <edelhard@debian.org>
+Build-Depends: debhelper (>= 4.0.0), libsqlite0-dev (>= 2.8.0)
+Standards-Version: 3.6.1
+
+Package: cvstrac
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, rcs
+Description: Low-ceremony bug tracker for medium-sized projects under CVS
+ CVSTrac implements a low-ceremony Web-based bug and patch-set tracking system
+ for use with CVS. Features include automatic changelog generation, repository
+ change history browsing, user-defined bug database queries, Wiki pages, and
+ Web-based administration of the CVSROOT/passwd file. CVSTrac is a stand-alone
+ C program that operates either as CGI or as its own Web server.
+ .
+  Author:   D. Richard Hipp <drh@hwaci.com>
+  Homepage: http://www.cvstrac.org/

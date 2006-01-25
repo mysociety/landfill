@@ -1,0 +1,16 @@
+#!/bin/bash
+# Make tarball of source
+
+set -e
+
+cd /data/vhost/www.mysociety.org/docs/cvs
+
+rm -fr mysociety
+export CVSROOT=/usr/local/cvs
+cvs -Q export -D now mysociety
+
+rm -fr mysociety-new.tar.gz
+tar cfz mysociety-new.tar.gz mysociety
+mv mysociety-new.tar.gz mysociety.tar.gz
+
+

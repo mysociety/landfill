@@ -1,0 +1,6 @@
+# cvstracs watch control file for uscan
+# Site			Directory	Pattern			Version	Script
+version=2
+# Currently the source is only available as cvstrac-src.tar.gz. Once there's a
+# versioned archive name, something like the following should do it:
+http://www.cvstrac.org/cvstrac/wiki?p=DownloadCvstrac http://www.cvstrac.org/cvstrac-src-(.*)\.tar\.gz

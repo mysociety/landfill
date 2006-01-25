@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+# bin/compile-cvstrac:
+# Compile cvstrac from source in CVS, after new deploy
+#
+# Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
+# Email: francis@mysociety.org; WWW: http://www.mysociety.org/
+#
+# $Id: compile-cvstrac,v 1.1 2006-01-25 17:47:38 francis Exp $
+
+if [ ! -d cvswww/src ]
+then
+    echo "Run in root mysociety directory with cvswww/src below"!
+    exit
+fi
+cd cvswww/src
+
+cd cvstrac-1.1.5
+make
+cp cvstrac ../../../bin/
+

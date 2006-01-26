@@ -55,7 +55,7 @@ void login_page(void){
   zGoto = P("g");
   if( P("out")!=0 ){
     const char *zCookieName = login_cookie_name();
-    cgi_set_cookie(zCookieName, "", 0, 0);
+    cgi_set_cookie(zCookieName, "", 0, 86400 * 28);
     db_execute("DELETE FROM cookie WHERE cookie='%q'", zCookieName);
     cgi_redirect(PD("nxp","index"));
     return;
@@ -121,9 +121,9 @@ void login_page(void){
         "INSERT INTO cookie(cookie,user,expires,ipaddr,agent)"
         "  VALUES('%q','%q',%d,'%q','%q');"
         "COMMIT;",
-        now, zDigest, zUsername, now+3600*24, zAddr, zAgent
+        now, zDigest, zUsername, now+28*3600*24, zAddr, zAgent
       );
-      cgi_set_cookie(login_cookie_name(), zDigest, 0, 0);
+      cgi_set_cookie(login_cookie_name(), zDigest, 0, 86400 * 28);
       cgi_redirect(PD("nxp","index"));
       return;
     }

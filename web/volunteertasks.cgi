@@ -7,7 +7,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.1 2006-01-27 03:33:10 francis Exp $';
+my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.2 2006-01-27 03:47:24 francis Exp $';
 
 use strict;
 require 5.8.0;
@@ -354,7 +354,6 @@ Good luck!
 "
             }, [ $email, $mysociety_email ]);
         my $url = $q->param('prevurl');
-        warn "url: $url";
         $url ||= 'http://www.mysociety.org/';
         print $q->header(
                 -type => 'text/html; charset=utf-8' ,

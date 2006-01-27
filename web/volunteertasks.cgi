@@ -7,7 +7,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.3 2006-01-27 03:48:42 francis Exp $';
+my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.4 2006-01-27 03:51:00 francis Exp $';
 
 use strict;
 require 5.8.0;
@@ -264,7 +264,7 @@ EOF
                         $q->div({ -class => 'signup' },
                             $q->start_form(-method => 'GET'),
                             $q->hidden(-name => 'tn', -value => $tn),
-                            $q->hidden(-name => 'prevurl', -value => $q->self_url(-relative => 1)),
+                            $q->hidden(-name => 'prevurl', -value => $q->url(-relative => 1, -path => 1, -query => 1)),
                             $q->submit(-name => 'register', -value => "I'm interested >>>"),
                             $q->end_form()
                         ));

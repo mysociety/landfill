@@ -7,7 +7,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.4 2006-01-27 03:51:00 francis Exp $';
+my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.5 2006-02-02 15:21:52 francis Exp $';
 
 use strict;
 require 5.8.0;
@@ -99,10 +99,12 @@ sub start_html ($$) {
             ),
             $q->div({ -class => 'top' },
                 $q->div({ -class => 'masthead' },
-                    $q->img({
-                        -src => 'http://www.mysociety.org/mslogo.gif',
-                        -alt => 'mySociety.org'
-                    })
+                    $q->a({ -href => '/'},
+                        $q->img({
+                            -src => 'http://www.mysociety.org/mslogo.gif',
+                            -alt => 'mySociety.org'
+                        })
+                    )
                 )
             ),
             $q->start_div({ -class => 'page-body' }),

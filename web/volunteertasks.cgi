@@ -7,7 +7,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.6 2006-02-08 16:28:38 francis Exp $';
+my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.7 2006-02-08 17:21:01 francis Exp $';
 
 use strict;
 require 5.8.0;
@@ -209,7 +209,7 @@ EOF
     }
 
     my $ntasks = $dbh->selectrow_array("
-                    select count(tn) from ticket where extra1 = ?
+                    select count(tn) from ticket where extra1 = ? and status = 'new'
                 ", {}, $skills_needed);
 
     if ($ntasks == 0) {
@@ -231,7 +231,7 @@ EOF
 
             my $ntasks = $dbh->selectrow_array("
                             select count(tn) from ticket
-                            where extra1 = ? and extra2 = ?
+                            where extra1 = ? and extra2 = ? and status = 'new'
                         ", {}, $skills_needed, $howlong);
             next if ($ntasks == 0);
 #            print $q->h3($desc),
@@ -248,7 +248,7 @@ EOF
                             select tn, origtime, changetime, extra1, extra2
                             from ticket
                             where extra1 = ?
-                                and extra2 = ?
+                                and extra2 = ? and status = 'new'
                             order by max(origtime, changetime) desc
                         ");
 

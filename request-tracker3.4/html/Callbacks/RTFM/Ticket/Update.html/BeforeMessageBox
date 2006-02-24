@@ -1,0 +1,44 @@
+%# BEGIN LICENSE BLOCK
+%# 
+%#  Copyright (c) 2002-2003 Jesse Vincent <jesse@bestpractical.com>
+%#  
+%#  This program is free software; you can redistribute it and/or modify
+%#  it under the terms of version 2 of the GNU General Public License 
+%#  as published by the Free Software Foundation.
+%# 
+%#  A copy of that license should have arrived with this
+%#  software, but in any event can be snarfed from www.gnu.org.
+%# 
+%#  This program is distributed in the hope that it will be useful,
+%#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+%#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%#  GNU General Public License for more details.
+%# 
+%# END LICENSE BLOCK
+
+% foreach my $arg (keys %ARGS) {
+% if ($arg =~ /^RTFM-Include-Article-(\d+)$/) {
+% my $art = RT::FM::Article->new($session{'CurrentUser'});
+% $art->Load($1);
+% if ($art->Id) { 
+<input type="hidden" name="<%$ARGS{'id'}%>-RefersTo" value="<%$art->URI%>">
+% }
+
+% }
+%}
+<table>
+<tr>
+<td><&|/l&>Include RTFM article:</&></td>
+<td><select name="RTFM-Include-Article-Named">
+% while (my $article = $articles_content->Next) {
+<option value="<% $article->Name %>"><% $article->Summary %></option>
+% }
+</select>
+<td><input type=submit value="Go"></td>
+</tr>
+</table>
+<%init>
+use RT::FM::ArticleCollection;
+my $articles_content = RT::FM::ArticleCollection->new( $session{'CurrentUser'} );
+$articles_content->UnLimit;
+</%init>

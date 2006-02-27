@@ -6,7 +6,7 @@
 # Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: GIA.pm,v 1.3 2005-10-21 17:31:51 chris Exp $
+# $Id: GIA.pm,v 1.4 2006-02-27 17:09:33 chris Exp $
 #
 
 package GIA::Error;
@@ -34,9 +34,8 @@ BEGIN {
         );
 
     if (!dbh()->selectrow_array('select secret from secret for update of secret')) {
-        dbh()->{RaiseError} = 0;
+        local dbh()->{HandleError};
         dbh()->do('insert into secret (secret) values (?)', {}, unpack('h*', mySociety::Util::random_bytes(32)));
-        dbh()->{RaiseError} = 1;
     }
     dbh()->commit();
 }

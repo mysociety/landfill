@@ -1,3 +1,11 @@
+<?php
+function indent_recommendations($content) {
+    $content = preg_replace("/(\d+)\./i", "<ol start=\"\\1\"><li>", $content);
+    $content .= '</li></ol>';
+    return $content;
+}
+add_filter('the_content', 'indent_recommendations');
+?>
 <?php get_header(); ?>
 
 	<div id="content" class="narrowcolumn">

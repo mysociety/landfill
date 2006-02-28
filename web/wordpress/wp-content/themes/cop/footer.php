@@ -4,7 +4,8 @@
 	<p>
 		<small><a href="feed:<?php bloginfo('comments_rss2_url'); ?>">Comments (RSS)</a>.</small>
 		<!-- <?php echo get_num_queries(); ?> queries. <?php timer_stop(1); ?> seconds. -->
-		<small> <?php bloginfo('name'); ?> is proudly powered by <a href="http://wordpress.org/">WordPress</a> </small>
+		<small> Built by <a href="http://www.mysociety.org/">mySociety</a>. </small>
+		<small> Powered by <a href="http://wordpress.org/">WordPress</a>. </small>
 	</p>
 </div>
 </div>

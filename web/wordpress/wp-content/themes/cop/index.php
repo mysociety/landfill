@@ -8,7 +8,14 @@
 		<?php while (have_posts()) : the_post(); ?>
             <tr>
                 <td>
-				<h2><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title(); ?>"><?php the_title(); ?></a></h2>
+				<h2><?php the_title(); ?></h2>
+                </td>
+                <td>
+                <h2>Your Thoughts</h2>
+                </td>
+            </tr>
+            <tr>
+                <td>
 				<!-- <small><?php the_time('F jS, Y') ?> by <?php the_author() ?> </small>-->
 				
 				<div class="entry">
@@ -22,18 +29,18 @@
                     $comments = get_approved_comments($id);
                     if ($comments) {
                ?>
-                <ol id="commentlist">
+                <ul id="commentlist">
                 <?php foreach ($comments as $comment) { ?>
                     <li id="comment-<?php comment_ID() ?>">
-                    <?php comment_text() ?>
-                    <p><cite><?php comment_type('Comment', 'Trackback', 'Pingback'); ?> by <?php comment_author_link() ?> &#8212; <?php comment_date() ?> @ <a href="#comment-<?php comment_ID() ?>"><?php comment_time() ?></a></cite></p>
+                    <?php comment_excerpt() ?>
                     </li>
 
                 <?php } // end for each comment ?>
-                </ol>
+                </ul>
                <? } 
-                    comments_popup_link('Add your thoughts &#187;', '1 thought &#187;', '% thoughts &#187;');
+                    comments_popup_link('Add your thoughts &#187;', 'Show thought &#187;', 'Show % thoughts &#187;');
                ?>
+                <p><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title(); ?>">Link to this section</a></p>
                 </td>
             </tr>
 	

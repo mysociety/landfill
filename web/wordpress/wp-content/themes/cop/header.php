@@ -19,6 +19,7 @@
 
 
 <div id="header">
+    <p class="mysociety_logo">built by<br><a href="http://www.mysociety.org"><img src="/mysociety_sm.gif"></a></div>
 	<div id="headerimg">
 		<h1><a href="<?php echo get_settings('home'); ?>/"><?php bloginfo('name'); ?></a></h1>
 		<div class="description"><?php bloginfo('description'); ?></div>

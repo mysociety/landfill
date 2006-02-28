@@ -37,8 +37,10 @@ add_filter('the_content', 'indent_recommendations');
 
                 <?php } // end for each comment ?>
                 </ul>
-               <? } 
-                    comments_popup_link('Add your thoughts &#187;', 'Show thought &#187;', 'Show % thoughts &#187;');
+               <? }  ?>
+                <p>
+               <?
+                    comments_popup_link('Leave a response to this &#187;', 'Leave a response and read more&#187;', 'Leave a response and read % &#187;');
                ?>
                 </td>
             </tr>

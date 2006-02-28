@@ -20,7 +20,7 @@
 <!-- You can start editing here. -->
 
 <?php if ($comments) : ?>
-	<h3 id="comments"><?php comments_number('No thoughts', 'One thought', '% thoughts' );?> on &#8220;<?php the_title(); ?>&#8221;</h3> 
+	<h3 id="comments"><?php comments_number('No responses', 'One response', '% responses' );?> to &#8220;<?php the_title(); ?>&#8221;</h3> 
 
 	<ol class="commentlist">
 
@@ -63,7 +63,7 @@
 
 <?php if ('open' == $post->comment_status) : ?>
 
-<h3 id="respond">Leave your thoughts</h3>
+<h3 id="respond">Leave your response</h3>
 
 <?php if ( get_option('comment_registration') && !$user_ID ) : ?>
 <p>You must be <a href="<?php echo get_option('siteurl'); ?>/wp-login.php?redirect_to=<?php the_permalink(); ?>">logged in</a> to post a comment.</p>

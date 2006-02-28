@@ -1,11 +1,11 @@
 <?php
 
 /* Include mySociety config file. */
-if (!@include "../conf/general"
-    && !@include "../../conf/general"
-    && !@include "../../../conf/general") {
-    /* Should handle error */
-    print "Error including conf/general in wp-config.php on mysociety.org WordPress";
+if (!@include "../conf/general")
+    if (!@include "../../conf/general")
+        if (!@include "../../../conf/general") {
+            /* Should handle error */
+            print "Error including conf/general in wp-config.php on commentonpower.org WordPress";
     exit;
 }
 

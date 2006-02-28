@@ -7,15 +7,7 @@
         <table>
 		<?php while (have_posts()) : the_post(); ?>
             <tr>
-                <td>
-				<h2><?php the_title(); ?></h2>
-                </td>
-                <td>
-                <h2>Your Thoughts</h2>
-                </td>
-            </tr>
-            <tr>
-                <td>
+                <td valign="top">
 				<!-- <small><?php the_time('F jS, Y') ?> by <?php the_author() ?> </small>-->
 				
 				<div class="entry">
@@ -40,7 +32,6 @@
                <? } 
                     comments_popup_link('Add your thoughts &#187;', 'Show thought &#187;', 'Show % thoughts &#187;');
                ?>
-                <p><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title(); ?>">Link to this section</a></p>
                 </td>
             </tr>
 	

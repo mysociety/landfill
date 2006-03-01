@@ -13,7 +13,7 @@ add_filter('the_content', 'indent_recommendations');
 	<div id="content" class="widecolumn" style="margin-left: 4%;">
 				
   <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
-	
+                <h2><?=the_title()?></h2>
 		<div class="navigation">
 			<?php next_post('&laquo; %', '', 'yes', 'yes', '', 2) ?>
                         |

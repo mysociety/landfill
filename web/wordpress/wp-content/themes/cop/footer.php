@@ -6,7 +6,9 @@
         <hr class="footrule" />
     </td>
     </tr>
-</table>
+    <tr>
+    <td></td>
+    <td>
 <div id="footer">
 	<p>
 		<small><a href="feed:<?php bloginfo('comments_rss2_url'); ?>">Comments (RSS)</a>.</small>
@@ -15,6 +17,9 @@
 		<small> Powered by <a href="http://wordpress.org/">WordPress</a>. </small>
 	</p>
 </div>
+    </td>
+    </tr>
+</table>
 </div>
 
 <?php /* "Just what do you think you're doing Dave?" */ ?>

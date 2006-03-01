@@ -71,6 +71,7 @@ div.permalink a:hover {
 }
 
 div.postthoughts {
+    padding-top: 1em;
     line-height: 125%;
     font-size: 80%;
 }

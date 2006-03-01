@@ -53,7 +53,7 @@ decide what counts about it.
     </tr>
     <tr>
     <td></td>
-    <td colspan="2">
+    <td colspan="3">
         <hr class="headrule" />
     </td>
     </tr>

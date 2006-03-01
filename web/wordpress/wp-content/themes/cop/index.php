@@ -17,10 +17,8 @@ add_filter('the_content', 'indent_recommendations');
 		<?php while (have_posts()) : the_post(); ?>
             <tr>
                 <td width="60%" valign="top">
-				<!-- <small><?php the_time('F jS, Y') ?> by <?php the_author() ?> </small>-->
-				
+                                <div class="permalink"><a href="#<?=$id?>">#</a><a name="<?=$id?>"></a></div>
 				<div class="entry">
-                                        <div class="permalink"><a href="#<?=$id?>"><a name="<?=$id?>">#</a></a></div>
 					<?php the_content('Read the rest of this entry &raquo;'); ?>
 				</div>
                 </td>

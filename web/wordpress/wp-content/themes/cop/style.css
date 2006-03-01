@@ -39,10 +39,18 @@ hr.headrule {
     clear: both;
     margin-top: 1em;
     margin-bottom: 1em;
+
+    color: #888;
+    background-color: #888;
+    height: 1px;
 }
 
 hr.footrule {
     margin-bottom: 0em;
+
+    color: #888;
+    background-color: #888;
+    height: 1px;
 }
 
 #footer {

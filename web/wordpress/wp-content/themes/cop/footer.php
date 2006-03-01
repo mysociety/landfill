@@ -1,5 +1,12 @@
 
-<hr class="footrule" />
+<table>
+    <tr>
+    <td width="2%"></td>
+    <td width="98%">
+        <hr class="footrule" />
+    </td>
+    </tr>
+</table>
 <div id="footer">
 	<p>
 		<small><a href="feed:<?php bloginfo('comments_rss2_url'); ?>">Comments (RSS)</a>.</small>
@@ -10,7 +17,6 @@
 </div>
 </div>
 
-<!-- Gorgeous design by Michael Heilemann - http://binarybonsai.com/kubrick/ -->
 <?php /* "Just what do you think you're doing Dave?" */ ?>
 
 		<?php wp_footer(); ?>

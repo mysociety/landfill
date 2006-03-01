@@ -51,6 +51,11 @@ decide what counts about it.
         </small>
     </td>
     </tr>
+    <tr>
+    <td></td>
+    <td colspan="2">
+        <hr class="headrule" />
+    </td>
+    </tr>
 </table>
-<hr class="headrule" />
 

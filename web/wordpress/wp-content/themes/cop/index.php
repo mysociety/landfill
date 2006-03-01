@@ -45,7 +45,7 @@ add_filter('the_content', 'indent_recommendations');
                 </ul>
                <? }  ?>
                <?
-                    comments_popup_link('Leave a response to this &#187;', 'Leave a response and read more&#187;', 'Leave a response and read % &#187;', '', '');
+                    comments_popup_link('Respond &#187;', 'Leave a response and read more&#187;', 'Leave a response and read % &#187;', '', '');
                ?>
                                 </div>
                 </td>

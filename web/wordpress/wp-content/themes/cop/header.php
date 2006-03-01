@@ -34,17 +34,13 @@ in this important new document.</p>
     <td width="10%" valign="top">
     </td>
     <td width="30%" valign="top">
-        <small>this site was built by</small>
+        <small>this site was built by<br/>
         <a href="http://www.mysociety.org/"><img border="0" src="/mysociety_sm.gif" alt="mySociety.org" /></a>
-        <br/><small>the charitable project that runs</small>
-        <ul style="margin-top: 0; margin-bottom: 0 ">
-        <li><a href="http://www.writetothem.com">WriteToThem.com</a></li>
-        
-        <li><a href="http://www.theyworkforyou.com">TheyWorkForYou.com</a></li>
-        
-        <li><a href="http://www.pledgebank.com">PledgeBank.com</a></li>
-        </ul>
-        <small>and is supported by
+        <br/>the charitable project that runs
+        <a href="http://www.writetothem.com">WriteToThem.com</a>,
+        <a href="http://www.theyworkforyou.com">TheyWorkForYou.com</a>, and
+        <a href="http://www.pledgebank.com">PledgeBank.com</a>;
+        and is supported by<br/>
         <a href="http://www.opendemocracy.org/"><img border="0" src="/oD-133px.png" alt="OpenDemocracy" /></a>
         </small>
     </td>

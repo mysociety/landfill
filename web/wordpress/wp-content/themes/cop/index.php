@@ -1,7 +1,9 @@
 <?php
 function indent_recommendations($content) {
-    $content = preg_replace("/(\d+)\./i", "<ol start=\"\\1\"><li>", $content);
-    $content .= '</li></ol>';
+    if (preg_match('/^<p>[1-9]\d*\./', $content)) {
+        $content = preg_replace("/^<p>([1-9]\d*)\./i", "<ol start=\"\\1\"><li>", $content);
+        $content = preg_replace("#</p>#i", "</li></ol>", $content);
+    }
     return $content;
 }
 add_filter('the_content', 'indent_recommendations');

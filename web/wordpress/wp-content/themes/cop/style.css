@@ -50,9 +50,8 @@ hr.footrule {
     margin-bottom: 0;
 }
 
-div.permalink {
-/*    float: left;
-    margin-left: -2em;*/
+div.permalink a {
+    color #7b52a5;
 }
 
 div.permalink a:link {
@@ -61,4 +60,5 @@ div.permalink a:link {
 
 div.permalink a:hover {
     text-decoration: underline;
+    color: #522994;
 }

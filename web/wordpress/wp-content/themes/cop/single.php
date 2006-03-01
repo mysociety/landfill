@@ -5,9 +5,9 @@
   <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
 	
 		<div class="navigation">
-			<?php next_post_link('&laquo; %link', '', '', 'excluded_category', 2) ?>
+			<?php next_post('&laquo; %link', '', '', 'excluded_category', 2) ?>
                         |
-			<?php previous_post_link('%link &raquo;', '', '', 'excluded_category', 2) ?>
+			<?php previous_post('%link &raquo;', '', '', 'excluded_category', 2) ?>
 		</div>
 	
 		<div class="post" id="post-<?php the_ID(); ?>">
@@ -18,7 +18,7 @@
 				<?php link_pages('<p><strong>Pages:</strong> ', '</p>', 'number'); ?>
 	
 			</div>
-                <p><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title(); ?>">Link to this section</a></p>
+                <p><a href="<?php the_permalink() ?>" rel="bookmark" title="Link to <?php the_title(); ?>">Link to this section</a></p>
 		</div>
 		
 	<?php comments_template(); ?>

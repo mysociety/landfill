@@ -33,7 +33,7 @@ in this important new document.
     <td width="30%" valign="top">
         <br>
         <small>this site was built by</small>
-        <a href="http://www.mysociety.org"><img border="0" src="/mysociety_sm.gif" alt="mySociety.org"></a>
+        <a href="http://www.mysociety.org/"><img border="0" src="/mysociety_sm.gif" alt="mySociety.org"></a>
         <br><small>the charitable project that runs 
         <ul style="margin-top: 0; margin-bottom: 0 ">
         <li><a href="http://www.writetothem.com">WriteToThem.com</a></li>
@@ -42,6 +42,8 @@ in this important new document.
         
         <li><a href="http://www.pledgebank.com">PledgeBank.com</a></li>
         </ul>
+        <small>and is supported by</small>
+        <a href="http://www.opendemocracy.org/"><img border="0" src="/oD-133px.png" alt="OpenDemocracy"></a>
         </small>
     </td>
     </tr>

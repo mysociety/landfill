@@ -18,14 +18,16 @@ add_filter('the_content', 'indent_recommendations');
 
 		<?php while (have_posts()) : the_post(); ?>
             <tr>
-                <td width="60%" valign="top">
+                <td width="2%" valign="top">
+                                <div class="permalink"><a title="Link to this" href="#<?=$id?>">#</a></div>
+                </td>
+                <td width="59%" valign="top">
                                 <a name="<?=$id?>"></a>
 				<div class="entry">
-                                <div class="permalink"><a title="Link to this" href="#<?=$id?>">#</a></div>
 					<?php the_content('Read the rest of this entry &raquo;'); ?>
 				</div>
                 </td>
-                <td width="10%" valign="top">
+                <td width="9%" valign="top">
                 </td>
 		
                 <td width="30%" valign="top">

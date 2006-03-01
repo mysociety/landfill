@@ -24,7 +24,8 @@
 		<h1><a href="<?php echo get_settings('home'); ?>/"><?php bloginfo('name'); ?></a></h1>
 		<p class="description">
 This is an entirely <strong>unofficial</strong> page for discussion of the
-report of the <a href="http://www.powerinquiry.org/">Power Inquiry</a>. 
+report of the <a href="http://www.powerinquiry.org/">Power Inquiry</a>,
+an independent inquiry into Britain’s democracy. 
 We've put the executive summary up only, all on one page.
 It's short and very interesting: so read it! 
 </p>

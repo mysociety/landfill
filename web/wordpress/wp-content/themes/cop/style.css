@@ -59,3 +59,7 @@ div.permalink a:hover {
     text-decoration: underline;
     color: #522994;
 }
+
+div.postthoughts {
+    font-size: 80%;
+}

@@ -1,11 +1,12 @@
 <?php get_header(); ?>
 
-	<div id="content" class="widecolumn" style="margin-left: 2%;">
+	<div id="content" class="widecolumn" style="margin-left: 4%;">
 				
   <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
 	
 		<div class="navigation">
 			<?php next_post_link('&laquo; %link') ?>
+                        |
 			<?php previous_post_link('%link &raquo;') ?>
 		</div>
 	

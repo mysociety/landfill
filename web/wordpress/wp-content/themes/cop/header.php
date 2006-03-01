@@ -45,7 +45,6 @@ decide what counts about it.
         <a href="http://www.writetothem.com">WriteToThem.com</a>,
         <a href="http://www.theyworkforyou.com">TheyWorkForYou.com</a>, and
         <a href="http://www.pledgebank.com">PledgeBank.com</a>;
-        <p>
         and is supported by<br/>
         <a href="http://www.opendemocracy.org/"><img border="0" src="/oD-133px.png" alt="OpenDemocracy" /></a>
         </small>

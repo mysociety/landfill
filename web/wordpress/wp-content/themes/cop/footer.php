@@ -1,5 +1,5 @@
 
-<hr />
+<hr class="footrule" />
 <div id="footer">
 	<p>
 		<small><a href="feed:<?php bloginfo('comments_rss2_url'); ?>">Comments (RSS)</a>.</small>

@@ -13,14 +13,17 @@ add_filter('the_content', 'indent_recommendations');
 	<?php if (have_posts()) : ?>
 		
         <table>
+
 		<?php while (have_posts()) : the_post(); ?>
             <tr>
-                <td valign="top">
+                <td width="60%" valign="top">
 				<!-- <small><?php the_time('F jS, Y') ?> by <?php the_author() ?> </small>-->
 				
 				<div class="entry">
 					<?php the_content('Read the rest of this entry &raquo;'); ?>
 				</div>
+                </td>
+                <td width="10%" valign="top">
                 </td>
 		
                 <td width="30%" valign="top">
@@ -29,6 +32,7 @@ add_filter('the_content', 'indent_recommendations');
                     $comments = get_approved_comments($id);
                     if ($comments) {
                ?>
+                <p>Some responses:
                 <ul id="commentlist">
                 <?php foreach ($comments as $comment) { ?>
                     <li id="comment-<?php comment_ID() ?>">

@@ -18,11 +18,33 @@
 <div id="page">
 
 
-<div id="header">
-    <p class="mysociety_logo">built by<br><a href="http://www.mysociety.org"><img border="0" src="/mysociety_sm.gif"></a></div>
-	<div id="headerimg">
+<table>
+    <tr>
+    <td width="60%" valign="top">
 		<h1><a href="<?php echo get_settings('home'); ?>/"><?php bloginfo('name'); ?></a></h1>
-		<div class="description"><?php bloginfo('description'); ?></div>
-	</div>
-</div>
-<hr />
+		<p class="description">
+This is an entirely <strong>unofficial</strong> page to promote discussion
+around the <a href="http://www.powerinquiry.org/report/documents/PowertothePeople_000.pdf">report</a> of the <a href="http://www.powerinquiry.org/">Power Inquiry</a>.
+Leave a response and stop the mass media from deciding what is and isn't good
+in this important new document. 
+    </td>
+    <td width="10%" valign="top">
+    </td>
+    <td width="30%" valign="top">
+        <br>
+        <small>this site was built by</small>
+        <a href="http://www.mysociety.org"><img border="0" src="/mysociety_sm.gif" alt="mySociety.org"></a>
+        <br><small>the charitable project that runs 
+        <ul style="margin-top: 0; margin-bottom: 0 ">
+        <li><a href="http://www.writetothem.com">WriteToThem.com</a></li>
+        
+        <li><a href="http://www.theyworkforyou.com">TheyWorkForYou.com</a></li>
+        
+        <li><a href="http://www.pledgebank.com">PledgeBank.com</a></li>
+        </ul>
+        </small>
+    </td>
+    </tr>
+</table>
+<hr class="headrule" />
+

@@ -7,8 +7,39 @@ Author: Francis Irving
 Author URI: http://flourish.org/
 */
 
-.mysociety_logo {
-    float: right;
+body {
+    font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #000000;
+    background-color: #ffffff;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 2em;
+}
+
+a:link { color: #522994; text-decoration: underline; }
+a:visited { color: #7b52a5; text-decoration: underline; }
+a:hover, a:active { color: #000000; text-decoration: underline; }
+
+h1 a:link, h1 a:visited {
+    text-decoration: none;
+    color: #000000;
+}
+
+hr.headrule { 
+    clear: both;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+hr.footrule {
+    margin-bottom: 0em;
+}
+
+#footer {
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 /* "Daisy, Daisy, give me your answer do. I'm half crazy all for the love of you.

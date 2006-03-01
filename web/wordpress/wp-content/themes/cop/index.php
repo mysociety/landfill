@@ -19,7 +19,7 @@ add_filter('the_content', 'indent_recommendations');
 		<?php while (have_posts()) : the_post(); ?>
             <tr>
                 <td width="2%" valign="top">
-                                <div class="permalink"><a title="Link to this" href="#<?=$id?>">#</a></div>
+                                <div class="permalink"><p><a title="Link to this" href="#<?=$id?>">#</a></p></div>
                 </td>
                 <td width="59%" valign="top">
 				<div class="entry">

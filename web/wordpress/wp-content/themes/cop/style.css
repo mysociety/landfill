@@ -50,12 +50,7 @@ hr.footrule {
     margin-bottom: 0;
 }
 
-div.permalink a:link {
-    color #7b52a5;
-    text-decoration: none;
-}
-
-div.permalink a:hover {
+div.permalink a:link, div.permalink a:visited {
     color #7b52a5;
     text-decoration: none;
 }

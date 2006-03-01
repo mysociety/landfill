@@ -22,8 +22,8 @@ add_filter('the_content', 'indent_recommendations');
                                 <div class="permalink"><a title="Link to this" href="#<?=$id?>">#</a></div>
                 </td>
                 <td width="59%" valign="top">
-                                <a name="<?=$id?>"></a>
 				<div class="entry">
+                                <a name="<?=$id?>"></a>
 					<?php the_content('Read the rest of this entry &raquo;'); ?>
 				</div>
                 </td>

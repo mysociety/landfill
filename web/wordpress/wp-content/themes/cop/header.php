@@ -20,7 +20,8 @@
 
 <table>
     <tr>
-    <td width="60%" valign="top">
+    <td width="2%" valign="top"></td>
+    <td width="59%" valign="top">
 		<h1><a href="<?php echo get_settings('home'); ?>/"><?php bloginfo('name'); ?></a></h1>
 		<p class="description">
 This is an entirely <strong>unofficial</strong> page for discussion of the
@@ -35,7 +36,7 @@ the debate about the Power Inquiry report, it is the mass media that will
 decide what counts about it.
         </p>
     </td>
-    <td width="10%" valign="top">
+    <td width="9%" valign="top">
     </td>
     <td width="30%" valign="top">
         <small>this site was built by<br/>

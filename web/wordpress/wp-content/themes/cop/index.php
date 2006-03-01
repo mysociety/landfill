@@ -34,7 +34,7 @@ add_filter('the_content', 'indent_recommendations');
                     $comments = get_approved_comments($id);
                     if ($comments) {
                ?>
-                <p>Some responses:
+                <p>Some responses:</p>
                 <ul id="commentlist">
                 <?php foreach ($comments as $comment) { ?>
                     <li id="comment-<?php comment_ID() ?>">
@@ -44,7 +44,6 @@ add_filter('the_content', 'indent_recommendations');
                 <?php } // end for each comment ?>
                 </ul>
                <? }  ?>
-                <p>
                <?
                     comments_popup_link('Leave a response to this &#187;', 'Leave a response and read more&#187;', 'Leave a response and read % &#187;', '', '');
                ?>

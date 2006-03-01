@@ -51,8 +51,8 @@ hr.footrule {
 }
 
 div.permalink {
-    float: left;
-    margin-left: -2em;
+/*    float: left;
+    margin-left: -2em;*/
 }
 
 div.permalink a:link {

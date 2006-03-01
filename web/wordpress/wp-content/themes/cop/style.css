@@ -16,16 +16,24 @@ body {
     margin-left: 10%;
     margin-right: 10%;
     margin-top: 2em;
+    line-height: 125%;
 }
 
 a:link { color: #522994; text-decoration: underline; }
 a:visited { color: #7b52a5; text-decoration: underline; }
 a:hover, a:active { color: #000000; text-decoration: underline; }
 
+h1 { color: #444; }
+
 h1 a:link, h1 a:visited {
     text-decoration: none;
-    color: #000000;
+    color: #444;
 }
+
+h2 { line-height: 125%; color: #444; }
+h3 { line-height: 125%; color: #444; }
+
+ul li { padding-bottom: 0.5em; }
 
 hr.headrule { 
     clear: both;
@@ -43,10 +51,14 @@ hr.footrule {
 }
 
 div.permalink {
-    position: absolute;
-    left: -2em;
+    float: left;
+    margin-left: -2em;
 }
 
-/* "Daisy, Daisy, give me your answer do. I'm half crazy all for the love of you.
-	It won't be a stylish marriage, I can't afford a carriage.
-	But you'll look sweet upon the seat of a bicycle built for two." */
+div.permalink a:link {
+    text-decoration: none;
+}
+
+div.permalink a:hover {
+    text-decoration: underline;
+}

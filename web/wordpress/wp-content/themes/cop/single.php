@@ -1,3 +1,13 @@
+<?php
+function indent_recommendations($content) {
+    if (preg_match('/^<p>[1-9]\d*\./', $content)) {
+        $content = preg_replace("/^<p>([1-9]\d*)\./i", "<ol start=\"\\1\"><li>", $content);
+        $content = preg_replace("#</p>#i", "</li></ol>", $content);
+    }
+    return $content;
+}
+add_filter('the_content', 'indent_recommendations');
+?>
 <?php get_header(); ?>
 
 	<div id="content" class="widecolumn" style="margin-left: 4%;">

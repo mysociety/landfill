@@ -1,5 +1,5 @@
 
-<table>
+<table width="100%">
     <tr>
     <td width="2%"></td>
     <td width="98%">

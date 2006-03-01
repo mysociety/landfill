@@ -18,7 +18,7 @@
 <div id="page">
 
 
-<table>
+<table width="100%">
     <tr>
     <td width="2%" valign="top"></td>
     <td width="59%" valign="top">

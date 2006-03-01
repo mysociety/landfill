@@ -23,12 +23,16 @@
     <td width="60%" valign="top">
 		<h1><a href="<?php echo get_settings('home'); ?>/"><?php bloginfo('name'); ?></a></h1>
 		<p class="description">
-This is an entirely <strong>unofficial</strong> page to promote discussion
-around the report of the <a href="http://www.powerinquiry.org/">Power Inquiry</a>.
-Leave a response and stop the mass media from deciding what is and isn't good
-in this important new document.</p>
-		<p class="description">
-            The discussion is based around the executive summary, you might also like to <a href="http://www.powerinquiry.org/report/documents/PowertothePeople_000.pdf">read the full report</a>.
+This is an entirely <strong>unofficial</strong> page for discussion of the
+report of the <a href="http://www.powerinquiry.org/">Power Inquiry</a>. 
+We've put the executive summary up only, all on one page.
+It's short and very interesting: so read it! 
+</p>
+<p class="description">If you agree or disagree with any
+part of the summary, we strongly encourage you to hit respond next to it &mdash; we
+want people to 'scribble in the margins'. Remember, if you don't take part in
+the debate about the Power Inquiry report, it is the mass media that will
+decide what counts about it.
         </p>
     </td>
     <td width="10%" valign="top">
@@ -40,6 +44,7 @@ in this important new document.</p>
         <a href="http://www.writetothem.com">WriteToThem.com</a>,
         <a href="http://www.theyworkforyou.com">TheyWorkForYou.com</a>, and
         <a href="http://www.pledgebank.com">PledgeBank.com</a>;
+        <p>
         and is supported by<br/>
         <a href="http://www.opendemocracy.org/"><img border="0" src="/oD-133px.png" alt="OpenDemocracy" /></a>
         </small>

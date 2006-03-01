@@ -5,9 +5,9 @@
   <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
 	
 		<div class="navigation">
-			<?php next_post('&laquo; %', '', 'yes', '', '', 2) ?>
+			<?php next_post('&laquo; %', '', 'yes', 'yes', '', 2) ?>
                         |
-			<?php previous_post('% &raquo;', '', 'yes', '', '', 2) ?>
+			<?php previous_post('% &raquo;', '', 'yes', 'yes', '', 2) ?>
 		</div>
 	
 		<div class="post" id="post-<?php the_ID(); ?>">

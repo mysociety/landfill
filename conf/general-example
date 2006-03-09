@@ -6,7 +6,7 @@
  * Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
  * Email: chris@mysociety.org; WWW: http://www.mysociety.org/
  *
- * $Id: general-example,v 1.6 2006-03-08 17:37:36 chris Exp $
+ * $Id: general-example,v 1.7 2006-03-09 13:19:45 chris Exp $
  * 
  */
 
@@ -35,5 +35,8 @@ define('OPTION_TRACKING_COOKIE_SECURE', 0);
 
 // Whether user tracking should be enabled on the pages about user-tracking
 define('OPTION_TRACKING', 1);
+
+// URL of web bug.
+define('OPTION_TRACKING_URL', 'http://track.fishsoupisgoodforyou.com/webbug.png');
 
 ?>

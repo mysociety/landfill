@@ -6,7 +6,7 @@
 # Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: Track.pm,v 1.3 2006-01-03 16:50:47 chris Exp $
+# $Id: Track.pm,v 1.4 2006-03-10 18:37:14 chris Exp $
 #
 
 package Track::DB;
@@ -27,12 +27,11 @@ BEGIN {
             Port => mySociety::Config::get('TRACKING_DB_PORT', undef)
         );
 
-    if (!dbh()->selectrow_array('select secret from secret for update of secret')) {
-        dbh()->{RaiseError} = 0;
+    if (!dbh()->selectrow_array('select secret from secret')) {
+        local dbh()->{HandleError};
         dbh()->do('insert into secret (secret) values (?)', {}, unpack('h*', mySociety::Util::random_bytes(32)));
-        dbh()->{RaiseError} = 1;
+        dbh()->commit();
     }
-    dbh()->commit();
 }
 
 =item secret

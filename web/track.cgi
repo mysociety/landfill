@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.19 2006-01-17 13:29:39 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.20 2006-03-10 11:06:04 francis Exp $';
 
 use strict;
 
@@ -126,7 +126,7 @@ sub do_web_bug ($$$) {
                 if (!$ua_id) {
                     $ua_id = dbh()->selectrow_array("select nextval('useragent_id_seq')");
                     dbh()->do('insert into useragent (id, useragent) values (?, ?)', {}, $ua_id, $ua);
-                    warn "saw new user-agent '$ua' for first time\n";
+                    # warn "saw new user-agent '$ua' for first time\n";
                     $docommit = 1;
                 }
                 if ($n_useragents_cached < 1000) {

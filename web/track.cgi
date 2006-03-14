@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.21 2006-03-10 18:36:47 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.22 2006-03-14 13:22:49 chris Exp $';
 
 use strict;
 
@@ -23,6 +23,7 @@ use CGI::Fast;
 use Digest::SHA1;
 use Error qw(:try);
 use HTML::Entities;
+use IO::Handle;
 use POSIX qw();
 
 use mySociety::DBHandle qw(dbh);
@@ -87,6 +88,8 @@ sub do_web_bug ($$$) {
                 -type => 'image/png',
                 -content_length => Track::transparent_png_image_length
             ), Track::transparent_png_image;
+
+    STDOUT->flush();
 
     return if ($track_cookie eq 'do-not-track-me');
 

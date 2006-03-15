@@ -7,7 +7,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: index.cgi,v 1.1 2006-03-15 17:20:52 francis Exp $';
+my $rcsid = ''; $rcsid .= '$Id: index.cgi,v 1.2 2006-03-15 17:28:21 francis Exp $';
 
 use strict;
 require 5.8.0;
@@ -55,7 +55,7 @@ sub do_view_volunteers ($) {
     print map { 
         $q->h2($q->a({ -href => "https://secure.mysociety.org/cvstrac/tktview?tn=$_" }, $ticket_titles{$_})),
         $q->table ( { -border => 1 },
-            map { $q->Tr({}, $q->td([ $_>[0], $_->[1],$_->[2], strftime('%e %B %Y', localtime($_->[3]))])) } @{$bytask{$_}}
+            map { $q->Tr({}, $q->td([$_->[1],$_->[2], strftime('%e %B %Y', localtime($_->[3]))])) } @{$bytask{$_}}
         )
         } sort keys %bytask;
 

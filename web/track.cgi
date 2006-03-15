@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.22 2006-03-14 13:22:49 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.23 2006-03-15 20:23:16 chris Exp $';
 
 use strict;
 
@@ -139,7 +139,7 @@ sub do_web_bug ($$$) {
     # number of rows committed. So ideally we want to batch them up; however,
     # might we hit some nasty concurrency issue?
     try {
-        do_commit() if ($docommit || $n_since_lastcommit > 10 || $lastcommit < time() - 10);
+        do_commit(); # if ($docommit || $n_since_lastcommit > 10 || $lastcommit < time() - 10);
     } catch mySociety::DBHandle::Error with {
         my $E = shift;
         warn "database error: " . $E->text() . " committing rows to tracking database";

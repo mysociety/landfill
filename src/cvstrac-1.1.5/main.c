@@ -136,6 +136,8 @@ int main(int argc, char **argv){
   const char *zLogFile;
   int cmdlineProj;        /* True if project specified on command line */
   void (*xFunc)(void);
+  const char *zRemoteAddr;
+  const char *zForwardedAddr;
 
   /*
   ** Attempt to put this process in a chroot jail if requested by the
@@ -221,6 +223,19 @@ int main(int argc, char **argv){
     g.zName = mprintf("%s", &argv[0][i]);
     cmdlineProj = 0;
   }
+
+  /* Cope with proxies (ip address is associated with cookies in login system) */
+  /* putenv("HTTP_X_FORWARDED_FOR=10.20.30.40"); */
+  zForwardedAddr = getenv("HTTP_X_FORWARDED_FOR");
+  if (zForwardedAddr) {
+    setenv("REMOTE_ADDR", zForwardedAddr, 1);
+  }
+  /*
+  zRemoteAddr = getenv("REMOTE_ADDR");
+  cgi_printf("hello! %s\n", zRemoteAddr);
+  cgi_reply();
+  exit(0);
+  */
 
   /* Figure out our behavior based on command line parameters and
   ** the environment.  

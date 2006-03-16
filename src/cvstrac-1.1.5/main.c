@@ -136,7 +136,6 @@ int main(int argc, char **argv){
   const char *zLogFile;
   int cmdlineProj;        /* True if project specified on command line */
   void (*xFunc)(void);
-  const char *zRemoteAddr;
   const char *zForwardedAddr;
 
   /*
@@ -231,8 +230,8 @@ int main(int argc, char **argv){
     setenv("REMOTE_ADDR", zForwardedAddr, 1);
   }
   /*
-  zRemoteAddr = getenv("REMOTE_ADDR");
-  cgi_printf("hello! %s\n", zRemoteAddr);
+   * Test code - shows how to print for debugging
+  cgi_printf("hello! %s\n", getenv("REMOTE_ADDR"));
   cgi_reply();
   exit(0);
   */

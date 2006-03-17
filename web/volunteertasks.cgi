@@ -7,7 +7,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.12 2006-03-17 09:42:19 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.13 2006-03-17 09:43:49 chris Exp $';
 
 use strict;
 require 5.8.0;
@@ -251,10 +251,11 @@ sub do_register_page ($) {
                 values (?, ?, ?, ?)', {},
                 $tn, $name, $email, time());
         my $mysociety_email = "volunteers\@mysociety.org";
+        my $s = decode_entities($heading);
         mySociety::EvEl::send(
             { 'To' => $email, 'Cc' => $mysociety_email, 
               'From' => $mysociety_email, 
-              'Subject' => "mySociety task: $heading",
+              'Subject' => "mySociety task: $s",
               '_unwrapped_body_' => "$name,
 
 Thanks for expressing an interesting in helping with this task:

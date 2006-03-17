@@ -7,7 +7,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.11 2006-03-15 17:20:52 francis Exp $';
+my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.12 2006-03-17 09:42:19 chris Exp $';
 
 use strict;
 require 5.8.0;
@@ -83,7 +83,7 @@ how you can help!</p>
 EOF
         programmer => <<EOF,
 <p>We're an Open Source languages shop, but beyond that we're very free and
-easy about what people use. Perl, PHP, Python, Javascript and Ruby, have all
+easy about what people use. Perl, PHP, Python, Javascript and Ruby have all
 been used on mySociety's projects, and there's no reason to stop there. Our
 servers run on Linux and FreeBSD, and we prefer PostgreSQL to MySQL, but none
 of that is set in stone.</p>

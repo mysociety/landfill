@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.23 2006-03-15 20:23:16 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.24 2006-03-22 15:12:04 chris Exp $';
 
 use strict;
 
@@ -112,7 +112,10 @@ sub do_web_bug ($$$) {
     my $sign2 = $D->hexdigest();
     if (lc($sign2) ne lc($sign)) {
         # May as well warn here as it may help with debugging.
-        warn "signature does not match (passed $sign vs computed $sign2)\n";
+        warn "signature does not match (passed $sign vs computed $sign2)\n"
+                . "  passed salt = $salt\n"
+                . "          url = $url\n"
+                . "        extra = " . ($extra ? $extra : '(none)') . "\n";
         return;
     }
 

@@ -245,6 +245,9 @@ void ticket_new(void){
   @   </td>
   @ </tr>
   @
+  /* We don't use severity */
+  @ <input type="hidden" name="r" value="1">
+  /*
   @ <tr>
   @   <td align="right"><nobr>
   @     Severity:
@@ -258,6 +261,7 @@ void ticket_new(void){
   @     defect or a nice-to-have feature request.
   @   </td>
   @ </tr>
+  */
   @
   @ <tr>
   @   <td align="right"><nobr>
@@ -693,6 +697,8 @@ void ticket_view(void){
   @   <td align="right">Created:</td>
   @   <td bgcolor="%s(BG3)" class="bkgnd3"><b>%h(az[2])</b></td>
   @ </tr>
+  /* We don't use severity */
+/*
   @ <tr>
   @   <td align="right">Severity:</td>
   @   <td bgcolor="%s(BG3)" class="bkgnd3"><b>%h(az[7])&nbsp;</b></td>
@@ -700,6 +706,7 @@ void ticket_view(void){
   @   <td align="right">Last&nbsp;Change:</td>
   @   <td bgcolor="%s(BG3)" class="bkgnd3"><b>%h(az[3])</b></td>
   @ </tr>
+*/
   @ <tr>
   @   <td align="right">Priority:</td>
   @   <td bgcolor="%s(BG3)" class="bkgnd3"><b>%h(az[8])&nbsp;</b></td>
@@ -1066,12 +1073,16 @@ void ticket_edit(void){
   @ &nbsp;&nbsp;&nbsp;
   @ 
   @ 
+  /* We don't use severity */
+  @ <input type="hidden" name="e" value="%h(aParm[5].zNew)">
+  /*
   @ <nobr>
   @ Severity: 
   cgi_optionmenu(0, "e", aParm[5].zNew,
          "1", "1", "2", "2", "3", "3", "4", "4", "5", "5", 0);
   @ </nobr>
   @ &nbsp;&nbsp;&nbsp;
+  */
   @ 
   @ <nobr>
   @ Assigned To: 

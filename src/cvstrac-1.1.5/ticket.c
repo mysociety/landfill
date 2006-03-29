@@ -235,6 +235,9 @@ void ticket_new(void){
   @ <td>What type of ticket is this?</td>
   @ </tr> 
   @
+  /* We don't use version */
+  @ <input type="hidden" name="v" value="%h(zVers)">
+  /* 
   @ <tr>
   @   <td align="right"><nobr>
   @     Version: <input type="text" name="v" value="%h(zVers)" size="10">
@@ -245,6 +248,7 @@ void ticket_new(void){
   @   </td>
   @ </tr>
   @
+  */
   /* We don't use severity */
   @ <input type="hidden" name="r" value="1">
   /*
@@ -686,10 +690,13 @@ void ticket_view(void){
   @ <tr>
   @   <td align="right">Type:</td>
   @   <td bgcolor="%s(BG3)" class="bkgnd3"><b>%h(az[0])&nbsp;</b></td>
+  /* We don't use version */
+/*
   @ <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
   @   <td align="right">Version:</td>
   @   <td bgcolor="%s(BG3)" class="bkgnd3"><b>%h(az[5])&nbsp;</b></td>
   @ </tr>
+*/
   @ <tr>
   @   <td align="right">Status:</td>
   @   <td bgcolor="%s(BG3)" class="bkgnd3"><b>%h(az[1])</b></td>
@@ -1100,10 +1107,14 @@ void ticket_edit(void){
   @ </nobr>
   @ &nbsp;&nbsp;&nbsp;
   @ 
+  /* we don't use version */
+  @ <input type="hidden" name="v" value="%h(aParm[3].zNew)">
+  /*
   @ <nobr>
   @ Version: <input type="text" name="v" value="%h(aParm[3].zNew)" size=10>
   @ </nobr>
   @ &nbsp;&nbsp;&nbsp;
+  */
   @ 
   @ <nobr>
   @ Derived From: <input type="text" name="d" value="%h(aParm[2].zNew)" size=10>

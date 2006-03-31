@@ -139,13 +139,13 @@ $current_tab = "Ticket/Display.html?id=" . $id;
 
 
 
-
-if (    $Ticket->CurrentUserHasRight('ModifyTicket')
-     or $Ticket->CurrentUserHasRight('ReplyToTicket') ) {
-    $actions->{'A'} = { title => loc('Reply'),
-                        path  => "Ticket/Update.html?Action=Respond&id=" . $id,
-    };
-}
+# Hidden 2006-03-31 - Matthew
+# if (    $Ticket->CurrentUserHasRight('ModifyTicket')
+#      or $Ticket->CurrentUserHasRight('ReplyToTicket') ) {
+#     $actions->{'A'} = { title => loc('Reply'),
+#                         path  => "Ticket/Update.html?Action=Respond&id=" . $id,
+#     };
+# }
 
 if ( $Ticket->CurrentUserHasRight('ModifyTicket') ) {
     if ( $Ticket->Status ne 'resolved' ) {
@@ -161,6 +161,10 @@ if ( $Ticket->CurrentUserHasRight('ModifyTicket') ) {
     if ( $Ticket->Status ne 'open' ) {
         $actions->{'C'} = { path => "Ticket/Display.html?Status=open&id=" . $id,
                             title => loc('Open it') };
+    }
+    if ( $Ticket->Status ne 'deleted' ) {
+        $actions->{'CC'} = { path => "Ticket/Display.html?MoveOn=1&Action=Delete&id=" . $id,
+                            title => loc('Delete') };
     }
 }
 

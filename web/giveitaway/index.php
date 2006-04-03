@@ -1,4 +1,4 @@
-<? include_once('../header.php'); ?>
+<? $title = 'GiveItAway'; include_once('../header.php'); ?>
 
 <h1>GiveItAway</h1>
 

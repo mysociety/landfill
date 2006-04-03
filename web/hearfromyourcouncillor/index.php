@@ -1,4 +1,4 @@
-<? include_once('../header.php'); ?>
+<? $title = 'HearFromYourCouncillor'; include_once('../header.php'); ?>
 
 <h1>HearFromYourCouncillor</h1>
 

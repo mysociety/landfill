@@ -117,18 +117,18 @@ if ($ARGS{'id'} eq 'new') {
     }
 
     if (defined $ARGS{'Action'}) {
-	if ($ARGS{'Action'} =~ /^(Steal|Delete|Take|SetTold)$/) {
-	    my $action = $1;
-	    my ($res, $msg)=$TicketObj->$action();
-	    push(@Actions, $msg);
-	}
-	if ($ARGS{'Action'} eq 'Delete') {
-            $ARGS{'Actions'} = \@Actions;
-	    if (!$ARGS{'MoveOn'}) {
+        if ($ARGS{'Action'} =~ /^(Steal|Delete|Take|SetTold)$/) {
+            my $action = $1;
+            my ($res, $msg)=$TicketObj->$action();
+            push(@Actions, $msg);
+        }
+        if ($ARGS{'Action'} eq 'Delete') {
+                $ARGS{'Actions'} = \@Actions;
+            if (!$ARGS{'MoveOn'}) {
                 $m->comp('../index.html', %ARGS);
-	        return;
-	    }
-	}
+                return;
+            }
+        }
     }
 
     $ARGS{'UpdateContent'} =~ s/\r\n/\n/g if defined $ARGS{'UpdateContent'};
@@ -149,7 +149,7 @@ if ($ARGS{'id'} eq 'new') {
     my @results = ProcessTicketLinks( TicketObj => $TicketObj, ARGSRef => \%ARGS);
     push (@Actions, @BasicActions, @results);
 
-    if (($TicketObj->Status eq 'resolved' || $TicketObj->Status eq 'deleted') && ((defined $ARGS{'UpdateContent'} && $ARGS{'UpdateContent'} ne '') || ($ARGS{'MoveOn'}))) {
+    if (($TicketObj->Status eq 'deleted' || $TicketObj->Status eq 'resolved') && ((defined $ARGS{'UpdateContent'} && $ARGS{'UpdateContent'} ne '') || ($ARGS{'MoveOn'}))) {
         # Assuming we've just resolved a ticket, we want to move on to another ticket
         # I hope I've done this right!
         my $gtickets = new RT::Tickets($session{'CurrentUser'});

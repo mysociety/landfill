@@ -137,8 +137,6 @@ $tabs->{'this'}->{"subtabs"} = $ticket_page_tabs;
 $current_tab = "Ticket/Display.html?id=" . $id;
 
 
-
-
 # Hidden 2006-03-31 - Matthew
 # if (    $Ticket->CurrentUserHasRight('ModifyTicket')
 #      or $Ticket->CurrentUserHasRight('ReplyToTicket') ) {
@@ -164,7 +162,7 @@ if ( $Ticket->CurrentUserHasRight('ModifyTicket') ) {
     }
     if ( $Ticket->Status ne 'deleted' ) {
         $actions->{'CC'} = { path => "Ticket/Display.html?MoveOn=1&Action=Delete&id=" . $id,
-                            title => loc('Delete') };
+                             title => loc('Delete') };
     }
 }
 

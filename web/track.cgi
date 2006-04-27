@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.25 2006-04-27 10:39:40 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.26 2006-04-27 10:53:14 chris Exp $';
 
 use strict;
 
@@ -77,7 +77,7 @@ sub do_web_bug ($$$) {
     my ($q, $track_id, $track_cookie) = @_;
 
     print $q->header(
-                -p3p => 'CP="IDC DSP COR CURa ADMa OUR IND PHY ONL COM STA"',
+#                -p3p => 'CP="IDC DSP COR CURa ADMa OUR IND PHY ONL COM STA"',
                 -cookie => $q->cookie(
                         -name => $cookiename,
                         -value => $track_cookie,

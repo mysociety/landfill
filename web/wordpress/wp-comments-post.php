@@ -16,6 +16,13 @@ if ( empty($status->comment_status) ) {
 } elseif ( 'draft' == $status->post_status ) {
 	do_action('comment_on_draft', $comment_post_ID);
 	exit;
+} elseif ($_POST['magicword'] != 'power') {
+    do_action('comment_closed', $comment_post_ID);
+    die( __('Please go back and enter the magic word \'power\' with your
+comment.  We ask you to do this because there are people who run software which
+crawls the internet and automatically posts adverts.  Asking you to enter the
+word is a reliable and unobtrusive way of making sure you are a human, not a
+piece of software.') );
 }
 
 $comment_author       = trim($_POST['author']);

@@ -93,6 +93,10 @@
 
 <p><textarea name="comment" id="comment" cols="100%" rows="10" tabindex="4" style="width: 100%;"></textarea></p>
 
+<p>Enter the magic word, which is 'power':
+<input name="magicword" type="input" id="magicword" tabindex="5"
+value="" />
+
 <p><input name="submit" type="submit" id="submit" tabindex="5" value="Submit Comment" />
 <input type="hidden" name="comment_post_ID" value="<?php echo $id; ?>" />
 </p>

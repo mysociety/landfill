@@ -128,6 +128,13 @@ function add_place(f) {
     r.send(post_data);
 }
 
+GSize.fromLatLngXml = function(s) {
+    return new GSize(s.getAttribute('lng'), s.getAttribute('lat'));
+}
+GPoint.fromLatLngXml = function(c) {
+    return new GPoint(c.getAttribute('lng'), c.getAttribute('lat'));
+}
+
 function POPsearch(s) {
     var d = document.getElementById('Submit1')
     d.value = 'Searching...'; d.disabled = true
@@ -145,7 +152,7 @@ function POPsearch(s) {
             if (c && s) {
                 p = GPoint.fromLatLngXml(c)
                 s = GSize.fromLatLngXml(s)
-                z = map.spec.getLowestZoomLevel(p, s, map.viewSize)
+                z = 4; // map.spec.getLowestZoomLevel(p, s, map.viewSize)
                 map.centerAndZoom(p, z)
                 document.getElementById('search_results').style.display = 'none'
                 return 1;
@@ -267,7 +274,7 @@ function update_place_list() {
     var halfwidth = span.width/2;
     var centre = map.getCenterLatLng();
     bounds.minX = centre.x - halfwidth;
-    bounds.maxX = centre.x + halfwidth;
+    bounds.maxX = parseFloat(centre.x) + halfwidth;
     var r = GXmlHttp.create();
     url = "/cgi-bin/list.fcg?type=xml;topleft_lat=" + bounds.maxY + ";topleft_long="+ bounds.minX + ";bottomright_lat=" + bounds.minY + ";bottomright_long=" + bounds.maxX
     r.open("GET", url, true);

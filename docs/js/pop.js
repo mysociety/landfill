@@ -79,8 +79,9 @@ function add_place(f) {
         document.getElementById('show_where').innerHTML = str
         document.getElementById('show_where2').innerHTML = str
     } else {
-        lng = add_marker.point.x
-        lat = add_marker.point.y
+        var am = add_marker.getPoint()
+        lng = am.x
+        lat = am.y
     }
     name = encodeURIComponent(f.name.value)
     email = encodeURIComponent(f.email.value)
@@ -203,7 +204,7 @@ return 1;
 }
 
 function show_post(marker) {
-    p = marker.point
+    p = marker.getPoint()
     z = marker.zoomlevel
     map.centerAndZoom(p, z)
     GEvent.trigger(marker, "click")
@@ -216,7 +217,8 @@ function report_post(f) {
         locstr = ''
     } else {
         zoom = map.getZoomLevel()
-        locstr = ";lng=" + add_marker.point.x + ";lat=" + add_marker.point.y + ";zoom=" + zoom
+        var am = add_marker.getPoint()
+        locstr = ";lng=" + am.x + ";lat=" + am.y + ";zoom=" + zoom
     }
     name = encodeURIComponent(f.name.value)
     email = encodeURIComponent(f.email.value)
@@ -330,7 +332,7 @@ function onLoad() {
     });
 
     if (marker.length==1) {
-        map.centerAndZoom(marker[0].point, marker[0].zoomlevel);
+        map.centerAndZoom(marker[0].getPoint(), marker[0].zoomlevel);
     } else {
         map.centerAndZoom(new GPoint(10, 34.724620), 16);
     }

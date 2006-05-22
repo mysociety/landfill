@@ -54,10 +54,17 @@ my $Js='';
              $topleft_long=~ s#[^-\.\d]##g;
              $bottomright_lat=~ s#[^-\.\d]##g;
              $bottomright_long=~ s#[^-\.\d]##g;
-                $geog_limiter= <<EOSQL;
-        and google_lat <= $topleft_lat and google_lat >= $bottomright_lat
-        and google_long >= $topleft_long and google_long <= $bottomright_long
-EOSQL
+             $geog_limiter = " and google_lat <= $topleft_lat and google_lat >= $bottomright_lat";
+             if ($topleft_long<-180 && $bottomright_long>180) {
+             } elsif ($topleft_long<-180) {
+                 $topleft_long+=360;
+                 $where .= " and (google_long <= $bottomright_long or google_long >= $topleft_long)";
+             } elsif ($bottomright_long>180) {
+                 $bottomright_long-=360;
+                 $where .= " and (google_long <= $bottomright_long or google_long >= $topleft_long)";
+             } else {
+                 $where .= " and google_long <= $bottomright_long and google_long >= $topleft_long";
+             }
         }
          my $mainlimit = 15;
 		my $brief = 1; # mainlimit x brief entries displayed in the brief listing

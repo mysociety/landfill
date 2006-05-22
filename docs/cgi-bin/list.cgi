@@ -58,12 +58,12 @@ my $Js='';
              if ($topleft_long<-180 && $bottomright_long>180) {
              } elsif ($topleft_long<-180) {
                  $topleft_long+=360;
-                 $where .= " and (google_long <= $bottomright_long or google_long >= $topleft_long)";
+                 $geog_limiter .= " and (google_long <= $bottomright_long or google_long >= $topleft_long)";
              } elsif ($bottomright_long>180) {
                  $bottomright_long-=360;
-                 $where .= " and (google_long <= $bottomright_long or google_long >= $topleft_long)";
+                 $geog_limiter .= " and (google_long <= $bottomright_long or google_long >= $topleft_long)";
              } else {
-                 $where .= " and google_long <= $bottomright_long and google_long >= $topleft_long";
+                 $geog_limiter .= " and google_long <= $bottomright_long and google_long >= $topleft_long";
              }
         }
          my $mainlimit = 15;

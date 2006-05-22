@@ -55,10 +55,17 @@ while (my $q = new CGI::Fast()) {
              $topleft_long=~ s#[^-\.\d]##g;
              $bottomright_lat=~ s#[^-\.\d]##g;
              $bottomright_long=~ s#[^-\.\d]##g;
-                $where .= <<EOSQL;
-        and lat <= $topleft_lat and lat >= $bottomright_lat
-        and lon >= $topleft_long and lon <= $bottomright_long
-EOSQL
+             $where .= " and lat <= $topleft_lat and lat >= $bottomright_lat";
+             if ($topleft_long<-180 && $bottomright_long>180) {
+             } elsif ($topleft_long<-180) {
+                 $topleft_long+=360;
+                 $where .= " and (lon <= $bottomright_long or lon >= $topleft_long)";
+             } elsif ($bottomright_long>180) {
+                 $bottomright_long-=360;
+                 $where .= " and (lon <= $bottomright_long or lon >= $topleft_long)";
+             } else {
+                 $where .= " and lon <= $bottomright_long and lon >= $topleft_long";
+             }
         }
         if (defined $q->param('interest')){
 	    $where .= " and (interesting=1 or commentcount >= 5)";

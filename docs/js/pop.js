@@ -263,6 +263,11 @@ function report_post(f) {
 
 function update_place_list() {
     var bounds = map.getBoundsLatLng();
+    var span = map.getSpanLatLng();
+    var halfwidth = span.width/2;
+    var centre = map.getCenterLatLng();
+    bounds.minX = centre.x - halfwidth;
+    bounds.maxX = centre.x + halfwidth;
     var r = GXmlHttp.create();
     url = "/cgi-bin/list.fcg?type=xml;topleft_lat=" + bounds.maxY + ";topleft_long="+ bounds.minX + ";bottomright_lat=" + bounds.minY + ";bottomright_long=" + bounds.maxX
     r.open("GET", url, true);
@@ -292,19 +297,6 @@ function update_place_list() {
     r.send(null)
 };
 
-function keep_adding_pin() {
-    if (state=='recent' || !add_marker) return
-    var point = add_marker.point
-    var p = map.getScreenCoord(point)
-    if (p.x>=0&&p.x<=1&&p.y>=0&&p.y<=1) {
-        if (p.x==map.centerScreen.x && p.y==map.centerScreen.y){return}
-        map.centerBitmap.x -= Math.round(map.viewSize.width*(map.centerScreen.x-p.x))
-        map.centerBitmap.y -= Math.round(map.viewSize.height*(map.centerScreen.y-p.y))
-        map.centerScreen.x = p.x; map.centerScreen.y = p.y
-        map.centerLatLng = point
-    }
-}
-
 function onLoad() {
     if (GBrowserIsCompatible()) {
         // do nothing
@@ -315,7 +307,6 @@ function onLoad() {
     map = new GMap(document.getElementById("map"));
     map.addControl(new GLargeMapControl());
     map.addControl(new GMapTypeControl());
-//    map.setMapType( _HYBRID_TYPE );
 
     GEvent.addListener(map, 'click', function(overlay, point) {
         if (state!='adding' && state!='reporting') return false
@@ -328,7 +319,6 @@ function onLoad() {
             if (add_marker) map.removeOverlay(add_marker)
             add_marker = new GMarker(point, yellowPin)
             map.addOverlay(add_marker)
-            keep_adding_pin()
         }
     });
 
@@ -343,7 +333,6 @@ function onLoad() {
         GEvent.trigger(marker[0], "click")
 
     /* Not perfect, but it'll do for now */
-    GEvent.addListener(map, 'moveend', keep_adding_pin);
     GEvent.addListener(map, 'moveend', update_place_list);
 
     d = document.getElementById('f')
@@ -357,13 +346,13 @@ function onLoad() {
         add_place_form()
     }
 }
-window.onload = onLoad
+window.onload = onLoad;
+window.onunload = GUnload;
 
 function revert() {
     if (!map) return true;
     show_recent_places();
     map.closeInfoWindow()
-    map.resetCenterScreen()
     map.centerAndZoom(new GPoint(10, 34.724620), 16); // -4.218750, 34.724620), 16);
     return false;
 }

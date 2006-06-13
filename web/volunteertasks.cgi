@@ -7,7 +7,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.13 2006-03-17 09:43:49 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.14 2006-06-13 22:43:06 matthew Exp $';
 
 use strict;
 require 5.8.0;
@@ -258,8 +258,8 @@ sub do_register_page ($) {
               'Subject' => "mySociety task: $s",
               '_unwrapped_body_' => "$name,
 
-Thanks for expressing an interesting in helping with this task:
-$heading
+Thanks for expressing an interest in helping with this task:
+'$heading'.
 
 First step - join our public developers' list and say hello!
 http://www.mysociety.org/mailman/listinfo/mysociety-devchat

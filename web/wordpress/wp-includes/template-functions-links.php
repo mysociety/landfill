@@ -62,14 +62,15 @@ function get_permalink($id = 0) {
 
 		$authordata = get_userdata($post->post_author);
 		$author = $authordata->user_nicename;
+		$date = explode(" ",date('Y m d H i s', $unixtime));
 		$rewritereplace = 
 		array(
-			date('Y', $unixtime),
-			date('m', $unixtime),
-			date('d', $unixtime),
-			date('H', $unixtime),
-			date('i', $unixtime),
-			date('s', $unixtime),
+			$date[0],
+			$date[1],
+			$date[2],
+			$date[3],
+			$date[4],
+			$date[5],
 			$post->post_name,
 			$post->ID,
 			$category,
@@ -205,13 +206,10 @@ function get_feed_link($feed='rss2') {
 }
 
 function edit_post_link($link = 'Edit This', $before = '', $after = '') {
-	global $user_ID, $post;
+	global $post;
 
-	get_currentuserinfo();
-
-	if ( !user_can_edit_post($user_ID, $post->ID) ) {
+	if ( ! current_user_can('edit_post', $post->ID) )
 		return;
-	}
 
 	if ( is_attachment() )
 		return;
@@ -223,11 +221,9 @@ function edit_post_link($link = 'Edit This', $before = '', $after = '') {
 }
 
 function edit_comment_link($link = 'Edit This', $before = '', $after = '') {
-	global $user_ID, $post, $comment;
+	global $post, $comment;
 
-	get_currentuserinfo();
-
-	if ( !user_can_edit_post_comments($user_ID, $post->ID) )
+	if ( ! current_user_can('edit_post', $post->ID) )
 		return;
 
 	$location = get_settings('siteurl') . "/wp-admin/post.php?action=editcomment&amp;comment=$comment->comment_ID";

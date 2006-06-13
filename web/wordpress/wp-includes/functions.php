@@ -32,10 +32,10 @@ function mysql2date($dateformatstring, $mysqlstring, $translate = true) {
 		$dateweekday = $weekday[date('w', $i)];
 		$dateweekday_abbrev = $weekday_abbrev[$dateweekday];
 		$dateformatstring = ' '.$dateformatstring;
-		$dateformatstring = preg_replace("/([^\\\])D/", "\\1".backslashit($dateweekday_abbrev), $dateformatstring);
-		$dateformatstring = preg_replace("/([^\\\])F/", "\\1".backslashit($datemonth), $dateformatstring);
-		$dateformatstring = preg_replace("/([^\\\])l/", "\\1".backslashit($dateweekday), $dateformatstring);
-		$dateformatstring = preg_replace("/([^\\\])M/", "\\1".backslashit($datemonth_abbrev), $dateformatstring);
+		$dateformatstring = preg_replace("/([^\\\])D/", "\${1}".backslashit($dateweekday_abbrev), $dateformatstring);
+		$dateformatstring = preg_replace("/([^\\\])F/", "\${1}".backslashit($datemonth), $dateformatstring);
+		$dateformatstring = preg_replace("/([^\\\])l/", "\${1}".backslashit($dateweekday), $dateformatstring);
+		$dateformatstring = preg_replace("/([^\\\])M/", "\${1}".backslashit($datemonth_abbrev), $dateformatstring);
 
 		$dateformatstring = substr($dateformatstring, 1, strlen($dateformatstring)-1);
 	}
@@ -71,10 +71,10 @@ function date_i18n($dateformatstring, $unixtimestamp) {
 		$dateweekday = $weekday[date('w', $i)];
 		$dateweekday_abbrev = $weekday_abbrev[$dateweekday];
 		$dateformatstring = ' '.$dateformatstring;
-		$dateformatstring = preg_replace("/([^\\\])D/", "\\1".backslashit($dateweekday_abbrev), $dateformatstring);
-		$dateformatstring = preg_replace("/([^\\\])F/", "\\1".backslashit($datemonth), $dateformatstring);
-		$dateformatstring = preg_replace("/([^\\\])l/", "\\1".backslashit($dateweekday), $dateformatstring);
-		$dateformatstring = preg_replace("/([^\\\])M/", "\\1".backslashit($datemonth_abbrev), $dateformatstring);
+		$dateformatstring = preg_replace("/([^\\\])D/", "\${1}".backslashit($dateweekday_abbrev), $dateformatstring);
+		$dateformatstring = preg_replace("/([^\\\])F/", "\${1}".backslashit($datemonth), $dateformatstring);
+		$dateformatstring = preg_replace("/([^\\\])l/", "\${1}".backslashit($dateweekday), $dateformatstring);
+		$dateformatstring = preg_replace("/([^\\\])M/", "\${1}".backslashit($datemonth_abbrev), $dateformatstring);
 		$dateformatstring = substr($dateformatstring, 1, strlen($dateformatstring)-1);
 	}
 	$j = @date($dateformatstring, $i);
@@ -305,10 +305,10 @@ function get_option($option) {
 }
 
 function get_user_option( $option, $user = 0 ) {
-	global $wpdb, $current_user;
+	global $wpdb;
 	
 	if ( empty($user) )
-		$user = $current_user;
+		$user = wp_get_current_user();
 	else
 		$user = get_userdata($user);
 
@@ -364,6 +364,7 @@ function update_option($option_name, $newvalue) {
 		return true;
 	}
 
+	$_newvalue = $newvalue;
 	if ( is_array($newvalue) || is_object($newvalue) )
 		$newvalue = serialize($newvalue);
 
@@ -373,7 +374,7 @@ function update_option($option_name, $newvalue) {
 	$option_name = $wpdb->escape($option_name);
 	$wpdb->query("UPDATE $wpdb->options SET option_value = '$newvalue' WHERE option_name = '$option_name'");
 	if ( $wpdb->rows_affected == 1 ) {
-		do_action("update_option_{$option_name}", $oldvalue, $newvalue);
+		do_action("update_option_{$option_name}", array('old'=>$oldvalue, 'new'=>$_newvalue));
 		return true;
 	}
 	return false;
@@ -1090,15 +1091,13 @@ function wp_get_http_headers( $url, $red = 1 ) {
 		$headers["$key"] = $matches[2][$i];
 	}
 
-    $code = preg_replace('/.*?(\d{3}).*/i', '$1', $response);
-    
-    $headers['status_code'] = $code;
-    
-    if ( '302' == $code || '301' == $code )
-        return wp_get_http_headers( $url, ++$red );
-
 	preg_match('/.*([0-9]{3}).*/', $response, $return);
 	$headers['response'] = $return[1]; // HTTP response code eg 204, 200, 404
+
+    $code = $headers['response'];
+    if ( ('302' == $code || '301' == $code) && isset($headers['location']) )
+        return wp_get_http_headers( $headers['location'], ++$red );
+
 	return $headers;
 }
 
@@ -1144,6 +1143,28 @@ function setup_postdata($post) {
 		$multipage = 0;
 	}
 	return true;
+}
+
+// Setup global user vars.  Used by set_current_user() for back compat.
+function setup_userdata($user_id = '') {
+	global $user_login, $userdata, $user_level, $user_ID, $user_email, $user_url, $user_pass_md5, $user_identity;
+
+	if ( '' == $user_id )
+		$user = wp_get_current_user();
+	else 
+		$user = new WP_User($user_id);
+
+	if ( 0 == $user->ID )
+		return;
+
+	$userdata = $user->data;
+	$user_login	= $user->user_login;
+	$user_level	= $user->user_level;
+	$user_ID	= $user->ID;
+	$user_email	= $user->user_email;
+	$user_url	= $user->user_url;
+	$user_pass_md5	= md5($user->user_pass);
+	$user_identity	= $user->display_name;
 }
 
 function is_new_day() {
@@ -2284,6 +2305,14 @@ function plugin_basename($file) {
 function get_num_queries() {
 	global $wpdb;
 	return $wpdb->num_queries;
+}
+
+function wp_nonce_url($actionurl, $action = -1) {
+	return add_query_arg('_wpnonce', wp_create_nonce($action), $actionurl);
+}
+
+function wp_nonce_field($action = -1) {
+	echo '<input type="hidden" name="_wpnonce" value="' . wp_create_nonce($action) . '" />';
 }
 
 ?>

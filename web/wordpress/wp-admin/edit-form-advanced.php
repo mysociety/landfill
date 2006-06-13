@@ -22,9 +22,11 @@ if (0 == $post_ID) {
 	$form_action = 'post';
 	$temp_ID = -1 * time();
 	$form_extra = "<input type='hidden' name='temp_ID' value='$temp_ID' />";
+	wp_nonce_field('add-post');
 } else {
 	$form_action = 'editpost';
 	$form_extra = "<input type='hidden' name='post_ID' value='$post_ID' />";
+	wp_nonce_field('update-post_' .  $post_ID);
 }
 
 $form_pingback = '<input type="hidden" name="post_pingback" value="' . get_option('default_pingback_flag') . '" id="post_pingback" />';
@@ -220,7 +222,7 @@ else
 <?php
 if (current_user_can('upload_files')) {
 	$uploading_iframe_ID = (0 == $post_ID ? $temp_ID : $post_ID);
-	$uploading_iframe_src = "inline-uploading.php?action=view&amp;post=$uploading_iframe_ID";
+	$uploading_iframe_src = wp_nonce_url("inline-uploading.php?action=view&amp;post=$uploading_iframe_ID", 'inlineuploading');
 	$uploading_iframe_src = apply_filters('uploading_iframe_src', $uploading_iframe_src);
 	if ( false != $uploading_iframe_src )
 		echo '<iframe id="uploading" border="0" src="' . $uploading_iframe_src . '">' . __('This feature requires iframe support.') . '</iframe>';
@@ -264,8 +266,8 @@ if($metadata = has_meta($post_ID)) {
 
 </div>
 
-<?php if ('edit' == $action) : ?>
-<input name="deletepost" class="button" type="submit" id="deletepost" tabindex="10" value="<?php _e('Delete this post') ?>" <?php echo "onclick=\"return confirm('" . sprintf(__("You are about to delete this post \'%s\'\\n  \'Cancel\' to stop, \'OK\' to delete."), addslashes($post->post_title) ) . "')\""; ?> />
+<?php if ('edit' == $action) : $delete_nonce = wp_create_nonce( 'delete-post_' . $post_ID ); ?>
+<input name="deletepost" class="button" type="submit" id="deletepost" tabindex="10" value="<?php _e('Delete this post') ?>" <?php echo "onclick=\"if ( confirm('" . sprintf(__("You are about to delete this post \'%s\'\\n  \'Cancel\' to stop, \'OK\' to delete."), addslashes($post->post_title) ) . "') ) { document.forms.post._wpnonce.value = '$delete_nonce'; return true;}\""; ?> />
 <?php endif; ?>
 
 </div>

@@ -43,6 +43,12 @@ function write_post() {
 	if ('static' == $_POST['post_status'] && !current_user_can('edit_pages'))
 		die(__('This user cannot edit pages.'));
 
+	if (!isset ($_POST['comment_status']))
+		$_POST['comment_status'] = 'closed';
+
+	if (!isset ($_POST['ping_status']))
+		$_POST['ping_status'] = 'closed';
+
 	if (!empty ($_POST['edit_date'])) {
 		$aa = $_POST['aa'];
 		$mm = $_POST['mm'];
@@ -84,12 +90,12 @@ function relocate_children($old_ID, $new_ID) {
 function fix_attachment_links($post_ID) {
 	global $wp_rewrite;
 
-	$post = & get_post($post_ID);
+	$post = & get_post($post_ID, ARRAY_A);
 
 	$search = "#<a[^>]+rel=('|\")[^'\"]*attachment[^>]*>#ie";
 
 	// See if we have any rel="attachment" links
-	if ( 0 == preg_match_all($search, $post->post_content, $anchor_matches, PREG_PATTERN_ORDER) )
+	if ( 0 == preg_match_all($search, $post['post_content'], $anchor_matches, PREG_PATTERN_ORDER) )
 		return;
 
 	$i = 0;
@@ -101,9 +107,11 @@ function fix_attachment_links($post_ID) {
 		$id = $id_matches[2];
 
 		// While we have the attachment ID, let's adopt any orphans.
-		$attachment = & get_post($id);
-		if ( ! is_object(get_post($attachment->post_parent)) ) {
-			$attachment->post_parent = $post_ID;
+		$attachment = & get_post($id, ARRAY_A);
+		if ( ! empty($attachment) && ! is_object(get_post($attachment['post_parent'])) ) {
+			$attachment['post_parent'] = $post_ID;
+			// Escape data pulled from DB.
+			$attachment = add_magic_quotes($attachment);
 			wp_update_post($attachment);
 		}
 
@@ -112,7 +120,10 @@ function fix_attachment_links($post_ID) {
 		++$i;
 	}
 
-	$post->post_content = str_replace($post_search, $post_replace, $post->post_content);
+	$post['post_content'] = str_replace($post_search, $post_replace, $post['post_content']);
+
+	// Escape data pulled from DB.
+	$post = add_magic_quotes($post);
 
 	return wp_update_post($post);
 }
@@ -512,7 +523,7 @@ function checked($checked, $current) {
 
 function return_categories_list($parent = 0) {
 	global $wpdb;
-	return $wpdb->get_col("SELECT cat_ID FROM $wpdb->categories WHERE category_parent = $parent ORDER BY category_count DESC LIMIT 100");
+	return $wpdb->get_col("SELECT cat_ID FROM $wpdb->categories WHERE category_parent = $parent ORDER BY category_count DESC");
 }
 
 function sort_cats($cat1, $cat2) {
@@ -582,14 +593,13 @@ function cat_rows($parent = 0, $level = 0, $categories = 0) {
 		foreach ($categories as $category) {
 			if ($category->category_parent == $parent) {
 				$category->cat_name = wp_specialchars($category->cat_name);
-				$count = $wpdb->get_var("SELECT COUNT(post_id) FROM $wpdb->post2cat WHERE category_id = $category->cat_ID");
 				$pad = str_repeat('&#8212; ', $level);
 				if ( current_user_can('manage_categories') ) {
 					$edit = "<a href='categories.php?action=edit&amp;cat_ID=$category->cat_ID' class='edit'>".__('Edit')."</a></td>";
 					$default_cat_id = get_option('default_category');
-					
+
 					if ($category->cat_ID != $default_cat_id)
-						$edit .= "<td><a href='categories.php?action=delete&amp;cat_ID=$category->cat_ID' onclick=\"return deleteSomething( 'cat', $category->cat_ID, '".sprintf(__("You are about to delete the category &quot;%s&quot;.  All of its posts will go to the default category.\\n&quot;OK&quot; to delete, &quot;Cancel&quot; to stop."), wp_specialchars($category->cat_name, 1))."' );\" class='delete'>".__('Delete')."</a>";
+						$edit .= "<td><a href='" . wp_nonce_url("categories.php?action=delete&amp;cat_ID=$category->cat_ID", 'delete-category_' . $category->cat_ID ) . "' onclick=\"return deleteSomething( 'cat', $category->cat_ID, '" . sprintf(__("You are about to delete the category &quot;%s&quot;.  All of its posts will go to the default category.\\n&quot;OK&quot; to delete, &quot;Cancel&quot; to stop."), wp_specialchars($category->cat_name, 1))."' );\" class='delete'>".__('Delete')."</a>";
 					else
 						$edit .= "<td style='text-align:center'>".__("Default");
 				}
@@ -599,7 +609,7 @@ function cat_rows($parent = 0, $level = 0, $categories = 0) {
 				$class = ('alternate' == $class) ? '' : 'alternate';
 				echo "<tr id='cat-$category->cat_ID' class='$class'><th scope='row'>$category->cat_ID</th><td>$pad $category->cat_name</td>
 								<td>$category->category_description</td>
-								<td>$count</td>
+								<td>$category->category_count</td>
 								<td>$edit</td>
 								</tr>";
 				cat_rows($category->cat_ID, $level +1, $categories);
@@ -633,7 +643,7 @@ function page_rows($parent = 0, $level = 0, $pages = 0) {
     <td><?php echo mysql2date('Y-m-d g:i a', $post->post_modified); ?></td> 
 	<td><a href="<?php the_permalink(); ?>" rel="permalink" class="edit"><?php _e('View'); ?></a></td>
     <td><?php if ( current_user_can('edit_pages') ) { echo "<a href='post.php?action=edit&amp;post=$id' class='edit'>" . __('Edit') . "</a>"; } ?></td> 
-    <td><?php if ( current_user_can('edit_pages') ) { echo "<a href='post.php?action=delete&amp;post=$id' class='delete' onclick=\"return deleteSomething( 'page', " . $id . ", '" . sprintf(__("You are about to delete the &quot;%s&quot; page.\\n&quot;OK&quot; to delete, &quot;Cancel&quot; to stop."), wp_specialchars(get_the_title('','',0), 1)) . "' );\">" . __('Delete') . "</a>"; } ?></td> 
+    <td><?php if ( current_user_can('edit_pages') ) { echo "<a href='" . wp_nonce_url("post.php?action=delete&amp;post=$id", 'delete-post_' . $id) .  "' class='delete' onclick=\"return deleteSomething( 'page', " . $id . ", '" . sprintf(__("You are about to delete the &quot;%s&quot; page.\\n&quot;OK&quot; to delete, &quot;Cancel&quot; to stop."), addslashes(wp_specialchars(get_the_title(),'double')) ) . "' );\">" . __('Delete') . "</a>"; } ?></td> 
   </tr> 
 
 <?php
@@ -1757,6 +1767,7 @@ function wp_handle_upload(&$file, $overrides = false) {
 			else
 				$filename = str_replace("$number$ext", ++$number . $ext, $filename);
 		}
+		$filename = preg_replace('#\.(?![^.]+$)#', '-', $filename);
 	}
 
 	// Move the file to the uploads dir

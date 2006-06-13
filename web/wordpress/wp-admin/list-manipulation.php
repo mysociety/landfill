@@ -2,9 +2,11 @@
 require_once('../wp-config.php');
 require_once('admin-functions.php');
 require_once('admin-db.php');
+header("Content-type: text/plain", true);
 
-get_currentuserinfo();
 if ( !is_user_logged_in() )
+	die('-1');
+if ( !check_ajax_referer() )
 	die('-1');
 
 function grab_results() {
@@ -15,15 +17,13 @@ function grab_results() {
 function get_out_now() { exit; }
 add_action('shutdown', 'get_out_now', -1);
 
-//	check_admin_referer();
-
 switch ( $_POST['action'] ) :
 case 'delete-link' :
 	$id = (int) $_POST['id'];
 	if ( !current_user_can('manage_links') )
 		die ('-1');
 
-	if ( $wpdb->query("DELETE FROM $wpdb->links WHERE link_id = '$id'") )
+	if ( wp_delete_link($id) ) 
 		die('1');
 	else	die('0');
 	break;

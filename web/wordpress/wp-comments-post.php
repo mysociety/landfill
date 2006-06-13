@@ -31,11 +31,11 @@ $comment_author_url   = trim($_POST['url']);
 $comment_content      = trim($_POST['comment']);
 
 // If the user is logged in
-get_currentuserinfo();
-if ( $user_ID ) :
-	$comment_author       = $wpdb->escape($user_identity);
-	$comment_author_email = $wpdb->escape($user_email);
-	$comment_author_url   = $wpdb->escape($user_url);
+$user = wp_get_current_user();
+if ( $user->ID ) :
+	$comment_author       = $wpdb->escape($user->display_name);
+	$comment_author_email = $wpdb->escape($user->user_email);
+	$comment_author_url   = $wpdb->escape($user->user_url);
 else :
 	if ( get_option('comment_registration') )
 		die( __('Sorry, you must be logged in to post a comment.') );
@@ -43,7 +43,7 @@ endif;
 
 $comment_type = '';
 
-if ( get_settings('require_name_email') && !$user_ID ) {
+if ( get_settings('require_name_email') && !$user->ID ) {
 	if ( 6 > strlen($comment_author_email) || '' == $comment_author )
 		die( __('Error: please fill the required fields (name, email).') );
 	elseif ( !is_email($comment_author_email))
@@ -55,12 +55,13 @@ if ( '' == $comment_content )
 
 $commentdata = compact('comment_post_ID', 'comment_author', 'comment_author_email', 'comment_author_url', 'comment_content', 'comment_type', 'user_ID');
 
-wp_new_comment( $commentdata );
-
-if ( !$user_ID ) :
-	setcookie('comment_author_' . COOKIEHASH, stripslashes($comment_author), time() + 30000000, COOKIEPATH, COOKIE_DOMAIN);
-	setcookie('comment_author_email_' . COOKIEHASH, stripslashes($comment_author_email), time() + 30000000, COOKIEPATH, COOKIE_DOMAIN);
-	setcookie('comment_author_url_' . COOKIEHASH, stripslashes($comment_author_url), time() + 30000000, COOKIEPATH, COOKIE_DOMAIN);
+$comment_id = wp_new_comment( $commentdata );
+  
+if ( !$user->ID ) :
+	$comment = get_comment($comment_id);
+ 	setcookie('comment_author_' . COOKIEHASH, $comment->comment_author, time() + 30000000, COOKIEPATH, COOKIE_DOMAIN);
+ 	setcookie('comment_author_email_' . COOKIEHASH, $comment->comment_author_email, time() + 30000000, COOKIEPATH, COOKIE_DOMAIN);
+ 	setcookie('comment_author_url_' . COOKIEHASH, clean_url($comment->comment_author_url), time() + 30000000, COOKIEPATH, COOKIE_DOMAIN);
 endif;
 
 $location = ( empty( $_POST['redirect_to'] ) ) ? get_permalink( $comment_post_ID ) : $_POST['redirect_to']; 

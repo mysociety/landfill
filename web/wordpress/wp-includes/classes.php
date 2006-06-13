@@ -616,7 +616,7 @@ class WP_Query {
 		$join = apply_filters('posts_join', $join);
 
 		// Paging
-		if (empty($q['nopaging']) && ! $this->is_single) {
+		if (empty($q['nopaging']) && ! $this->is_single && ! $this->is_page) {
 			$page = $q['paged'];
 			if (empty($page)) {
 				$page = 1;
@@ -654,7 +654,7 @@ class WP_Query {
 		$this->posts = $wpdb->get_results($this->request);
 
 		// Check post status to determine if post should be displayed.
-		if ($this->is_single) {
+		if ( !empty($this->posts) && $this->is_single ) {
 			$status = get_post_status($this->posts[0]);
 			if ( ('publish' != $status) && ('static' != $status) ) {
 				if ( ! (isset($user_ID) && ('' != intval($user_ID))) ) {
@@ -826,7 +826,7 @@ class retrospam_mgr {
 					if ( empty( $word ) )
 						continue;
 					$fulltext = strtolower($comment->email.' '.$comment->url.' '.$comment->ip.' '.$comment->text);
-					if( strpos( $fulltext, strtolower($word) ) != FALSE ) {
+					if( false !== strpos( $fulltext, strtolower($word) ) ) {
 						$this->found_comments[] = $comment->ID;
 						break;
 					}
@@ -1321,7 +1321,7 @@ class WP_Rewrite {
 		$root_rewrite = apply_filters('root_rewrite_rules', $root_rewrite);
 
 		// Comments
-		$comments_rewrite = $this->generate_rewrite_rules($this->root . $this->comments_base, true, true, true);
+		$comments_rewrite = $this->generate_rewrite_rules($this->root . $this->comments_base, true, true, true, false);
 		$comments_rewrite = apply_filters('comments_rewrite_rules', $comments_rewrite);
 
 		// Search
@@ -1604,7 +1604,6 @@ class WP {
 	}
 
 	function send_headers() {
-		global $current_user;
 		@header('X-Pingback: '. get_bloginfo('pingback_url'));
 		if ( is_user_logged_in() )
 			nocache_headers();
@@ -1681,7 +1680,7 @@ class WP {
 	}
 
 	function init() {
-		get_currentuserinfo();
+		wp_get_current_user();
 	}
 
 	function query_posts() {

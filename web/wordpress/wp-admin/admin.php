@@ -17,7 +17,7 @@ nocache_headers();
 
 update_category_cache();
 
-get_currentuserinfo();
+wp_get_current_user();
 
 $posts_per_page = get_settings('posts_per_page');
 $what_to_show = get_settings('what_to_show');
@@ -61,7 +61,7 @@ if (isset($_GET['page'])) {
 		}
 		
 		if (! file_exists(ABSPATH . "wp-content/plugins/$plugin_page"))
-			die(sprintf(__('Cannot load %s.'), $plugin_page));
+			die(sprintf(__('Cannot load %s.'), htmlentities($plugin_page)));
 
 		if (! isset($_GET['noheader']))
 			require_once(ABSPATH . '/wp-admin/admin-header.php');

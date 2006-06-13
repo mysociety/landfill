@@ -41,7 +41,7 @@ function wptexturize($text) {
 		} else {
 			$next = true;
 		}
-		$curl = preg_replace('/&([^#])(?![a-z1-4]{1,8};)/', '&#038;$1', $curl);
+		$curl = preg_replace('/&([^#])(?![a-zA-Z1-4]{1,8};)/', '&#038;$1', $curl);
 		$output .= $curl;
 	}
 	return $output;
@@ -274,7 +274,7 @@ function sanitize_user( $username, $strict = false ) {
 
 	// If strict, reduce to ASCII for max portability.
 	if ( $strict )
-		$username = preg_replace('|[^a-z0-9 _.-@]|i', '', $username);
+		$username = preg_replace('|[^a-z0-9 _.\-@]|i', '', $username);
 
 	return apply_filters('sanitize_user', $username, $raw_username, $strict);
 }
@@ -997,10 +997,7 @@ function ent2ncr($text) {
 		'&diams;' => '&#9830;'
 	);
 
-	foreach ($to_ncr as $entity => $ncr) {
-		$text = str_replace($entity, $ncr, $text);
-	}
-	return $text;
+	return str_replace( array_keys($to_ncr), array_values($to_ncr), $text );
 }
 
 function wp_richedit_pre($text) {
@@ -1018,4 +1015,9 @@ function wp_richedit_pre($text) {
 	return apply_filters('richedit_pre', $output);
 }
 
+// Escape single quotes, specialchar double quotes, and fix line endings.
+function js_escape($text) {
+	$text = wp_specialchars($text, 'double');
+	return preg_replace("/\r?\n/", "\\n", addslashes($text));	
+}
 ?>

@@ -64,8 +64,9 @@ function add_place(f) {
         pass = false
         document.getElementById('show_where').innerHTML = '<b style="color: #ff0000">Please select somewhere</b>'
     } else {
-        lng = add_marker.point.x
-        lat = add_marker.point.y
+    	var am = add_marker.getPoint();
+        lng = am.x
+        lat = am.y
     }
     title = encodeURIComponent(f.title.value)
     name = encodeURIComponent(f.name.value)
@@ -164,7 +165,7 @@ function search(s) {
 };
 
 function show_post(marker, id) {
-    p = marker.point
+    p = marker.getPoint()
     z = marker.zoomlevel
     map.centerAndZoom(p, z)
     GEvent.trigger(marker, "click")
@@ -233,7 +234,7 @@ function onLoad() {
     });
 
     if (marker.length==1) {
-        map.centerAndZoom(marker[0].point, marker[0].zoomlevel);
+        map.centerAndZoom(marker[0].getPoint(), marker[0].zoomlevel);
     } else {
         map.centerAndZoom(new GPoint(-4.218750, 54.724620), 12);
     }

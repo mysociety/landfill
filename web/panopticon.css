@@ -1,0 +1,57 @@
+ .blogroll_block {
+	float: right;
+	width: 15em;
+}
+
+body {
+	font-size: 80%;
+	margin: 0;
+	padding: 1em;
+	font-family: Arial, Verdana, sans-serif;
+	line-height: 1.4;
+}
+
+td.main {
+	padding: 0 1em;
+}
+
+h1 {
+	margin: 0 0 0 0;
+	text-align: center;
+}
+
+h2 {
+	border-bottom: 1px solid #35579f;
+	font-size:	100%;
+	padding: 0;
+	margin:	0 0 0.5em 0;
+}
+
+#nav {
+	padding: 0 0 0 3px;
+	margin: 0 0 0 1.5em;
+	list-style-type: circle;
+}
+
+#feeds {
+	margin-top: 1em;
+	padding: 3px;
+	background:lightblue;
+	width: 15em;
+	float: right;
+	margin: 1em;
+}
+#feeds h2 {
+	font-size: 100%;
+	margin: 0;
+}
+#feeds ul {
+	padding: 0;
+	margin: 0 0 0 1.5em;
+}
+#feeds p {
+	margin-bottom: 0;
+}
+#feeds a {
+	text-decoration: none;
+}

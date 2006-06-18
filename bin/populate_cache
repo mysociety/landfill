@@ -1,0 +1,31 @@
+#!/usr/bin/perl 
+
+BEGIN {push @INC, $ENV{PANOPTICON_PATH}.'/bin/'}
+
+use warnings;
+use strict;
+use PanopticonConfig;
+use LWP::Simple;
+
+
+
+
+	my $query= $dbh->prepare (" select link, entryid from entries ");
+
+	$query->execute();
+
+	my $r;
+
+	while ($r = $query->fetchrow_hashref) {
+		my $itemid= $r->{entryid};
+		print "fetching $r->{link}\n";
+		my $page= get($r->{link});
+		if (defined $page) {
+			chdir($ENV{"PANOPTICON_CACHE_PATH"})|| warn "can't chdir to $ENV{PANOPTICON_CACHE_PATH} :$!";
+			open (TMP, ">$itemid.html") || warn "can't open $itemid.html:$!";
+			print TMP "<p>This page was retrieved from <a href=\"" . $r->{link} ."\">" . $r->{link} . "</a> at " . scalar localtime() . " when the panopticon first noticed it existed</p>";
+			print TMP $page ;
+			close (TMP);
+
+		}
+	}

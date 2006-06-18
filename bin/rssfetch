@@ -1,0 +1,197 @@
+#!/usr/bin/perl 
+
+BEGIN {push @INC, $ENV{PANOPTICON_PATH}.'/bin/'}
+
+use warnings;
+use strict;
+use PanopticonConfig;
+use XML::RAI;
+use LWP::UserAgent;
+use XML::RSS::TimingBot; # only fetch stuff when needed.
+use XML::RAI; # standard names for entires in RSS feeds.
+use HTML::Scrubber;
+
+{
+	my $feeds_query=$dbh->prepare(" select  feedid, feedurl, tag from  feeds ");
+	$feeds_query->execute || die $dbh->errstr;
+	while (my $r= $feeds_query->fetchrow_hashref) {
+		&handle_feed($r->{feedurl}, $r->{feedid}, $r->{tag});
+	}
+}
+
+
+
+sub handle_feed {
+	my ($feedurl, $feedid, $tag)=@_;
+	my $browser = XML::RSS::TimingBot->new;
+	$browser->agent("Mysociety panopticon: mysociety-panopticon\@msmith.net http://panopticon.mysociety.org/");
+	my $response = $browser->get($feedurl);
+	my $tidy_metadata=0;
+
+
+      	if($response->code == 200) {
+		my $content= $response->{_content};
+		$content=~ s#Â##g;
+		$content=~ s#\£#\&amp;pound;#g;
+		if (defined $ENV{DEBUG}) {print STDERR "process_feed $feedid\n";}
+		my $rai= XML::RAI->parse($content);
+		if (defined $ENV{DEBUG}) {print STDERR "parsed: $feedid\n";}
+		if ($rai->item_count) { # the foreach doesn't do this properly
+			foreach my $item (@{$rai->items}) {
+				&process_item ($feedid, $item, $tag);
+				$tidy_metadata=1;
+			}
+		}
+		&update_status($feedid, "last_successful_fetch=now(), reason='ok'");
+		if ($tidy_metadata) {&handle_feed_metadata($feedid, $rai);}
+
+      	} elsif($response->code == 304) { # unchanged
+		&update_status($feedid, "last_attempt=now(), reason='unchanged'");
+      	} else {
+        	#print "Hm, couldn't access it: ", $response->status_line, "\n";
+		&update_status($feedid, "last_failed_fetch=now(), reason=" . $dbh->quote($response->status_line)  );
+      	}
+
+      	$browser->commit;   # Save our history.  Don't forget!!
+
+
+}
+
+
+sub update_status {
+	my $feedid= shift;
+	my $what= shift;
+	$dbh->do("update feeds set $what where feedid=$feedid");
+}
+
+
+sub list_feeds {
+	my @feeds;
+	my $feeds_query=$dbh->prepare("
+		select  feedid, feedurl
+ 		  from  feeds
+		");
+	$feeds_query->execute;
+	my @elements;
+
+	while (@elements =$feeds_query->fetchrow_array) {
+		my $hashref;
+		$hashref->{feedid}=$elements[0];
+		$hashref->{feedurl}=$elements[1];
+		push @feeds, $hashref;
+	}
+	return (@feeds);
+}
+
+
+
+sub process_item {
+	my ($feedid, $item, $tag)=@_; #feedid and RAI object
+	if (defined $ENV{DEBUG}) {print STDERR "process_item link " . $item->link . ", feedid $feedid , tag $tag\n";}
+	my $item_query;
+	my %encoded;
+	my $itemid='';
+
+	return if (($item->link =~ m#http://www\.theyworkforyou\.com#i) and ($tag =~ /theyworkforyou/i) );
+
+	if (defined $ENV{DEBUG}) {print STDERR "foo\n";}
+	my $content= $item->content;
+	$content ||= $item->title;
+
+	$content=~ s#Â##g;
+	$content=~ s#\£#\&amp;pound;#g;
+	if (defined $ENV{DEBUG}) {print STDERR "content $content\n";}
+	my $scrubber = HTML::Scrubber->new;
+	$scrubber->default(0);
+	$scrubber->allow(qw[a => href]); # only allow links
+	$content=~s/\&#160;//g;
+	#print STDERR "\n\n\n$content\n";
+	$content= $scrubber->scrub($content);
+
+	if (defined $ENV{DEBUG}) {print STDERR "title " . $item->title . "\n";}
+	if (defined $ENV{DEBUG}) {print STDERR "link" . $item->link . "\n";}
+	$encoded{"feedid"}=$dbh->quote($feedid);
+	$encoded{"content"}=$dbh->quote($content or '');
+	$encoded{"title"}=$dbh->quote($item->title or '');
+	$encoded{"link"}=$dbh->quote($item->link or '');
+
+
+	$encoded{"title"}=~ s#Â##g;
+	#$encoded{"title"}=~ s#\£#\&amp;pound;#g;
+
+	if ($content =~ m/(.{210}.+?\b)/) {
+		$encoded{shortcontent}= $dbh->quote($1 . "...");
+	} else  {
+		$encoded{shortcontent}= $encoded{"content"};
+	}
+
+	my $query= $dbh->prepare ("
+		select entryid from entries where
+		   title  =$encoded{title} and
+		   link   =$encoded{link} and
+		   content=$encoded{content}
+		");
+
+	$query->execute();
+
+	if ($query->rows != 0) {
+		# already exists
+		my ($entryid)= $query->fetchrow_array;
+		$dbh->do("update entries set last_seen=now() 
+  			               where entryid=$entryid");
+
+		return ();
+	} else  {
+		# doesn't exist
+
+		$encoded{feedid}= $dbh->quote($feedid);
+		my $query= $dbh->do ("
+		insert into entries set
+		   feedid= $encoded{feedid}  ,
+		   title  =$encoded{title}   ,
+		   link   =$encoded{link}    ,
+		   content=$encoded{content} ,
+		   shortcontent=$encoded{shortcontent} ,
+		   first_seen=now()
+		");
+		$itemid=$dbh->{'mysql_insertid'};
+	}
+
+	# only get here if it's a new item.
+
+	# now fetch the page and cache it on disc
+
+	use LWP::Simple;
+	my $page=get($item->link);
+	if (defined $page) {
+		chdir($ENV{"PANOPTICON_CACHE_PATH"})|| warn "can't chdir to $ENV{PANOPTICON_CACHE_PATH} :$!";
+		open (TMP, ">$itemid.html") || warn "can't open $itemid.html:$!";
+		print TMP "<p>This page was retrieved from <a href=\"" . $item->link ."\">" . $item->link . "</a> at " . scalar localtime() . " when the panopticon first noticed it existed</p>";
+		print TMP $page ;
+		close (TMP);
+
+	}
+}
+
+
+sub handle_feed_metadata {
+	my ($feedid, $rai)= @_;
+	if (defined $ENV{DEBUG}) {print STDERR "handle_feed_metadata $feedid\n";}
+	my %channel;
+
+	$channel{title}= $dbh->quote($rai->channel->title or 'title');
+	$channel{description}= $dbh->quote($rai->channel->description or 'description');
+	$channel{url}= $dbh->quote($rai->channel->link or '');
+
+	$channel{description}=~ s#£#\&pound;#g;
+
+	$dbh->do("
+		replace into feedinfo set
+			siteurl=$channel{url},
+			description= $channel{description},
+			title=$channel{title},
+ 		  	feedid=$feedid
+		");
+
+
+}

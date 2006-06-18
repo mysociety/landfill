@@ -1,0 +1,10 @@
+#!/bin/sh
+
+export PANOPTICON_PATH=~/work/democracy.org.uk/panopticon/
+export TIMINGBOTPATH=${PANOPTICON_PATH}/rssdata
+export PANOPTICON_CACHE_PATH=${PANOPTICON_PATH}/cache
+cd ${PANOPTICON_PATH}
+
+# populate the database
+./bin/rssfetch
+

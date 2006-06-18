@@ -1,0 +1,15 @@
+
+package PanopticonConfig;
+require Exporter;
+use DBI;
+@ISA = qw(Exporter);
+@EXPORT = qw($dbh);
+
+my $dsn = 'DBI:mysql:db_name:db_host'; # DSN connection string
+my $db_username= 'db_username';              # database username
+my $db_password= 'db_pass';         # database password
+our $dbh;
+
+$dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
+
+1;

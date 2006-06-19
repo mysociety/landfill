@@ -93,6 +93,7 @@ sub process_item {
 	my $itemid='';
 
 	return if (($item->link =~ m#http://www\.theyworkforyou\.com#i) and ($tag =~ /theyworkforyou/i) );
+	return if (($item->link =~ m#http://www\.publicwhip\.#i) and ($tag =~ /PublicWhip/i) );
 
 	if (defined $ENV{DEBUG}) {print STDERR "foo\n";}
 	my $content= $item->content;

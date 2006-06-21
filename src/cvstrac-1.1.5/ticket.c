@@ -169,6 +169,14 @@ void ticket_new(void){
   }
   if( zErrMsg==0 && zTitle[0] && zType[0] && zDesc[0] && P("submit")
       && (zContact[0] || !g.isAnon) ){
+    /* Check magic spam-avoidance word if they aren't logged in */
+    if (strcmp(g.zUser, "anonymous") == 0) {
+        if (!P("mw") || strcmp(P("mw"), "tangible")!=0) {
+            print_spam_trap_failure();
+            return;
+        }
+    }
+
     int tn;
     time_t now;
     const char *zState;
@@ -381,6 +389,13 @@ void ticket_new(void){
   @   </td>
   @ </tr>
   @ 
+  if(strcmp(g.zUser, "anonymous") == 0){
+      @ <tr>
+      @   <td colspan="2">
+      @ Enter the magic word, which is 'tangible': <input type="text" name="mw" value="%h(P("mw"))" size=10>
+      @   </td>
+      @ </tr>
+  }
   if( isPreview ){
     @ <tr>
     @   <td align="right">
@@ -1196,7 +1211,7 @@ void ticket_edit(void){
   @ 
   if(strcmp(g.zUser, "anonymous") == 0){
       @ <nobr>
-      @ Enter the magic word, which is 'tangible': <input type="text" name="mw" value="" size=10>
+      @ Enter the magic word, which is 'tangible': <input type="text" name="mw" value="%h(P("mw"))" size=10>
       @ </nobr>
       @ &nbsp;&nbsp;&nbsp;
       @ 

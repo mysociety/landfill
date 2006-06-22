@@ -2,21 +2,18 @@
  * mailman_wrapper.c:
  * Setuid wrapper to invoke Mailman python scripts from Exim.
  *
- * $Id: mailman_wrapper.c,v 1.1 2006-06-22 15:36:03 chris Exp $
+ * Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
+ * Email: chris@mysociety.org; WWW: http://www.mysociety.org/
  *
  */
+
+static const char rcsid[] = "$Id:";
 
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
-#define LIST_UID    38
-#define LIST_GID    38
-
-#define EXIM_UID    102
-#define EXIM_GID    102
 
 #define LIST_DOMAIN_PROG    "/etc/exim4/scripts/mailman_list_domain"
 #define TEST_SENDER_PROG    "/etc/exim4/scripts/mailman_test_sender"

@@ -22,7 +22,7 @@ static const char rcsid[] = "$Id:";
 #define die(...)    do { err(__VA_ARGS__); exit(1); } while (0)
 
 int main(int argc, char *argv[]) {
-    char *aa[4] = {0}, *ee[] = { "PATH=/bin:/usr/bin:/usr/local/bin", NULL };
+    char *aa[8] = {0}, *ee[] = { "PATH=/bin:/usr/bin:/usr/local/bin", NULL };
     if ((getuid() != 0 && getuid() != EXIM_UID)
         || (getgid() != 0 && getgid() != EXIM_GID))
         die(strerror(EPERM));
@@ -34,11 +34,13 @@ int main(int argc, char *argv[]) {
         aa[0] = LIST_DOMAIN_PROG;
         aa[1] = argv[2];
     } else if (0 == strcmp(argv[1], "test-sender")) {
-        if (argc != 4)
-            die("Need exactly two arguments to test-sender command");
+        if (argc < 4 || argc > 6)
+            die("Need two to four arguments to test-sender command");
         aa[0] = TEST_SENDER_PROG;
         aa[1] = argv[2];
         aa[2] = argv[3];
+        if (argc > 4) aa[3] = argv[4];
+        if (argc > 5) aa[4] = argv[5];
     } else
         die("Bad command \"%s\"", argv[1]);
     

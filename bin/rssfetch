@@ -12,7 +12,7 @@ use XML::RAI; # standard names for entires in RSS feeds.
 use HTML::Scrubber;
 
 {
-	my $feeds_query=$dbh->prepare(" select  feedid, feedurl, tag from  feeds ");
+	my $feeds_query=$dbh->prepare(" select  feedid, feedurl, tag from  feeds where active=1");
 	$feeds_query->execute || die $dbh->errstr;
 	while (my $r= $feeds_query->fetchrow_hashref) {
 		&handle_feed($r->{feedurl}, $r->{feedid}, $r->{tag});

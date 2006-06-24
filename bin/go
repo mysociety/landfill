@@ -7,4 +7,6 @@ cd ${PANOPTICON_PATH}
 
 # populate the database
 ./bin/rssfetch
+./bin/createblogroll.pl > www/includes/blogroll.shtml
+./bin/generatemonthly.pl > www/history/monthly.shtml
 

@@ -16,5 +16,5 @@ my $value;
 	}
 
 	$response=~ s#//+#/#g;
-	print "Location: http://panopticon.devel.disruptiveproactivity.com/?$response\n\n";
+	print "Location: ../?$response\n\n";
 }

@@ -1,3 +1,4 @@
+<!--#include virtual="config.shtml" -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
@@ -5,8 +6,8 @@
 <head>
   <title>mySociety panopticon</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <link rel="stylesheet" type="text/css" href="/panopticon.css" />
-  <link rel="alternate" href="/cgi-bin/rss.cgi" type="application/rss+xml" />
+  <link rel="stylesheet" type="text/css" href="<!--#echo var="root_prefix"-->panopticon.css" />
+  <link rel="alternate" href="<!--#echo var="root_prefix" -->cgi-bin/rss.cgi" type="application/rss+xml" />
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
  </head>
 
@@ -16,12 +17,14 @@
 <h2>Where we get mentioned online</h2>
 
 <div id="feeds">
-	<form method="get" action="/cgi-bin/search.cgi">
+	<form method="get" action="<!--#echo var="root_prefix" -->cgi-bin/search.cgi">
 		<input name="box1" type="text" />
 		<input type="submit" value="go" />
 	</form>
 	<ul class="blogroll_list">
-	<!--#include virtual="/includes/blogroll.shtml" -->
+	<!--#include virtual="${root_prefix}includes/blogroll.shtml" -->
 	</ul>
-	<a href="/cgi-bin/rss.cgi">RSS of everything</a>.
+	<p>
+	<a href="<!--#echo var="root_prefix" -->cgi-bin/rss.cgi">RSS of everything</a>.<br />
+	<a href="<!--#echo var="root_prefix" -->history/">History</a>.
 </div>

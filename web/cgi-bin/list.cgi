@@ -33,10 +33,9 @@ my $search_term = &handle_search_term($ENV{'QUERY_STRING'} || ''); # &handle_sea
 	 	       where entries.feedid=feedinfo.feedid
 		       	 and entries.feedid=feeds.feedid
 		         and visible=1
-			 and first_seen>=date_sub(now(), interval 8 day)
 			 $search_term
 		    order by first_seen
-			     desc limit 200
+			     desc limit 100
 		       "); # XXX order by first_seen needs to change
 
 	$query->execute;
@@ -83,24 +82,6 @@ EOfragment
 
 
 
-sub handle_links {
-
-
-	return '' if (defined $ENV{NO_COMMENTING});
-
-	my $item= shift;
-	my $google_terms= encode_entities($item->{title});
-	$google_terms=~ s# #\+#;
-
-	my $html.=<<EOhtml;
-	<a href="/~sams/tgs/comments/$item->{entryid}">Comment ($item->{commentcount}),
-	Trackback</a>,
-	<a href="/~sams/tgs/email/$item->{entryid}">Email this</a>.
-EOhtml
-
-	return ($html);
-}
-
 sub date_header {
 	my $date= shift; # in mysql timestampe format
 	my ($year, $month, $day)= $date =~ /^(\d{4})\-(\d{2})\-(\d{2})/;
@@ -130,7 +111,9 @@ sub handle_search_term {
 
 	my @search_fields= ('entries.content', 'entries.subject',
 			    'entries.title', 'feedinfo.description',
-			    'feedinfo.title', 'entries.link', 'feeds.tag');
+			    'feedinfo.title', 
+			    'entries.link', 
+			    'feeds.tag');
 
         my (@or)= split /\//, $search_path;
 
@@ -167,6 +150,7 @@ sub handle_search_term {
         $limiter .= " )\n\n ";
 
 	# print STDERR $limiter;
+
         return $limiter;
 
 }

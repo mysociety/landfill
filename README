@@ -25,6 +25,9 @@ edit the username/password/dsn string in PanopticonConfig.pm
 This needs symlinking to the bin directory and also the
 admin cgi directory (or inclusion some other way).
 
+Edit bin/go to set the paths to be where you made the
+checkout (and where you want things to be).
+
 Links will be fetched and cached in the cache directory.
 
 

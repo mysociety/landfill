@@ -1,0 +1,36 @@
+
+mySociety Panopticon
+
+This is the code for the mysociety panopticon - fetch lots
+of RSS feeds (including those from aggregators like Google
+Blogs and friends). it then puts it on the web in a nice and
+friendly way. There are email scripts available if you want
+them, but they're not here yet. This code is the base of the
+UK Government News aggregator www.TheGovernmentSays.com.
+
+
+
+Installing
+
+
+To install it, it should just work if you use your own
+virtual host for this. If you want the panopticon in a
+subdirectory, edit web/includes/config.shtml
+
+Copy cgi-bin/PanopticonConfig.pm-incvs to be 
+cgi-bin/PanopticonConfig.pm
+
+You then need to create mysql using schema.sql, and then
+edit the username/password/dsn string in PanopticonConfig.pm
+This needs symlinking to the bin directory and also the
+admin cgi directory (or inclusion some other way).
+
+Links will be fetched and cached in the cache directory.
+
+
+
+
+
+Sam Smith
+ S@mSmith.net
+ 24 June 2006

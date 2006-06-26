@@ -1,0 +1,28 @@
+#!/usr/bin/perl -I. -Ibin 
+
+my $filename= shift || die "usage: $0 twfy_mplist.csv\n";
+
+use warnings;
+use strict;
+use mySociety::Boxes::Config;
+our %Constituencies;
+our %Constituencies_Canonical;
+use MPtables::Constants::Constituencies;
+
+open (FILE, $filename) || die "can't open $filename: $!";
+
+my $skip_header=<FILE>;
+foreach my $line (<FILE>) {
+	if ($line =~ m/^(\d+),[^,]*,[^,]*,[^,]*,"?(.*?)"?,http/) {
+		my ($mpid, $cons_name)= ($1, $2);
+		# print $Constituencies{$cons_name};
+		my $cons_uri=$Constituencies_Canonical{$Constituencies{$cons_name}};
+		my ($consid)= $cons_uri=~ m#/(\d+)$#;
+		#print "$mpid, $consid, $cons_name\n";
+		$dbh->do("insert into feeds set feedurl=\"http://www.theyworkforyou.com/rss/mp/$mpid.rdf\", constituencyid=\"$consid\"");
+		# then put consid and rssfeed url into feeds
+	} else {
+		warn "unmatched line $line\n";
+	}
+
+}

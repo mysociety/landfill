@@ -1,0 +1,9 @@
+#!/usr/bin/perl -I. -Ibin
+
+my $url= shift || die "usage: $0 http://www.example.com/foo.rss\n";
+
+use warnings;
+use strict;
+use mySociety::Boxes::Config;
+
+$dbh->do("insert into feeds set feedurl=\"$url\"");

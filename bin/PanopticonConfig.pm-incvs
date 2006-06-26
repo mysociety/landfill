@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # base directory 
-$ENV{'PANOPTICON_PATH'}=~/work/democracy.org.uk/panopticon/
+$ENV{'PANOPTICON_PATH'}="~/work/mysociety/panopticon/";
 
 package PanopticonConfig;
 require Exporter;

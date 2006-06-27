@@ -3,7 +3,7 @@
 package mySociety::Boxes::Routines;
 require Exporter;
 @ISA = qw(Exporter);
-@EXPORT = qw(add_feed_to_box generate_rss_feed generate_box_style_richard2 get_constituencyid_from_postcode);  # symbols to export on request
+@EXPORT = qw(&add_feed_to_box &generate_rss_feed &generate_box_style_richard2 &get_constituencyid_from_postcode);  # symbols to export on request
 my $dbh= $main::dbh;
 
 sub get_constituencyid_from_postcode {
@@ -27,6 +27,8 @@ sub add_feed_to_box {
 		if ($result= $query->fetchrow_hashref) {
 			$feedid=$result->{feedid};
 		} else {
+			if ($tag =~ /theyworkforyou/i) { $tag= 'theyworkforyou'; }
+			if ($tag =~ /pledgebank/i) { $tag= 'pledgebank';}
 			$dbh->do("insert into feeds set feedurl=?, tag=?", undef, $feed, $tag);
 			$feedid= $dbh->{mysql_insertid};
 		}
@@ -57,9 +59,9 @@ sub generate_box_style_richard2 {
 			if ($last->{'tag'} eq '') {
 				$count=0;
 
-				if ($result->{tag} eq 'theyworkforyou') { $result->{feedtitle}= 'What my MP has been up to'; }
-				if ($result->{tag} eq 'pledgebank') { $result->{feedtitle}= 'Pledges set up by my neighbours'; }
-				print "<h4 class=\"mysociety_yp_$result->{tag}\">$result->{feedtitle}</h4>\n";
+				if ($result->{link} =~ /theyworkforyou\.com/i) { $result->{feedtitle}= 'What my MP has been up to'; }
+				if ($result->{link} =~ /pledgebank\.com/i) { $result->{feedtitle}= 'Pledges set up by my neighbours'; }
+				print "<h4 class=\"mysociety_yp_$result->{tag}\">$result->{feedtitle}</h5>\n";
 				print "<ul>\n";
 			} else {
 				print "<li class=\"mysociety_yp_morelink\" target=\"_new\"><a href=\"$morelink\">more &raquo; <small>$lasttag</small></a></li>\n";
@@ -155,7 +157,7 @@ sub generate_rss_feed {
 
         }
 
-        print $rss->as_string;
+        return ($rss->as_string);
 }
 
 

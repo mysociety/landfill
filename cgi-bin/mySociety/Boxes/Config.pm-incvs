@@ -7,7 +7,7 @@ our $dbh;
 package mySociety::Boxes::Config;
 require Exporter;
 @ISA = qw(Exporter);
-@EXPORT = qw(%Site_Feed_Names $about_url_prefix $static_url_prefix $dbh);  # symbols to export on request
+@EXPORT = qw(%Site_Feed_Names $about_url_prefix $Dir_On_Disc $static_url_prefix $dbh);  # symbols to export on request
 my $dsn = 'DBI:mysql:boxes:localhost'; # DSN connection string
 my $db_username= 'username';              # database username
 my $db_password= 'youmustbejoking';         # database password
@@ -16,6 +16,7 @@ our $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 0});
 
 our $static_url_prefix='http://yoursociety.mysociety.org/boxes/content/v1/';
 our $about_url_prefix='http://yoursociety.mysociety.org/boxes/about/v1/';
+our $Dir_On_Disc='/home/sebastian/sams/work/democracy.org.uk/mysociety_cvs/mysociety/boxes/docs/boxes/content/v1/';
 
 our %Site_Feed_Name;
 

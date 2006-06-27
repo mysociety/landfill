@@ -1,0 +1,30 @@
+<form method="get" action="stage2">
+	Postcode: <input type="text" name="postcode" />
+	<input type="submit" value="Next" />
+</form>
+
+It will always think you are in manchester gorton because the API to do the postcode lookups is restricted. The HFYMP feed is empty.
+
+While the box you get at the end contains real live data, it is completely dynamically generated, and also has no wrapping/style applied.
+
+
+<p>
+ToDo, in a rough order
+<ul>
+	<!-- <li>style it suitably for richard pope's design (an hour or two) -->
+	<li>allow generation of amias' output when his is done
+	<!-- <li>Abstract out more of the design stuff (an hour or two based on the above) -->
+	<li>move to mysoc, and use the postcode lookup api (probably far too long)
+	<li>Put in generation layer, so browsers don't hit the db just disc (an hour)
+	<li>Sensible defaults. (10 mins)
+	<li>Document creation so that you don't need to use a webbrowser (you can just POST things the right things to the right address)
+	<!-- <li>RSS2.0 output as well as JS (for Richard Pope's thing and other rss readers) -->
+</ul>
+
+feeds we're obviously missing
+<ul>
+	<li>per mp feed for hfymp
+	<li>how my mp voted on interesting divisons from PW
+	<li>What else could be an option?
+</ul>
+

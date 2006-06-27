@@ -1,0 +1,10 @@
+To get the below box on your website, cut and paste the following into your webpage:
+
+<pre>
+&lt;div class="msociety_yourpolitics">
+&lt;iframe src="generateiframe.cgi?boxid=35" width="250" height="450" border="0" frameborder="0" >&lt;/iframe>
+&lt;/div>
+</pre>
+
+<!--#include virtual="/cgi-bin/showfeed/showfeed.cgi?${QUERY_STRING}" -->
+

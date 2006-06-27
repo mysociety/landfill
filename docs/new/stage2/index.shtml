@@ -1,0 +1,10 @@
+<form method="post" action="/cgi-bin/new/stage2/store.cgi">
+Include
+<ul>
+	<!--#include virtual="/cgi-bin/new/stage2/new.cgi?${QUERY_STRING}" -->
+	<li><input type="checkbox" name="pledgebank" /> Pledgebank pledges near you</li>
+	<li><input type="checkbox" name="hearfromyourmp" /> HearFromYourMP postings</li>
+</ul>
+
+<input type="submit" value="create feed" />
+</form>

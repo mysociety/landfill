@@ -2,19 +2,21 @@
 
 package mySociety::Boxes::Designs;
 use mySociety::Boxes::Routines;
+use mySociety::Boxes::Config;
 require Exporter;
 @ISA = qw(Exporter);
 @EXPORT = qw(&generate_iframe &get_html);  # symbols to export on request
 
 
-sub get_html {
-	return (&generate_iframe(@_)); # these two might need splitting.
+sub generate_iframe {
+	return (&get_html(@_)); # these two might need splitting.
 }
 
 
-sub generate_iframe {
+sub get_html {
 	my $boxid=shift;
-return <<EOhtml;
+	my $html='';
+$html = <<EOhtml;
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
@@ -122,11 +124,12 @@ return <<EOhtml;
   </style>
 </head>
 <body id="body">
+
 EOhtml
 
-&generate_box_style_richard2($boxid);
+$html.= &generate_box_style_richard2($boxid);
 
-print <<EOhtml;
+$html.= <<EOhtml;
 
 
 </body>
@@ -134,6 +137,7 @@ print <<EOhtml;
 
 
 EOhtml
+	return ($html);
 }
 
 

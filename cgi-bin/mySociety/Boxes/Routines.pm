@@ -44,16 +44,17 @@ sub generate_box_style_richard2 {
 	my $lasttag='';
 	my $count=0;
 	my $morelink='';
+	my $html='';
 
-	print (&get_style_section('richard2', 'header'));
+	$html.= (&get_style_section('richard2', 'header'));
 
 	foreach my $result (&get_items($boxid) ) {
 		if ($result->{tag} ne $lasttag) { 
 			if ($lasttag ne '') { # we don't want end stuff at the top
 				if ($morelink ne '') { # link from the rss feed
-					print "<li class=\"mysociety_yp_morelink\" target=\"_new\"><a href=\"$morelink\">more &raquo; <small>$lasttag</small></a></li>\n";
+					$html.=  "<li class=\"mysociety_yp_morelink\" target=\"_new\"><a href=\"$morelink\">more &raquo; <small>$lasttag</small></a></li>\n";
 				}
-				print "</ul>\n";
+				$html.=  "</ul>\n";
 			}
 
 			if ($last->{'tag'} eq '') {
@@ -61,25 +62,26 @@ sub generate_box_style_richard2 {
 
 				if ($result->{link} =~ /theyworkforyou\.com/i) { $result->{feedtitle}= 'What my MP has been up to'; }
 				if ($result->{link} =~ /pledgebank\.com/i) { $result->{feedtitle}= 'Pledges set up by my neighbours'; }
-				print "<h4 class=\"mysociety_yp_$result->{tag}\">$result->{feedtitle}</h5>\n";
-				print "<ul>\n";
+				$html.=  "<h4 class=\"mysociety_yp_$result->{tag}\">$result->{feedtitle}</h5>\n";
+				$html.=  "<ul>\n";
 			} else {
-				print "<li class=\"mysociety_yp_morelink\" target=\"_new\"><a href=\"$morelink\">more &raquo; <small>$lasttag</small></a></li>\n";
+				$html.=  "<li class=\"mysociety_yp_morelink\" target=\"_new\"><a href=\"$morelink\">more &raquo; <small>$lasttag</small></a></li>\n";
 				last;
 			}
 		}
 
 		next if ($count ==5); $count++;
 		last if $result->{'last'};
-		print "<li><a target=\"_new\" href=\"$result->{link}\">$result->{title}</a></li>\n";
+		$html.=  "<li><a target=\"_new\" href=\"$result->{link}\">$result->{title}</a></li>\n";
 
 		$lasttag=$result->{tag};
 		$morelink=$result->{morelink};
 	}
-	print "</ul>\n";
+	$html.=  "</ul>\n";
 
-	print (&get_style_section('richard2', 'footer'));
-} 
+	$html .=  (&get_style_section('richard2', 'footer'));
+	return ($html);
+}
 
 sub get_style_section {
 	my ($style,$section)= @_;

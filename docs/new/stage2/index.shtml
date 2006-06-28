@@ -1,3 +1,5 @@
+<!--#include virtual="/includes/header.shtml" -->
+
 <form method="post" action="/cgi-bin/new/stage2/store.cgi">
 Include
 <ul>
@@ -8,3 +10,7 @@ Include
 
 <input type="submit" value="create feed" />
 </form>
+
+
+<!--#include virtual="/includes/footer.shtml" -->
+

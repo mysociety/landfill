@@ -1,3 +1,5 @@
+<!--#include virtual="/includes/header.shtml" -->
+
 To get the below box on your website, cut and paste the following into your webpage:
 
 <pre>
@@ -7,4 +9,10 @@ To get the below box on your website, cut and paste the following into your webp
 </pre>
 
 <!--#include virtual="/cgi-bin/showfeed/showfeed.cgi?${QUERY_STRING}" -->
+
+
+
+
+<!--#include virtual="/includes/footer.shtml" -->
+
 

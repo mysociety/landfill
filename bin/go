@@ -2,3 +2,5 @@
 
 cd `dirname $0`
 ./bin/rssfetch
+./bin/regenerate # only rebuilds what it needs to rebuild.
+	         # use `./bin/regenerate all` to do it all

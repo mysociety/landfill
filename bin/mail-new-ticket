@@ -3,7 +3,7 @@
 # mail-new-ticket:
 # Mail information about a new ticket in CVSTrac
 #
-# $Id: mail-new-ticket,v 1.3 2006-02-01 12:35:19 francis Exp $
+# $Id: mail-new-ticket,v 1.4 2006-07-03 13:51:25 chris Exp $
 #
 ticket=$1
 if [ x$ticket = x ] ; then
@@ -21,6 +21,6 @@ fi
     lynx -dump -force_html -nolist "http://cvs.mysociety.org/cvstrac/tktview?tn=$ticket" | tail +5
     cat <<EOF
 -- 
-mail-new-ticket, \$Id: mail-new-ticket,v 1.3 2006-02-01 12:35:19 francis Exp $
+mail-new-ticket, \$Id: mail-new-ticket,v 1.4 2006-07-03 13:51:25 chris Exp $
 EOF
-) | mail -s "ticket #$ticket created/changed" mysociety-cvs@mysociety.org
+) | mail -s "ticket #$ticket created/changed" cvs-public@lists.mysociety.org

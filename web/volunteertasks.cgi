@@ -7,7 +7,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.14 2006-06-13 22:43:06 matthew Exp $';
+my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.15 2006-07-03 13:52:44 chris Exp $';
 
 use strict;
 require 5.8.0;
@@ -262,7 +262,7 @@ Thanks for expressing an interest in helping with this task:
 '$heading'.
 
 First step - join our public developers' list and say hello!
-http://www.mysociety.org/mailman/listinfo/mysociety-devchat
+https://secure.mysociety.org/admin/lists/mailman/listinfo/developers-public
 Tell us a bit about yourself, and your ideas for doing this task.
 
 You can find the task in our ticket tracking system here. Please add remarks with any information you find out, and as you make progress.

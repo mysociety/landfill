@@ -24,7 +24,7 @@ static const char rcsid[] = "$Id:";
 int main(int argc, char *argv[]) {
     char *aa[8] = {0}, *ee[] = { "PATH=/bin:/usr/bin:/usr/local/bin", NULL };
     if ((getuid() != 0 && getuid() != EXIM_UID)
-        || (getgid() != 0 && getgid() != EXIM_GID))
+        || (getuid() != 0 && getgid() != 0 && getgid() != EXIM_GID))
         die(strerror(EPERM));
     if (argc < 2)
         die("Need arguments");

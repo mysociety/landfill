@@ -1,14 +1,12 @@
 #!/bin/sh
 
-#export PANOPTICON_PATH=~/work/democracy.org.uk/panopticon/
-#export TIMINGBOTPATH=${PANOPTICON_PATH}/rssdata
-#export PANOPTICON_CACHE_PATH=${PANOPTICON_PATH}/cache
-
 cd `dirname $0` # gets us here
 cd ../ # up one.
 
 # populate the database
 ./bin/rssfetch
-./bin/createblogroll.pl > www/includes/blogroll.shtml
-./bin/generatemonthly.pl > www/history/monthly.shtml
+./bin/createblogroll.pl > /data/vhost/panopticon.mysociety.org/docs/includes/blogroll.shtml
+./bin/generatemonthly.pl > /data/vhost/panopticon.mysociety.org/docs/history/monthly.shtml
 
+cd ./bin/heattheme
+php heattheme.php > /data/vhost/panopticon.mysociety.org/docs/heattheme/map.shtml

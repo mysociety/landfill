@@ -11,8 +11,8 @@ use DBI;
 
 # change these:
 my $dsn = 'DBI:mysql:db_name:db_host'; # DSN connection string
-my $db_username= 'db_username';              # database username
-my $db_password= 'db_pass';         # database password
+our $db_username= 'db_username';              # database username
+our $db_password= 'db_pass';         # database password
 
 
 our $dbh;

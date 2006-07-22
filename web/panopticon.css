@@ -63,3 +63,75 @@ h2 {
 .entry_1 {
 	background: #eeeeff;
 }
+
+
+
+table.heattheme {
+	width: 620px;
+	background-color: #ffffff;
+	margin-top: 48px;
+}
+
+tr.heattheme {
+	height: 30px;
+}
+
+td.heattheme  {
+	font-family: verdana;
+	font-size: 1.1em;
+	height: 30px;
+	width: 70px;
+	padding:3px;
+}
+
+#cell1 {background-color:#f3510b;}
+#cell2 {background-color:#f3540c;}
+#cell4 {background-color:#f55d0e;}
+#cell7 {background-color:#f66d13;}
+#cell11 {background-color: #f8861c;}
+#cell15 {background-color: #fa9f24;}
+#cell19 {background-color: #fdb62c;}
+#cell23 {background-color: #fec632;}
+#cell27 {background-color: #f9cc44;}
+#cell31 {background-color: #eecd6a;}
+#cell35 {background-color: #e1ce96;}
+#cell39 {background-color: #d7cfb7;}
+
+#cell3 {background-color: #f4590d;}
+#cell5 {background-color: #f56210;}
+#cell8 {background-color: #f77315;}
+#cell12 {background-color: #f88c1e;}
+#cell16 {background-color: #fba526;}
+#cell20 {background-color: #fdba2d;}
+#cell24 {background-color: #fec934;}
+#cell28 {background-color: #f7cd4c;}
+#cell32 {background-color: #ebcd75;}
+#cell36 {background-color: #dece9f;}
+#cell40 {background-color: #d6d0bd;}
+#cell43 {background-color: #cdcabf;}
+
+#cell6 {background-color: #f66712;}
+#cell9 {background-color: #f77917;}
+#cell13 {background-color: #f99220;}
+#cell17 {background-color: #fbab28;}
+#cell21 {background-color: #febf2f;}
+#cell25 {background-color: #fec934;}
+#cell29 {background-color: #f4cd56;}
+#cell33 {background-color: #e8ce80;}
+#cell37 {background-color: #dbcfa9;}
+#cell41 {background-color: #d4d0c2;}
+#cell44 {background-color: #c7c4bb;}
+#cell46 {background-color: #b8b7b3;}
+
+#cell10 {background-color: #f87f19;}
+#cell14 {background-color: #fa9822;}
+#cell18 {background-color: #fcb12a;}
+#cell22 {background-color: #fec330;}
+#cell26 {background-color: #fbcc3e;}
+#cell30 {background-color: #f1cd60;}
+#cell34 {background-color: #e5ce8b;}
+#cell38 {background-color: #d9cfb2;}
+#cell42 {background-color: #d4d0c3;}
+#cell45 {background-color: #c7c4bb;}
+#cell47 {background-color: #b8b7b3;}
+#cell48 {background-color: #adadac;}

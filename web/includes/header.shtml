@@ -13,7 +13,7 @@
 
 <body>
 
-<h1>mySociety Panopticon</h1>
+<h1><a href="/" style="highlight: none; color: black">mySociety Panopticon</a></h1>
 <h2>Where we get mentioned online</h2>
 
 <div id="feeds">
@@ -26,5 +26,6 @@
 	</ul>
 	<p>
 	<a href="<!--#echo var="root_prefix" -->cgi-bin/rss.cgi">RSS of everything</a>.<br />
-	<a href="<!--#echo var="root_prefix" -->history/">History</a>.
+	<a href="<!--#echo var="root_prefix" -->history/">History</a>.<br />
+	<a href="<!--#echo var="root_prefix" -->heattheme/">Heat theme maps</a>.<br />
 </div>

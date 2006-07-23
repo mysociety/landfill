@@ -1,0 +1,10 @@
+<?php
+$_ENV['Password']='password';
+
+
+
+
+$_ENV['User']='panopticon';
+$_ENV['Database']='panopticon';
+$_ENV['Hostname']='localhost';
+?>

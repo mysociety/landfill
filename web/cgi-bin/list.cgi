@@ -14,7 +14,12 @@ my $search_term = &handle_search_term($ENV{'QUERY_STRING'} || ''); # &handle_sea
 	if (defined $ENV{'GATEWAY_INTERFACE'} ) {
 		 print "Content-Type: text/html\n\n";
 	}
-
+	
+	if ($search_term) {
+		my $human_search = $ENV{QUERY_STRING} ;
+		$human_search =~ s#/# #;
+		print "<strong>Results for $human_search</strong>\n";
+	}
 	my $query= $dbh->prepare ("
 	              select entryid,
 			     entries.title as title,
@@ -46,6 +51,8 @@ my $search_term = &handle_search_term($ENV{'QUERY_STRING'} || ''); # &handle_sea
 	my $count;
 	while ($result=$query->fetchrow_hashref) {
 
+		next if ($result->{shortcontent} =~ m#HARD NEWS#);
+		next if ($result->{shortcontent} =~ m#Source: www.writetothem.com#);
 		print &date_header($result->{first_seen});
 
 		($show_link) = $result->{link} =~ m#(http://[^/]+/)#;

@@ -7,7 +7,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.15 2006-07-03 13:52:44 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.16 2006-08-04 10:31:05 francis Exp $';
 
 use strict;
 require 5.8.0;
@@ -344,6 +344,7 @@ Good luck!
             ),
             $q->end_table(),
             $q->end_form(),
+            $q->p( $q->a({ -href => "https://secure.mysociety.org/cvstrac/tktview?tn=$tn" }, "Comment on or update this task (in cvstrac)")),
             CVSWWW::end_html($q);
 }
 

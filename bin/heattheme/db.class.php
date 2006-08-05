@@ -7,16 +7,16 @@
 	This software is licensed under the GNU General Public License.
 	<http://opensource.org/licenses/gpl-license.php>
 	
-	$Id: db.class.php,v 1.1 2006-07-23 12:33:09 sams Exp $
+	$Id: db.class.php,v 1.2 2006-08-05 11:29:30 sams Exp $
 */
 
 class sql
 {
-	private $conn;
-	private $res;
-	public $queries_array;
+	var $conn;
+	var $res;
+	var $queries_array;
 	
-	function __construct($host, $user, $pass, $db_name, $port = 3306)
+	function sql ($host, $user, $pass, $db_name, $port = 3306)
 	{
 		$this->conn = mysql_pconnect("$host:$port", $user, $pass);
 		mysql_select_db($db_name, $this->conn);

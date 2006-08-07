@@ -273,10 +273,10 @@ void login_check_credentials(void){
     zUser = db_short_query(
       "SELECT user FROM cookie "
       "WHERE cookie='%q' "
-      "  AND ipaddr='%q' "
+      /* "  AND ipaddr='%q' " */ /* disabled ip address check */
       "  AND agent='%q' "
       "  AND expires>%d",
-      zCookie, zAddr, zAgent, now);
+      zCookie, /*zAddr,*/ zAgent, now);
     if( zUser==0 ){
       return;
     }

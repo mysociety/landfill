@@ -273,7 +273,7 @@ void login_check_credentials(void){
     zUser = db_short_query(
       "SELECT user FROM cookie "
       "WHERE cookie='%q' "
-      /* "  AND ipaddr='%q' " */ /* disabled ip address check */
+      /* "  AND ipaddr='%q' " */ /* disabled ip address check; doesn't work due to our SSH proxying and squid stuff */
       "  AND agent='%q' "
       "  AND expires>%d",
       zCookie, /*zAddr,*/ zAgent, now);

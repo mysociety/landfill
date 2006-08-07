@@ -223,7 +223,11 @@ int main(int argc, char **argv){
     cmdlineProj = 0;
   }
 
-  /* Cope with proxies (ip address is associated with cookies in login system) */
+  /* Cope with proxies (ip address is associated with cookies in login system) 
+   * Unfortunately, it doesn't cope well when you have two layers of proxy,
+   * as we now do with squid. You get comma separated lists of IPs here.
+   * Instead have disabled cookie check in login.c. Using HTTP_X_FORWARDED_FOR
+   * is still more useful here, for logging and throttling. */
   /* putenv("HTTP_X_FORWARDED_FOR=10.20.30.40"); */
   zForwardedAddr = getenv("HTTP_X_FORWARDED_FOR");
   if (zForwardedAddr) {

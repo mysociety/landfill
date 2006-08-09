@@ -1,4 +1,3 @@
-<!--#set var="page_title" value="Placeopedia" -->
 <!--#config errmsg="[File config.shtml missing: please copy config.shtml-example and configure]" -->
 <!--#include file="config.shtml" -->
 <!--#config errmsg="[an error occurred while processing this directive]" -->

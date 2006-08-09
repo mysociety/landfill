@@ -53,7 +53,6 @@ EOSQL
 
 	$query->execute;
 	my $result;
-	my $results;
         print '<?xml version="1.0" encoding="UTF-8"?>'."\n".'<kml xmlns="http://earth.google.com/kml/2.0">' . "\n<Folder><name>Latest entries on Placeopedia</name><description>The 50 latest additions to placeopedia.com</description>\n";
 	while ($result=$query->fetchrow_hashref() ) {
             my $shortwhy = $result->{shortwhy} || '';

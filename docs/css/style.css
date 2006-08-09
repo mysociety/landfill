@@ -79,9 +79,9 @@ img{
 	border: none;
 }
 
-a:link { color: #96C479; text-decoration:none; }
+a:link { color: #669449; text-decoration:none; }
 a:visited { color: #96C479; text-decoration:none;}
-a:hover, a:active { color: #96C479; text-decoration:underline; }
+a:hover, a:active { color: #669449; text-decoration:underline; }
 
 input[type=submit]{
 	border:1px solid #999999;

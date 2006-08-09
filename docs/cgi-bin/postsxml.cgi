@@ -35,11 +35,6 @@ my $search_term = &handle_search_term(); #' 1 = 1 ';
 
 	$query->execute;
 	my $result;
-	my $google_terms;
-	my $comments_html;
-	my $date_html;
-	my $show_link;
-	my $more_link;
 	my $results=$query->fetchall_arrayref({});
 	print XMLout($results, (GroupTags => {'anon' => 'post'}, KeyAttr=>"postid", NoAttr=>1, RootName=>"yourhistorythere"));
 }

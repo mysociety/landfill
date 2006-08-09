@@ -1,0 +1,98 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+use FindBin;
+use lib "$FindBin::Bin/../perllib";
+use lib "$FindBin::Bin/../../perllib";
+use mySociety::Config;
+BEGIN {
+    mySociety::Config::set_file("$FindBin::Bin/../conf/general");
+}
+use PoP;
+use HTML::Entities;
+use XML::Simple;
+use URI::Escape;
+use XML::RSS;
+my $url_prefix= mySociety::Config::get('URL');
+my $email_domain= mySociety::Config::get('EMAIL_DOMAIN');
+my $site_name= mySociety::Config::get('SITE_NAME');
+my %State; # State variables during display.
+
+my $query=$dbh->prepare("
+  select postid, posted, title, google_lat, google_long, google_zoom
+    from posts
+   where validated=1 and hidden=0 and site='$site_name' 
+order by posted");
+$query->execute;
+
+my $results=$query->fetchall_arrayref({});
+my $result;
+
+# XML
+open(FP, ">$FindBin::Bin/../docs/data/all.xml") or die $!;
+print FP XMLout($results, (GroupTags => {'anon' => 'post'}, KeyAttr=>"postid", NoAttr=>1, RootName=>"placeopedia"));
+close FP;
+
+# RSS
+my $rss = new XML::RSS (version => '1');
+$rss->add_module(prefix=>'geo', uri=>'http://www.w3.org/2003/01/geo/wgs84_pos#');
+$rss->channel(
+    title=> "$site_name",
+    link => "$url_prefix",
+    description  => "All posts on $site_name",
+    dc => {
+        creator    => "team$email_domain",
+        publisher  => "team$email_domain",
+        language   => 'en-gb',
+        ttl=>  1440
+    },
+    syn => {
+        updatePeriod     => "daily",
+        updateFrequency  => "1",
+        updateBase       => "1901-01-01T00:00+00:00",
+    },
+);
+# KML
+open(FP, ">$FindBin::Bin/../docs/data/all.kml") or die $!;
+print FP '<?xml version="1.0" encoding="UTF-8"?>'."\n".'<kml xmlns="http://earth.google.com/kml/2.0">' . "\n<Folder><name>All entries on Placeopedia</name><description>All the entries on placeopedia.com</description>\n";
+
+my ($wikiuri, $title);
+foreach $result (@$results) {
+    $wikiuri = $result->{title};
+    $wikiuri =~ tr/ /_/;
+    $wikiuri = uri_escape($title);
+    $title = encode_entities($result->{title}, '<&>');
+    $rss->add_item(
+        title => $result->{title},
+        link => "http://en.wikipedia.org/wiki/$wikiuri",
+        description => "Wikipedia article on $result->{title}",
+        geo => {
+	    lat => "$result->{google_lat}",
+            long => "$result->{google_long}"
+	},
+    );
+    print FP <<EOF
+<Placemark>
+	<description><![CDATA[<a href="http://en.wikipedia.org/wiki/$wikiuri">Wikipedia article</a>.]]></description>
+	<name>$title</name>
+	<LookAt>
+		<longitude>$result->{google_long}</longitude>
+		<latitude>$result->{google_lat}</latitude>
+		<range>0</range>
+		<tilt>0</tilt>
+		<heading>3</heading>
+	</LookAt>
+	<Point>
+		<coordinates>$result->{google_long},$result->{google_lat},0</coordinates>
+	</Point>
+</Placemark>
+EOF
+}
+print FP "</Folder>\n</kml>\n";
+close FP;
+
+open(FP, ">$FindBin::Bin/../docs/data/all.rss") or die $!;
+print FP $rss->as_string;
+close FP;
+

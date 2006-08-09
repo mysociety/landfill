@@ -66,10 +66,6 @@ EOSQL
 
 	$query->execute;
 	my $result;
-	my $google_terms;
-	my $comments_html;
-	my $date_html;
- use XML::RSS;
  my $rss = new XML::RSS (version => '1');
  $rss->add_module(prefix=>'geo', uri=>'http://www.w3.org/2003/01/geo/wgs84_pos#');
 

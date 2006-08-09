@@ -61,7 +61,7 @@ my ($wikiuri, $title);
 foreach $result (@$results) {
     $wikiuri = $result->{title};
     $wikiuri =~ tr/ /_/;
-    $wikiuri = uri_escape($title);
+    $wikiuri = uri_escape($wikiuri);
     $title = encode_entities($result->{title}, '<&>');
     $rss->add_item(
         title => $result->{title},

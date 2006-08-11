@@ -34,9 +34,7 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 	my %headers;
 
     unless ((Email::Valid->address(-address => $Passed_Values{"email"},-mxcheck => 1 ))) {
-        if (defined $Passed_Values{error_redirect}) {
 	    &die_cleanly("email verification failed");
-        }
     }
 
 	my $randomness = rand(); $randomness=~ s/^0\.(\d+)/$1/;

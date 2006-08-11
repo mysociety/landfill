@@ -36,7 +36,9 @@ my $catch_all_address = 'team@yourhistoryhere.com';
     unless ((Email::Valid->address(-address => $Passed_Values{"email"},-mxcheck => 1 ))) {
         if (defined $Passed_Values{error_redirect}) {
 	    &die_cleanly("email verification failed");
-        }
+        } else { # added after spam problem by SS
+		&die_cleanly('dead');
+	}
     }
 
 	my $randomness = rand(); $randomness=~ s/^0\.(\d+)/$1/;

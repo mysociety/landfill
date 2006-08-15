@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.27 2006-05-02 14:49:44 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.28 2006-08-15 12:49:17 chris Exp $';
 
 use strict;
 
@@ -372,6 +372,12 @@ submit to any of our sites, except with your permission and when required to
 make the sites function (for instance, when you write to an elected
 representative via WriteToThem.com, your name and address are passed to the
 recipient).</p>
+
+<p>We keep this data for up to one month. The cookie we give you doesn't expire
+in that time, though &mdash; it will stay on your computer as long as you come
+to our sites (unless you delete it). However, because we delete data from our
+database after a month, we can't piece together older information about you,
+however long the cookie lasts.</p>
 
 <h2>How does it work, technically?</h2>
 

@@ -53,7 +53,7 @@
 
 <link rel="shortcut icon" href="<%$RT::WebImagesURL%>/favicon.png" type="image/png">
 <link rel="stylesheet" href="<%$RT::WebPath%>/NoAuth/webrt.css" type="text/css">
-<script>
+<script type="text/javascript">
 function hideshow(num) {
     idstring = "element-" + num;
     chunk = document.getElementById(idstring);
@@ -63,7 +63,40 @@ function hideshow(num) {
         chunk.style.tag = chunk.style.display;
         chunk.style.display = "none";
     }
-}   
+}
+
+/* Return true if XMLHTTP not support */
+function delete_ticket(id) {
+    var xmlhttp=false;
+    /*@cc_on @*/
+    /*@if (@_jscript_version >= 5)
+    // JScript gives us Conditional compilation, we can cope with old IE versions.
+    // and security blocked creation of the objects.
+    try { xmlhttp = new ActiveXObject("Msxml2.XMLHTTP"); }
+    catch (e) {
+        try { xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); }
+        catch (E) { xmlhttp = false; }
+    }
+    @end @*/
+    if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
+        try { xmlhttp = new XMLHttpRequest(); }
+        catch (e) { xmlhttp=false; }
+    }
+    if (!xmlhttp && window.createRequest) {
+        try { xmlhttp = window.createRequest(); }
+        catch (e) { xmlhttp=false; }
+    }
+    if (!xmlhttp) return true;
+    xmlhttp.open("GET", "<%$RT::WebPath%>/Ticket/Display.html?Action=Delete&id="+id,true);
+    xmlhttp.onreadystatechange=function() {
+        if (xmlhttp.readyState==4) {
+            var d = document.getElementById('ticketdel'+id);
+            if (d) d.innerHTML = 'Deleted';
+        }
+    }
+    xmlhttp.send(null)
+    return false;
+}
 </script>
 <& /Elements/Callback, _CallbackName => 'Head', %ARGS &>
 </HEAD>

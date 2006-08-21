@@ -125,7 +125,7 @@ if ($ARGS{'id'} eq 'new') {
         if ($ARGS{'Action'} eq 'Delete') {
                 $ARGS{'Actions'} = \@Actions;
             if (!$ARGS{'MoveOn'}) {
-                # $m->comp('../index.html', %ARGS);
+                $m->comp('../index.html', %ARGS);
                 return;
             }
         }

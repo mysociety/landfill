@@ -52,8 +52,9 @@ $scrubber->default(
         '*'    => 0,
         id     => 1,
         class  => 1,
-        href   => qr{^(?:http:|ftp:|https:|javascript:|/)}i, 
-        # Match http, ftp, relative and yucky JavaScript urls
+        href   => qr{^(?:http:|ftp:|https:|/)}i, 
+        # Match http, ftp, and relative urls
+        onclick => 1,
         face   => 1,
         size   => 1,
         target => 1

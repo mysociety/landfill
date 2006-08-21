@@ -65,7 +65,7 @@ function hideshow(num) {
     }
 }
 
-/* Return true if XMLHTTP not support */
+/* Return true if XMLHTTP not supported */
 function delete_ticket(id) {
     var xmlhttp=false;
     /*@cc_on @*/

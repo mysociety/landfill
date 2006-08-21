@@ -47,7 +47,7 @@
         title => loc("[_1] newest unowned tickets", $rows),
 	title_href => "Search/Results.html".$QueryString &>
 <& /Elements/TicketList, 
-        Format => "'<a href=\"$RT::WebPath/Ticket/Display.html?id=__id__\">__id__</a>/TITLE:#', '<a href=\"$RT::WebPath/Ticket/Display.html?id=__id__\">__Subject__</a>/TITLE:Subject', QueueName, Priority, ExtendedStatus, CreatedRelative, '<A HREF=\"$RT::WebPath/Ticket/Display.html?Action=Take&id=__id__\">".loc('Take')."</a>/TITLE:&nbsp;', '<span id=\"ticketdel__id__\"><A HREF=\"javascript:delete_ticket(__id__); return false;\">".loc('Delete')."</a></span>/TITLE:&nbsp;' ",
+        Format => "'<a href=\"$RT::WebPath/Ticket/Display.html?id=__id__\">__id__</a>/TITLE:#', '<a href=\"$RT::WebPath/Ticket/Display.html?id=__id__\">__Subject__</a>/TITLE:Subject', QueueName, Priority, ExtendedStatus, CreatedRelative, '<A HREF=\"$RT::WebPath/Ticket/Display.html?Action=Take&id=__id__\">".loc('Take')."</a>/TITLE:&nbsp;', '<span id=\"ticketdel__id__\"><A HREF=\"javascript:delete_ticket(__id__);\">".loc('Delete')."</a></span>/TITLE:&nbsp;' ",
         Query => $Query,
         OrderBy => 'Priority',
         Order => 'DESC',

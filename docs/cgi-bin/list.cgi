@@ -28,7 +28,7 @@ my $Js='';
 while (my $q = new CGI::Fast()) {
     my $type = $q->param('type') || 'details';
         if ($type eq 'xml') {
-            print "Content-Type: application/xml\n\n";
+            print "Content-Type: application/xml; charset=utf-8\n\n";
         } else {
             print "Content-Type: text/html\n\n";
         }

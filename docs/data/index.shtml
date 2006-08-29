@@ -2,7 +2,13 @@
 
 <h2>API</h2>
 
-<p>All data created on Placeopedia and YourHistoryHere is being made freely available under a Creative Commons license for use by whoever is interested. This is part of our effort to offer coders and users an easy, standard system for mapping annotation that interoperates easily with current and future geographic-based tools and systems.</p>
+<p>All data created on Placeopedia and YourHistoryHere is being made
+freely available under the
+<a href="http://creativecommons.org/licenses/by-sa/2.5/">Creative
+Commons Attribution-ShareAlike license version 2.5</a> for use by whoever is
+interested. This is part of our effort to offer coders and users
+an easy, standard system for mapping annotation that interoperates
+easily with current and future geographic-based tools and systems.</p>
 
 <h3 class="blue">Google Earth auto-update</h3>
 <p>To add Placeopedia to Google Earth, such that it automatically shows you the latest additions on the map you're looking at, auto-updating as you move around, please use this <a href="placeopedia.kml">KML file</a>.

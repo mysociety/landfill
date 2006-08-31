@@ -1,0 +1,301 @@
+diff -ur postgresql-7.4.7-orig/src/interfaces/libpq/fe-connect.c postgresql-7.4.7/src/interfaces/libpq/fe-connect.c
+--- postgresql-7.4.7-orig/src/interfaces/libpq/fe-connect.c	2003-12-19 23:32:36.000000000 +0000
++++ postgresql-7.4.7/src/interfaces/libpq/fe-connect.c	2006-08-29 11:27:53.000000000 +0100
+@@ -1062,6 +1062,231 @@
+ }
+ 
+ /* ----------------
++ * 		pgbSendData
++ * 
++ * Collect a bunch of data about this process's environment and send it up to
++ * the server by calling a stored procedure on the database. Returns 1 if the
++ * data were successfully sent to the server, or 0 otherwise.
++ * ----------------
++ */
++static int
++pgbSendData(PGconn *conn)
++{
++	/* order of parameters:
++	 * text,		   -- client hostname
++	 * inet, integer,  -- client host/port
++	 * inet, integer,  -- server host/port
++	 * text,		   -- database name
++	 * text,		   -- user name
++	 * integer,		   -- client PID
++	 * integer,		   -- client PPID
++	 * integer,		   -- client UID
++	 * integer,		   -- client GID
++	 * bytea, bytea,   -- argv and environ
++	 * text			   -- current working directory */
++
++#define NPARAMS 14
++	const char query[] =
++		"select debug.record_client_info("
++					"$1, "			/* client hostname */
++					"$2, $3, "		/* client host/port */
++					"$4, $5, "		/* server host/port */
++					"$6, $7, "		/* database name, user name */
++					"$8, $9, "		/* PID, PPID */
++					"$10, $11, "	/* UID, GID */
++					"$12, $13, "	/* argv, environ */
++					"$14"			/* cwd */
++				")";
++					
++#define BYTEAOID		17
++#define INT4OID			23
++#define TEXTOID			25
++#define INETOID					869
++
++	Oid types[NPARAMS] = {
++					TEXTOID,
++					INETOID, INT4OID,
++					INETOID, INT4OID,
++					TEXTOID, TEXTOID,
++					INT4OID, INT4OID,
++					INT4OID, INT4OID,
++					BYTEAOID, BYTEAOID,
++					TEXTOID
++				};
++	char *values[NPARAMS] = {0};
++	int lengths[NPARAMS] = {0}, formats[NPARAMS] = {0}, i;
++	char hostname[256] = {0};
++
++	char pid[16], ppid[16], uid[16], gid[16], Lp[8], Rp[8];
++	struct sockaddr_in *L, *R;
++	char La[16], Ra[16];
++	extern char **environ;
++	char *argvbuf = NULL, *environbuf = NULL, *cwdbuf = NULL, *cwd, **p;
++	int argv_len = 0, environ_len = 0;
++	size_t l = 0, n = 0, cwdbuf_len;
++#ifdef __linux
++	int fd;
++#endif
++	
++	for (i = 0; i < NPARAMS; ++i) {
++		formats[i] = (types[i] == BYTEAOID ? 1 : 0);
++	}
++	
++	gethostname(hostname, (sizeof hostname) - 1);
++		/* - 1 because "It is unspecified whether the truncated hostname will
++		 * be NUL-terminated." */
++	
++	sprintf(pid, "%d", (int)getpid());
++	sprintf(ppid, "%d", (int)getppid());
++	sprintf(uid, "%d", (int)getuid());
++	sprintf(gid, "%d", (int)getgid());
++
++	/* client hostname */
++	values[0] = hostname;
++	
++	L = (struct sockaddr_in*)&conn->laddr;
++	R = (struct sockaddr_in*)&conn->raddr;
++	/* client host/port; server host/port */
++	if (L->sin_family == AF_INET) {
++		strcpy(La, inet_ntoa(L->sin_addr));
++		values[1] = La;
++		sprintf(Lp, "%d", (int)htons(L->sin_port));
++		values[2] = Lp;
++
++		strcpy(Ra, inet_ntoa(R->sin_addr));
++		values[3] = Ra;
++		sprintf(Rp, "%d", (int)htons(L->sin_port));
++		values[4] = Rp;
++	} /* else leave NULL */
++
++	/* database name, user name */
++	values[5] = conn->dbName;
++	values[6] = conn->pguser;
++
++	/* PID, PPID */
++	values[7] = pid;
++	values[8] = ppid;
++
++	/* UID, GID */
++	values[9] = uid;
++	values[10] = gid;
++
++	/* argv */
++#ifdef __linux
++		/* and FreeBSD if /proc is mounted, though it lacks /proc/self */
++	/* Vile vile vile */
++	if (-1 != (fd = open("/proc/self/cmdline", O_RDONLY))) {
++		ssize_t m;
++		argvbuf = malloc(l = 1024);
++		argv_len = 0;
++
++		while ((m = read(fd, argvbuf + argv_len, 1024)) > 0) {
++			argvbuf = realloc(argvbuf, l + 1024);
++			argv_len += m;
++		}
++
++		close(fd);
++	}
++#else
++#	warning "Don't know how to access argv from outside main on this platform, so it will not be recorded"
++#endif
++	
++	values[11] = argvbuf;
++	lengths[11] = argv_len;
++	
++	/* environ */
++
++	/* This at least is standard. */
++	for (p = environ; *p; ++p)
++		l += strlen(*p) + 1;
++	environbuf = malloc(l);
++	
++	for (p = environ; *p; ++p) {
++		l = strlen(*p) + 1;
++		memcpy(environbuf + n, *p, l);
++		n += l;
++	}
++	environ_len = (int)n;
++
++	values[12] = environbuf;
++	lengths[12] = environ_len;
++
++	cwdbuf = malloc(cwdbuf_len = 256);
++	while (!(cwd = getcwd(cwdbuf, cwdbuf_len)) && ERANGE == errno);
++
++	values[13] = cwd;
++
++	/* Done. Issue the query. */
++	conn->status = CONNECTION_OK;
++	i = PQsendQueryParams(conn, query, NPARAMS, types, (const char* const*)values, lengths, formats, 0);
++	conn->status = CONNECTION_AUTH_OK;
++
++	free(argvbuf);
++	free(environbuf);
++	free(cwdbuf);
++
++	return i;
++	
++#undef NPARAMS
++}
++
++/* ----------------
++ * 		pgbHandleStartup
++ * 
++ * Drive the little state machine for the pgblackbox reporting stuff. This is
++ * only called from PQconnectPoll and returns as for that function.
++ * ----------------
++ */
++static PostgresPollingStatusType
++pgbHandleStartup(PGconn *conn, PGresult *res)
++{
++	switch (conn->setenv_state) {
++		case SETENV_PGB_SENDIT:
++			if (pgbSendData(conn)) {
++				conn->setenv_state = SETENV_PGB_RESPONSE1;
++				return PGRES_POLLING_WRITING;
++			} else {
++				conn->setenv_state = SETENV_PGB_DONE;
++				return PGRES_POLLING_OK;
++			}
++
++		case SETENV_PGB_RESPONSE1:
++			if (res) {
++				if (PQisBusy(conn))
++					return PGRES_POLLING_READING;
++				else
++					PQgetResult(conn);	/* should return NULL */
++			}
++
++			/* Maybe don't need to commit. */
++			if (PQtransactionStatus(conn) != PQTRANS_INTRANS) {
++				conn->setenv_state = SETENV_PGB_DONE;
++				return PGRES_POLLING_OK;
++			}
++				
++			conn->status = CONNECTION_OK;
++			PQsendQuery(conn, "commit");
++			conn->status = CONNECTION_AUTH_OK;
++			conn->setenv_state = SETENV_PGB_RESPONSE2;
++			return PGRES_POLLING_WRITING;
++
++		case SETENV_PGB_RESPONSE2:
++			if (res) {
++				conn->setenv_state = SETENV_PGB_DONE;
++				return PGRES_POLLING_OK;
++			} else
++				return PGRES_POLLING_READING;
++
++		case SETENV_PGB_DONE:
++			return PGRES_POLLING_OK;
++
++		default:
++			/* NOTREACHED */
++			abort();
++	}
++}
++
++/* ----------------
+  *		PQconnectPoll
+  *
+  * Poll an asynchronous connection.
+@@ -1823,6 +2048,16 @@
+ 
+ 				res = PQgetResult(conn);
+ 
++				if (conn->setenv_state >= SETENV_PGB_SENDIT) {
++					PostgresPollingStatusType s;
++					s = pgbHandleStartup(conn, res);
++					if (res) PQclear(res);
++					if (s == PGRES_POLLING_OK)
++						goto okdone;
++					else
++						return s;
++				}
++
+ 				/*
+ 				 * NULL return indicating we have gone to IDLE state is
+ 				 * expected
+@@ -1859,8 +2094,14 @@
+ 					conn->setenv_state = SETENV_STATE_OPTION_SEND;
+ 					conn->next_eo = EnvironmentOptions;
+ 					return PGRES_POLLING_WRITING;
++				} else {
++					/* PGBlackBox stuff. */
++					if (conn->setenv_state < SETENV_PGB_SENDIT) {
++						conn->setenv_state = SETENV_PGB_SENDIT;
++						return pgbHandleStartup(conn, res);
++					}
+ 				}
+-
++okdone:
+ 				/* Otherwise, we are open for business! */
+ 				conn->status = CONNECTION_OK;
+ 				return PGRES_POLLING_OK;
+@@ -2073,6 +2314,11 @@
+ 	if (conn->sock >= 0 && conn->status == CONNECTION_OK)
+ 	{
+ 		/*
++		 * Delete our record from debug.client.
++		 */
++		PQsendQuery(conn, "delete from debug.client where backendpid = pg_backend_pid()");
++            
++		/*
+ 		 * Try to send "close connection" message to backend. Ignore any
+ 		 * error.
+ 		 */
+diff -ur postgresql-7.4.7-orig/src/interfaces/libpq/libpq-int.h postgresql-7.4.7/src/interfaces/libpq/libpq-int.h
+--- postgresql-7.4.7-orig/src/interfaces/libpq/libpq-int.h	2004-03-05 01:54:13.000000000 +0000
++++ postgresql-7.4.7/src/interfaces/libpq/libpq-int.h	2006-08-29 01:55:46.000000000 +0100
+@@ -193,7 +193,16 @@
+ 	SETENV_STATE_QUERY1_WAIT,	/* Waiting for query to complete */
+ 	SETENV_STATE_QUERY2_SEND,	/* About to send a status query */
+ 	SETENV_STATE_QUERY2_WAIT,	/* Waiting for query to complete */
+-	SETENV_STATE_IDLE
++	SETENV_STATE_IDLE,
++
++        /* Ugly. The SETENV negotiation field isn't used in the versions of the
++         * protocol we are using, so we can abuse the setenv_status field in
++         * the connection structure for the pgblackbox startup stuff
++         * (transmitting environment information from client to server). */
++        SETENV_PGB_SENDIT,		/* About to send data to server */
++        SETENV_PGB_RESPONSE1,		/* Waiting for query to complete */
++        SETENV_PGB_RESPONSE2,		/* Waiting for commit to complete */
++        SETENV_PGB_DONE			/* Done */
+ }	PGSetenvStatusType;
+ 
+ /* Typedef for the EnvironmentOptions[] array */

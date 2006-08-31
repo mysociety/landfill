@@ -1,0 +1,131 @@
+#!/usr/bin/perl -w
+#
+# pgblackbox:
+# Record certain information about a PostgreSQL database server for later
+# analysis and debugging.
+#
+# Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
+# Email: chris@mysociety.org; WWW: http://www.mysociety.org/
+#
+
+my $rcsid = ''; $rcsid .= '$Id: pgblackbox,v 1.1 2006-08-31 12:27:15 chris Exp $';
+
+use strict;
+
+use Data::Dumper;
+use DBI;
+use DBD::Pg;
+
+my $dbuser = 'postgres';
+my $dbpass = '';
+my $dbname_dummy = 'dummy';
+
+my $dbh;        # master db connection
+my %dbh_by_db;  # handles for individual databases
+
+# dbh [DBNAME]
+# Return a handle open on the given DBNAME, or the dummy database if it is not
+# specified.
+sub dbh (;$) {
+    if (@_) {
+        my $dbname = shift;
+        croak "DBNAME must not be undef" unless (defined($dbname));
+
+        my $dbh = $dbh_by_db{$dbname};
+        if ($dbh && !$dbh->ping()) {
+            # XXX log that handle has gone away.
+            undef $dbh;
+        }
+        if (!defined($dbh)) {
+            $dbh = $dbh_by_db{$dbname}
+                = DBI->connect("dbi:Pg:dbname=$dbname", $dbuser, $dbpass, {
+                                AutoCommit => 1, PrintError => 0, Warn => 0
+                            });
+            # log if undef
+        }
+
+        return $dbh;
+    } else {
+        return dbh($dbname_dummy);
+    }
+}
+
+# dbname ID
+# Return the name of the database with the given ID.
+sub dbname ($) {
+    my $id = shift;
+    our %dbname;
+    if (!exists($dbname{$id})) {
+        $dbname{$id}
+            = dbh()->selectrow_array('
+                    select datname
+                    from pg_stat_database
+                    where datid = ?', {}, $id);
+        $dbname{$id} ||= "<db#$id>";
+    }
+    return $dbname{$id};
+}
+
+# tablename DATABASE TABLE
+# Return the name of the TABLE (ID) in the given DATABASE (ID).
+sub tablename ($$) {
+    my ($d, $t) = @_;
+    my $dbname = dbname($d);
+    our %tablename;
+    if (!exists($tablename{$dbname}) || !exists($tablename{$dbname}->{$t})) {
+        $tablename{$dbname} ||= { };
+        $tablename{$dbname}->{$t}
+            = dbh($dbname)->selectrow_array('
+                    select relname
+                    from pg_stat_user_tables
+                    where relid = ?', {}, $t);
+        $tablename{$dbname}->{$t} ||= "<rel#$t>";
+    }
+    return $tablename{$dbname}->{$t};
+}
+
+# get_state
+# Record relevant state of the database.
+sub get_state () {
+    my $pg_stat_activity
+        = dbh()->selectall_arrayref('
+                select datid, datname, procpid, usesysid, usename,
+                    current_query
+                from pg_stat_activity');
+    my $pg_locks
+        = dbh()->selectall_arrayref('
+                select relation, database, transaction, pid, mode, granted
+                from pg_locks');
+
+    # Now grab information about the individual clients, if available.
+    #
+    # XXX Also use this opportunity to clean up old client rows.
+    my $clients = [ ];
+    foreach (@{$pg_stat_activity}) {
+        my ($datid, $datname, $procpid) = @$_;
+        my $row = dbh($datname)->selectrow_arrayref('
+                        select backendpid, host,
+                            clientaddr, clientport, serveraddr, serverport,
+                            dbname, dbuser,
+                            pid, ppid,
+                            uid, gid,
+                            argv, environ, cwd,
+                            connected
+                        from debug.client
+                        where backendpid = ?', {}, $procpid);
+        push(@$clients, $row) if ($row);
+    }
+
+    # maybe record other circumstantial information, e.g. load?
+
+    return ($pg_stat_activity, $pg_locks, $clients);
+}
+
+
+while (1) {
+    my ($pg_stat_activity, $pg_locks, $clients) = get_state();
+    print Dumper($pg_stat_activity);
+    print Dumper($pg_locks);
+    print Dumper($clients);
+    sleep(5);
+}

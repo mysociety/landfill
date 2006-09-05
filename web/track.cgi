@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.28 2006-08-15 12:49:17 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.29 2006-09-05 14:33:48 chris Exp $';
 
 use strict;
 
@@ -259,6 +259,7 @@ EOF
 
                 $when = POSIX::strftime("%Y-%m-%d %H:%M:%S", localtime($when));
 
+                $extra ||= '';
                 utf8::encode($extra);
                 $extra =~ s/([^\x20-\x7f])/sprintf('\%02x', ord($1))/ge;
 

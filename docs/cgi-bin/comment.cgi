@@ -37,6 +37,7 @@ my %Passed_Values;
 	$Passed_Values{text} ||= '';
 	$Passed_Values{author} ||= 'Anonymous';
 	$Passed_Values{url}= '';
+        $Passwd_Values{magic} ||= '';
 
 	&handle_comment;
 }
@@ -59,6 +60,10 @@ sub handle_comment {
 
         unless ($Passed_Values{text} && $Passed_Values{text} ne 'Write your response...') {
             &die_cleanly("Please give a response.");
+        }
+
+        unless ($Passed_Values{magic} && mysociety::NotApathetic::Config::magic($Passed_Values{magic})) {
+            &die_cleanly("Please type the magic number in the box.");
         }
 
 	foreach my $pv (keys %Passed_Values) {

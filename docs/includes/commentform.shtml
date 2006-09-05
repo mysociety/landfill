@@ -15,6 +15,10 @@
     	<em>not</em> be displayed to the public or used for evil spamming<sup>TM</sup>.</small>
 	</div>
 
+        <div>
+        <label for="magic">Magic number</label><input id="magic" name="magic" type="text" size="20"
+                    value="" />
+        <small>Today's magic number is <!--#include virtual="/cgi-bin/magic.cgi" --></small>
 	<div>
 
 	<textarea id="commenttext" name="text" rows="15" cols="30">Write your response...</textarea>

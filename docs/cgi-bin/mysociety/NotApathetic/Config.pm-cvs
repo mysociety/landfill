@@ -4,6 +4,7 @@
 
 package mysociety::NotApathetic::Config; # don't change this line.
 
+use Digest::MD5 qw(md5_hex);
 
 # things you need to change
 our $dsn = 'DBI:mysql:notapathetic:localhost'; # DSN connection string
@@ -48,5 +49,19 @@ sub die_cleanly {
         my $error= shift || 'no error given';
         print "Location: $url/error/?$error\n\n";
 	exit(0);
+}
+
+
+# magic [N]
+# Generate or, if N is supplied, check a magic number.
+sub magic (;$) {
+    if (@_) {
+        my $n = shift;
+        return 0 if (!defined($n) || $n !~ /^[0-9a-f]{6}/i);
+        return substr($n, 3) eq substr(md5_hex("$db_password\0" . substr($n, 0, 3)), 0, 3);
+    } else {
+        my $n = sprintf('%03x', int(rand(0x1000)));
+        return $n . substr(md5_hex("$db_password\0$n"), 0, 3);
+    }
 }
 

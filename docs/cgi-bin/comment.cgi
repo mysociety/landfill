@@ -37,7 +37,7 @@ my %Passed_Values;
 	$Passed_Values{text} ||= '';
 	$Passed_Values{author} ||= 'Anonymous';
 	$Passed_Values{url}= '';
-        $Passwd_Values{magic} ||= '';
+        $Passed_Values{magic} ||= '';
 
 	&handle_comment;
 }

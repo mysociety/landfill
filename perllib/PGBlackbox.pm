@@ -6,7 +6,7 @@
 # Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: PGBlackbox.pm,v 1.1 2006-09-06 18:00:16 chris Exp $
+# $Id: PGBlackbox.pm,v 1.2 2006-09-06 18:01:41 chris Exp $
 #
 
 package PGBlackbox::Spoolfile;
@@ -85,6 +85,10 @@ sub open ($;$) {
     my $filename = shift;
     croak "FILENAME must be defined" unless ($filename);
     my $rw = shift;
+
+    # XXX consider whether file is compressed and, if it is, decompress it into
+    # a temporary file. Note that obviously we can't open a compressed file RW.
+    
     my $fh = new IO::File($filename, $rw ? O_RDONLY : O_RDWR);
     if (!$fh) {
         return "open: $!";
@@ -96,7 +100,6 @@ sub open ($;$) {
         $err = "File is too short to be valid";
         goto fail;
     }
-
 
     my $buf = '';
     my $n = $fh->sysread($buf, length(header));

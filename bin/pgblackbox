@@ -8,17 +8,27 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: pgblackbox,v 1.1 2006-08-31 12:27:15 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: pgblackbox,v 1.2 2006-09-06 18:00:51 chris Exp $';
 
 use strict;
 
+package main;
+
+use Carp;
 use Data::Dumper;
 use DBI;
 use DBD::Pg;
+use POSIX;
 
 my $dbuser = 'postgres';
 my $dbpass = '';
 my $dbname_dummy = 'dummy';
+
+my $compression_prog = "/usr/bin/bzip2";
+my $compression_suffix = ".bz2";
+
+#my $spool_dir = "/var/spool/pgblackbox";
+my $spool_dir = "/tmp/pgblackbox";
 
 my $dbh;        # master db connection
 my %dbh_by_db;  # handles for individual databases
@@ -26,6 +36,7 @@ my %dbh_by_db;  # handles for individual databases
 # dbh [DBNAME]
 # Return a handle open on the given DBNAME, or the dummy database if it is not
 # specified.
+sub dbh (;$);
 sub dbh (;$) {
     if (@_) {
         my $dbname = shift;
@@ -113,6 +124,11 @@ sub get_state () {
                             connected
                         from debug.client
                         where backendpid = ?', {}, $procpid);
+        next unless ($row);
+        $row->[12] ||= '';
+        $row->[12] = [split(/\0/, $row->[12])];
+        $row->[13] ||= '';
+        $row->[13] = [split(/\0/, $row->[13])];
         push(@$clients, $row) if ($row);
     }
 
@@ -124,6 +140,7 @@ sub get_state () {
 
 while (1) {
     my ($pg_stat_activity, $pg_locks, $clients) = get_state();
+    print time(), "\n";
     print Dumper($pg_stat_activity);
     print Dumper($pg_locks);
     print Dumper($clients);

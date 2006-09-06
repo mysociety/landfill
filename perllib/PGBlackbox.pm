@@ -6,7 +6,7 @@
 # Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: PGBlackbox.pm,v 1.2 2006-09-06 18:01:41 chris Exp $
+# $Id: PGBlackbox.pm,v 1.3 2006-09-06 22:58:12 chris Exp $
 #
 
 package PGBlackbox::Spoolfile;
@@ -17,7 +17,7 @@ use File::Basename;
 use File::stat;
 use IO::Handle;
 
-use fields qw(name fh slots);
+use fields qw(name fh slots cursor);
 
 #
 # Format of file: the file begins with a brief note explaining its format and
@@ -26,17 +26,24 @@ use fields qw(name fh slots);
 # Storable format.
 #
 
-use constant header =>
+use constant HEADER =>
     "pgblackbox spool file\n" .
     "This is a binary file which records information about the activity of\n" .
     "PostgreSQL database installation. You should edit/modify it using the\n" .
     "pgblackbox tools, not by hand.\n\n";
 
-# create FILENAME SLOTS
-# Create a new spool file with space for SLOTS entries, named FILENAME, and
-# return a file handle open on the new file or an error message on failure. The
-# new file is created atomically and destroys any previous file of the same
-# name.
+use constant HEADERLEN => length(HEADER);
+
+# 4 bytes for the slot count.
+use constant INDEXOFFSET => (HEADERLEN + 4);
+
+# 6 bytes for time and 4 bytes for offset.
+use constant SLOTLEN => 10;
+
+# create FILE SLOTS
+# Create a new named spool FILE with space for SLOTS entries, and return a file
+# handle open on the new file or an error message on failure. The new file is
+# created atomically and destroys any previous file of the same name.
 sub create ($$) {
     my $filename = shift;
     croak "FILENAME must be defined" unless ($filename);
@@ -59,9 +66,13 @@ sub create ($$) {
 
     # 10 to give two 0 bytes padding before the time (so we can expand in
     # 2038...).
-    my $index = pack('N', $slots) . ("\0" x 10 x $slots;
-    if (!$fh->syswrite(header . $index)) {
+    my $index = pack('N', $slots) . ("\0" x 10 x $slots);
+    my $n;
+    if (!($n = $fh->syswrite(HEADER . $index))) {
         $err = "write: $!";
+        goto fail;
+    } elsif ($n < HEADERLEN + length($index)) {
+        $err = "write: Wrote $n, expected " . (HEADERLEN + length($index));
         goto fail;
     } elsif (!$fh->sysseek(0, SEEK_SET)) {
         $err = "lseek: $!";
@@ -79,8 +90,9 @@ fail:
     return $err;
 }
 
-# open FILENAME [RW]
-#
+# open FILE [RW]
+# Open an existing named spool FILE. Returns a new spoolfile object on success
+# or an error message on failure.
 sub open ($;$) {
     my $filename = shift;
     croak "FILENAME must be defined" unless ($filename);
@@ -89,29 +101,27 @@ sub open ($;$) {
     # XXX consider whether file is compressed and, if it is, decompress it into
     # a temporary file. Note that obviously we can't open a compressed file RW.
     
-    my $fh = new IO::File($filename, $rw ? O_RDONLY : O_RDWR);
-    if (!$fh) {
-        return "open: $!";
-    }
+    my $fh = new IO::File($filename, $rw ? O_RDONLY : O_RDWR)
+                    or return "open: $!";
 
     my $err = undef;
     my $st = stat($fh);
-    if ($st->size() < length(header) + 14) {
+    if ($st->size() < length(HEADER) + 14) {
         $err = "File is too short to be valid";
         goto fail;
     }
 
     my $buf = '';
-    my $n = $fh->sysread($buf, length(header));
+    my $n = $fh->sysread($buf, length(HEADER));
     if (!defined($n)) {
         $err = "read: $!";
         goto fail;
-    } elsif ($n < length(header)) {
+    } elsif ($n < length(HEADER)) {
         $err = "File truncated while reading header";
         goto fail;
-    } elsif ($buf ne header)) {
+    } elsif ($buf ne HEADER)) {
         # Header doesn't match.
-        $err = "Header doesn't match";
+        $err = "Header doesn't match proper format";
         goto fail;
     }
 
@@ -126,12 +136,28 @@ sub open ($;$) {
     }
 
     my $N = unpack('N', $buf);
-    if ($st->size() < length(header) + 4 + $N * 10) {
+    if ($st->size() < length(HEADER) + 4 + $N * 10) {
         $err = "File is too short to contain full index";
         goto fail;
     }
 
-    # XXX could scan index at this point; maybe no point though.
+    # Need to identify the current cursor position. Unused slots have time 0,
+    # so want the index of the first 0 slot.
+    my $i;
+    my ($il, $ih) = (0, $N - 1);
+    my $th = _slot($fh, $ih);
+    if ($th == 0) {
+        while ($ih > $il) {
+            my $i = int(($ih + $il) / 2);
+            my $t = _slot($fh, $i);
+            if ($t == 0) {
+                $ih = $i;
+            } else {
+                $il = $i;
+            }
+        }
+    }
+    $N = $ih;
     
     return $fh;
     
@@ -146,10 +172,107 @@ sub new ($$;$) {
     
 }
 
-# append DATA
-sub append ($$) {
+# _slot H I
+#
+sub _slot ($$) {
+    my IO::Seekable $fh = shift;
+    my $i = shift;
+
+    my $buf = '';
+    goto fail if (!$self->fh()->sysseek(INDEXOFFSET + $i * SLOTLEN));
+    my $n = $self->fh()->sysread($buf, SLOTLEN);
+    goto fail if (!defined($n) || $n != SLOTLEN);
+
+    my ($time, $offset) = unpack('xxNN', $buf);
+
+    return wantarray() ? ($time, $offset) : $time;
+
+fail:
+    return wantarray() ? () : undef;
+}
+
+# slot I
+# Return in list context the time and offset of the values in slot I; in scalar
+# context, just the time. Returns the empty list or undef on error.
+sub slot ($$) {
     my PGBlackbox::Spoolfile $self = shift;
-    my $data = shift;
+    my $i = shift;
+    croak "I must be an integer between 0 and " . ($self->{slots} - 1)
+        unless (defined($i) && $i =~ /^(0|[1-9]\d*)$/ && $i < $self->{slots});
+
+    my @x = _slot($self->fh(), $i);
+    goto fail unless (@x);
+    
+    return wantarray() ? @x : $x[0];
+
+fail:
+    return wantarray() ? () : undef;
+}
+
+# findslot TIME [SENSE]
+# Find the last slot before, or, if SENSE is +1, the first slot after,
+# TIME. Returns a slot number or undef if TIME is out of range.
+sub findslot ($$;$) {
+    my PGBlackbox::Spoolfile $self = shift;
+    my $time = shift;
+    my $sense = shift;
+    $sense ||= -1;
+
+    croak "SENSE should be a positive or a negative integer"
+        unless (defined($sense) && $sense =~ /^[+-]?([1-9]\d*)$/);
+ 
+    return undef if ($self->{cursor} == 0);
+
+    my ($il, $ih) = (0, $self->{cursor} - 1);
+
+    if ($sense <= 0   
+
+    while ($ih > $il + 1) {
+        
+    }
+}
+
+# eof
+# Return true if there is a slot for a further append.
+sub eof ($) {
+    my PGBlackbox::Spoolfile $self = shift;
+    return ($self->{cursor} == $self->{slots});
+}
+
+# append ACTIVITY LOCKS CLIENTS
+# Write the given ACTIIVITY, LOCKS and CLIENTS state to the end of the spool
+# file. Returns undef on success or an error message on failure.
+sub append ($$$$) {
+    my PGBlackbox::Spoolfile $self = shift;
+    my ($activity, $locks, $clients) = @_;
+
+    return "no space left" if ($self->{cursor} == $self->{slots});
+
+    my $time = time()
+    my $buf = Storable::nstore([$activity, $locks, $clients]);
+    my $off;
+    return "lseek (to append): $!"
+        if (!($off = $self->fh()->sysseek(0, SEEK_END)));
+
+    my $n = $self->syswrite($buf, length($buf));
+    return "write (data): $!" if (!defined($n));
+    return "write (data): Wrote $n, expected " . length($buf)
+        unless ($n == length($buf));
+
+    return "lseek (to write offset): $!"
+        if (!$self->fh()->sysseek(INDEXOFFSET + $self->{cursor} * SLOTLEN,
+                                    SEEK_SET));
+    my $slot = pack('xxNN', $time, $off);
+
+    $n = $self->fh()->syswrite($slot, SLOTLEN);
+    if (!defined($n)) {
+        return "write (time and offset): $!";
+    } elsif ($n < SLOTLEN) {
+        return "write (time and offset): Wrote $n, expected " . SLOTLEN;
+    }
+
+    ++$self->{index};
+    return undef;
 }
 
 package PGBlackbox;

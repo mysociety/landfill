@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: pgblackbox,v 1.3 2006-09-07 13:57:26 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: pgblackbox,v 1.4 2006-09-07 15:19:25 chris Exp $';
 
 use strict;
 
@@ -36,6 +36,7 @@ my $compression_suffix = ".bz2";
 
 #my $spool_dir = "/var/spool/pgblackbox";
 my $spool_dir = "/tmp/pgblackbox";
+my $spool_slots = 360;  # half an hour
 
 my $dbh;        # master db connection
 my %dbh_by_db;  # handles for individual databases
@@ -144,18 +145,41 @@ sub get_state () {
     return ($pg_stat_activity, $pg_locks, $clients);
 }
 
-my $spool;
-$spool = PGBlackbox::Spoolfile->open("$spool_dir/fish", 1);
-$spool ||= PGBlackbox::Spoolfile->create("$spool_dir/fish", 100);
-die "$spool_dir/fish: $spool" if (!ref($spool));
+# spoolfile
+# Return current spoolfile object.
+sub spoolfile () {
+    our $current_spoolfile;
+
+    if (!defined($current_spoolfile) || $current_spoolfile->eof()) {
+        my @l = localtime(time());
+        foreach my $d (map { POSIX::strftime($_, @l) } qw(%Y %Y/%m %Y/%m/%d)) {
+            if (!-d "$spool_dir/$d" && !mkdir("$spool_dir/$d", 0755) && !$!{EEXIST}) {
+                die "$spool_dir/$d: mkdir: $!";
+            }
+        }
+        
+        my $filename = POSIX::strftime('%Y/%m/%d/%Y%m%dT%H%M%S.pgb', @l);
+        my $s = PGBlackbox::Spoolfile->create("$spool_dir/$filename", $spool_slots);
+        if (!ref($s)) {
+            die "$spool_dir/$filename: $s";
+        }
+
+        $current_spoolfile = $s;
+
+        # XXX really we should see whether the last-written spool file has any
+        # free space and open that, but can't be bothered at the moment.
+    }
+
+    return $current_spoolfile;
+}
 
 
 while (1) {
     my ($pg_stat_activity, $pg_locks, $clients) = get_state();
 
-    my $err = $spool->append($pg_stat_activity, $pg_locks, $clients);
+    my $err = spoolfile()->append($pg_stat_activity, $pg_locks, $clients);
     warn $err if ($err);
-warn "now cursor = " . $spool->cursor() . "\n";
+warn "now cursor = " . spoolfile()->cursor() . "\n";
     
     sleep(5);
 }

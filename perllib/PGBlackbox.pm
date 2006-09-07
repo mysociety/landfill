@@ -6,7 +6,7 @@
 # Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: PGBlackbox.pm,v 1.8 2006-09-07 13:57:27 chris Exp $
+# $Id: PGBlackbox.pm,v 1.9 2006-09-07 15:19:26 chris Exp $
 #
 
 package PGBlackbox::Spoolfile;
@@ -389,6 +389,11 @@ sub get ($$) {
     return "Malformed data" if (!defined($data));
 
     return $data;
+}
+
+DESTROY ($) {
+    my PGBlackbox::Spoolfile $self = shift;
+    $self->fh()->close();
 }
 
 package PGBlackbox;

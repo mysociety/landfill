@@ -6,16 +6,18 @@
 # Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: PGBlackbox.pm,v 1.7 2006-09-07 13:20:12 chris Exp $
+# $Id: PGBlackbox.pm,v 1.8 2006-09-07 13:57:27 chris Exp $
 #
 
 package PGBlackbox::Spoolfile;
 
 use Carp;
+use Errno;
 use Fcntl;
 use File::Basename;
 use File::stat;
-use IO::Handle;
+use IO::File;
+use Storable;
 
 use fields qw(name fh slots cursor rw);
 
@@ -64,6 +66,7 @@ sub create ($$$) {
     do {
         $tempname = sprintf('%s/.%s.%08x', $dir, $base, int(rand(0xffffffff)));
         $fh = new IO::File($tempname, O_RDWR | O_CREAT | O_EXCL);
+        return "open (temporary file): $!" if (!$fh && !$!{EEXIST});
     } while (!$fh);
 
     # 10 to give two 0 bytes padding before the time (so we can expand in
@@ -111,13 +114,13 @@ sub open ($$;$) {
 
     my ($fh, $fh2);
     
-    if ($filename =~ /\.(gz|bz2)/) {
+    if ($filename =~ /\.(gz|bz2)$/) {
         return "Cannot open a compressed spool file read/write" if ($rw);
         my %decompressor = ( gz => 'gunzip', bz2 => 'bunzip2' );
         my $prog = $decompressor{$1};
         
         $fh = IO::File->new_tmpfile() or return "open (temp file): $!";
-        if (!($fh2 = new IO::File($filename, $rw ? O_RDONLY : O_RDWR))) {
+        if (!($fh2 = new IO::File($filename, $rw ? O_RDWR : O_RDONLY))) {
             $err = "open: $!";
             goto fail;
         }
@@ -144,7 +147,7 @@ sub open ($$;$) {
 
         $fh->sysseek(0, SEEK_SET);
     } else {
-        $fh = new IO::File($filename, $rw ? O_RDONLY : O_RDWR)
+        $fh = new IO::File($filename, ($rw ? O_RDWR : O_RDONLY))
             or return "open: $!";
     }
 
@@ -191,7 +194,7 @@ sub open ($$;$) {
     my ($il, $ih) = (0, $N - 1);
     my $th = _slot($fh, $ih);
     if ($th == 0) {
-        while ($ih > $il) {
+        while ($ih > $il + 1) {
             my $i = int(($ih + $il) / 2);
             my $t = _slot($fh, $i);
             if ($t == 0) {
@@ -208,7 +211,7 @@ sub open ($$;$) {
     $self->{slots} = $N;
     $self->{cursor} = $ih;
     $self->{rw} = $rw;
-
+warn "at open, cursor = $ih\n";
     return $self;
     
 fail:
@@ -224,8 +227,8 @@ sub _slot ($$) {
     my $i = shift;
 
     my $buf = '';
-    goto fail if (!$self->fh()->sysseek(INDEXOFFSET + $i * SLOTLEN));
-    my $n = $self->fh()->sysread($buf, SLOTLEN);
+    goto fail if (!$fh->sysseek(INDEXOFFSET + $i * SLOTLEN, SEEK_SET));
+    my $n = $fh->sysread($buf, SLOTLEN);
     goto fail if (!defined($n) || $n != SLOTLEN);
 
     my ($time, $offset) = unpack('xxNN', $buf);
@@ -309,6 +312,11 @@ sub rw ($) {
     return $self->{rw};
 }
 
+sub cursor ($) {
+    my PGBlackbox::Spoolfile $self = shift;
+    return $self->{cursor};
+}
+
 # eof
 # Return true if there is space for a further append.
 sub eof ($) {
@@ -327,13 +335,13 @@ sub append ($$$$) {
     return "No space left" if ($self->eof());
 
     my $time = time();
-    my $buf = Storable::nstore([$activity, $locks, $clients]);
+    my $buf = Storable::nfreeze([$activity, $locks, $clients]);
     $buf = pack('N', length($buf)) . $buf;
     my $off;
     return "lseek (to append): $!"
         if (!($off = $self->fh()->sysseek(0, SEEK_END)));
 
-    my $n = $self->syswrite($buf, length($buf));
+    my $n = $self->fh()->syswrite($buf, length($buf));
     return "write (data): $!" if (!defined($n));
     return "write (data): Wrote $n, expected " . length($buf)
         unless ($n == length($buf));

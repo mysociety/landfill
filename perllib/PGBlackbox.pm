@@ -6,7 +6,7 @@
 # Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: PGBlackbox.pm,v 1.3 2006-09-06 22:58:12 chris Exp $
+# $Id: PGBlackbox.pm,v 1.4 2006-09-07 13:12:26 chris Exp $
 #
 
 package PGBlackbox::Spoolfile;
@@ -17,7 +17,7 @@ use File::Basename;
 use File::stat;
 use IO::Handle;
 
-use fields qw(name fh slots cursor);
+use fields qw(name fh slots cursor rw);
 
 #
 # Format of file: the file begins with a brief note explaining its format and
@@ -29,7 +29,7 @@ use fields qw(name fh slots cursor);
 use constant HEADER =>
     "pgblackbox spool file\n" .
     "This is a binary file which records information about the activity of\n" .
-    "PostgreSQL database installation. You should edit/modify it using the\n" .
+    "a PostgreSQL database installation. You should read it using the\n" .
     "pgblackbox tools, not by hand.\n\n";
 
 use constant HEADERLEN => length(HEADER);
@@ -44,7 +44,9 @@ use constant SLOTLEN => 10;
 # Create a new named spool FILE with space for SLOTS entries, and return a file
 # handle open on the new file or an error message on failure. The new file is
 # created atomically and destroys any previous file of the same name.
-sub create ($$) {
+sub create ($$$) {
+    my PGBlackbox::Spoolfile $self = shift;
+
     my $filename = shift;
     croak "FILENAME must be defined" unless ($filename);
     my $slots = shift;
@@ -82,7 +84,14 @@ sub create ($$) {
         goto fail;
     }
 
-    return $fh;
+    my $self = fields::new($self) unless (ref($self));
+    $self->{name} = $filename;
+    $self->{fh} = $fh;
+    $self->{slots} = $slots;
+    $self->{cursor} = 0;
+    $self->{rw} = 1;
+    
+    return $self;
 
 fail:
     $fh->close();
@@ -93,16 +102,51 @@ fail:
 # open FILE [RW]
 # Open an existing named spool FILE. Returns a new spoolfile object on success
 # or an error message on failure.
-sub open ($;$) {
+sub open ($$;$) {
+    my PGBlackbox::Spoolfile $self = shift;
+
     my $filename = shift;
     croak "FILENAME must be defined" unless ($filename);
     my $rw = shift;
 
-    # XXX consider whether file is compressed and, if it is, decompress it into
-    # a temporary file. Note that obviously we can't open a compressed file RW.
+    my ($fh, $fh2);
     
-    my $fh = new IO::File($filename, $rw ? O_RDONLY : O_RDWR)
-                    or return "open: $!";
+    if ($filename =~ /\.(gz|bz2)/) {
+        return "Cannot open a compressed spool file read/write" if ($rw);
+        my %decompressor = ( gz => 'gunzip', bz2 => 'bunzip2' );
+        my $prog = $decompressor{$1};
+        
+        $fh = IO::File->new_tmpfile() or return "open (temp file): $!";
+        if (!($fh2 = new IO::File($filename, $rw ? O_RDONLY : O_RDWR))) {
+            $err = "open: $!";
+            goto fail;
+        }
+
+        my $pid = fork();
+        if (!defined($pid)) {
+            $err = "fork: $!";
+            goto fail;
+        } elsif (0 == $pid) {
+            POSIX::close(0);
+            POSIX::dup($fh2->fileno());
+            POSIX::close(1);
+            POSIX::dup($fh->fileno());
+            { exec($prog); }
+            print STDERR "exec: $!\n";
+            POSIX::_exit(1);
+        }
+
+        wait();
+        if ($? != 0) {
+            $err = "$prog failed with status $?";
+            goto fail;
+        }
+
+        $fh->sysseek(0, SEEK_SET);
+    } else {
+        $fh = new IO::File($filename, $rw ? O_RDONLY : O_RDWR)
+            or return "open: $!";
+    }
 
     my $err = undef;
     my $st = stat($fh);
@@ -157,19 +201,19 @@ sub open ($;$) {
             }
         }
     }
-    $N = $ih;
-    
-    return $fh;
+    my $self = fields::new($self) unless (ref($self));
+    $self->{name} = $filename;
+    $self->{fh} = $fh;
+    $self->{slots} = $N;
+    $self->{cursor} = $ih;
+    $self->{rw} = $rw;
+
+    return $self;
     
 fail:
     $fh->close() if ($fh);
+    $fh2->close() if ($fh2);
     return $err;
-}
-
-# new FILENAME [SLOTS]
-# 
-sub new ($$;$) {
-    
 }
 
 # _slot H I
@@ -224,32 +268,55 @@ sub findslot ($$;$) {
     return undef if ($self->{cursor} == 0);
 
     my ($il, $ih) = (0, $self->{cursor} - 1);
+    my ($tl, $th) = map { $self->slot($_) } ($il, $ih);
 
-    if ($sense <= 0   
+    if ($sense < 0 && $th < $time) {
+        return $ih;
+    } elsif ($sense > 0 && $tl > $time) {
+        return $il;
+    }
 
     while ($ih > $il + 1) {
-        
+        my $i = int(($ih + $il) / 2);
+        my $t = $self->slot($i);
+
+        if ($sense < 0) {
+            if ($t < $time) {
+                $ih = $i;
+            } else {
+                $il = $i;
+            }
+        } else {
+            if ($t > $time) {
+                $ih = $i;
+            } else {
+                $il = $i;
+            }
+        }
     }
+
+    return $sense < 0 ? $il : $ih;
 }
 
 # eof
-# Return true if there is a slot for a further append.
+# Return true if there is space for a further append.
 sub eof ($) {
     my PGBlackbox::Spoolfile $self = shift;
     return ($self->{cursor} == $self->{slots});
 }
 
 # append ACTIVITY LOCKS CLIENTS
-# Write the given ACTIIVITY, LOCKS and CLIENTS state to the end of the spool
+# Write the given ACTIVITY, LOCKS and CLIENTS state to the end of the spool
 # file. Returns undef on success or an error message on failure.
 sub append ($$$$) {
     my PGBlackbox::Spoolfile $self = shift;
     my ($activity, $locks, $clients) = @_;
 
-    return "no space left" if ($self->{cursor} == $self->{slots});
+    return "No space left" if ($self->eof());
 
     my $time = time()
     my $buf = Storable::nstore([$activity, $locks, $clients]);
+    $buf = pack('N', length($buf)) . $buf;
     my $off;
     return "lseek (to append): $!"
         if (!($off = $self->fh()->sysseek(0, SEEK_END)));
@@ -273,6 +340,35 @@ sub append ($$$$) {
 
     ++$self->{index};
     return undef;
+}
+
+# get INDEX
+# Return the data at the given slot INDEX, or an error message on failure.
+sub get ($$) {
+    my PGBlackbox::Spoolfile $self = shift;
+    my $i = shift;
+    my ($time, $offset) = $self->slot($i)
+        or return "Can't obtain offset for slot $i";
+    
+    return "lseek (to data): $!"
+        if (!$self->fh()->sysseek($offset, SEEK_SET));
+
+    my $buf = '';
+    my $n = $self->sysread($buf, 4);
+    return "read (length): $!" if (!defined($n));
+    return "read (length): Read $n, expected 4" unless ($n == 4);
+
+    my $len = unpack('N', $buf);
+
+    $buf = '';
+    $n = $self->sysread($buf, $len);
+    return "read (data): $!" if (!defined($n));
+    return "read (data): Read $n, expected $len" unless ($n == $len);
+    
+    my $data = Storable::thaw($buf);
+    return "Malformed data" if (!defined($data));
+
+    return $data;
 }
 
 package PGBlackbox;

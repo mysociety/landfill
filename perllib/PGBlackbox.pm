@@ -6,7 +6,7 @@
 # Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: PGBlackbox.pm,v 1.6 2006-09-07 13:19:50 chris Exp $
+# $Id: PGBlackbox.pm,v 1.7 2006-09-07 13:20:12 chris Exp $
 #
 
 package PGBlackbox::Spoolfile;
@@ -84,7 +84,7 @@ sub create ($$$) {
         goto fail;
     }
 
-    my $self = fields::new($self) unless (ref($self));
+    $self = fields::new($self) unless (ref($self));
     $self->{name} = $filename;
     $self->{fh} = $fh;
     $self->{slots} = $slots;
@@ -201,7 +201,8 @@ sub open ($$;$) {
             }
         }
     }
-    my $self = fields::new($self) unless (ref($self));
+
+    $self = fields::new($self) unless (ref($self));
     $self->{name} = $filename;
     $self->{fh} = $fh;
     $self->{slots} = $N;

@@ -6,13 +6,13 @@
 # Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: PGBlackbox.pm,v 1.4 2006-09-07 13:12:26 chris Exp $
+# $Id: PGBlackbox.pm,v 1.5 2006-09-07 13:14:20 chris Exp $
 #
 
 package PGBlackbox::Spoolfile;
 
 use Carp;
-use Fcntl q;
+use Fcntl;
 use File::Basename;
 use File::stat;
 use IO::Handle;
@@ -32,7 +32,7 @@ use constant HEADER =>
     "a PostgreSQL database installation. You should read it using the\n" .
     "pgblackbox tools, not by hand.\n\n";
 
-use constant HEADERLEN => length(HEADER);
+use constant HEADERLEN => HEADERLEN;
 
 # 4 bytes for the slot count.
 use constant INDEXOFFSET => (HEADERLEN + 4);
@@ -150,20 +150,20 @@ sub open ($$;$) {
 
     my $err = undef;
     my $st = stat($fh);
-    if ($st->size() < length(HEADER) + 14) {
+    if ($st->size() < HEADERLEN + 14) {
         $err = "File is too short to be valid";
         goto fail;
     }
 
     my $buf = '';
-    my $n = $fh->sysread($buf, length(HEADER));
+    my $n = $fh->sysread($buf, HEADERLEN);
     if (!defined($n)) {
         $err = "read: $!";
         goto fail;
-    } elsif ($n < length(HEADER)) {
+    } elsif ($n < HEADERLEN) {
         $err = "File truncated while reading header";
         goto fail;
-    } elsif ($buf ne HEADER)) {
+    } elsif ($buf ne HEADER) {
         # Header doesn't match.
         $err = "Header doesn't match proper format";
         goto fail;
@@ -180,7 +180,7 @@ sub open ($$;$) {
     }
 
     my $N = unpack('N', $buf);
-    if ($st->size() < length(HEADER) + 4 + $N * 10) {
+    if ($st->size() < HEADERLEN + 4 + $N * 10) {
         $err = "File is too short to contain full index";
         goto fail;
     }
@@ -298,6 +298,16 @@ sub findslot ($$;$) {
     return $sense < 0 ? $il : $ih;
 }
 
+sub fh ($) {
+    my PGBlackbox::Spoolfile $self = shift;
+    return $self->{fh};
+}
+
+sub rw ($) {
+    my PGBlackbox::Spoolfile $self = shift;
+    return $self->{rw};
+}
+
 # eof
 # Return true if there is space for a further append.
 sub eof ($) {
@@ -312,9 +322,10 @@ sub append ($$$$) {
     my PGBlackbox::Spoolfile $self = shift;
     my ($activity, $locks, $clients) = @_;
 
+    return "Spoolfile is read-only" unless ($self->rw());
     return "No space left" if ($self->eof());
 
-    my $time = time()
+    my $time = time();
     my $buf = Storable::nstore([$activity, $locks, $clients]);
     $buf = pack('N', length($buf)) . $buf;
     my $off;
@@ -338,7 +349,7 @@ sub append ($$$$) {
         return "write (time and offset): Wrote $n, expected " . SLOTLEN;
     }
 
-    ++$self->{index};
+    ++$self->{cursor};
     return undef;
 }
 

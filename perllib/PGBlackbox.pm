@@ -6,7 +6,7 @@
 # Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: PGBlackbox.pm,v 1.5 2006-09-07 13:14:20 chris Exp $
+# $Id: PGBlackbox.pm,v 1.6 2006-09-07 13:19:50 chris Exp $
 #
 
 package PGBlackbox::Spoolfile;
@@ -32,7 +32,7 @@ use constant HEADER =>
     "a PostgreSQL database installation. You should read it using the\n" .
     "pgblackbox tools, not by hand.\n\n";
 
-use constant HEADERLEN => HEADERLEN;
+use constant HEADERLEN => length(HEADER);
 
 # 4 bytes for the slot count.
 use constant INDEXOFFSET => (HEADERLEN + 4);

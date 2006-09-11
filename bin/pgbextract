@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: pgbextract,v 1.1 2006-09-11 11:39:05 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: pgbextract,v 1.2 2006-09-11 18:49:57 chris Exp $';
 
 use strict;
 
@@ -22,8 +22,79 @@ use DateTime::Format::Strptime;
 
 use PGBlackbox;
 
-sub dump_db_info ($$) {
-    my IO::Handle $f = shift;
+# dump_db_info H DATA CONDITIONS
+#
+sub dump_db_info ($$%) {
+    my IO::Handle $h = shift;
     my $data = shift;
 
+    my %filter = @_;
+
+    # Iterate over databases, and, for each database, identify each client and
+    # what it was doing at that point, what locks it was holding, and what
+    # locks it was waiting for.
+    
+    my ($activity, $locks, $clients) = @$data;
+
+    my %backendpid_by_database;
+    my %activity_by_backendpid;
+    my %client_by_backendpid;
+
+    foreach (@$activity) {
+        $activity_by_backendpid{$_->[2]} = $_;
+        push(@{$backendpid_by_database{$_->[1]}}, $_->[2]);
+    }
+
+    foreach (@$clients) {
+        $clients_by_backendpid{$_->[0]} = $_;
+    }
+
+    foreach my $database (sort(keys(%backendpid_by_database))) {
+        $h->print("$database:\n");
+        foreach my $backendpid (keys(%activity_by_backendpid)) {
+            my $activity = $activity_by_backendpid{$backendpid};
+            my $client = $client_by_backendpid{$backendpid};
+            $h->print("  DB user $activity->[4]; backend PID $backendpid; ");
+            if ($client) {
+                $h->print("client PID $client->[8] on host $client->[1] (child of $client->[9])\n");
+                my $cmd = join(' ', map { / / ? (/'/ ? qq("$_") : qq('$_')) : $_ } @{$client->[13]});
+                $h->print("    prog $cmd\n"
+                $h->print("    in $client->[15]; UID:GID $client->[10]:$client->[11]\n");
+                $h->print("    currently: $activity->[5]\n");
+            } else {
+                $h->print("client unknown");
+            }
+
+            # Show locks waited for...
+            my @waitingfor = grep { $_->[3] == $backendpid && !$_->[5] } @$locks;
+            if (@waitingfor) {
+                $h->print("  waiting for:\n");
+                foreach (@waitingfor) {
+                    my ($table, $database, $transaction, $pid, $mode) = @$_;
+                    if ($table) {
+                        $h->print("    $mode on $database.$table\n");
+                        # Figure out who holds this.
+                        my ($holder) = grep { $_->[0] eq $table && $_->[1] eq $database && $_->[5] } @$locks;
+                        $h->print("      blocked by backend PID $holder->[3] holding $holder->[4]\n");
+                    } else {
+                        $h->print("    completion of transaction #$transaction\n");
+                        my ($holder) = grep { $_->[2] == $transaction && $_->[5] } @$locks;
+                        $h->print("      being executed by backend PID $holder->[3]\n");
+                    }
+                }
+            }
+
+            # ... and held.
+            my @holding = grep { $_->[3] == $backendpid && !$_->[5] && $_->[0] } @$locks;
+            if (@holding) {
+                $h->print("  holding:\n");
+                foreach (@holding) {
+                    my ($table, $database, $transaction, $pid, $mode) = @$_;
+                    $h->print("    $mode on $database.$table\n");
+                }
+            }
+
+            $h->print("\n");
+        }
+    }
 }

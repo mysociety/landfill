@@ -1,0 +1,29 @@
+#!/usr/bin/perl -w
+#
+# pgbextract:
+# Extract data from pgblackbox's spool files and present information about the
+# recorded state of the PostgreSQL server to the user.
+#
+# Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
+# Email: chris@mysociety.org; WWW: http://www.mysociety.org/
+#
+
+my $rcsid = ''; $rcsid .= '$Id: pgbextract,v 1.1 2006-09-11 11:39:05 chris Exp $';
+
+use strict;
+
+# Horrible boilerplate to set up appropriate library paths.
+use FindBin;
+use lib "$FindBin::Bin/../perllib";
+use lib "$FindBin::Bin/../../perllib";
+
+use DateTime;
+use DateTime::Format::Strptime;
+
+use PGBlackbox;
+
+sub dump_db_info ($$) {
+    my IO::Handle $f = shift;
+    my $data = shift;
+
+}

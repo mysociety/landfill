@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: pgblackbox,v 1.5 2006-09-11 10:07:00 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: pgblackbox,v 1.6 2006-09-11 16:14:34 chris Exp $';
 
 use strict;
 
@@ -124,6 +124,14 @@ sub get_state () {
         = dbh()->selectall_arrayref('
                 select relation, database, transaction, pid, mode, granted
                 from pg_locks');
+
+    foreach (@$pg_locks) {
+        # Replace relation and database IDs with names.
+        if (defined($_->[0])) {
+            $_->[0] = tablename($_->[1], $_->[0]);
+            $_->[1] = dbname($_->[1]);
+        }
+    }
 
     # Now grab information about the individual clients, if available.
     #

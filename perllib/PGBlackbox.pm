@@ -6,7 +6,7 @@
 # Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: PGBlackbox.pm,v 1.9 2006-09-07 15:19:26 chris Exp $
+# $Id: PGBlackbox.pm,v 1.10 2006-09-12 20:04:25 chris Exp $
 #
 
 package PGBlackbox::Spoolfile;
@@ -71,7 +71,7 @@ sub create ($$$) {
 
     # 10 to give two 0 bytes padding before the time (so we can expand in
     # 2038...).
-    my $index = pack('N', $slots) . ("\0" x 10 x $slots);
+    my $index = pack('N', $slots) . ("\0" x SLOTLEN x $slots);
     my $n;
     if (!($n = $fh->syswrite(HEADER . $index))) {
         $err = "write: $!";
@@ -211,7 +211,7 @@ sub open ($$;$) {
     $self->{slots} = $N;
     $self->{cursor} = $ih;
     $self->{rw} = $rw;
-warn "at open, cursor = $ih\n";
+
     return $self;
     
 fail:
@@ -374,14 +374,14 @@ sub get ($$) {
         if (!$self->fh()->sysseek($offset, SEEK_SET));
 
     my $buf = '';
-    my $n = $self->sysread($buf, 4);
+    my $n = $self->fh()->sysread($buf, 4);
     return "read (length): $!" if (!defined($n));
     return "read (length): Read $n, expected 4" unless ($n == 4);
 
     my $len = unpack('N', $buf);
 
     $buf = '';
-    $n = $self->sysread($buf, $len);
+    $n = $self->fh()->sysread($buf, $len);
     return "read (data): $!" if (!defined($n));
     return "read (data): Read $n, expected $len" unless ($n == $len);
     

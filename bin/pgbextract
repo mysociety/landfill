@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: pgbextract,v 1.5 2006-09-13 09:38:06 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: pgbextract,v 1.6 2006-09-13 10:58:16 chris Exp $';
 
 use strict;
 
@@ -90,7 +90,12 @@ sub dump_db_info ($$%) {
             } else {
                 $h->print("client unknown\n");
             }
-            $h->print("    currently: $activity->[5]\n");
+
+            if (defined($activity->[6])) {
+                $h->print("    currently (for $activity->[6]s): $activity->[5]\n");
+            } else {
+                $h->print("    currently: $activity->[5]\n");
+            }
 
             if (@waitingfor) {
                 $h->print("    waiting for:\n");

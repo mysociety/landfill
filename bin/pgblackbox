@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: pgblackbox,v 1.8 2006-09-13 10:37:10 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: pgblackbox,v 1.9 2006-09-13 10:44:39 chris Exp $';
 
 use strict;
 
@@ -82,7 +82,7 @@ sub configure (;$) {
         exit(1);
     }
     foreach (keys %$config) {
-        no strict refs;
+        no strict 'refs';
         my $val = $config->{$_};
         $_ = 'dbname_dummy' if ($_ eq 'dbname');
         $$_ = $val;
@@ -357,8 +357,10 @@ if ($pid_file) {
     }
 }
 
-$h_pid_file->truncate(0);
-$h_pid_file->syswrite("$$");
+if ($h_pid_file) {
+    $h_pid_file->truncate(0);
+    $h_pid_file->syswrite("$$");
+}
 
 my $last_cleanup = 0;
 my $cleanup_pid;
@@ -407,3 +409,5 @@ while (!$foad) {
         sleep(0.1);
     }
 }
+
+unlink($pid_file) if ($pid_file);

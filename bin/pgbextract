@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: pgbextract,v 1.6 2006-09-13 10:58:16 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: pgbextract,v 1.7 2006-09-13 11:40:53 chris Exp $';
 
 use strict;
 
@@ -239,8 +239,11 @@ foreach (@files) {
 my @d;
 if ($searchmode != +1) {
     # Find before data.
-    my $i = $ff[0]->findslot($epoch, -1);
+    my $i = $ff[$#ff]->findslot($epoch, -1);
     if (defined($i)) {
+        push(@d, [scalar($ff[$#ff]->slot($i)), $ff[$#ff]->get($i)]);
+        debug("slot before is $i in ", $ff[$#ff]->name(), " at epoch ", scalar($ff[$#ff]->slot($i)));
+    } elsif (@ff == 2 && defined($i = $ff[0]->findslot($epoch, -1))) {
         push(@d, [scalar($ff[0]->slot($i)), $ff[0]->get($i)]);
         debug("slot before is $i in ", $ff[0]->name(), " at epoch ", scalar($ff[0]->slot($i)));
     } else {
@@ -262,7 +265,7 @@ if ($searchmode != -1) {
 
 my $i = 0;
 if ($searchmode == 0 && @ff == 2) {
-    $i = 1 if (abs($epoch - $ff[1]->[0]) < abs($epoch - $ff[0]->[0]));
+    $i = 1 if (abs($epoch - $d[1]->[0]) < abs($epoch - $d[0]->[0]));
 } elsif (0 == @ff) {
     print STDERR "pgbextract: cannot find any relevant record\n";
     exit(1);

@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: pgblackbox,v 1.9 2006-09-13 10:44:39 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: pgblackbox,v 1.10 2006-09-13 10:57:02 chris Exp $';
 
 use strict;
 
@@ -190,7 +190,8 @@ sub get_state () {
     my $pg_stat_activity
         = dbh()->selectall_arrayref('
                 select datid, datname, procpid, usesysid, usename,
-                    current_query
+                    current_query,
+                    extract(epoch from (current_timestamp - query_start))::integer
                 from pg_stat_activity');
         # XXX consider only looking at activity rows which are not
         # "<IDLE>".

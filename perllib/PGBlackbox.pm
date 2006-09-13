@@ -6,7 +6,7 @@
 # Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: PGBlackbox.pm,v 1.11 2006-09-13 09:38:06 chris Exp $
+# $Id: PGBlackbox.pm,v 1.12 2006-09-13 10:37:10 chris Exp $
 #
 
 package PGBlackbox::Spoolfile;
@@ -405,5 +405,66 @@ DESTROY ($) {
 package PGBlackbox;
 
 use strict;
+
+$PGBlackbox::default_config_file = "/etc/pgblackbox.conf";
+
+# read_config HANDLE FILE
+# Read configuration directives from the given HANDLE, which is assumed to
+# refer to the named FILE (this is used in error messages). Returns a reference
+# to a hash of config directives to their values on success, or an error
+# message on failure.
+sub read_config ($$) {
+    my IO::Handle $h = shift;
+    my $name = shift;
+    my %config_vars = map { $_ => 1 } qw(
+            user group pid_file
+            dbuser dbgroup dbname
+            compression_prog compression_suffix compression_age
+            spool_dir spool_slots max_size
+            interval
+            cleanup_interval
+        );
+    my %config = ( );
+    my $retval = \%config;
+    my $n = 0;
+    while (defined(my $line = $h->getline())) {
+        ++$n;
+        chomp($line);
+        $line =~ s/#.*//;
+        $line =~ s/^\s+//;
+        $line =~ s/\s+$//;
+        next if ($line eq '');
+        my ($key, $value) = split(/\s+/, $line);
+        if (!exists($config_vars{$key})) {
+            $retval = sprintf('%s:%d: bad config directive "%s"',
+                                $name, $n, $key);
+            last;
+        } elsif (exists($config{$key})) {
+            $retval = sprintf('%s:%d: repeated config directive "%s"',
+                                $name, $n, $key);
+            last;
+        }
+        
+        # Simple format checks.
+        if ($key =~ /^(compression_age|max_size|interval)$/ && $value !~ /^[1-9]\d*$/) {
+            $retval = sprintf('%s:%d: value for "%s" must be a positive integer, not "%s"',
+                                $name, $n, $key, $value);
+            last;
+        }
+
+        if ($key =~ /^(pid_file|compression_prog|spool_dir)$/ && $value !~ m#^/#) {
+            $retval = sprintf('%s:%d: value for "%s" must be an absolute path, not "%s"',
+                                $name, $n, $key, $value);
+            last;
+        }
+     
+        $config{$key} = $value;
+    }
+    
+    $retval = sprintf('%s: %s', $name, $!);
+        if ($h->error());
+
+    return $retval;
+}
 
 1;

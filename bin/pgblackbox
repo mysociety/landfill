@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: pgblackbox,v 1.7 2006-09-13 09:38:06 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: pgblackbox,v 1.8 2006-09-13 10:37:10 chris Exp $';
 
 use strict;
 
@@ -33,8 +33,12 @@ use Time::HiRes qw(sleep);
 
 use PGBlackbox;
 
+# UNIX user and group we run as.
 my $user = 'postgres';
 my $group = 'postgres';
+
+# PID file for the daemon.
+my $pid_file = '';
 
 my $dbuser = 'postgres';
 my $dbpass = '';
@@ -43,24 +47,67 @@ my $dbname_dummy = 'dummy';
 my $compression_prog = "/usr/bin/bzip2";
 my $compression_suffix = ".bz2";
 
+# Parameters for cleaning up the spool directory.
+my $compression_age = 86400;
+my $max_size = 512; # MB
+
 #my $spool_dir = "/var/spool/pgblackbox";
 my $spool_dir = "/tmp/pgblackbox";
 my $spool_slots = 360;  # half an hour
 
-# PID file for the daemon.
-my $pid_file = '/var/run/pgblackbox.pid';
 
 # How often we log information about the database, and how often we compress
 # and clean up old data.
 my $interval = 5;
 my $cleanup_interval = 3600;
 
-# Parameters for cleaning up the spool directory.
-my $compression_age = 86400;
-my $max_size = 512; # MB
-
 my $dbh;        # master db connection
 my %dbh_by_db;  # handles for individual databases
+
+# configure [FILE]
+# Read the configuration from the named FILE, or, if it is not specified, the
+# default global config file.
+sub configure (;$) {
+    my $name = shift;
+    $name ||= $PGBlackbox::default_config_file;
+    my $h = new IO::File($name, O_RDONLY);
+    if (!$h) {
+        print_log('err', '%s: %s', $name, $!);
+        exit(1);
+    }
+    my $config = PGBlackbox::read_config($h, $name);
+    $h->close();
+    if (!ref($config)) {
+        print_log('err', '%s', $config);
+        exit(1);
+    }
+    foreach (keys %$config) {
+        no strict refs;
+        my $val = $config->{$_};
+        $_ = 'dbname_dummy' if ($_ eq 'dbname');
+        $$_ = $val;
+    }
+
+    if ($user !~ /^(0|[1-9]\d*)$/) {
+        my $uid = getpwnam($user);
+        if (!defined($uid)) {
+            print_log('err', '%s: no such user', $user);
+            exit(1);
+        } else {
+            $user = $uid;
+        }
+    }
+
+    if ($group =~ /^(0|[1-9]\d*)$/) {
+        my $gid = getgrnam($group);
+        if (!defined($gid)) {
+            print_log('err', '%s: no such group', $group);
+            exit(1);
+        } else {
+            $group = $gid;
+        }
+    }
+}
 
 # dbh [DBNAME]
 # Return a handle open on the given DBNAME, or the dummy database if it is not

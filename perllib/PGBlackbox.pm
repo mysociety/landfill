@@ -6,7 +6,7 @@
 # Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: PGBlackbox.pm,v 1.10 2006-09-12 20:04:25 chris Exp $
+# $Id: PGBlackbox.pm,v 1.11 2006-09-13 09:38:06 chris Exp $
 #
 
 package PGBlackbox::Spoolfile;
@@ -272,30 +272,31 @@ sub findslot ($$;$) {
     return undef if ($self->{cursor} == 0);
 
     my ($il, $ih) = (0, $self->{cursor} - 1);
-    my ($tl, $th) = map { $self->slot($_) } ($il, $ih);
+    my ($tl, $th) = map { scalar($self->slot($_)) } ($il, $ih);
 
-    if ($sense < 0 && $th < $time) {
-        return $ih;
-    } elsif ($sense > 0 && $tl > $time) {
-        return $il;
+    if ($th < $time) {
+        if ($sense < 0) {
+            return $ih;
+        } else {
+            return undef;
+        }
+    }
+    if ($tl > $time) {
+        if ($sense < 0) {
+            return undef;
+        } else {
+            return $il;
+        }
     }
 
     while ($ih > $il + 1) {
         my $i = int(($ih + $il) / 2);
         my $t = $self->slot($i);
 
-        if ($sense < 0) {
-            if ($t < $time) {
-                $ih = $i;
-            } else {
-                $il = $i;
-            }
+        if ($t < $time) {
+            $il = $i;
         } else {
-            if ($t > $time) {
-                $ih = $i;
-            } else {
-                $il = $i;
-            }
+            $ih = $i;
         }
     }
 
@@ -315,6 +316,11 @@ sub rw ($) {
 sub cursor ($) {
     my PGBlackbox::Spoolfile $self = shift;
     return $self->{cursor};
+}
+
+sub name ($) {
+    my PGBlackbox::Spoolfile $self = shift;
+    return $self->{name};
 }
 
 # eof

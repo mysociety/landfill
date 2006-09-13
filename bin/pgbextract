@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: pgbextract,v 1.4 2006-09-12 19:09:13 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: pgbextract,v 1.5 2006-09-13 09:38:06 chris Exp $';
 
 use strict;
 
@@ -75,7 +75,7 @@ sub dump_db_info ($$%) {
             # Obtain locks held and waited for, excluding clients' locks on
             # their own current transactions.
             my @waitingfor = grep { $_->[3] == $backendpid && !$_->[5] } @$locks;
-            my @holding = grep { $_->[3] == $backendpid && !$_->[5] && $_->[0] } @$locks;
+            my @holding = grep { $_->[3] == $backendpid && $_->[5] && $_->[0] } @$locks;
                 # XXX should probably only show locks for which other clients
                 # are waiting, rather than all locks held.
 
@@ -93,27 +93,27 @@ sub dump_db_info ($$%) {
             $h->print("    currently: $activity->[5]\n");
 
             if (@waitingfor) {
-                $h->print("  waiting for:\n");
+                $h->print("    waiting for:\n");
                 foreach (@waitingfor) {
                     my ($table, $database, $transaction, $pid, $mode) = @$_;
                     if ($table) {
-                        $h->print("    $mode on $database.$table\n");
+                        $h->print("      $mode on $database.$table\n");
                         # Figure out who holds this.
-                        my ($holder) = grep { $_->[0] eq $table && $_->[1] eq $database && $_->[5] } @$locks;
-                        $h->print("      blocked by backend PID $holder->[3] holding $holder->[4]\n");
+                        my ($holder) = grep { $_->[0] && $_->[0] eq $table && $_->[1] eq $database && $_->[5] } @$locks;
+                        $h->print("        blocked by backend PID $holder->[3] holding $holder->[4]\n");
                     } else {
-                        $h->print("    completion of transaction #$transaction\n");
-                        my ($holder) = grep { $_->[2] == $transaction && $_->[5] } @$locks;
-                        $h->print("      being executed by backend PID $holder->[3]\n");
+                        $h->print("      completion of transaction #$transaction\n");
+                        my ($holder) = grep { $_->[2] && $_->[2] == $transaction && $_->[5] } @$locks;
+                        $h->print("        being executed by backend PID $holder->[3]\n");
                     }
                 }
             }
 
             if (@holding) {
-                $h->print("  holding:\n");
+                $h->print("    holding:\n");
                 foreach (@holding) {
                     my ($table, $database, $transaction, $pid, $mode) = @$_;
-                    $h->print("    $mode on $database.$table\n");
+                    $h->print("      $mode on $database.$table\n");
                 }
             }
 
@@ -135,7 +135,7 @@ my $after;
 if (!GetOptions(
         debug =>            \$debug,
         help =>             \$help,
-        database =>         \$database,
+        'database=s' =>     \$database,
         'all-clients' =>    \$allclients,
         before =>           \$before,
         after =>            \$after)) {
@@ -178,9 +178,9 @@ if ($time !~ /^([1-9]\d{3})(\d\d)(\d\d)T(\d\d)(\d\d)(\d\d)$/) {
     exit(1);
 }
 
-my $epoch = mktime($6, $5, $4, $3, $2 - 1, $1 - 1900);
+my $epoch = mktime($6, $5, $4, $3, $2 - 1, $1 - 1900) - 3600;
 
-debug("time $time -> epoch $epoch");
+debug("time $time -> epoch $epoch -> " . strftime('%Y%m%dT%H%M%S', localtime($epoch)));
 
 # Locate possible files. These are named for their start times, so we might
 # need to look on the day before the specified time too.
@@ -237,16 +237,21 @@ if ($searchmode != +1) {
     my $i = $ff[0]->findslot($epoch, -1);
     if (defined($i)) {
         push(@d, [scalar($ff[0]->slot($i)), $ff[0]->get($i)]);
+        debug("slot before is $i in ", $ff[0]->name(), " at epoch ", scalar($ff[0]->slot($i)));
+    } else {
+        debug("no before slot found");
     }
 }
 if ($searchmode != -1) {
-    my $f = $ff[0];
     my $i = $ff[0]->findslot($epoch, +1);
     if (defined($i)) {
         push(@d, [scalar($ff[0]->slot($i)), $ff[0]->get($i)]);
-    } elsif (@ff == 2) {
-        $i = $ff[1]->findslot($epoch, +1);
+        debug("slot after is $i in ", $ff[0]->name(), " at epoch ", scalar($ff[0]->slot($i)));
+    } elsif (@ff == 2 && defined($i = $ff[1]->findslot($epoch, +1))) {
         push(@d, [scalar($ff[1]->slot($i)), $ff[1]->get($i)]);
+        debug("slot after is $i in ", $ff[1]->name(), " at epoch ", scalar($ff[1]->slot($i)));
+    } else {
+        debug("no after slot found");
     }
 }
 
@@ -258,7 +263,7 @@ if ($searchmode == 0 && @ff == 2) {
     exit(1);
 }
 
-print "At time ", strftime('%Y%m%dT%H%M%S', localtime($ff[$i]->[0])), "\n\n";
+print "At time ", strftime('%Y%m%dT%H%M%S', localtime($d[$i]->[0])), "\n\n";
 dump_db_info(\*STDOUT, $d[$i]->[1], %filter);
 
 __END__

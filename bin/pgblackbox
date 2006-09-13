@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: pgblackbox,v 1.6 2006-09-11 16:14:34 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: pgblackbox,v 1.7 2006-09-13 09:38:06 chris Exp $';
 
 use strict;
 
@@ -23,9 +23,18 @@ use Carp;
 use Data::Dumper;
 use DBI;
 use DBD::Pg;
-use POSIX;
+use Errno;
+use Fcntl qw(:DEFAULT :flock);
+use File::Find qw();
+use File::stat;
+use POSIX qw(strftime _exit :sys_wait_h);
+use Sys::Syslog;
+use Time::HiRes qw(sleep);
 
 use PGBlackbox;
+
+my $user = 'postgres';
+my $group = 'postgres';
 
 my $dbuser = 'postgres';
 my $dbpass = '';
@@ -37,6 +46,18 @@ my $compression_suffix = ".bz2";
 #my $spool_dir = "/var/spool/pgblackbox";
 my $spool_dir = "/tmp/pgblackbox";
 my $spool_slots = 360;  # half an hour
+
+# PID file for the daemon.
+my $pid_file = '/var/run/pgblackbox.pid';
+
+# How often we log information about the database, and how often we compress
+# and clean up old data.
+my $interval = 5;
+my $cleanup_interval = 3600;
+
+# Parameters for cleaning up the spool directory.
+my $compression_age = 86400;
+my $max_size = 512; # MB
 
 my $dbh;        # master db connection
 my %dbh_by_db;  # handles for individual databases
@@ -59,7 +80,8 @@ sub dbh (;$) {
             $dbh = DBI->connect("dbi:Pg:dbname=$dbname", $dbuser, $dbpass, {
                                 AutoCommit => 1, PrintError => 0, Warn => 0
                             });
-            # log if undef
+            print_log('err', 'connect to database "%s": %s', $dbname, DBI->errstr())
+                if (!defined($dbh));
         }
 
         $dbh_by_db{$dbname} = $dbh if ($dbh && $dbname eq $dbname_dummy);
@@ -99,6 +121,9 @@ sub tablename ($$) {
     if (!exists($tablename{$dbname}) || !exists($tablename{$dbname}->{$t})) {
         $tablename{$dbname} ||= { };
         my $dbh = dbh($dbname);
+        # failure to connect probably means the database doesn't exist for some
+        # reason, but it might be a transient failure, so don't cache the result.
+        return "<rel#$t>" if (!$dbh);
         my $x = $dbh->selectall_arrayref('
                     select relid, relname
                     from pg_stat_user_tables');
@@ -120,6 +145,8 @@ sub get_state () {
                 select datid, datname, procpid, usesysid, usename,
                     current_query
                 from pg_stat_activity');
+        # XXX consider only looking at activity rows which are not
+        # "<IDLE>".
     my $pg_locks
         = dbh()->selectall_arrayref('
                 select relation, database, transaction, pid, mode, granted
@@ -137,9 +164,16 @@ sub get_state () {
     #
     # XXX Also use this opportunity to clean up old client rows.
     my $clients = [ ];
-    foreach (@{$pg_stat_activity}) {
+    my $dbh;
+    my $last_datname;
+    foreach (sort { $a->[1] cmp $b->[1] } @{$pg_stat_activity}) {
         my ($datid, $datname, $procpid) = @$_;
-        my $row = dbh($datname)->selectrow_arrayref('
+        if (!defined($dbh) || $datname ne $last_datname) {
+            $dbh->disconnect() if ($dbh);
+            $dbh = dbh($datname);
+            $last_datname = $datname;
+        }
+        my $row = $dbh->selectrow_arrayref('
                         select backendpid, host,
                             clientaddr, clientport, serveraddr, serverport,
                             dbname, dbuser,
@@ -156,6 +190,7 @@ sub get_state () {
         $row->[13] = [split(/\0/, $row->[13])];
         push(@$clients, $row) if ($row);
     }
+    $dbh->disconnect() if ($dbh);
 
     # maybe record other circumstantial information, e.g. load?
 
@@ -163,22 +198,24 @@ sub get_state () {
 }
 
 # spoolfile
-# Return current spoolfile object.
+# Return current spoolfile object, or undef in case of a fatal error.
 sub spoolfile () {
     our $current_spoolfile;
 
     if (!defined($current_spoolfile) || $current_spoolfile->eof()) {
         my @l = localtime(time());
-        foreach my $d (map { POSIX::strftime($_, @l) } qw(%Y %Y/%m %Y/%m/%d)) {
+        foreach my $d (map { strftime($_, @l) } qw(%Y %Y/%m %Y/%m/%d)) {
             if (!-d "$spool_dir/$d" && !mkdir("$spool_dir/$d", 0755) && !$!{EEXIST}) {
-                die "$spool_dir/$d: mkdir: $!";
+                print_log('error', '%s: mkdir: %s', "$spool_dir/$d", $!);
+                return undef;
             }
         }
         
-        my $filename = POSIX::strftime('%Y/%m/%d/%Y%m%dT%H%M%S.pgb', @l);
+        my $filename = strftime('%Y/%m/%d/%Y%m%dT%H%M%S.pgb', @l);
         my $s = PGBlackbox::Spoolfile->create("$spool_dir/$filename", $spool_slots);
         if (!ref($s)) {
-            die "$spool_dir/$filename: $s";
+            print_log('error', '%s: create new spool file: %s', "$spool_dir/$filename", $s);
+            return undef;
         }
 
         $current_spoolfile = $s;
@@ -190,13 +227,136 @@ sub spoolfile () {
     return $current_spoolfile;
 }
 
+# do_cleanup
+# Clean up / compress old spool files.
+sub do_cleanup () {
+    my $compression_time = strftime('%Y%m%dT%H%M%S.pgb', localtime(time() - $compression_age));
+    my @to_compress = ( );
+    File::Find::find(sub {
+                return unless ($_ lt $compression_time
+                                && /^\d{8}T\d{6}\.pgb$/);
+                push(@to_compress, $File::Find::name);
+            }, $spool_dir);
 
-while (1) {
+    foreach (@to_compress) {
+        unlink("$_$compression_suffix");    # avoid "already exists" error
+        system($compression_prog, $_);
+        # XXX ignores errors / stderr
+    }
+
+    print_log('info', 'compressed %d old spool files', scalar(@to_compress))
+        if (@to_compress);
+        
+    my @all_files = ( );
+    File::Find::find(sub {
+                return unless ($_ =~ /^\d{8}T\d{6}\.pgb(|\Q$compression_suffix\E)$/);
+                push(@all_files, $File::Find::name);
+            }, $spool_dir);
+
+    # Produce list sorted newest first.
+    @all_files = sort { $b cmp $a } @all_files;
+    
+    my $total = 0;
+    my $ndeleted = 0;
+    foreach (@all_files) {
+        if ($total / (1024 * 1024) > $max_size) {
+            unlink($_) and ++$ndeleted;
+        } else {
+            my $st = stat($_);
+            $total += $st->size() if ($st);
+        }
+    }
+
+    print_log('info', 'deleted %d old spool files', $ndeleted)
+        if ($ndeleted > 0);
+}
+
+openlog('pgblackbox', 'ndelay,pid', 'daemon');
+
+sub print_log ($$@) {
+    my ($prio, $fmt, @args) = @_;
+    print STDERR "pgblackbox: ", sprintf($fmt, @args), "\n";
+    syslog($prio, $fmt, @args);
+}
+
+$SIG{__DIE__} = sub {
+    print_log('err', 'perl fatal error: %s', join('', @_));
+};
+
+$SIG{__DIE__} = sub {
+    print_log('err', 'perl warning: %s', join('', @_));
+};
+
+my $foad = 0;
+$SIG{TERM} = $SIG{INT} = sub { $foad = 1; };
+my $alarm_fired = 0;
+$SIG{ALRM} = sub { $alarm_fired = 1; };
+my $child_exited = 0;
+$SIG{CHLD} = sub { $child_exited = 1; };
+
+my $h_pid_file;
+if ($pid_file) {
+    $h_pid_file = new IO::File($pid_file, O_RDWR | O_CREAT, 0644);
+    if (!$h_pid_file) {
+        print_log('err', '%s: open: %s; aborting', $pid_file, $!);
+        exit(1);
+    } elsif (!flock($h_pid_file, LOCK_EX | LOCK_NB)) {
+        if ($!{EAGAIN}) {
+            print_log('err', '%s: flock: already locked; another instance must be running', $pid_file);
+        } else {
+            print_log('err', '%s: flock: %s; aborting', $pid_file, $!);
+        }
+        exit(1);
+    }
+}
+
+$h_pid_file->truncate(0);
+$h_pid_file->syswrite("$$");
+
+my $last_cleanup = 0;
+my $cleanup_pid;
+while (!$foad) {
     my ($pg_stat_activity, $pg_locks, $clients) = get_state();
 
-    my $err = spoolfile()->append($pg_stat_activity, $pg_locks, $clients);
-    warn $err if ($err);
-warn "now cursor = " . spoolfile()->cursor() . "\n";
+    my $f = spoolfile();
+    if (!$f) {
+        print_log('error', 'fatal error; aborting');
+        exit(1);
+    }
+    my $err = $f->append($pg_stat_activity, $pg_locks, $clients);
+    if ($err) {
+        print_log('error', '%s: %s', spoolfile()->name(), $err);
+    }
+
+    $alarm_fired = 0;
+    alarm($interval);
+    if (!defined($cleanup_pid) && $last_cleanup < time() - $cleanup_interval) {
+        $cleanup_pid = fork();
+        if (!defined($cleanup_pid)) {
+            print_log('error', 'fork (start cleanup process): %s', $!);
+        } elsif (0 == $cleanup_pid) {
+            do_cleanup();
+            _exit(0);
+        } else {
+            print_log('info', 'started new cleanup process, %d', $cleanup_pid);
+            $last_cleanup = time();
+        }
+    }
+
+    if ($child_exited) {
+        my $pid = waitpid(-1, WNOHANG);
+        if ($pid) {
+            if ($?) {
+                print_log('err', 'cleanup process %d exited with bad status %d', $pid, $?);
+            } else {
+                print_log('info', 'cleanup process %d finished', $pid);
+            }
+        }
+        $child_exited = 0;
+        $cleanup_pid = undef;
+    }
     
-    sleep(5);
+    while (!$alarm_fired) {
+        sleep(0.1);
+    }
 }

@@ -6,7 +6,7 @@
 # Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: PGBlackbox.pm,v 1.13 2006-09-13 10:44:40 chris Exp $
+# $Id: PGBlackbox.pm,v 1.14 2006-09-13 11:41:21 chris Exp $
 #
 
 package PGBlackbox::Spoolfile;
@@ -399,7 +399,7 @@ sub get ($$) {
 
 DESTROY ($) {
     my PGBlackbox::Spoolfile $self = shift;
-    $self->fh()->close();
+    $self->fh()->close() if ($self->fh());
 }
 
 package PGBlackbox;

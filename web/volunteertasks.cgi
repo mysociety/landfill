@@ -7,7 +7,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.17 2006-09-14 17:11:09 francis Exp $';
+my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.18 2006-09-14 17:41:30 francis Exp $';
 
 use strict;
 require 5.8.0;
@@ -265,8 +265,7 @@ Next step - join our public developers' email list
 https://secure.mysociety.org/admin/lists/mailman/listinfo/developers-public
 If you like, tell us a bit about yourself, and your ideas for doing this task.
 
-You can find the task in our ticket tracking system here. Please append 
-remarks with any information you find out, and as you make progress.
+You can find the task in our ticket tracking system here. Please append remarks with any information you find out, and as you make progress.
 https://secure.mysociety.org/cvstrac/tktview?tn=$tn
 
 Good luck!

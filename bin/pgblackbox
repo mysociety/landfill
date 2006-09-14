@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: pgblackbox,v 1.13 2006-09-14 11:14:02 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: pgblackbox,v 1.14 2006-09-14 17:42:38 chris Exp $';
 
 use strict;
 
@@ -206,8 +206,8 @@ sub get_state () {
     my $pg_locks
         = dbh()->selectall_arrayref('
                 select relation, database, transaction, pid, mode, granted
-                where database <> 0 or database is null
                 from pg_locks');
+    @$pg_locks = grep { !defined($_->[1]) || $_->[1] != 0 } @$pg_locks;
         # Occasionally we see rows with database = 0 referring to shadow
         # tables. Ignore these.
 

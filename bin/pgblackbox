@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: pgblackbox,v 1.10 2006-09-13 10:57:02 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: pgblackbox,v 1.11 2006-09-14 00:12:07 chris Exp $';
 
 use strict;
 
@@ -20,14 +20,16 @@ use lib "$FindBin::Bin/../perllib";
 use lib "$FindBin::Bin/../../perllib";
 
 use Carp;
-use Data::Dumper;
 use DBI;
 use DBD::Pg;
 use Errno;
 use Fcntl qw(:DEFAULT :flock);
 use File::Find qw();
 use File::stat;
-use POSIX qw(strftime _exit :sys_wait_h);
+use Getopt::Long;
+use Pod::Usage;
+use Pod::Usage;
+use POSIX qw(strftime _exit setsid :sys_wait_h);
 use Sys::Syslog;
 use Time::HiRes qw(sleep);
 
@@ -72,8 +74,13 @@ sub configure (;$) {
     $name ||= $PGBlackbox::default_config_file;
     my $h = new IO::File($name, O_RDONLY);
     if (!$h) {
-        print_log('err', '%s: %s', $name, $!);
-        exit(1);
+        if ($!{ENOENT}) {
+            print_log('warning', '%s: %s; using defaults', $name, $!);
+            return;
+        } else {
+            print_log('err', '%s: %s; aborting', $name, $!);
+            exit(1);
+        }
     }
     my $config = PGBlackbox::read_config($h, $name);
     $h->close();
@@ -85,7 +92,7 @@ sub configure (;$) {
         no strict 'refs';
         my $val = $config->{$_};
         $_ = 'dbname_dummy' if ($_ eq 'dbname');
-        $$_ = $val;
+        eval "\$$_ = \$val;";
     }
 
     if ($user !~ /^(0|[1-9]\d*)$/) {
@@ -143,6 +150,7 @@ sub dbh (;$) {
 # Return the name of the database with the given ID.
 sub dbname ($) {
     my $id = shift;
+croak "db#0" if (0 == $id);
     our %dbname;
     if (!exists($dbname{$id})) {
         $dbname{$id}
@@ -198,7 +206,10 @@ sub get_state () {
     my $pg_locks
         = dbh()->selectall_arrayref('
                 select relation, database, transaction, pid, mode, granted
+                where database <> 0
                 from pg_locks');
+        # Occasionally we see rows with database = 0 referring to shadow
+        # tables. Ignore these.
 
     foreach (@$pg_locks) {
         # Replace relation and database IDs with names.
@@ -306,16 +317,21 @@ sub do_cleanup () {
     
     my $total = 0;
     my $ndeleted = 0;
+    my $total_deleted = 0;
     foreach (@all_files) {
         if ($total / (1024 * 1024) > $max_size) {
-            unlink($_) and ++$ndeleted;
+            my $st = stat($_);
+            if ($st && unlink($_)) {
+                ++$ndeleted;
+                $total_deleted += $st->size();
+            }
         } else {
             my $st = stat($_);
             $total += $st->size() if ($st);
         }
     }
 
-    print_log('info', 'deleted %d old spool files', $ndeleted)
+    print_log('info', 'deleted %d old spool files totaling %d bytes', $ndeleted, $total_deleted)
         if ($ndeleted > 0);
 }
 
@@ -342,6 +358,24 @@ $SIG{ALRM} = sub { $alarm_fired = 1; };
 my $child_exited = 0;
 $SIG{CHLD} = sub { $child_exited = 1; };
 
+my $config_file = $PGBlackbox::default_config_file;
+my $debug = 0;
+my $help = 0;
+if (!GetOptions(
+        debug =>            \$debug,
+        help =>             \$help,
+        'config=s' =>       \$config_file)) {
+    print_log('err', "bad options; try --help for help");
+    exit(1);
+}
+
+if ($help) {
+    pod2usage(-exitval => 0, -verbose => 1);
+    exit(0);
+}
+
+configure($config_file);
+
 my $h_pid_file;
 if ($pid_file) {
     $h_pid_file = new IO::File($pid_file, O_RDWR | O_CREAT, 0644);
@@ -356,6 +390,43 @@ if ($pid_file) {
         }
         exit(1);
     }
+}
+
+# Become a daemon, if necessary.
+if (!$debug) {
+    my $p = fork();
+    if (!defined($p)) {
+        print_log('err', 'fork: %s; aborting', $!);
+        exit(1);
+    } elsif ($p != 0) {
+        exit(0);
+    }
+    POSIX::close(0);
+    POSIX::close(1);
+    POSIX::open("/dev/null", O_RDWR);
+    POSIX::dup(0);
+    POSIX::dup(0);
+    for (my $i = 3; $i < POSIX::sysconf(POSIX::_SC_OPEN_MAX()); ++$i) {
+        POSIX::close($i) unless ($h_pid_file && $i == $h_pid_file->fileno());
+    }
+    # Re-open syslog.
+    openlog('pgblackbox', 'ndelay,pid', 'daemon');
+    if (!setsid()) {
+        print_log('err', 'setsid: %s; aborting', $!);
+        exit(1);
+    }
+    
+    $p = fork();
+    if (!defined($p)) {
+        print_log('err', 'fork: %s; aborting', $!);
+        exit(1);
+    } elsif ($p != 0) {
+        exit(0);
+    }
+
+    # Now close stderr.
+    POSIX::close(2);
+    POSIX::dup(0);
 }
 
 if ($h_pid_file) {
@@ -411,4 +482,40 @@ while (!$foad) {
     }
 }
 
+print_log('info', 'terminating on signal');
+
 unlink($pid_file) if ($pid_file);
+
+__END__
+
+=head1 NAME
+
+pgblackbox
+
+=head1 SYNOPSIS
+
+pgbextract --help | [OPTIONS]
+
+=head1 DESCRIPTION
+
+Record data about the state of a PostgreSQL database in a set of spool files,
+for later extraction with pgbextract.
+
+=head1 OPTIONS
+
+=over 4
+
+=item --help
+
+Display information about using the program.
+
+=item --debug
+
+Don't detach from controlling terminal, and log diagnostics to standard error
+as well as the system log.
+
+=item --config FILE
+
+Read the configuration from the named FILE, rather than the configured default.
+
+=back

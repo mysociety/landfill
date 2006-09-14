@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: pgbextract,v 1.9 2006-09-14 00:20:14 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: pgbextract,v 1.10 2006-09-14 10:10:01 chris Exp $';
 
 use strict;
 
@@ -271,6 +271,8 @@ if ($searchmode == 0 && @d == 2) {
     print STDERR "pgbextract: cannot find any relevant record\n";
     exit(1);
 }
+
+# XXX warn if time of snapshot is too far from time requested.
 
 print "At time ", strftime('%Y%m%dT%H%M%S', localtime($d[$i]->[0])), "\n\n";
 dump_db_info(\*STDOUT, $d[$i]->[1], %filter);

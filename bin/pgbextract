@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: pgbextract,v 1.8 2006-09-14 00:18:59 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: pgbextract,v 1.9 2006-09-14 00:20:14 chris Exp $';
 
 use strict;
 
@@ -265,7 +265,7 @@ if ($searchmode != -1) {
 }
 
 my $i = 0;
-if ($searchmode == 0 && @ff == 2) {
+if ($searchmode == 0 && @d == 2) {
     $i = 1 if (abs($epoch - $d[1]->[0]) < abs($epoch - $d[0]->[0]));
 } elsif (0 == @ff) {
     print STDERR "pgbextract: cannot find any relevant record\n";

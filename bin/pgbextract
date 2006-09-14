@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: pgbextract,v 1.7 2006-09-13 11:40:53 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: pgbextract,v 1.8 2006-09-14 00:18:59 chris Exp $';
 
 use strict;
 
@@ -195,6 +195,7 @@ foreach my $dir (map { $spool_dir . strftime('/%Y/%m/%d', localtime($_)) } ($epo
     my $D = new IO::Dir($dir);
     next unless ($D);
     while (defined(my $fn = $D->read())) {
+        next unless ($fn =~ /^\d{8}T\d{6}\.pgb/);
         my $fn2 = $fn;
         $fn2 =~ s/\.(bz2|gz)$//;
         $files{$fn2} = "$dir/$fn"; 

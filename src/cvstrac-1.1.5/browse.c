@@ -33,6 +33,21 @@
 #include <time.h>
 #include <string.h>
 
+static void other_methods_footer() {
+@ <hr>
+@ <p>Instead of browsing above, you can get all the mySociety source code in two ways:</p>
+@ <p><strong>Anonymous CVS</strong>. This is updated as we commit new changes. 
+@ Set CVSROOT to <tt>:pserver:anonymous@cvs.mysociety.org:/repos</tt> 
+@ and grab the module <tt>mysociety</tt>. We recommend <a href="http://www.tortoisecvs.org">TortoiseCVS</a>
+@ as a CVS client on Windows. On Unix or on a Mac just type 
+@ "<tt>cvs -d :pserver:anonymous@cvs.mysociety.org:/repos co mysociety</tt>" at a terminal.
+@ </p>
+@ <p><strong>HTTP download</strong>. This compressed archive is updated once a day.
+@ <a href="http://www.mysociety.org/cvs/mysociety.tar.gz">http://www.mysociety.org/cvs/mysociety.tar.gz</a>
+@ </p>
+@ <hr>
+}
+
 /*
 ** This routine generates an HTML page that describes the complete
 ** revision history for a single file.
@@ -205,6 +220,7 @@ void browse_filediff(void){
   common_header("Difference in %s versions %s and %s", zFile, zV1, zV2);
   /* @ <h2>Difference in %h(zFile) versions %h(zV1) and %h(zV2)</h2> */
   diff_versions(zV1, zV2, zReal);
+  other_methods_footer();
   common_footer();
 }
 
@@ -295,6 +311,7 @@ void browse_dir(void){
     @ </td>
   }
   @ </tr></table>
+  other_methods_footer();
   common_footer();
 }
 

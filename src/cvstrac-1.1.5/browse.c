@@ -131,6 +131,7 @@ static void revision_history(const char *zName, int showMilestones){
     @ <tr><td>Nothing is known about this file</td></tr>
   }
   @ </table>
+  other_methods_footer();
 }
 
 /*

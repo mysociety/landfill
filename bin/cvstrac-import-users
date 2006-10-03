@@ -9,7 +9,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: cvstrac-import-users,v 1.1 2006-01-25 17:47:38 francis Exp $';
+my $rcsid = ''; $rcsid .= '$Id: cvstrac-import-users,v 1.2 2006-10-03 08:03:52 francis Exp $';
 
 use strict;
 
@@ -21,7 +21,8 @@ sub escape ($) {
     return "'$s'";
 }
 
-my $dbh = DBI->connect('dbi:SQLite2:dbname=/usr/local/cvs/mysociety/mysociety.db', '', '', {RaiseError => 1, AutoCommit => 0});
+my $dbfile = shift;
+my $dbh = DBI->connect("dbi:SQLite2:dbname=$dbfile", '', '', {RaiseError => 1, AutoCommit => 0});
 
 # Do everything in a transaction. Actually that's how this version of
 # DBD::SQLite behaves anyway.

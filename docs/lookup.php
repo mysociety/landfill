@@ -17,14 +17,16 @@ if (validate_postcode($q)) {
 $h_q = htmlspecialchars($q);
 $u_q = urlencode($q);
 $f = file_get_contents('http://maps.google.co.uk/maps?output=js&q=' . $u_q);
-if (preg_match('#<error>(.*?)</error>#', $f, $m)) {
+if (preg_match('#panel: \'(.*?)\'#', $f, $m) && preg_match('#We could not understand#', $f)) {
     $error = $m[1];
     $out = ($xml) ? '<error><![CDATA['.$error.']]></error>' : $error;
-} elseif (preg_match('#<refinements>(.*?)</refinements>#', $f, $m)) {
+} elseif (preg_match('#panel: \'(.*?)\'#', $f, $m)) {
     $refine = $m[1];
     if ($xml) {
-        $refine = preg_replace('#(<description>)(.*?)(</description>)#s', '$1<![CDATA[$2]]>$3', $refine);
-        $out = $refine;
+        preg_match_all('#<div class=\\\"ref\\\"><a href=\\\"/maps\?q=(.*?)&.*?>(.*?)</a></div>#', $refine, $m, PREG_SET_ORDER);
+        foreach ($m as $match) {
+            $out .= "<refinement><query>$match[1]</query><description><![CDATA[$match[2]]]></description></refinement>\n";
+        }
     } else {
 	preg_match_all('#<refinement><query>(.*?)</query><description>(.*?)</description></refinement>#', $refine, $m, PREG_SET_ORDER);
         if (sizeof($m)) {
@@ -58,13 +60,13 @@ if (preg_match('#<error>(.*?)</error>#', $f, $m)) {
         }
     }
 } else {
-    preg_match('#<center lat="(.*?)" lng="(.*?)"/>#', $f, $m);
-    if ($xml) $out = $m[0];
+    preg_match('#center: {lat: (.*?),lng: (.*?)}#', $f, $m);
+    if ($xml) $out = '<center lat="'.$m[1].'" lng="'.$m[2].'"/>';
     else {
         $lat = $m[1]; $lng = $m[2];
     }
-    preg_match('#<span lat="(.*?)" lng="(.*?)"/>#', $f, $m);
-    if ($xml) $out .= $m[0];
+    preg_match('#span: {lat: (.*?),lng: (.*?)}#', $f, $m);
+    if ($xml) $out .= '<span lat="'.$m[1].'" lng="'.$m[2].'"/>';
     else {
         $sp_lat = $m[1]; $sp_lng = $m[2];
         $out .= "<div id='map'></div> <p><strong>$h_q</strong> : $lat $lng";

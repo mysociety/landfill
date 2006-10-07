@@ -20,7 +20,7 @@
             <input type="text" id="name" name="name" size="30" value="" />
             <span class="error" id="nameerror"></span>
 
-            <label for="emailreason">Email address: <small>(<a href="/about/privacy/">why do we need this?</a>)</small></label>
+            <label for="emailreason">Email address: <small>(to check you are a real user)</small></label>
             <input type="text" name="email" id="emailreason" size="30" /><br />
             <span class="error" id="emailerror"></span>
             <!--

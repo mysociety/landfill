@@ -1,4 +1,4 @@
-<!--#include virtual="includes/header.shtml" -->
+<!--#include virtual="/includes/header.shtml" -->
 
 <h2>Admin Interface</h2>
 <p>
@@ -9,5 +9,5 @@
 <!--#include virtual="cgi-bin/list.cgi" -->
 
 
-<!--#include virtual="includes/footer.shtml" -->
+<!--#include virtual="/includes/footer.shtml" -->
 

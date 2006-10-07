@@ -2,7 +2,7 @@
 <div id="footer">
     <img align="right" src="/images/mysociety.png" alt="mySociety" hspace="5" />
     <ul class="footer">
-        <li><a href="mailto:team@yourhistoryhere.com">contact us</a></li>
+        <li><a href="mailto:team&#64;yourhistoryhere.com">contact us</a></li>
         <li><a href="/api/">Data</a></li>
         <li><a href="http://www.mysociety.org/">A mySociety BackO'TheEnvelope Project</a></li>
         <!--        <li><a href="/about/privacy/">privacy policy</a></li> -->

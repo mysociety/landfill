@@ -6,6 +6,7 @@ use DBI;
 use HTML::Entities;
 use XML::RSS;
 use mysociety::NotApathetic::Config;
+use CGI qw/param/;
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $email_domain= $mysociety::NotApathetic::Config::email_domain;
 my $site_name= $mysociety::NotApathetic::Config::site_name;
@@ -17,7 +18,6 @@ if ((defined $ENV{QUERY_STRING}) and ($ENV{QUERY_STRING} =~/^\d+$/)){
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
-my $site_name= $mysociety::NotApathetic::Config::site_name;
 my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 my %State; # State variables during display.
 my $search_term = &handle_search_term(); #' 1 = 1 ';
@@ -123,6 +123,7 @@ sub date_header {
 
 
 sub handle_search_term {
+	
 	my $search_path= param('q') || '';
 	my @search_fields= ('posts.why', 
 			    'posts.title');

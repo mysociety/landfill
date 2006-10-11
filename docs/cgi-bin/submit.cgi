@@ -99,12 +99,12 @@ sub send_email {
     my $mailer= new Mail::Mailer 'sendmail';
     my %headers;
     my $address      = $Passed_Values{"email"};
-    my $name         = $Passed_Values{"name"} || '';
+    #my $name         = $Passed_Values{"name"} || '';
 
     $headers{"Subject"}= "Request to post to $site_name";
-    $headers{"To"}= "$name <$address>" ;
+    $headers{"To"}= "$address" ;
     $headers{'From'}= "$site_name <team$email_domain>";
-    $headers{"X-Originating-IP"}= $ENV{'HTTP_X_FORWARDED_FOR'}  || $ENV{'REMOTE_ADDR'} || return;
+    #$headers{"X-Originating-IP"}= $ENV{'HTTP_X_FORWARDED_FOR'}  || $ENV{'REMOTE_ADDR'} || return;
     $mailer->open(\%headers);
     print $mailer <<EOmail;
 

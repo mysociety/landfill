@@ -31,7 +31,7 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 	&die_cleanly unless defined $Passed_Values{to};
 	&die_cleanly unless defined $Passed_Values{name};
         &die_cleanly if (defined $Passed_Values{entryid} && $Passed_Values{entryid} !~ /^\d+$/);
-    
+
 	my $result;
 	if (defined $Passed_Values{entryid}) {
             my $query=$dbh->prepare("
@@ -64,6 +64,7 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 
 	my $from_address      = $Passed_Values{"from"} || "team$email_domain";
 	my $from_name         = $Passed_Values{"name"} || 'Someone';
+	$from_name=~ s#[^a-zA-Z0-9 ']##g;
 	my $to_person         = $Passed_Values{"to"} ;
 	delete $Passed_Values{"subject"};
 	delete $Passed_Values{"submitter_name"};
@@ -76,7 +77,7 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 		$headers{"Subject"} = "Have you heard about $site_name ?";
 	}
 	$headers{"From"}= "$from_name <$from_address>";
-	$headers{"X-Originating-IP"}= $ENV{'HTTP_X_FORWARDED_FOR'}  || $ENV{'REMOTE_ADDR'} || return;
+	#$headers{"X-Originating-IP"}= $ENV{'HTTP_X_FORWARDED_FOR'}  || $ENV{'REMOTE_ADDR'} || return;
 	$mailer->open(\%headers);
 	
 	my $shortwhy = "";

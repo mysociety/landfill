@@ -62,7 +62,7 @@ my $catch_all_address = 'team@yourhistoryhere.com';
 	$headers{'To'}= "$to_person" ;
         $headers{"From"}= "\"$site_name\" <$email_noreply>" ;
 	$headers{"Subject"}= "Confirm request for Updates from $site_name";
-	$headers{"X-Originating-IP"}= $ENV{'HTTP_X_FORWARDED_FOR'}  || $ENV{'REMOTE_ADDR'} || return;
+	$headers{"X-Originating-IP"}= $ENV{'REMOTE_ADDR'} || return;
 	$mailer->open(\%headers);
 
 

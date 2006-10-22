@@ -20,8 +20,12 @@ easily with current and future geographic-based tools and systems.</p>
     <li><a href="/cgi-bin/kml.cgi/placeopedia.kml">KML file</a> (for Google Earth)</li>
 </ul>
 
-<p>To restrict the RSS feed to a particular geographic area, specify a bounding box in the URL as follows:<br />
+<p>To restrict the RSS or XML feed to a particular geographic area, specify a bounding box in the URL as follows:<br />
 <tt><a href="/cgi-bin/rss.cgi?topleft_long=-1;topleft_lat=54;bottomright_long=1;bottomright_lat=50">http://www.placeopedia.com/cgi-bin/rss.cgi?topleft_long=-1;topleft_lat=54;bottomright_long=1;bottomright_lat=50</a></tt>
+
+or 
+
+<tt><a href="/cgi-bin/postsxml.cgi?topleft_long=-1;topleft_lat=54;bottomright_long=1;bottomright_lat=50">http://www.placeopedia.com/cgi-bin/postsxml.cgi?topleft_long=-1;topleft_lat=54;bottomright_long=1;bottomright_lat=50</a></tt>
 
 <h3 class="blue">Dump of all locations</h3>
 <p>Apologies for taking so long to make this available!</p>

@@ -91,8 +91,16 @@ sub send_email {
     $headers{"To"}= "\"$site_name\" <matthew\@mysociety.org>";
     $headers{'From'}= $headers{'To'};
     $headers{'Content-Type'} = 'text/plain; charset=utf-8';
-    $headers{"X-Originating-IP"}= $ENV{'HTTP_X_FORWARDED_FOR'}  || $ENV{'REMOTE_ADDR'} || return;
+    $headers{"X-Originating-IP"}= $ENV{'REMOTE_ADDR'} || return;
+
+
+    # XXX lng, lat, zoom and name aren't validated. 
+    # this isn't currently called, but just in case
+    return(0); 
+
+
     $mailer->open(\%headers);
+
 
     print $mailer <<EOmail;
 

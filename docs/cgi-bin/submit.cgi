@@ -119,12 +119,13 @@ sub send_email {
     my %headers;
     my $address      = $Passed_Values{"email"};
     my $name         = $Passed_Values{"name"} || '';
+    $name=~ s#[^a-zA-Z0-9 ']##g;
 
     $headers{"Subject"}= "Request to post to $site_name";
     $headers{"To"}= "$name <$address>" ;
     $headers{'From'}= "\"$site_name\" <team$email_domain>";
     $headers{'Content-Type'} = 'text/plain; charset=utf-8';
-    $headers{"X-Originating-IP"}= $ENV{'HTTP_X_FORWARDED_FOR'}  || $ENV{'REMOTE_ADDR'} || return;
+    $headers{"X-Originating-IP"}= $ENV{'REMOTE_ADDR'} || return;
     $mailer->open(\%headers);
 
     print $mailer <<EOmail;

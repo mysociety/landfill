@@ -141,7 +141,8 @@ function POPsearch(s) {
     d.value = 'Searching...'; d.disabled = true
     document.getElementById('q').disabled = true
     var r = GXmlHttp.create();
-    r.open("GET", "/lookup.php?output=xml&q=" + encodeURIComponent(s), true);
+    r.open("GET", "/lookup.php?output=xml&q=" + encodeURIComponent(s), true); 
+    /* r.open("GET", "/cgi-bin/lookup.cgi?output=xml&q=" + encodeURIComponent(s), true); */
     r.onreadystatechange = function(){
         if (r.readyState == 4) {
             var d = document.getElementById('Submit1')

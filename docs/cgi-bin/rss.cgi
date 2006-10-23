@@ -47,6 +47,13 @@ EOSQL
                 $geog_limiter .= "\nand google_long >= $topleft_long and google_long <= $bottomright_long\n";
             }
         }
+        my $num_results=param('num_results');
+        if (defined($num_results)){
+            $num_results=~ s#[^\d]##g;
+        }
+        $num_results = $num_results || 50;
+
+
 	my $query=$dbh->prepare("
 	              select postid,
 			     posts.title as title,
@@ -60,7 +67,7 @@ EOSQL
 			     $search_term
                              $geog_limiter
 		    order by posted
-			desc limit 50
+			desc limit $num_results
 		       "); # XXX order by first_seen needs to change
 
 
@@ -170,6 +177,7 @@ sub handle_search_term {
         return $limiter;
 
 }
+
 
 
 

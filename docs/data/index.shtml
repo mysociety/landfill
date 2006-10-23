@@ -22,10 +22,19 @@ easily with current and future geographic-based tools and systems.</p>
 
 <p>To restrict the RSS or XML feed to a particular geographic area, specify a bounding box in the URL as follows:<br />
 <tt><a href="/cgi-bin/rss.cgi?topleft_long=-1;topleft_lat=54;bottomright_long=1;bottomright_lat=50">http://www.placeopedia.com/cgi-bin/rss.cgi?topleft_long=-1;topleft_lat=54;bottomright_long=1;bottomright_lat=50</a></tt>
-
 or 
 
 <tt><a href="/cgi-bin/postsxml.cgi?topleft_long=-1;topleft_lat=54;bottomright_long=1;bottomright_lat=50">http://www.placeopedia.com/cgi-bin/postsxml.cgi?topleft_long=-1;topleft_lat=54;bottomright_long=1;bottomright_lat=50</a></tt>
+
+<p>Similarly, to specify the number of results you would like returned, use the num_results parameter.</p>
+<tt><a href="/cgi-bin/rss.cgi?num_results=10
+">http://www.placeopedia.com/cgi-bin/rss.cgi?num_results=10</a></tt>
+<br />
+or
+<br />
+<tt><a href="/cgi-bin/postsxml.cgi?num_results=10
+">http://www.placeopedia.com/cgi-bin/postsxml.cgi?num_results=10</a></tt>
+
 
 <h3 class="blue">Dump of all locations</h3>
 <p>Apologies for taking so long to make this available!</p>

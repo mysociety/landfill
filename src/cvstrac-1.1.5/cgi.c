@@ -193,7 +193,7 @@ void cgi_reply(void){
   printf(
     "Content-Type: %s; charset=%s\r\n"
     "Content-Length: %d\r\n",
-    zContentType, nl_langinfo(CODESET),
+    zContentType, "UTF-8",  /* HACK! */
     nUsedTxt
   );
 #else

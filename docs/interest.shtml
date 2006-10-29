@@ -1,0 +1,6 @@
+<!--#set var="interest_reg_map" value="yes" -->
+<!--#include virtual="/includes/header.shtml" -->
+
+<!--#include virtual="/cgi-bin/interestinfo.cgi?${QUERY_STRING}" -->
+
+<!--#include virtual="/includes/footer.shtml" -->

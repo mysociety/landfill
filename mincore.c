@@ -2,12 +2,14 @@
  * mincore.c:
  * Establish what fraction of a file's pages are in core.
  *
+ * TODO: handle block devices properly; for large files, sample.
+ * 
  * Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
  * Email: francis@mysociety.org; WWW: http://www.mysociety.org/
  *
  */
 
-static const char rcsid[] = "$Id: mincore.c,v 1.1 2006-11-10 22:50:51 chris Exp $";
+static const char rcsid[] = "$Id: mincore.c,v 1.2 2006-11-10 22:51:31 chris Exp $";
 
 #include <sys/types.h>
 

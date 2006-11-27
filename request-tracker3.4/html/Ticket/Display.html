@@ -149,7 +149,7 @@ if ($ARGS{'id'} eq 'new') {
     my @results = ProcessTicketLinks( TicketObj => $TicketObj, ARGSRef => \%ARGS);
     push (@Actions, @BasicActions, @results);
 
-    if (($TicketObj->Status eq 'deleted' || $TicketObj->Status eq 'resolved') && ((defined $ARGS{'UpdateContent'} && $ARGS{'UpdateContent'} ne '') || ($ARGS{'MoveOn'}))) {
+    if (($TicketObj->Status eq 'deleted' || $TicketObj->Status eq 'resolved' || $TicketObj->Status eq 'stalled') && ((defined $ARGS{'UpdateContent'} && $ARGS{'UpdateContent'} ne '') || ($ARGS{'MoveOn'}))) {
         # Assuming we've just resolved a ticket, we want to move on to another ticket
         # I hope I've done this right!
         my $gtickets = new RT::Tickets($session{'CurrentUser'});

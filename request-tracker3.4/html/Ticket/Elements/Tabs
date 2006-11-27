@@ -156,6 +156,11 @@ if ( $Ticket->CurrentUserHasRight('ModifyTicket') ) {
             path => "Ticket/Display.html?MoveOn=1&Status=resolved&id=" . $id,
             title => loc('Resolve') };
     }
+    if ( $Ticket->Status ne 'stalled' ) {
+        $actions->{'BBB'} = {
+            path => "Ticket/Display.html?MoveOn=1&Status=stalled&id=" . $id,
+            title => loc('Stall') };
+    }
     if ( $Ticket->Status ne 'open' ) {
         $actions->{'C'} = { path => "Ticket/Display.html?Status=open&id=" . $id,
                             title => loc('Open it') };

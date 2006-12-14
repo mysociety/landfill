@@ -7,7 +7,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.18 2006-09-14 17:41:30 francis Exp $';
+my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.19 2006-12-14 11:07:57 ben Exp $';
 
 use strict;
 require 5.8.0;
@@ -28,6 +28,10 @@ use mySociety::Util;
 use mySociety::EvEl;
 
 use CVSWWW;
+
+#
+my $mysociety_email = "volunteers\@mysociety.org";
+
 
 my $dbh = CVSWWW::dbh();
 
@@ -69,6 +73,10 @@ computer</a></li>
 <li><a href="?skills=programmer">I am a programmer</a></li>
 <li><a href="?skills=designer">I am a graphic designer</a></li>
 </ul>
+
+<p>
+Come and hang out in our <a href="http://www.irc.mysociety.org">public internet chat room</a>!
+</p>
 EOF
 
     my %blurb = (
@@ -240,30 +248,53 @@ sub do_register_page ($) {
     }
 
     if ($q->param('edited') && !@errors) {
-        # XXX should be in transaction.
+        # all go - perform the signup
+
+
+        # don't want dupes...
         $dbh->do('
                 delete from volunteer_interest
                 where ticket_num = ? and email = ?', {},
                 $tn, $email);
+
+        # build up list of people to CC the "hello" email
+        my @ccers = ( $mysociety_email );
+        my $sth = $dbh->prepare("select name, email
+            from volunteer_interest
+            where ticket_num = ? and ccme = 'TRUE'");
+        $sth->execute( $tn );
+        while (my ($vname, $vemail)  = $sth->fetchrow_array()) {
+            push @ccers, $vemail;
+        }
+        $sth->finish;
+
+        # Insert volunteer into the DB
         $dbh->do('
                 insert into volunteer_interest
-                    (ticket_num, name, email, whenregistered)
-                values (?, ?, ?, ?)', {},
-                $tn, $name, $email, time());
-        my $mysociety_email = "volunteers\@mysociety.org";
+                    (ticket_num, name, email, whenregistered, ccme )
+                values (?, ?, ?, ?, ? )', {},
+                $tn, $name, $email, time(),
+                $q->param('ccme') ? 'TRUE' : 'FALSE'
+                );
+
+        my @recipients = ($email, @ccers);
         my $s = decode_entities($heading);
+
         mySociety::EvEl::send(
-            { 'To' => $email, 'Cc' => $mysociety_email, 
+            { 'To' => $email, 'Cc' => \@ccers, 
               'From' => $mysociety_email, 
               'Subject' => "mySociety task: $s",
               '_unwrapped_body_' => "$name,
 
 Thanks for expressing an interest in helping with this task:
-'$heading'.
+'$s'.
 
 Next step - join our public developers' email list
 https://secure.mysociety.org/admin/lists/mailman/listinfo/developers-public
 If you like, tell us a bit about yourself, and your ideas for doing this task.
+
+Also, pop by our public internet chat room and say 'hi'!
+http://www.irc.mysociety.org
 
 You can find the task in our ticket tracking system here. Please append remarks with any information you find out, and as you make progress.
 https://secure.mysociety.org/cvstrac/tktview?tn=$tn
@@ -272,7 +303,8 @@ Good luck!
 
 -- the mySociety team
 "
-            }, [ $email, $mysociety_email ]);
+            }, \@recipients );
+
         my $url = $q->param('prevurl');
         $url ||= 'http://www.mysociety.org/';
         print $q->header(
@@ -298,6 +330,9 @@ Good luck!
         print $q->p("You've been sent an email putting you in touch
         with people at mySociety, so you can ask any questions.");
         print $q->p( $q->a({ -href => $url }, 'Back to task list'));
+
+
+    
         print CVSWWW::end_html($q);
         return;
     }
@@ -338,6 +373,11 @@ Good luck!
                 $q->td($q->textfield(-name => 'email', -size => 30))
             ),
             $q->Tr(
+                $q->th(''),
+                $q->td($q->checkbox(-name => 'ccme', -checked => 1,
+                    -label => "Let me know when other volunteers sign up to this task"))
+            ),
+            $q->Tr(
                 $q->th(),
                 $q->td($q->submit(-name => 'register',
                         -value => 'Register my interest'))
@@ -347,6 +387,8 @@ Good luck!
             $q->p( $q->a({ -href => "https://secure.mysociety.org/cvstrac/tktview?tn=$tn" }, "Comment on or update this task (in cvstrac)")),
             CVSWWW::end_html($q);
 }
+
+
 
 while (my $q = new CGI::Fast()) {
 #    $q->encoding('utf-8');

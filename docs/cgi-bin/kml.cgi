@@ -38,8 +38,7 @@ my $limiter='';
 EOSQL
 	}
 	my $query=$dbh->prepare("
-	              select postid, why, posted, shortwhy,
-		             title, commentcount, google_lat, google_long
+	              select google_lat, google_long, title
 			from posts
 	 	       where validated=1
 			 and hidden=0
@@ -55,12 +54,11 @@ EOSQL
 	my $result;
         print '<?xml version="1.0" encoding="UTF-8"?>'."\n".'<kml xmlns="http://earth.google.com/kml/2.0">' . "\n<Folder><name>Latest entries on Placeopedia</name><description>The 50 latest additions to placeopedia.com</description>\n";
 	while ($result=$query->fetchrow_hashref() ) {
-            my $shortwhy = $result->{shortwhy} || '';
             my $wikiuri = $result->{title};
             $wikiuri =~ tr/ /_/;
             $wikiuri = uri_escape($wikiuri);
             print "<Placemark>\n";
-	    print "\t<description><![CDATA[$shortwhy <a href=\"http://en.wikipedia.org/wiki/$wikiuri\">Wikipedia article</a>.]]></description>\n";
+	    print "\t<description><![CDATA[<a href=\"http://en.wikipedia.org/wiki/$wikiuri\">Wikipedia article</a>.]]></description>\n";
             print "\t<name>" . encode_entities($result->{title}, '<&>') . "</name>\n";
 	    print "\t<LookAt>\n";
 	    print "\t\t<longitude>$result->{google_long}</longitude>\n";

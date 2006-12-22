@@ -14,16 +14,22 @@ use CGI qw/param/;
 use HTML::Entities;
 use XML::Simple;
 use URI::Escape;
+use CGI::Fast;
+
 
 my $site_name= mySociety::Config::get('SITE_NAME');
 
-my $search_term = &handle_search_term(); #' 1 = 1 ';
 
-my ($topleft_long,$bottomright_lat,$bottomright_long,$topleft_lat) = split(/,/, param('BBOX')) if (defined(param('BBOX')));
-my $limiter='';
-
-{
+while (my $q = new CGI::Fast()) {
         print "Content-Type: application/vnd.google-earth.kml+xml\r\n\r\n";
+	my $limiter='';
+	my $search_term = &handle_search_term($q); #' 1 = 1 ';
+
+	unless ($dbh and $dbh->ping()) {
+		# recreate db connection
+		use PoP; # reload it.
+	}
+	my ($topleft_long,$bottomright_lat,$bottomright_long,$topleft_lat) = split(/,/, $q->param('BBOX')) if (defined($q->param('BBOX')));
 
 
 	if ( defined($topleft_lat) and defined($topleft_long) and
@@ -78,7 +84,8 @@ EOSQL
 
 
 sub handle_search_term {
-	my $search_path= param('q') || '';
+	my $q= shift;
+	my $search_path= $q->param('q') || '';
 	my @search_fields= ('posts.region',
 			    'posts.why',
 			    'posts.title'

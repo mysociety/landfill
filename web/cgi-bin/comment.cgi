@@ -2,31 +2,29 @@
 
 use warnings;
 use strict;
-use DBI;
 use HTML::Entities;
 use HTML::Scrubber;
 use Mail::Mailer qw/sendmail/;
 use CGI qw/param/;
 use Email::Valid;
 use mysociety::NotApathetic::Config;
+use mysociety::NotApathetic::Routines;
 
 if ($mysociety::NotApathetic::Config::site_open_for_additions == 0) {
     print "Location: $mysociety::NotApathetic::Config::url\n\n";
     exit(0);
 }
 
-my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $domain = $mysociety::NotApathetic::Config::domain; # DSN connection string
 my $site_name= $mysociety::NotApathetic::Config::site_name; # DSN connection string
 my $email_noreply= $mysociety::NotApathetic::Config::email_noreply; # DSN connection string
-my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
-my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
 my $url_prefix= $mysociety::NotApathetic::Config::url;
-my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 my %State; # State variables during display.
 my %Passed_Values;
 
 {
+	&setup_db;
+
 	foreach my $param (param()) {
 		$Passed_Values{$param}=param($param);
 	}
@@ -71,7 +69,8 @@ sub handle_comment {
 		       comment=$quoted{text},
 		       email=$quoted{email},
 		       name=$quoted{author},
-		       posted=now()
+		       posted=now(),
+		       site='$site_name'
 	");
 
 	$dbh->do(" update posts set commentcount=commentcount+1 where postid=$quoted{postid} ");
@@ -80,10 +79,6 @@ sub handle_comment {
 	print "Location: $url_prefix/comments/$Passed_Values{postid}\r\n\r\n";
 }
 
-
-sub die_cleanly {
-        &mysociety::NotApathetic::Config::die_cleanly(@_);
-}
 
 
 sub email_comment_to_person {

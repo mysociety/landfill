@@ -4,17 +4,12 @@ use warnings;
 use strict;
 use CGI qw/param/;
 use Date::Manip;
-use DBI;
 use HTML::Entities;
 use mysociety::NotApathetic::Config;
+use mysociety::NotApathetic::Routines;
 
 
-my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
-my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
-my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
-my $dbh;
 my %State; # State variables during display.
-my $search_term;
 our $url_prefix=$mysociety::NotApathetic::Config::url;
 
 my @stopwords = qw(the to i of a and in is for that not are have it be my they as on you will all with no but we because don't this do if their who there any would or i'm them me an by what so get at when one from am like than can which about has our out up was then should even your can't how some way into those it's very well its where had were may he these isn't such go dont i'd just i'll i've did didn't too far rather most won't wont doesn't vote voting party people parties system government);
@@ -23,16 +18,12 @@ my %stopwords;
 for (@stopwords) { $stopwords{$_} = 1 }
 
 {
-    print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
-    eval {
-            if (!defined($dbh) || !eval { $dbh->ping() }) {
-                $dbh = DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
-            }
-
+    print "Content-Type: text/html; charset=UTF8\r\n\r\n";
             my $query=$dbh->prepare("
                           select *
                             from posts
                            where validated=1
+			     and site='$site_name'
                              and hidden=0
                            ");
 
@@ -77,8 +68,4 @@ for (@stopwords) { $stopwords{$_} = 1 }
 #                print $words{$_} . "\n";
 #                last if ($count++ == 100);
             }
-    };
-    if ($@) {
-        &die_cleanly($@);
-    }
 }

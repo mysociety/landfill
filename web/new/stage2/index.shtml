@@ -16,8 +16,7 @@
 	identify you. Your email address is <strong>never</strong> 
 	released and we do not ask your name. We ask this information to
 	potentially allow some statistical analysis of the type of people
-	who are not apathetic.  All the below are optional - 
-	<a href="/">click here to skip this form</a>.
+	who are posting.  All the below are optional - <a href="/">click here to skip this form</a>.
 </p>
 
 <p />
@@ -41,7 +40,7 @@
 			Age
 		</td>
 		<td>
-			<input name="age" /> Optional
+			<input name="q1" /> Optional
 		</td>
 	</tr>
 
@@ -50,7 +49,7 @@
 			Sex
 		</td>
 		<td>
-			<select name="sex">
+			<select name="q2">
 				<option value=""></option>
 				<option value="female">Female</option>
 				<option value="male">Male</option>
@@ -64,7 +63,7 @@
 			Ever voted?
 		</td>
 		<td>
-			<select name="evervoted">
+			<select name="q3">
 				<option value=""></option>
 				<option value="yes">yes</option>
 				<option value="notlast">Yes, but not last time</option>
@@ -79,7 +78,7 @@
 			Region
 		</td>
 		<td>
-			<select name="region">
+			<select name="q4">
 				<option value=""></option>
 				<option value="North West">North West</option>
 				<option value="South West">South West</option>
@@ -104,7 +103,7 @@
 			Ethnic Group 
 		</td>
 		<td>
-			<input type="text" name="ethgrp" />
+			<input type="text" name="q5" />
 			Optional.
 		</td>
 	</tr>
@@ -114,7 +113,7 @@
 			No of Children
 		</td>
 		<td>
-			<select name="nochildren">
+			<select name="q6">
 				<option value="0">0</option>
 				<option value="1">1</option>
 				<option value="2">2</option>

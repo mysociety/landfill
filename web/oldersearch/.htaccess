@@ -1,2 +1,2 @@
 RewriteEngine On
-RewriteRule ^(.*)	/search/?$1 [L]
+RewriteRule ^(.*)	/search/index.shtml/$1 [L]

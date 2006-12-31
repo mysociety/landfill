@@ -79,9 +79,10 @@ sub hide_abuse {
 	my $commentid_q= '';
 	if ($commentid  ne '') { 
 		$commentid_q= $dbh->quote($commentid);
-		$dbh->do("update comments set visible=0 where postid=$postid_q and commentid=$commentid_q");
-		$dbh->do("update posts set commentcount=commentcount-1 where postid=$postid_q");
+		$dbh->do("update comments set visible=0 where postid=$postid_q and commentid=$commentid_q and site='$site_name'");
+		$dbh->do("update posts set commentcount=commentcount-1 where postid=$postid_q and site='$site_name'");
+		$dbh->do("update abusereports set processed=now(), open=0 where site='$site_name' and postid=$postid_q and commentid=$commentid_q");
 	} else {
-		$dbh->do("update posts set hidden=1 where postid=$postid_q");
+		$dbh->do("update posts set hidden=1 where postid=$postid_q and site='$site_name'");
 	}
 }

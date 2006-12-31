@@ -10,27 +10,24 @@ use Text::Wrap;
 use Mail::Mailer qw(sendmail);
 use CGI qw/param/;
 use mysociety::NotApathetic::Config;
+use mysociety::NotApathetic::Routines;
 my $url_prefix= $mysociety::NotApathetic::Config::url;
-my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
-my $site_name= $mysociety::NotApathetic::Config::site_name;
-my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
-my $email_noreply= $mysociety::NotApathetic::Config::email_noreply;
-my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
-my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
-
 
 {
 	my %Passed_Values;
 	my $mailer= new Mail::Mailer 'sendmail';
         foreach my $param (param()) {
                 $Passed_Values{$param}=param($param);
+		if ($param ne 'email') {
+			$Passed_Values{$param}=~ s#@# _at_ #g;
+		}
         }
 
 	if (not defined ($Passed_Values{email})) {
 		print "Location: $url_prefix/emailnotify/\n\n";
 		next;
 	}
-    
+
 	my %headers;
 
     unless ((Email::Valid->address(-address => $Passed_Values{"email"},-mxcheck => 1 ))) {
@@ -52,13 +49,13 @@ my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 		");
 
 	my $rowid=$dbh->{insertid};
-
+	my $site_name=mysociety::NotApathetic::Config::site_name;
 	my $to_person = $Passed_Values{"email"} ;
 
 	$headers{'To'}= "$to_person" ;
         $headers{"From"}= "\"$site_name\" <$email_noreply>" ;
 	$headers{"Subject"}= "Confirm request for Updates from $site_name";
-	$headers{"X-Originating-IP"}= $ENV{'HTTP_X_FORWARDED_FOR'}  || $ENV{'REMOTE_ADDR'} || return;
+	$headers{"X-Originating-IP"}= $ENV{'REMOTE_ADDR'} || '';
 	$mailer->open(\%headers);
 
 
@@ -80,8 +77,4 @@ EOmail
 
 	print "Location: $url_prefix/emailnotify/emailsent/\n\n";
 
-}
-
-sub die_cleanly {
-        &mysociety::NotApathetic::Config::die_cleanly(@_);
 }

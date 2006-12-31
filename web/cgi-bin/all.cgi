@@ -2,34 +2,21 @@
 
 use warnings;
 use strict;
-use CGI qw/param/;
-use Date::Manip;
-use DBI;
-use HTML::Entities;
 use mysociety::NotApathetic::Config;
+use mysociety::NotApathetic::Routines;
 
-my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
-my $db_username= $mysociety::NotApathetic::Config::db_username; # database username
-my $db_password= $mysociety::NotApathetic::Config::db_password; # database password
-my $dbh=DBI->connect($dsn, $db_username, $db_password);
 my %State; # State variables during display.
-our $url_prefix=$mysociety::NotApathetic::Config::url;
-
+my $options;
 
 {
-     if (defined $ENV{REQUEST_METHOD}) {
-         print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
-     }
+	&setup;
 
-        my $query=$dbh->prepare("select * from posts where validated=1 and hidden=0"); 
+	$options->{'search_url'} = $ENV{'QUERY_STRING'} || '';
+	$options->{'search_url'} =~ s#page=\d+##g;
+	$options->{'search_term'} = &handle_search_term($ENV{'QUERY_STRING'}); #' 1 = 1 ';
+	$options->{'show_all_posts'}=1;
 
-        $query->execute;
-        my $result;
-        while ($result=$query->fetchrow_hashref) {
-                print <<EOfragment;
-<dt><a href="$url_prefix/comments/$result->{postid}">$result->{title}</a></dt><dd><p>$result->{why}</p></dd>
-EOfragment
-            }
+	&summary_listing(&run_query($options));
+	#my $rows_printed= &details_listing(&run_query($options));
+	#&details_page_footer($rows_printed, $options, '');
 }
-
-

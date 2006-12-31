@@ -6,22 +6,20 @@ use DBI;
 use CGI qw/:standard/;
 use HTML::Scrubber;
 use mysociety::NotApathetic::Config;
+use mysociety::NotApathetic::Routines;
 
 if ($mysociety::NotApathetic::Config::site_open_for_additions == 0) {
     print "Location: $mysociety::NotApathetic::Config::url\n\n";
     exit(0);
 }
 
-
-my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
-my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
-my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
-my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 my %Passed_Values;
 my %quoted;
         
 
 {
+	&setup;
+
         foreach my $param (param()) {
                 $Passed_Values{$param}=param($param);
         }
@@ -47,7 +45,7 @@ my %quoted;
 
 	($Passed_Values{postid})= $ENV{REQUEST_URI} =~ m#/(\d+)/?$#; 
         if (not defined $Passed_Values{postid}) {
-                &die_cleanly("form not passed on");
+                &die_cleanly_xml("form not passed on");
         }
 	$Passed_Values{title} =~ s#<\s*a\s+#<a rel="nofollow" #g;
 	$Passed_Values{excerpt} =~ s#<\s*a\s+#<a rel="nofollow" #g;
@@ -75,6 +73,7 @@ EOcomment
 	   	  email='',
 	   	  name='trackback',
 		  postid=$quoted{postid},
+		  site='$site_name',
 	   	  istrackback=1
 	");
 	$query->execute;
@@ -85,7 +84,7 @@ EOcomment
 	print "Content-Type: text/plain\r\n\r\n<error>0</error><message>it worked</message>\n";
 }
 
-sub die_cleanly {
+sub die_cleanly_xml {
 	my $error= shift || 'unknown';
 	print "Content-Type: text/plain\r\n\r\n<error>1</error><message>it went wrong</message>\n";
         exit(0);

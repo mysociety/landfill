@@ -3,234 +3,28 @@
 use warnings;
 use strict;
 use CGI qw/param/;
-use Date::Manip;
-use DBI;
-use HTML::Entities;
 use mysociety::NotApathetic::Config;
+use mysociety::NotApathetic::Routines;
+use HTML::Entities;
 
-my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
-my $db_username= $mysociety::NotApathetic::Config::db_username; # database username
-my $db_password= $mysociety::NotApathetic::Config::db_password; # database password
-my $dbh=DBI->connect($dsn, $db_username, $db_password);
-my %State; # State variables during display.
-our $url_prefix=$mysociety::NotApathetic::Config::url;
-
+our %State; # State variables during display.
 
 {
-     if (defined $ENV{REQUEST_METHOD}) {
-         print "Content-Type: text/html; charset=iso-8859-1\r\n\r\n";
-     }
+	&setup;
 
-    {
-        my $type = param('type') || 'details';
-        my $search_bit = param('search') || '';
-        my $page = param('page') || 0;
-        if ($search_bit =~ /\|(\d+)$/) {
-            $page = $1;
-            $search_bit =~ s/\|(\d+)$//;
-        }
-        my $search_term = handle_search_term($search_bit); #' 1 = 1 ';
-        my $mainlimit = 15;
-		my $brief = 1; # mainlimit x brief entries displayed in the brief listing
-        my $limit = ($type eq 'details') ? $mainlimit : $mainlimit * $brief;
-        my $offset = $page * $mainlimit;
-		my $interesting = "";
-		if (defined param('interest')){
-			$interesting = "and (interesting=1 or commentcount >= 5)";
-		}
-        $offset += $mainlimit if ($type eq 'summary');
+	my $options;
+	$options->{'search_url'} = $ENV{'QUERY_STRING'} || '';
+	$options->{'search_url'} =~ s#page=\d*##g;
 
-        my $query=$dbh->prepare("
-                          select *
-                            from posts
-                           where validated=1
-						   		 $interesting
-                             and hidden=0
-                                 $search_term
-                        order by posted
-                                 desc limit $offset, $limit
-                           "); # XXX order by first_seen needs to change
+	$options->{'search_term'} = encode_entities(&handle_search_term($options->{'search_url'}));
 
+	$options->{'page'}= $ENV{'DOCUMENT_PATH_INFO'} || 0;
+	$options->{'page'}=~ s#/##g;
 
-        $query->execute;
-        my $result;
-        my $someday;
-        my $google_terms;
-        my $comments_html;
-        my $show_link;
-        my $more_link;
-			
-        my $printed = 0;
-        $search_bit =~ s/\// /g;
-        my $title;
-        while ($result=$query->fetchrow_hashref) {
+	$options->{'offset'}= $options->{'page'} * $main_display_limit;
 
-            if ($printed==0) {
-                $printed = 1;
-                if ($type eq 'summary') {
-                    print "<ul>\n";
-                } else {
-					print "<dl>\n";
-	        }
-                if ($type eq 'details' && $search_bit ne '') {
-        	    print '<p>Your search for "'.$search_bit.'" yielded the following results:</p>';
-                }
-	    }
-
-            $comments_html= &handle_links($result);
-
-            #if ($result->{content} eq $result->{shortcontent}) {
-            #	$more_link= $result->{link};
-            #} else  {
-            #	$more_link= "comments/?$result->{entryid}";
-            #}
-
-            $title = encode_entities($result->{title}) || '&lt;No subject&gt;';
-            $more_link= $result->{link};
-            if ($type eq 'summary') {
-                print <<EOfragment;
-<li><a href="$url_prefix/comments/$result->{postid}">$title</a></li>
-EOfragment
-            } else {
-                $someday = UnixDate($result->{posted}, "%E %b %Y");
-                my $responses = ($result->{commentcount} != 1) ? 'responses' : 'response';
-                print <<EOfragment;
-<dt><a href="$url_prefix/comments/$result->{postid}">$title</a></dt>
-<dd><p>$result->{shortwhy}</p>
-<small>
-written $someday 
-| <a href="$url_prefix/comments/$result->{postid}">read more</a> 
-| <a href="$url_prefix/comments/$result->{postid}\#comments">$result->{commentcount} $responses</a> 
-| <a href="/abuse/?postid=$result->{postid}">abusive?</a>
-</small>
-</dd>
-EOfragment
-            }
-        }
-        if ($query->rows > 0) {
-            my $url = '/older/';
-			
-	    if ($search_bit ne ''){
-			$url = '/oldersearch/'.$search_bit.'|';
-	    }elsif (defined param('interest')){
-			$url = '/olderbusiest/';
-	    }
-			
-	    my $older = $page;
-
-
-            if ($type eq 'summary') {
-                print "</ul>\n";
-                $older += $brief+1;
-                print "<p align=\"right\"><a href=\"$url$older\">Even older entries</a></p>";
-            } else {
-				print "</dl>\n";
-                $older += 1;
-                my $newer = $page - 1;
-                print '<p align="center">';
-                if ($newer == 0) {
-                    my $fronturl = ($search_bit ne '') ? '/oldersearch/'.$search_bit : '/';
-                    print "<a href=\"$fronturl\">front page</a> | ";
-                } elsif ($newer > 0) {
-                    print "<a href=\"$url$newer\">newer $mainlimit entries</a> | ";
-                }
-                if ($type eq 'summary' || $query->rows eq $limit) {
-                    print "<a href=\"$url$older\">older $mainlimit entries</a>";
-                }
-                print '</p>';
-            }
-        } elsif ($type eq 'details' && $search_bit ne '') {
-            print "<p>Your search for " . $search_bit . " yielded no results.</p>";
-        }
-    }
+	my $rows_printed= &details_listing(&run_query($options));
+	&details_page_footer($rows_printed, $options, '');
 }
-
-
-sub handle_links {
-
-	return '' if (defined $ENV{NO_COMMENTING});
-
-	my $item= shift;
-	my $google_terms= encode_entities($item->{title});
-	$google_terms=~ s# #\+#;
-
-	my $html.=<<EOhtml;
-	<a href="$url_prefix/na/comments/$item->{postid}">Comment ($item->{commentcount}),
-	Trackback</a>,
-	<a href="$url_prefix/na/email/$item->{postid}">Email this</a>.
-EOhtml
-
-	return ($html);
-}
-
-sub date_header {
-	my $date= shift; # in mysql timestampe format
-	my ($thisday)= $date =~ /^(\d{8})/;
-
-	#if ($State{"thisday"} == 'first') {
-	#	$State{"thisday"}= $thisday;
-	#	return ''; # we don't show the first day
-	#}
-
-	return '' if ($State{"thisday"} eq $thisday); #same as last
-
-	my @months=('','January','February','March','April','May','June',
-	            'July','August','September','October','November','December');
-
-	# day has changed
-	$State{"thisday"}= $thisday;
-
-	my ($year, $month, $day)= $thisday =~ /^(\d{4})(\d{2})(\d{2})/;
-	return "<h2>$day $months[$month] </h2>\n";
-}
-
-
-sub handle_search_term {
-	my $search_path= shift;
-	my @search_fields= ('posts.region',
-			    'posts.why',
-			    'posts.title'
-			    );
-	return ('') if ($search_path eq '');
-
-        my (@or)= split /\//, $search_path;
-
-        my $limiter= ' and ( 1 = 0 '; # skipped by the optimiser but makes
-                                # syntax a lot easier to get right
-
-        foreach my $or (@or) {
-                # a/b/c+d/e
-                # a or b or (c and d) or e
-                next if $or =~ /^\s*$/;
-                my $or_q = $dbh->quote("\%$or\%");
-
-                if ($or =~ /\+/) {
-                        my @and= split /\+/, $or;
-                        $limiter.= " or  ( 1 = 1 ";
-                        foreach my $and (@and) {
-                                my $and_q = $dbh->quote("\%$and\%");
-                                $limiter.= " and ( 1=0 ";
-                                foreach my $field (@search_fields) {
-                                        $limiter.= " or $field like $and_q ";
-                                }
-                                $limiter.= " ) \n";
-                        }
-                        $limiter .= ' ) ';
-                } else  {
-                        $limiter .= " or ( 1=0 " ;
-                                foreach my $field (@search_fields) {
-                                        $limiter.= " or $field like $or_q ";
-                                }
-                        $limiter .= ' ) ';
-                }
-
-        }
-        $limiter .= " )\n\n ";
-
-        return $limiter;
-
-}
-
-
 
 

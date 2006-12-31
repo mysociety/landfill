@@ -28,16 +28,10 @@ print "Content-Type: text/html\n\n";
 	my $query=$dbh->prepare("
 	              select postid,
 		             email,
-			     age,
-			     sex,
-			     region,
-			     evervoted,
 			     why,
-			     nochildren,
 			     title,
 			     posted,
 			     commentcount,
-			     ethgroup,
 			     date_format(posted, \"%H:%i, %e %M\") as posted_formatted
 			from posts
 		       where postid=$Entry

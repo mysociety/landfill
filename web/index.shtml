@@ -2,7 +2,7 @@
 <!--#include virtual="/includes/header.shtml" -->
 <div class="hideme"><a href="#input">Write your own reason</a></div>
 <h2>They didn't vote because</h2>
-<!--#include virtual="/cgi-bin/list.cgi?page=${QUERY_STRING}" -->
+<!--#include virtual="/cgi-bin/list.cgi/?${QUERY_STRING}" -->
 </div>
 <div id="inputBox">
 <a name="input"></a>

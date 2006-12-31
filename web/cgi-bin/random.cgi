@@ -15,10 +15,10 @@ our $url_prefix=$mysociety::NotApathetic::Config::url;
             my $dbh = DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 
             my $query=$dbh->prepare("
-                          select postid
-                            from posts
+                          select postid from posts
                            where validated=1
                              and hidden=0
+			     and site='$site_name'
                            order by rand() desc limit 1
                            ");
             $query->execute();

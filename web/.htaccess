@@ -9,9 +9,9 @@ RewriteRule /(.+).php /down.html [R]
 RewriteCond %{DOCUMENT_ROOT}/down.html !-s
 RewriteRule /down.html / [R]
 
-RewriteRule ^/cgi-bin(.*)   /cgi-bin$1 [R]
+#RewriteRule ^/cgi-bin(.*)   /cgi-bin$1 [R]
 RewriteRule ^random         /cgi-bin/random.cgi [L]
-RewriteRule ^new/           / [R]
+#RewriteRule ^new/           / [R]
 
 Options +Includes +ExecCGI
 

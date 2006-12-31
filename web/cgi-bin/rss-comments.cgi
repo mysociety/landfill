@@ -6,13 +6,10 @@ use DBI;
 use HTML::Entities;
 use XML::RSS;
 use mysociety::NotApathetic::Config;
+use mysociety::NotApathetic::Routines;
 
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $email_domain= $mysociety::NotApathetic::Config::email_domain;
-my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
-my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
-my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
-my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 my %State; # State variables during display.
 
 {
@@ -40,6 +37,7 @@ my %State; # State variables during display.
 			from comments,posts
 	 	       where comments.visible=1
 		         and comments.postid=posts.postid
+			 and comments.site='$site_name'
 		             $limiter
 		    order by commentid
 			desc limit 50

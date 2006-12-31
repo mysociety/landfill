@@ -1,2 +1,2 @@
 RewriteEngine On
-RewriteRule ^(.*)	/?$1 [L]
+RewriteRule ^(.*)	/index.shtml/$1 [L]

@@ -9,6 +9,7 @@ use HTML::Scrubber;
 use Email::Valid;
 use CGI qw/param/;
 use mysociety::NotApathetic::Config;
+use mysociety::NotApathetic::Routines;
 
 if ($mysociety::NotApathetic::Config::site_open_for_additions == 0) {
     print "Location: $mysociety::NotApathetic::Config::url\n\n";
@@ -17,10 +18,6 @@ if ($mysociety::NotApathetic::Config::site_open_for_additions == 0) {
 
 
 
-my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
-my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
-my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
-my $dbh=DBI->connect($dsn, $db_username, $db_password, {RaiseError => 1});
 my $url_prefix= $mysociety::NotApathetic::Config::url;
 my $site_name= $mysociety::NotApathetic::Config::site_name;
 my $email_domain= $mysociety::NotApathetic::Config::email_domain; 
@@ -30,12 +27,14 @@ my %Passed_Values;
 	foreach my $param (param()) {
 		$Passed_Values{$param}=param($param);
 	}
+	&setup_db();
+
 	$Passed_Values{email} ||= '';
 	$Passed_Values{title} ||= '';
 	$Passed_Values{why} ||= '';
 
 	&handle_comment;
-	
+
 	&send_email;
 	print "Location: $url_prefix/new/checkemail/\r\n\r\n";
 }
@@ -43,9 +42,6 @@ my %Passed_Values;
 
 sub handle_comment {
 	my %quoted;
-	unless (Email::Valid->address( -address => $Passed_Values{email})) {
-		&die_cleanly("Email address invalid");
-	}
 
 	my $scrubber= HTML::Scrubber->new();
 	$scrubber->allow(qw[a em strong p br]);
@@ -54,8 +50,16 @@ sub handle_comment {
 	foreach my $pv (keys %Passed_Values) {
 		$Passed_Values{$pv}= $scrubber->scrub($Passed_Values{$pv});
                 $Passed_Values{$pv} =~ s/[\x80-\x9f]//g;
+		if ($pv ne 'email') {
+			$Passed_Values{$pv}=~s#@# at #g;
+		}
 		$quoted{$pv}= $dbh->quote($Passed_Values{$pv});
 	}
+
+	unless ( Email::Valid->address($Passed_Values{'email'})) {
+            &die_cleanly("invalid email address." . $Passed_Values{'email'});
+	}
+
 
         unless ($Passed_Values{why} && $Passed_Values{why} ne 'Write your reasons here...') {
             &die_cleanly("Please give a reason.");
@@ -87,6 +91,7 @@ sub handle_comment {
 		       shortwhy=$quoted{shortwhy} ,
 		       title=$quoted{title} ,
 		       posted=now(),
+		       site='$site_name',
 		       authcode=$auth_code_q
 	");
 
@@ -120,7 +125,7 @@ If it wasn't you, just ignore it.
 
 If this was you, and you wish to confirm that post, please click on
 the following link
-        $url_prefix/cgi-bin/new-confirm.cgi?u=$Passed_Values{rowid};c=$Passed_Values{authcode}
+        $url_prefix/mc/$Passed_Values{rowid}/$Passed_Values{authcode}
 
 Thank you
 $site_name
@@ -130,10 +135,4 @@ EOmail
     $mailer->close;
 
     return;
-}
-
-
-sub die_cleanly {
-        &mysociety::NotApathetic::Config::die_cleanly(@_);
-
 }

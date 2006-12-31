@@ -7,6 +7,7 @@ use Text::Wrap;
 use Mail::Mailer qw(sendmail);
 $Text::Wrap::columns = 65;
 
+
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
@@ -93,7 +94,7 @@ EOfooter
 
 sub handle_search_term {
         my $search_path= shift || '';
-        my @search_fields= ('posts.why', 'posts.title');
+        my @search_fields= ('posts.why', 'posts.title','posts.q1');
         return ('') if ($search_path eq '');
 
         my (@or)= split /\//, $search_path;

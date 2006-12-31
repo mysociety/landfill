@@ -7,6 +7,7 @@ use HTML::Entities;
 use CGI qw/param/;
 use mysociety::NotApathetic::Config;
 
+my $site_name = $mysociety::NotApathetic::Config::site_name; 
 my $dsn = $mysociety::NotApathetic::Config::dsn; # DSN connection string
 my $db_username= $mysociety::NotApathetic::Config::db_username;              # database username
 my $db_password= $mysociety::NotApathetic::Config::db_password;         # database password
@@ -35,7 +36,9 @@ sub output_comment {
 
 	my $query=$dbh->prepare("
 	              select * from comments
-		       where postid=? and commentid=? "); 
+		       where postid=? and commentid=?
+		         and site='$site_name'
+		       "); 
 	$query->execute ($postid, $commentid);
 	my $result=$query->fetchrow_hashref;
 
@@ -55,7 +58,9 @@ sub output_post {
 
 	my $query=$dbh->prepare("
 	              select * from posts
-		       where postid=?"); 
+		       where postid=?
+		         and site='$site_name'
+			 "); 
 	$query->execute ($postid);
 	my $result=$query->fetchrow_hashref;
 

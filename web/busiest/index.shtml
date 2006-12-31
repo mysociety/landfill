@@ -1,14 +1,14 @@
-<!--#set var="page_title" value="Busiest comments from those not voting in the 2005 General Election" -->
+<!--#set var="page_title" value="Busiest posts" -->
 <!--#include virtual="/includes/header.shtml" -->
 <h2>Busiest Posts</h2>
-<!--#include virtual="/cgi-bin/list.cgi?interest=true&page=${QUERY_STRING}" -->
+<!--#include virtual="/cgi-bin/list-busiest.cgi?${QUERY_STRING}" -->
 
 </div>
 <div id="inputBox">
 <!--#include virtual="/includes/new-stage1.shtml" -->
 <!--#include virtual="/includes/description.shtml" -->
 <!--#include virtual="/includes/searchform.shtml" -->
-<!--#include virtual="/cgi-bin/list.cgi?type=summary&interest=true&page=${QUERY_STRING}" -->
+<!--#include virtual="/cgi-bin/summary.cgi?${QUERY_STRING}" -->
 
 <!--#include virtual="/includes/footer.shtml" -->
 

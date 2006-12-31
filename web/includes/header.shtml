@@ -1,33 +1,29 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Not Apathetic<!--#if expr="${page_title}" --> - <!--#echo var="page_title" --><!--#endif --></title>
-<link rel="stylesheet" type="text/css" title="mainscreen" href="/css/na.css" media="screen, projection" />
-<!-- <link rel="stylesheet" type="text/css" title="portable" href="/css/handheld.css" media="handheld" /> -->
-<link rel="shortcut icon" href="/favicon.ico" />
-<link href="/cgi-bin/rss.cgi<!--#if expr="${rss_query}" -->?<!--#echo var="rss_query" --><!--#endif -->" rel="alternate" type="application/rss+xml" title="NotApathetic Reasons" />
-<script type="text/javascript" src="/forms.js"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<title>Not Apathetic<!--#if expr="${page_title}" --> - <!--#echo var="page_title" --><!--#endif --></title>
+	<link rel="stylesheet" type="text/css" title="mainscreen" href="/css/na.css" media="screen, projection" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link href="/cgi-bin/rss.cgi<!--#if expr="${rss_query}" -->?<!--#echo var="rss_query" --><!--#endif -->" rel="alternate" type="application/rss+xml" title="NotApathetic Reasons" />
+	<script type="text/javascript" src="/forms.js"></script>
 </head>
 <body>
 <div id="wrap"><a name="top"></a>
-<div id="top">
-<h1><a href="/"><img src="/images/na2.png" alt="Not Apathetic" /></a></h1>
-<h3 id="myh3"><a href="/">Tell the world why you're not voting - don't let your silence go unheard<span></span></a></h3>
-</div>
+	<div id="top">
+		<h1><a href="/"><img src="/images/na.png" alt="Not Apathetic" /></a></h1>
+	</div>
 	
-<ul class="nav main">
-<li><a href="/"><span>h</span>ome</a></li>
-<li><a href="/about/"><span>a</span>bout us</a></li>
-<li><a href="/news/"><span>n</span>ews</a></li>
-<li><a href="/emailnotify/"><span>e</span>mail alerts</a></li>
-<li class="last"><a href="/emailfriend/"><span>t</span>ell a friend</a></li>
-</ul>
-<ul class="nav posts">
-<li><a href="/recentcomments/"><span>r</span>ecent comments</a></li>
-<li><a href="/random"><span>r</span>andom</a></li>
-<li><a href="/busiest/"><span>b</span>usiest posts</a></li>
-<li class="last"><a title="RSS feeds, logos, XML" href="/data/"><span>rss</span>+</a></li>
+<ul class="nav">
+	<li><a href="/"><span>h</span>ome</a></li>
+	<li><a href="/about/"><span>a</span>bout us</a></li>
+	<li><a href="/news/"><span>n</span>ews</a></li>
+	<li><a href="/emailnotify/"><span>e</span>mail alerts</a></li>
+	<li><a href="/emailfriend/"><span>t</span>ell a friend</a></li>
+	<li><a href="/recentcomments/"><span>r</span>ecent comments</a></li>
+	<li><a href="/random"><span>r</span>andom</a></li>
+	<li><a href="/busiest/"><span>b</span>usiest posts</a></li>
+	<li class="last"><a title="RSS feeds, logos, XML" href="/data/"><span>rss</span>+</a></li>
 </ul>
 
 <div id="main">

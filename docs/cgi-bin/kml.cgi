@@ -70,8 +70,8 @@ EOSQL
 	    print "\t<description><![CDATA[<a href=\"http://en.wikipedia.org/wiki/$wikiuri\">Wikipedia article</a>.]]></description>\n";
             print "\t<name>" . encode_entities($title, '<&>') . "</name>\n";
 	    print "\t<LookAt>\n";
-	    print "\t\t<longitude>$lat</longitude>\n";
-	    print "\t\t<latitude>$long</latitude>\n";
+	    print "\t\t<longitude>$long</longitude>\n";
+	    print "\t\t<latitude>$lat</latitude>\n";
 	    print "\t\t<range>0</range>\n";
 	    print "\t\t<tilt>0</tilt>\n";
 	    print "\t\t<heading>3</heading>\n";

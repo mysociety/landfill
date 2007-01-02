@@ -59,22 +59,25 @@ EOSQL
 	$query->execute;
 	my $result;
         print '<?xml version="1.0" encoding="UTF-8"?>'."\n".'<kml xmlns="http://earth.google.com/kml/2.0">' . "\n<Folder><name>Latest entries on Placeopedia</name><description>The 50 latest additions to placeopedia.com</description>\n";
-	while ($result=$query->fetchrow_hashref() ) {
-            my $wikiuri = $result->{title};
+
+	my ($lat, $long, $title);
+
+	while (($lat, $long, $title) = $query->fetchrow_array ) {
+            my $wikiuri = $title;
             $wikiuri =~ tr/ /_/;
             $wikiuri = uri_escape($wikiuri);
             print "<Placemark>\n";
 	    print "\t<description><![CDATA[<a href=\"http://en.wikipedia.org/wiki/$wikiuri\">Wikipedia article</a>.]]></description>\n";
-            print "\t<name>" . encode_entities($result->{title}, '<&>') . "</name>\n";
+            print "\t<name>" . encode_entities($title, '<&>') . "</name>\n";
 	    print "\t<LookAt>\n";
-	    print "\t\t<longitude>$result->{google_long}</longitude>\n";
-	    print "\t\t<latitude>$result->{google_lat}</latitude>\n";
+	    print "\t\t<longitude>$lat</longitude>\n";
+	    print "\t\t<latitude>$long</latitude>\n";
 	    print "\t\t<range>0</range>\n";
 	    print "\t\t<tilt>0</tilt>\n";
 	    print "\t\t<heading>3</heading>\n";
 	    print "\t</LookAt>\n";
             print "\t<Point>\n";
-            print "\t\t<coordinates>$result->{google_long},$result->{google_lat},0</coordinates>\n";
+            print "\t\t<coordinates>$long,$lat,0</coordinates>\n";
             print "\t</Point>\n";
             print "</Placemark>\n";
 	}

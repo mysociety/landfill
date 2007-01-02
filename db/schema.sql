@@ -7,7 +7,7 @@
 -- Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 -- Email: matthew@mysociety.org; WWW: http://www.mysociety.org/
 --
--- $Id: schema.sql,v 1.5 2005-10-07 19:07:55 matthew Exp $
+-- $Id: schema.sql,v 1.6 2007-01-02 23:13:53 matthew Exp $
 --
 
 CREATE TABLE `comments` (
@@ -94,7 +94,7 @@ CREATE TABLE `posts` (
   KEY `posts_google_lat_idx` (`google_lat`),
   KEY `posts_lat_idx` (`lat`),
   KEY `posts_lon_idx` (`lon`),
-  KEY `testing` (`posted`,`validated`,`hidden`,`site`)
+  KEY `latest_posts` (`site`,`validated`,`hidden`,`posted`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- Index of Wikipedia article titles. Generation is used to drop articles which

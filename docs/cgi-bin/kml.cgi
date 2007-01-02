@@ -23,7 +23,8 @@ my $site_name= mySociety::Config::get('SITE_NAME');
 while (my $q = new CGI::Fast()) {
         print "Content-Type: application/vnd.google-earth.kml+xml\r\n\r\n";
 	my $limiter='';
-	my $search_term = &handle_search_term($q); #' 1 = 1 ';
+	# my $search_term = &handle_search_term($q); #' 1 = 1 ';
+	# $search_term
 
 	unless ($dbh and $dbh->ping()) {
 		# recreate db connection
@@ -49,7 +50,6 @@ EOSQL
 	 	       where validated=1
 			 and hidden=0
                          and site='$site_name'
-			     $search_term
 			     $limiter
 		    order by posted
 			     desc limit 50

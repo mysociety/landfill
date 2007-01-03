@@ -40,18 +40,21 @@ while (my $q = new CGI::Fast()) {
 	     $bottomright_lat=~ s#[^-\.\d]##g;
 	     $bottomright_long=~ s#[^-\.\d]##g;
 		$limiter= <<EOSQL;
-	and google_lat <= $topleft_lat and google_lat >= $bottomright_lat
-	and google_long >= $topleft_long and google_long <= $bottomright_long
+	and lat <= $topleft_lat and lat >= $bottomright_lat
+	and lon >= $topleft_long and lon <= $bottomright_long
 EOSQL
 	}
+	#and google_lat <= $topleft_lat and google_lat >= $bottomright_lat
+	#and google_long >= $topleft_long and google_long <= $bottomright_long
+	              # select google_lat, google_long, title
 	my $query=$dbh->prepare("
-	              select google_lat, google_long, title
+	              select lat, lon, title
 			from posts
 	 	       where validated=1
-			 and hidden=0
                          and site='$site_name'
+			 and hidden=0
 			     $limiter
-		    order by posted
+		    order by postid
 			     desc limit 50
 		       "); # XXX order by first_seen needs to change
 

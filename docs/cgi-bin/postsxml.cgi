@@ -48,7 +48,8 @@ EOSQL
         $num_results = $num_results || 50;
 
 	my $query=$dbh->prepare("
-	              select postid, why, posted,title,commentcount,google_lat, google_long
+	              select postid, why, posted,title,commentcount,google_lat, google_long,
+		      		concat('http://en.wikipedia.org/wiki/', title) as link
 			from posts
 	 	       where validated=1
 			 and hidden=0

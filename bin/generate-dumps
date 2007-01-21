@@ -37,6 +37,8 @@ close FP;
 # RSS
 my $rss = new XML::RSS (version => '1');
 $rss->add_module(prefix=>'geo', uri=>'http://www.w3.org/2003/01/geo/wgs84_pos#');
+$rss->add_module(prefix=>'content', uri=>'http://purl.org/rss/1.0/modules/content/');
+
 $rss->channel(
     title=> "$site_name",
     link => "$url_prefix",
@@ -67,6 +69,8 @@ foreach $result (@$results) {
         title => $result->{title},
         link => "http://en.wikipedia.org/wiki/$wikiuri",
         description => "Wikipedia article on $result->{title}",
+        content=>{ encoded=> "<![CDATA[<a href=\"$url_prefix/?$result->{postid}\">
+$result->{title} on $site_name</a>]]>" },
         geo => {
 	    lat => "$result->{google_lat}",
             long => "$result->{google_long}"

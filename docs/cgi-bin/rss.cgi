@@ -26,7 +26,7 @@ my $search_term = &handle_search_term(); #' 1 = 1 ';
 
 
 {
-        print "Content-Type: text/xml\r\n\r\n";
+        print "Content-Type: application/rss+xml\r\n\r\n";
 	my $topleft_lat=param('topleft_lat');
 	my $topleft_long=param('topleft_long');
 	my $bottomright_lat=param('bottomright_lat');
@@ -75,6 +75,7 @@ EOSQL
 	my $result;
  my $rss = new XML::RSS (version => '1');
  $rss->add_module(prefix=>'geo', uri=>'http://www.w3.org/2003/01/geo/wgs84_pos#');
+ $rss->add_module(prefix=>'content', uri=>'http://purl.org/rss/1.0/modules/content/');
 
  $rss->channel(
    title        => "$site_name",
@@ -101,6 +102,7 @@ EOSQL
  		       title => $result->{title},
                        link => "http://en.wikipedia.org/wiki/$title",
                        description => "Wikipedia article on $result->{title}",
+                       content=>{ encoded=> "<![CDATA[<a href=\"$url_prefix/?$result->{postid}\">$result->{title} on $site_name</a>]]>" },  
 		       geo => {lat => "$result->{google_lat}",
 		       	       long => "$result->{google_long}"},
                 );

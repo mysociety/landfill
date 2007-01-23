@@ -23,7 +23,7 @@ if (preg_match('#panel: \'(.*?)\'#', $f, $m) && preg_match('#We could not unders
 } elseif (preg_match('#panel: \'(.*?)\'#', $f, $m)) {
     $refine = $m[1];
     if ($xml) {
-        preg_match_all('#<div class=\\\"ref\\\"><a href=\\\"/maps\?q=(.*?)&.*?>(.*?)</a></div>#', $refine, $m, PREG_SET_ORDER);
+        preg_match_all('#<div class=\\042ref\\042><a href=\\042/maps\?q=(.*?)&.*?>(.*?)</a></div>#', $refine, $m, PREG_SET_ORDER);
         foreach ($m as $match) {
             $out .= "<refinement><query>$match[1]</query><description><![CDATA[$match[2]]]></description></refinement>\n";
         }

@@ -5,7 +5,7 @@
 # Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: Makefile,v 1.2 2006-11-10 22:50:51 chris Exp $
+# $Id: Makefile,v 1.3 2007-01-24 13:27:17 francis Exp $
 #
 
 CFLAGS = -Wall -g -O2
@@ -24,9 +24,7 @@ mailman_wrapper: mailman_wrapper.c Makefile
 mincore: mincore.c Makefile
 	$(CC) $(CFLAGS) mincore.c -o mincore
 
-install: mailman_wrapper mincore
-	install -o list -g list -m u+xs,g+xs,o+x mailman_wrapper bin
-	install mincore bin
+all: mailman_wrapper mincore
 
 clean:
 	rm -f mailman_wrapper mincore *~ core

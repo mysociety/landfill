@@ -5,12 +5,14 @@
 # Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: Makefile,v 1.3 2007-01-24 13:27:17 francis Exp $
+# $Id: Makefile,v 1.4 2007-01-24 13:29:49 francis Exp $
 #
 
 CFLAGS = -Wall -g -O2
 LDFLAGS =
 LDLIBS = 
+
+all: mailman_wrapper mincore
 
 mailman_wrapper: mailman_wrapper.c Makefile
 	$(CC) $(CFLAGS) \
@@ -23,8 +25,6 @@ mailman_wrapper: mailman_wrapper.c Makefile
 
 mincore: mincore.c Makefile
 	$(CC) $(CFLAGS) mincore.c -o mincore
-
-all: mailman_wrapper mincore
 
 clean:
 	rm -f mailman_wrapper mincore *~ core

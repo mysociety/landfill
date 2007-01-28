@@ -1,21 +1,26 @@
 
+
 # This is the configuration file for all CGI scripts
 # You should be able to make most changes here.
 
 package mysociety::NotApathetic::Config; # don't change this line.
 
+require Exporter;
+@ISA = qw(Exporter);
+@EXPORT = qw($main_display_limit $dbh $url_prefix);  # symbols to export on request
+use DBI;
 
 # things you need to change
-our $dsn = 'DBI:mysql:notapathetic:localhost'; # DSN connection string
-our $db_username= 'notapathetic';              # database username
-our $db_password= 'wearenottellingyou';        # database password
+our $dsn = 'DBI:mysql:bb:localhost'; # DSN connection string
+our $db_username= 'username';              # database username
+our $db_password= 'nottellingyou';        # database password
 
 
 
 
 # Domain name for the site.
 # Just the domain, used for email and with www. prefix
-our $domain='notapathetic.com';
+our $domain='example.com';
 
 
 # when comments/posts are turned off, change this to 0.
@@ -23,7 +28,7 @@ our $site_open_for_additions=1;
 
 
 #what's the name of the website - not necessarily the domain
-our $site_name='NotApathetic.com';
+our $site_name='Example Name ';
 
 
 # things which you shouldn't have to change
@@ -41,12 +46,13 @@ our $abuse_address='abuse@' . $domain;
 our $email_domain='@' . $domain; #used. May want to remove it eventually.
 our $url='http://www.' . $domain; # absolute URL. No slash on the end
 
+our $main_display_limit = 15;
+our $brief_display_limit_multiplier= 1; # mainlimit x brief entries displayed in the brief listing
 
 
-# when a script dies, serve aredirect
-sub die_cleanly {
-        my $error= shift || 'no error given';
-        print "Location: $url/error/?$error\n\n";
-	exit(0);
-}
+
+
+our $url_prefix=$mysociety::NotApathetic::Config::url;
+
+
 

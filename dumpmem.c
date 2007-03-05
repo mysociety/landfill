@@ -4,10 +4,14 @@
  *
  * Copyright (c) 2007 Chris Lightfoot. All rights reserved.
  * Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
+ * 
  *
  */
 
-static const char rcsid[] = "$Id: dumpmem.c,v 1.1 2007-02-22 16:41:36 francis Exp $";
+// Usage example:
+// dumpmem $PID `grep '\[heap\]' /proc/$PID/maps | sed 's/^\([0-9a-f]*\)-\([0-9a-f]\)*/0x\1 0x\2'`
+
+static const char rcsid[] = "$Id: dumpmem.c,v 1.2 2007-03-05 08:40:55 francis Exp $";
 
 #include <errno.h>
 #include <stdio.h>

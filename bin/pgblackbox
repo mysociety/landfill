@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: pgblackbox,v 1.14 2006-09-14 17:42:38 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: pgblackbox,v 1.15 2007-03-07 14:34:43 louise Exp $';
 
 use strict;
 
@@ -265,7 +265,7 @@ sub spoolfile () {
         my @l = localtime(time());
         foreach my $d (map { strftime($_, @l) } qw(%Y %Y/%m %Y/%m/%d)) {
             if (!-d "$spool_dir/$d" && !mkdir("$spool_dir/$d", 0755) && !$!{EEXIST}) {
-                print_log('error', '%s: mkdir: %s', "$spool_dir/$d", $!);
+                print_log('err', '%s: mkdir: %s', "$spool_dir/$d", $!);
                 return undef;
             }
         }
@@ -273,7 +273,7 @@ sub spoolfile () {
         my $filename = strftime('%Y/%m/%d/%Y%m%dT%H%M%S.pgb', @l);
         my $s = PGBlackbox::Spoolfile->create("$spool_dir/$filename", $spool_slots);
         if (!ref($s)) {
-            print_log('error', '%s: create new spool file: %s', "$spool_dir/$filename", $s);
+            print_log('err', '%s: create new spool file: %s', "$spool_dir/$filename", $s);
             return undef;
         }
 
@@ -441,12 +441,12 @@ while (!$foad) {
 
     my $f = spoolfile();
     if (!$f) {
-        print_log('error', 'fatal error; aborting');
+        print_log('err', 'fatal error; aborting');
         exit(1);
     }
     my $err = $f->append($pg_stat_activity, $pg_locks, $clients);
     if ($err) {
-        print_log('error', '%s: %s', spoolfile()->name(), $err);
+        print_log('err', '%s: %s', spoolfile()->name(), $err);
     }
 
     $alarm_fired = 0;
@@ -454,7 +454,7 @@ while (!$foad) {
     if (!defined($cleanup_pid) && $last_cleanup < time() - $cleanup_interval) {
         $cleanup_pid = fork();
         if (!defined($cleanup_pid)) {
-            print_log('error', 'fork (start cleanup process): %s', $!);
+            print_log('err', 'fork (start cleanup process): %s', $!);
         } elsif (0 == $cleanup_pid) {
             do_cleanup();
             _exit(0);
@@ -494,7 +494,7 @@ pgblackbox
 
 =head1 SYNOPSIS
 
-pgbextract --help | [OPTIONS]
+pgblackbox --help | [OPTIONS]
 
 =head1 DESCRIPTION
 

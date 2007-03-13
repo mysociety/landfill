@@ -33,6 +33,9 @@ HearFromYourCouncillor in conjunction with local authority web teams,
 and launch as soon as possible after the local elections, running for
 a year for free.</p>
 
+<p>This competition has been made possible as part of mySociety's
+support under the former ODPM's e-innovations fund.</p>
+
 <p>To contact mySociety with any questions about this or any other
 project, please email <a href="mailto:team&#64;mysociety.org">team&#64;mysociety.org</a>.</p>
 

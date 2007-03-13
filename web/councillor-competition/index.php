@@ -1,4 +1,4 @@
-<? $title = 'HearFromYourCouncillor competition'; include_once('../header.php'); ?>
+<? $nopdf = 1; $title = 'HearFromYourCouncillor competition'; include_once('../header.php'); ?>
 
 <h1>HearFromYourCouncillor competition</h1>
 

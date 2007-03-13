@@ -26,6 +26,8 @@ $home = ($_SERVER['PHP_SELF'] == $path . '/index.php');
 </tr>
 </table>
 
+<?  if (!isset($nopdf)) { ?>
 <a href="/pdfs<?=dirname($_SERVER['PHP_SELF']) ?>.pdf"><img align="right" src="/i/pdf.png" width="75" height="75" alt="PDF Document"></a>
-<? } ?>
+<?      }
+    } ?>
 

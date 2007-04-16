@@ -21,12 +21,12 @@ how it works and what makes it so much more well used than standard
 discussion forums or online consultations. Over 32,000 people are
 signed up across the UK, with the number rising steadily.</p>
 
-<p>The competition is simple. Before April 15th we ask councils who are
+<p>The competition is simple. Before May 17th we ask councils who are
 interested simply to tell us what they'd do to ensure
 HearFromYourCouncillor gets a healthy start in their area. The sort of
 thing we're looking for is a commitment to publicise the service from
-the site homepage, or to include it in print materials. After April
-15th we'll assess the different non-monetary offers we've been made,
+the site homepage, or to include it in print materials. After May
+17th we'll assess the different non-monetary offers we've been made,
 and pick two winners based on how seriously we think councils will
 take our offer of a free service. We will then build and customise
 HearFromYourCouncillor in conjunction with local authority web teams,

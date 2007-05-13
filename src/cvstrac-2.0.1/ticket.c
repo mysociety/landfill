@@ -278,8 +278,23 @@ void ticket_new(void){
   if( zTitle && strlen(zTitle)>70 ){
     zErrMsg = "Please make the title no more than 70 characters long.";
   }
+  /* Check magic spam-avoidance word if they aren't logged in */
+  if (strcmp(g.zUser, "anonymous") == 0) {
+      if (!P("mw") || strcmp(P("mw"), "tangible")!=0) {
+          print_spam_trap_failure();
+          return;
+      }
+  }
   if( zErrMsg==0 && zTitle[0] && zType[0] && zDesc[0] && P("submit")
       && (zContact[0] || !g.isAnon) ){
+    /* Check magic spam-avoidance word if they aren't logged in */
+    if (strcmp(g.zUser, "anonymous") == 0) {
+        if (!P("mw") || strcmp(P("mw"), "tangible")!=0) {
+            print_spam_trap_failure();
+            return;
+        }
+    }
+
     int tn;
     time_t now;
     const char *zState;
@@ -348,6 +363,9 @@ void ticket_new(void){
   @ <td>What type of ticket is this?</td>
   @ </tr> 
   @
+  /* We don't use version */
+  @ <input type="hidden" name="v" value="%h(zVers)">
+  /* 
   @ <tr>
   @   <td align="right"><nobr>
   @     Version: <input type="text" name="v" value="%h(zVers)" size="10">
@@ -358,6 +376,10 @@ void ticket_new(void){
   @   </td>
   @ </tr>
   @
+  */
+  /* We don't use severity */
+  @ <input type="hidden" name="r" value="1">
+  /*
   @ <tr>
   @   <td align="right"><nobr>
   @     Severity:
@@ -371,6 +393,7 @@ void ticket_new(void){
   @     defect or a nice-to-have feature request.
   @   </td>
   @ </tr>
+  */
   @
   @ <tr>
   @   <td align="right"><nobr>
@@ -492,6 +515,13 @@ void ticket_new(void){
   }
   @   </td>
   @ </tr>
+  if(strcmp(g.zUser, "anonymous") == 0){
+      @ <tr>
+      @   <td colspan="2">
+      @ Enter the magic word, which is 'tangible': <input type="text" name="mw" value="%h(P("mw"))" size=10>
+      @   </td>
+      @ </tr>
+  }
   @ <tr>
   @   <td align="right">
   @     <input type="submit" name="preview" value="Preview">
@@ -800,9 +830,12 @@ void ticket_view(void){
   @ <tr>
   @   <td align="right">Type:</td>
   @   <td bgcolor="%h(BG3)" class="bkgnd3"><b>%h(az[0])&nbsp;</b></td>
+/* We don't use version */
+/*
   @ <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
   @   <td align="right">Version:</td>
   @   <td bgcolor="%h(BG3)" class="bkgnd3"><b>%h(az[5])&nbsp;</b></td>
+*/
   @ </tr>
   @ <tr>
   @   <td align="right">Status:</td>
@@ -811,6 +844,8 @@ void ticket_view(void){
   @   <td align="right">Created:</td>
   @   <td bgcolor="%h(BG3)" class="bkgnd3"><b>%h(az[2])</b></td>
   @ </tr>
+  /* We don't use severity */
+/*
   @ <tr>
   @   <td align="right">Severity:</td>
   @   <td bgcolor="%h(BG3)" class="bkgnd3"><b>%h(az[7])&nbsp;</b></td>
@@ -818,6 +853,7 @@ void ticket_view(void){
   @   <td align="right">Last&nbsp;Change:</td>
   @   <td bgcolor="%h(BG3)" class="bkgnd3"><b>%h(az[3])</b></td>
   @ </tr>
+*/
   @ <tr>
   @   <td align="right">Priority:</td>
   @   <td bgcolor="%h(BG3)" class="bkgnd3"><b>%h(az[8])&nbsp;</b></td>
@@ -1002,6 +1038,18 @@ static char **tokenize_new_line(const char *zString){
   return azToks;
 }
 
+void print_spam_trap_failure(void){
+  @ <p>Please go back and enter the magic word <strong>tangible</strong> with your
+  @ changes.  
+  @ <p>We ask you to do this because there are people who run software which
+  @ crawls the internet and automatically posts adverts.  Asking you to enter the
+  @ word is a reliable and unobtrusive way of making sure you are a human, not a
+  @ piece of software. 
+  @ <p>If you are using mySociety cvstrac regularly, please
+  @ <a href="mailto:team@mysociety.org">contact us</a> and we will 
+  @ give you a proper account.
+}
+
 /*
 ** WEBPAGE: /tktedit
 **
@@ -1138,7 +1186,7 @@ void ticket_edit(void){
     if( aParm[i].zColumn==0 ) continue;
     aParm[i].zOld = remove_blank_lines(az[i]);
   }
-
+  
   /* Find out which fields may need to change due to query parameters.
   ** record the new values in aParm[].zNew.
   */
@@ -1194,6 +1242,15 @@ void ticket_edit(void){
   /* Update the record in the TICKET table.  Also update the XREF table.
   */
   if( cnt==nField && P("submit")!=0 ){
+
+    /* Check magic spam-avoidance word if they aren't logged in */
+    if (strcmp(g.zUser, "anonymous") == 0) {
+        if (!P("mw") || strcmp(P("mw"), "tangible")!=0) {
+            print_spam_trap_failure();
+            return;
+        }
+    }
+
     time_t now;
     char **az;
     int first_change;
@@ -1325,12 +1382,16 @@ void ticket_edit(void){
   @ &nbsp;&nbsp;&nbsp;
   @ 
   @ 
+  /* We don't use severity */
+  @ <input type="hidden" name="e" value="%h(aParm[5].zNew)">
+  /*
   @ <nobr>
   @ Severity: 
   cgi_optionmenu(0, "e", aParm[5].zNew,
          "1", "1", "2", "2", "3", "3", "4", "4", "5", "5", NULL);
   @ </nobr>
   @ &nbsp;&nbsp;&nbsp;
+  */
   @ 
   @ <nobr>
   @ Assigned To: 
@@ -1348,10 +1409,14 @@ void ticket_edit(void){
   @ </nobr>
   @ &nbsp;&nbsp;&nbsp;
   @ 
+  /* we don't use version */
+  @ <input type="hidden" name="v" value="%h(aParm[3].zNew)">
+  /*
   @ <nobr>
   @ Version: <input type="text" name="v" value="%h(aParm[3].zNew)" size=10>
   @ </nobr>
   @ &nbsp;&nbsp;&nbsp;
+  */
   @ 
   @ <nobr>
   @ Derived From: <input type="text" name="d" value="%h(aParm[2].zNew)" size=10>
@@ -1427,6 +1492,13 @@ void ticket_edit(void){
     @ </nobr>
     @ &nbsp;&nbsp;&nbsp;
     @ 
+  }
+  if(strcmp(g.zUser, "anonymous") == 0){
+      @ <nobr>
+      @ Enter the magic word, which is 'tangible': <input type="text" name="mw" value="" size=10>
+      @ </nobr>
+      @ &nbsp;&nbsp;&nbsp;
+      @ 
   }
   @ <p align="center">
   @ <input type="submit" name="submit" value="Apply Changes">
@@ -1533,6 +1605,13 @@ void ticket_append(void){
   @ (<small>See <a href="#format_hints">formatting hints</a></small>)<br>
   @ <textarea name="r" rows="8" cols="70" wrap="virtual">%h(zText)</textarea>
   @ <br>
+  if(strcmp(g.zUser, "anonymous") == 0){
+      @ <nobr>
+      @ Enter the magic word, which is 'tangible': <input type="text" name="mw" value="" size=10>
+      @ </nobr>
+      @ &nbsp;&nbsp;&nbsp;
+      @
+  }
   @ <p align="center">
   @ <input type="submit" name="submit" value="Apply">
   @ &nbsp;&nbsp;&nbsp;

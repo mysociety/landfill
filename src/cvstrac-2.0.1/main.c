@@ -227,6 +227,7 @@ int main(int argc, char **argv){
   const char *zLogFile;
   int cmdlineProj;        /* True if project specified on command line */
   void (*xFunc)(void);
+  const char *zForwardedAddr;
 
   /* Determine the SCM subsystem. Need to do this before anyone messes with
   ** argv.
@@ -328,6 +329,23 @@ int main(int argc, char **argv){
     g.zName = mprintf("%s", &argv[0][i]);
     cmdlineProj = 0;
   }
+
+  /* Cope with proxies (ip address is associated with cookies in login system) 
+   * Unfortunately, it doesn't cope well when you have two layers of proxy,
+   * as we now do with squid. You get comma separated lists of IPs here.
+   * Instead have disabled cookie check in login.c. Using HTTP_X_FORWARDED_FOR
+   * is still more useful here, for logging and throttling. */
+  /* putenv("HTTP_X_FORWARDED_FOR=10.20.30.40"); */
+  zForwardedAddr = getenv("HTTP_X_FORWARDED_FOR");
+  if (zForwardedAddr) {
+    setenv("REMOTE_ADDR", zForwardedAddr, 1);
+  }
+  /*
+   * Test code - shows how to print for debugging
+  cgi_printf("hello! %s\n", getenv("REMOTE_ADDR"));
+  cgi_reply();
+  exit(0);
+  */
 
   /* Figure out our behavior based on command line parameters and
   ** the environment.  

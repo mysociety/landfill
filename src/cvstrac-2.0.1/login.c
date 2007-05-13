@@ -55,7 +55,7 @@ void login_page(void){
   zGoto = P("g");
   if( P("out")!=0 ){
     const char *zCookieName = login_cookie_name();
-    cgi_set_cookie(zCookieName, "", 0, time(NULL)-(60*60*24));
+    cgi_set_cookie(zCookieName, "", 0, time(NULL)-(60*60*24 * 28 /*days*/));
     db_execute("DELETE FROM cookie WHERE cookie='%q'", P(zCookieName));
     cgi_redirect(PD("nxp","index"));
     return;
@@ -121,9 +121,9 @@ void login_page(void){
         "INSERT INTO cookie(cookie,user,expires,ipaddr,agent)"
         "  VALUES('%q','%q',%d,'%q','%q');"
         "COMMIT;",
-        now, zDigest, zUsername, now+3600*24, zAddr, zAgent
+        now, zDigest, zUsername, now+28 * 3600*24, zAddr, zAgent
       );
-      cgi_set_cookie(login_cookie_name(), (char *)zDigest, 0, 0);
+      cgi_set_cookie(login_cookie_name(), (char *)zDigest, 0, time(NULL)-(60*60*24 * 28 /*days*/));
       cgi_redirect(PD("nxp","index"));
       return;
     }
@@ -283,10 +283,10 @@ void login_check_credentials(void){
     zUser = db_short_query(
       "SELECT user FROM cookie "
       "WHERE cookie='%q' "
-      "  AND ipaddr='%q' "
+      /* "  AND ipaddr='%q' " */ /* disabled ip address check; doesn't work due to our SSH proxying and squid stuff */
       "  AND agent='%q' "
       "  AND expires>%d",
-      zCookie, zAddr, zAgent, now);
+      zCookie, /*zAddr,*/ zAgent, now);
     if( zUser==0 ){
       return;
     }

@@ -282,8 +282,9 @@ void cgi_reply(void){
   }
 
 #if CVSTRAC_I18N
-  printf( "Content-Type: %s; charset=%s\r\n", zContentType, nl_langinfo(CODESET));
+  printf( "Content-Type: %s; charset=%s\r\n", zContentType, /*el_langinfo(CODESET)) */ "UTF-8" /* HACK! */ );
 #else
+  #error We should use I18N version
   printf( "Content-Type: %s; charset=ISO-8859-1\r\n", zContentType);
 #endif
 

@@ -1,0 +1,400 @@
+? ChangeLog
+? ch.patch
+Index: browse.c
+===================================================================
+RCS file: /usr/local/cvs/mysociety/cvswww/src/cvstrac-1.1.5/browse.c,v
+retrieving revision 1.1
+retrieving revision 1.4
+diff -u -r1.1 -r1.4
+--- browse.c	25 Jan 2006 17:47:38 -0000	1.1
++++ browse.c	2 Dec 2006 16:30:58 -0000	1.4
+@@ -33,6 +33,28 @@
+ #include <time.h>
+ #include <string.h>
+ 
++static void other_methods_footer() {
++@ <hr>
++@ <p>Instead of browsing above, you can get all the mySociety source code in two ways:</p>
++@ <p><strong>Anonymous CVS</strong>. This is updated as we commit new changes. 
++@ Set CVSROOT to <tt>:pserver:anonymous@cvs.mysociety.org:/repos</tt> 
++@ and grab the module <tt>mysociety</tt>. We recommend
++@ <a href="http://www.tortoisecvs.org">TortoiseCVS</a> as a CVS client on
++@ Windows. On Unix or on a Mac just type
++@ "<tt>cvs -d :pserver:anonymous@cvs.mysociety.org:/repos co mysociety</tt>" at
++@ a terminal.</p>
++@ <p><strong>HTTP download</strong>. This compressed archive is updated once a
++@ day.
++@ <a href="http://www.mysociety.org/cvs/mysociety.tar.gz">http://www.mysociety.org/cvs/mysociety.tar.gz</a>
++@ </p>
++@ <p><strong>Licence.</strong> Most of mySociety's code is made available under
++@ <a href="/cvstrac/getfile/mysociety/LICENSE.txt">the Affero GPL</a>; parts
++@ are available under other free licences, as noted in the source. If you want
++@ to reuse some of our code, but its existing licence would prohibit you from
++@ doing so, ask us about relicensing.</p>
++@ <hr>
++}
++
+ /*
+ ** This routine generates an HTML page that describes the complete
+ ** revision history for a single file.
+@@ -116,6 +138,7 @@
+     @ <tr><td>Nothing is known about this file</td></tr>
+   }
+   @ </table>
++  other_methods_footer();
+ }
+ 
+ /*
+@@ -205,6 +228,7 @@
+   common_header("Difference in %s versions %s and %s", zFile, zV1, zV2);
+   /* @ <h2>Difference in %h(zFile) versions %h(zV1) and %h(zV2)</h2> */
+   diff_versions(zV1, zV2, zReal);
++  other_methods_footer();
+   common_footer();
+ }
+ 
+@@ -295,6 +319,7 @@
+     @ </td>
+   }
+   @ </tr></table>
++  other_methods_footer();
+   common_footer();
+ }
+ 
+Index: cgi.c
+===================================================================
+RCS file: /usr/local/cvs/mysociety/cvswww/src/cvstrac-1.1.5/cgi.c,v
+retrieving revision 1.1
+retrieving revision 1.2
+diff -u -r1.1 -r1.2
+--- cgi.c	25 Jan 2006 17:47:38 -0000	1.1
++++ cgi.c	27 Oct 2006 13:13:38 -0000	1.2
+@@ -193,7 +193,7 @@
+   printf(
+     "Content-Type: %s; charset=%s\r\n"
+     "Content-Length: %d\r\n",
+-    zContentType, nl_langinfo(CODESET),
++    zContentType, "UTF-8",  /* HACK! */
+     nUsedTxt
+   );
+ #else
+Index: login.c
+===================================================================
+RCS file: /usr/local/cvs/mysociety/cvswww/src/cvstrac-1.1.5/login.c,v
+retrieving revision 1.1
+retrieving revision 1.4
+diff -u -r1.1 -r1.4
+--- login.c	25 Jan 2006 17:47:38 -0000	1.1
++++ login.c	7 Aug 2006 12:58:18 -0000	1.4
+@@ -55,7 +55,7 @@
+   zGoto = P("g");
+   if( P("out")!=0 ){
+     const char *zCookieName = login_cookie_name();
+-    cgi_set_cookie(zCookieName, "", 0, 0);
++    cgi_set_cookie(zCookieName, "", 0, 86400 * 28);
+     db_execute("DELETE FROM cookie WHERE cookie='%q'", zCookieName);
+     cgi_redirect(PD("nxp","index"));
+     return;
+@@ -121,9 +121,9 @@
+         "INSERT INTO cookie(cookie,user,expires,ipaddr,agent)"
+         "  VALUES('%q','%q',%d,'%q','%q');"
+         "COMMIT;",
+-        now, zDigest, zUsername, now+3600*24, zAddr, zAgent
++        now, zDigest, zUsername, now+28*3600*24, zAddr, zAgent
+       );
+-      cgi_set_cookie(login_cookie_name(), zDigest, 0, 0);
++      cgi_set_cookie(login_cookie_name(), zDigest, 0, 86400 * 28);
+       cgi_redirect(PD("nxp","index"));
+       return;
+     }
+@@ -273,10 +273,10 @@
+     zUser = db_short_query(
+       "SELECT user FROM cookie "
+       "WHERE cookie='%q' "
+-      "  AND ipaddr='%q' "
++      /* "  AND ipaddr='%q' " */ /* disabled ip address check; doesn't work due to our SSH proxying and squid stuff */
+       "  AND agent='%q' "
+       "  AND expires>%d",
+-      zCookie, zAddr, zAgent, now);
++      zCookie, /*zAddr,*/ zAgent, now);
+     if( zUser==0 ){
+       return;
+     }
+Index: main.c
+===================================================================
+RCS file: /usr/local/cvs/mysociety/cvswww/src/cvstrac-1.1.5/main.c,v
+retrieving revision 1.1
+retrieving revision 1.4
+diff -u -r1.1 -r1.4
+--- main.c	25 Jan 2006 17:47:38 -0000	1.1
++++ main.c	7 Aug 2006 12:58:18 -0000	1.4
+@@ -136,6 +136,7 @@
+   const char *zLogFile;
+   int cmdlineProj;        /* True if project specified on command line */
+   void (*xFunc)(void);
++  const char *zForwardedAddr;
+ 
+   /*
+   ** Attempt to put this process in a chroot jail if requested by the
+@@ -222,6 +223,23 @@
+     cmdlineProj = 0;
+   }
+ 
++  /* Cope with proxies (ip address is associated with cookies in login system) 
++   * Unfortunately, it doesn't cope well when you have two layers of proxy,
++   * as we now do with squid. You get comma separated lists of IPs here.
++   * Instead have disabled cookie check in login.c. Using HTTP_X_FORWARDED_FOR
++   * is still more useful here, for logging and throttling. */
++  /* putenv("HTTP_X_FORWARDED_FOR=10.20.30.40"); */
++  zForwardedAddr = getenv("HTTP_X_FORWARDED_FOR");
++  if (zForwardedAddr) {
++    setenv("REMOTE_ADDR", zForwardedAddr, 1);
++  }
++  /*
++   * Test code - shows how to print for debugging
++  cgi_printf("hello! %s\n", getenv("REMOTE_ADDR"));
++  cgi_reply();
++  exit(0);
++  */
++
+   /* Figure out our behavior based on command line parameters and
+   ** the environment.  
+   */
+Index: ticket.c
+===================================================================
+RCS file: /usr/local/cvs/mysociety/cvswww/src/cvstrac-1.1.5/ticket.c,v
+retrieving revision 1.1
+retrieving revision 1.5
+diff -u -r1.1 -r1.5
+--- ticket.c	25 Jan 2006 17:47:38 -0000	1.1
++++ ticket.c	21 Jun 2006 11:45:46 -0000	1.5
+@@ -169,6 +169,14 @@
+   }
+   if( zErrMsg==0 && zTitle[0] && zType[0] && zDesc[0] && P("submit")
+       && (zContact[0] || !g.isAnon) ){
++    /* Check magic spam-avoidance word if they aren't logged in */
++    if (strcmp(g.zUser, "anonymous") == 0) {
++        if (!P("mw") || strcmp(P("mw"), "tangible")!=0) {
++            print_spam_trap_failure();
++            return;
++        }
++    }
++
+     int tn;
+     time_t now;
+     const char *zState;
+@@ -235,6 +243,9 @@
+   @ <td>What type of ticket is this?</td>
+   @ </tr> 
+   @
++  /* We don't use version */
++  @ <input type="hidden" name="v" value="%h(zVers)">
++  /* 
+   @ <tr>
+   @   <td align="right"><nobr>
+   @     Version: <input type="text" name="v" value="%h(zVers)" size="10">
+@@ -245,6 +256,10 @@
+   @   </td>
+   @ </tr>
+   @
++  */
++  /* We don't use severity */
++  @ <input type="hidden" name="r" value="1">
++  /*
+   @ <tr>
+   @   <td align="right"><nobr>
+   @     Severity:
+@@ -258,6 +273,7 @@
+   @     defect or a nice-to-have feature request.
+   @   </td>
+   @ </tr>
++  */
+   @
+   @ <tr>
+   @   <td align="right"><nobr>
+@@ -373,6 +389,13 @@
+   @   </td>
+   @ </tr>
+   @ 
++  if(strcmp(g.zUser, "anonymous") == 0){
++      @ <tr>
++      @   <td colspan="2">
++      @ Enter the magic word, which is 'tangible': <input type="text" name="mw" value="%h(P("mw"))" size=10>
++      @   </td>
++      @ </tr>
++  }
+   if( isPreview ){
+     @ <tr>
+     @   <td align="right">
+@@ -682,10 +705,13 @@
+   @ <tr>
+   @   <td align="right">Type:</td>
+   @   <td bgcolor="%s(BG3)" class="bkgnd3"><b>%h(az[0])&nbsp;</b></td>
++  /* We don't use version */
++/*
+   @ <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+   @   <td align="right">Version:</td>
+   @   <td bgcolor="%s(BG3)" class="bkgnd3"><b>%h(az[5])&nbsp;</b></td>
+   @ </tr>
++*/
+   @ <tr>
+   @   <td align="right">Status:</td>
+   @   <td bgcolor="%s(BG3)" class="bkgnd3"><b>%h(az[1])</b></td>
+@@ -693,6 +719,8 @@
+   @   <td align="right">Created:</td>
+   @   <td bgcolor="%s(BG3)" class="bkgnd3"><b>%h(az[2])</b></td>
+   @ </tr>
++  /* We don't use severity */
++/*
+   @ <tr>
+   @   <td align="right">Severity:</td>
+   @   <td bgcolor="%s(BG3)" class="bkgnd3"><b>%h(az[7])&nbsp;</b></td>
+@@ -700,6 +728,7 @@
+   @   <td align="right">Last&nbsp;Change:</td>
+   @   <td bgcolor="%s(BG3)" class="bkgnd3"><b>%h(az[3])</b></td>
+   @ </tr>
++*/
+   @ <tr>
+   @   <td align="right">Priority:</td>
+   @   <td bgcolor="%s(BG3)" class="bkgnd3"><b>%h(az[8])&nbsp;</b></td>
+@@ -796,6 +825,18 @@
+   common_footer();
+ }
+ 
++void print_spam_trap_failure(void){
++  @ <p>Please go back and enter the magic word <strong>tangible</strong> with your
++  @ changes.  
++  @ <p>We ask you to do this because there are people who run software which
++  @ crawls the internet and automatically posts adverts.  Asking you to enter the
++  @ word is a reliable and unobtrusive way of making sure you are a human, not a
++  @ piece of software. 
++  @ <p>If you are using mySociety cvstrac regularly, please
++  @ <a href="mailto:team@mysociety.org">contact us</a> and we will 
++  @ give you a proper account.
++}
++
+ /*
+ ** WEBPAGE: /tktedit
+ **
+@@ -925,7 +966,7 @@
+     if( aParm[i].zColumn==0 ) continue;
+     aParm[i].zOld = remove_blank_lines(az[i]);
+   }
+-
++  
+   /* Find out which fields may need to change due to query parameters.
+   ** record the new values in aParm[].zNew.
+   */
+@@ -978,6 +1019,15 @@
+   /* Update the record in the TICKET table.  Also update the XREF table.
+   */
+   if( cnt==nField && P("submit")!=0 ){
++
++    /* Check magic spam-avoidance word if they aren't logged in */
++    if (strcmp(g.zUser, "anonymous") == 0) {
++        if (!P("mw") || strcmp(P("mw"), "tangible")!=0) {
++            print_spam_trap_failure();
++            return;
++        }
++    }
++
+     time_t now;
+     time(&now);
+     db_execute("BEGIN");
+@@ -1066,12 +1116,16 @@
+   @ &nbsp;&nbsp;&nbsp;
+   @ 
+   @ 
++  /* We don't use severity */
++  @ <input type="hidden" name="e" value="%h(aParm[5].zNew)">
++  /*
+   @ <nobr>
+   @ Severity: 
+   cgi_optionmenu(0, "e", aParm[5].zNew,
+          "1", "1", "2", "2", "3", "3", "4", "4", "5", "5", 0);
+   @ </nobr>
+   @ &nbsp;&nbsp;&nbsp;
++  */
+   @ 
+   @ <nobr>
+   @ Assigned To: 
+@@ -1089,10 +1143,14 @@
+   @ </nobr>
+   @ &nbsp;&nbsp;&nbsp;
+   @ 
++  /* we don't use version */
++  @ <input type="hidden" name="v" value="%h(aParm[3].zNew)">
++  /*
+   @ <nobr>
+   @ Version: <input type="text" name="v" value="%h(aParm[3].zNew)" size=10>
+   @ </nobr>
+   @ &nbsp;&nbsp;&nbsp;
++  */
+   @ 
+   @ <nobr>
+   @ Derived From: <input type="text" name="d" value="%h(aParm[2].zNew)" size=10>
+@@ -1151,6 +1209,13 @@
+   @ </nobr>
+   @ &nbsp;&nbsp;&nbsp;
+   @ 
++  if(strcmp(g.zUser, "anonymous") == 0){
++      @ <nobr>
++      @ Enter the magic word, which is 'tangible': <input type="text" name="mw" value="%h(P("mw"))" size=10>
++      @ </nobr>
++      @ &nbsp;&nbsp;&nbsp;
++      @ 
++  }
+   @ <p align="center">
+   @ <input type="submit" name="submit" value="Apply Changes">
+   @ &nbsp;&nbsp;&nbsp;
+@@ -1203,6 +1268,13 @@
+   zText = remove_blank_lines(PD("r",""));
+   if( doSubmit ){
+     if( zText[0] ){
++      /* Check magic spam-avoidance word if they aren't logged in */
++      if (strcmp(g.zUser, "anonymous") == 0) {
++          if (!P("mw") || strcmp(P("mw"), "tangible")!=0) {
++              print_spam_trap_failure();
++              return;
++          }
++      }
+       time_t now;
+       struct tm *pTm;
+       char zDate[200];
+@@ -1250,6 +1322,13 @@
+     @ %h(zText)
+     @ </textarea><br>
+   }
++  if(strcmp(g.zUser, "anonymous") == 0){
++      @ <nobr>
++      @ Enter the magic word, which is 'tangible': <input type="text" name="mw" value="" size=10>
++      @ </nobr>
++      @ &nbsp;&nbsp;&nbsp;
++      @ 
++  }
+   @ <p align="center">
+   @ <input type="submit" name="submit" value="Apply">
+   @ &nbsp;&nbsp;&nbsp;
+Index: view.c
+===================================================================
+RCS file: /usr/local/cvs/mysociety/cvswww/src/cvstrac-1.1.5/view.c,v
+retrieving revision 1.1
+retrieving revision 1.2
+diff -u -r1.1 -r1.2
+--- view.c	25 Jan 2006 17:47:38 -0000	1.1
++++ view.c	26 Jan 2006 11:51:10 -0000	1.2
+@@ -91,7 +91,13 @@
+   while( n>0 && isspace(zOrig[j+n-1]) ){ n--; }
+   z = mprintf("%.*s", n, &zOrig[j]);
+   for(i=j=0; z[i]; i++){
+-    if( z[i]=='\r' && z[i+1]=='\n' ) continue;
++    if( z[i+1]=='\n' && z[i]!='\n' && isspace(z[i]) )
++    {
++      z[j] = z[i];
++      while( isspace(z[j]) && z[j] != '\n' ) { j--; }
++      j++;
++      continue;
++    }
+     z[j++] = z[i];
+   }
+   z[j] = 0;

@@ -53,3 +53,12 @@ wiki_.c
 wikiinit.h
 wikiinit_.c
 cvstrac.html
+cvs.h
+cvs_.c
+git_.c
+svn.h
+svn_.c
+tools.h
+tools_.c
+git.h
+index.html

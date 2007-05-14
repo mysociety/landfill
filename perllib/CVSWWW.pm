@@ -6,7 +6,7 @@
 # Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
 # Email: francis@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: CVSWWW.pm,v 1.1 2006-03-15 17:20:52 francis Exp $
+# $Id: CVSWWW.pm,v 1.2 2007-05-14 10:35:58 francis Exp $
 #
 
 package CVSWWW;
@@ -21,7 +21,7 @@ our $dbh;
 sub dbh () {
     if (!$dbh) {
         $dbh = DBI->connect(
-                        "dbi:SQLite2:dbname=/usr/local/cvs/mysociety/mysociety.db",
+                        "dbi:SQLite:dbname=/usr/local/cvs/mysociety/mysociety.db",
                         "", "", { 
                             # We don't want to enter a transaction which would lock the
                             # database.

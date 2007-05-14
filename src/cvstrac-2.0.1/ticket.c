@@ -278,13 +278,6 @@ void ticket_new(void){
   if( zTitle && strlen(zTitle)>70 ){
     zErrMsg = "Please make the title no more than 70 characters long.";
   }
-  /* Check magic spam-avoidance word if they aren't logged in */
-  if (strcmp(g.zUser, "anonymous") == 0) {
-      if (!P("mw") || strcmp(P("mw"), "tangible")!=0) {
-          print_spam_trap_failure();
-          return;
-      }
-  }
   if( zErrMsg==0 && zTitle[0] && zType[0] && zDesc[0] && P("submit")
       && (zContact[0] || !g.isAnon) ){
     /* Check magic spam-avoidance word if they aren't logged in */

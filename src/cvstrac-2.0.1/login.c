@@ -55,7 +55,7 @@ void login_page(void){
   zGoto = P("g");
   if( P("out")!=0 ){
     const char *zCookieName = login_cookie_name();
-    cgi_set_cookie(zCookieName, "", 0, time(NULL)-(60*60*24 * 28 /*days*/));
+    cgi_set_cookie(zCookieName, "", 0, (60*60*24 * 28 /*days*/));
     db_execute("DELETE FROM cookie WHERE cookie='%q'", P(zCookieName));
     cgi_redirect(PD("nxp","index"));
     return;
@@ -123,7 +123,7 @@ void login_page(void){
         "COMMIT;",
         now, zDigest, zUsername, now+28 * 3600*24, zAddr, zAgent
       );
-      cgi_set_cookie(login_cookie_name(), (char *)zDigest, 0, time(NULL)-(60*60*24 * 28 /*days*/));
+      cgi_set_cookie(login_cookie_name(), (char *)zDigest, 0, (60*60*24 * 28 /*days*/));
       cgi_redirect(PD("nxp","index"));
       return;
     }

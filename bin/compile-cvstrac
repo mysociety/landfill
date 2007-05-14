@@ -6,7 +6,7 @@
 # Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
 # Email: francis@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: compile-cvstrac,v 1.2 2006-01-26 10:02:19 francis Exp $
+# $Id: compile-cvstrac,v 1.3 2007-05-14 09:38:14 francis Exp $
 
 if [ ! -d cvswww/src ]
 then
@@ -15,7 +15,7 @@ then
 fi
 cd cvswww/src
 
-cd cvstrac-1.1.5
+cd cvstrac-2.0.1
 make
 mkdir -p ../../../../bin/
 cp cvstrac ../../../../bin/

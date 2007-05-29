@@ -952,6 +952,9 @@ void ticket_view(void){
     @ </table>
   }
   attachment_html(zPage,"<h3>Attachments:</h3>\n<blockquote>","</blockquote>");
+
+  ticket_history(0);
+
   common_footer();
 }
 
@@ -1797,7 +1800,10 @@ static void ticket_derived(
 ** A webpage for viewing the history of a ticket. The history is a
 ** chronological mix of ticket actions, checkins, attachments, etc.
 */
-void ticket_history(void){
+void ticket_history_all() {
+    ticket_history(1);
+}
+void ticket_history(int needmenus){
   int tn = 0, rn = 0;
   int lasttn = 0;
   char **az;
@@ -1817,6 +1823,7 @@ void ticket_history(void){
   if( tn<=0 ){ cgi_redirect("index"); return; }
 
   bprintf(zPage,sizeof(zPage),"%d",tn);
+
   common_standard_menu("tktview", "search?t=1");
 
   if( rn>0 ){
@@ -1852,8 +1859,12 @@ void ticket_history(void){
   pTm = localtime(&orig);
   strftime(zDate, sizeof(zDate), "%Y-%b-%d %H:%M:%S", pTm);
 
-  common_header("Ticket #%d History", tn);
-  @ <h2>Ticket %d(tn) History: %h(az[0])</h2>
+  if (needmenus) {
+      common_header("Ticket #%d History", tn);
+      @ <h2>Ticket %d(tn) History: %h(az[0])</h2>
+  } else {
+      @ <h3>History:</h3>
+  }
   @ <ol>
   @ <li>Created %h(zDate) by %h(az[2])</li>
 
@@ -1941,5 +1952,7 @@ void ticket_history(void){
     }
   }
   @ </ol>
-  common_footer();
+  if (needmenus) {
+      common_footer();
+  }
 }

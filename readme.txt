@@ -33,6 +33,10 @@ Any scaling of units (other than log scaling) is expected to
 be done by the generator of the XML, and not the flash
 applet. It displays what it is given.
 
+Any problems, my email is sams@disruptiveproactivity.com
+
+Cheers
+Sam
 
 <?xml version='1.0' standalone='yes'?>
 <iquango>

@@ -249,7 +249,7 @@ void ticket_new(void){
   const char *zWho = P("w");
   const char *zSubsys = PD("s","");
   const char *zSev = PD("r",db_config("dflt_severity","1"));
-  const char *zPri = PD("p",db_config("dflt_priority","1"));
+  const char *zPri = PD("p",db_config("dflt_priority","10"));
   const char *zFrom = P("f");
   int isPreview = P("preview")!=0;
   int severity, priority;
@@ -390,17 +390,12 @@ void ticket_new(void){
   @
   @ <tr>
   @   <td align="right"><nobr>
-  @     Priority:
-  cgi_optionmenu(0, "p", zPri,
-         "1", "1", "2", "2", "3", "3", "4", "4", "5", "5", NULL);
+  @     Priority: <input type="text" name="p" value="%h(zPri)" size="5">
   @   </nobr></td>
   @   <td>
-  @     How quickly do you need this ticket to be resolved?
-  @     "1" means immediately.
-  @     "2" means before the next build.  
-  @     "3" means before the next release.
-  @     "4" means implement as time permits.
-  @     "5" means defer indefinitely.
+  @     What's the priority of this ticket? 1 is do it now or
+  @     mySociety's world will probably end; 500 is do once we've
+  @     done absolutely everything else.
   @   </td>
   @ </tr>
   @
@@ -1420,9 +1415,7 @@ void ticket_edit(void){
   @ &nbsp;&nbsp;&nbsp;
   @ 
   @ <nobr>
-  @ Priority:
-  cgi_optionmenu(0, "p", aParm[6].zNew,
-         "1", "1", "2", "2", "3", "3", "4", "4", "5", "5", NULL);
+  @ Priority: <input type="text" name="p" value="%h(aParm[6].zNew)" size="5">
   @ </nobr>
   @ &nbsp;&nbsp;&nbsp;
   @ 

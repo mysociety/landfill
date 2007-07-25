@@ -1,29 +1,24 @@
-﻿//stop();
-
-// code to pick up and parse the full url
+﻿// code to pick up and parse the full url
 var _urlStr:String = _url.substr(this._url.lastIndexOf("?") + 1);
 _urls =_urlStr.split("&");
 var _xmlFile:String = getParam("xml");
-var _pointSize:Number = 2;
-var _pointFill:Boolean = true;
+//var _pointSize:Number = 2;
+var _pointSize:Number =  (getParam("pointSize") == ""?2:Number(getParam("pointSize")));
+
+//var _pointFill:Boolean = true;
 var _customList:Boolean = true;
 var _opacity = 0;
 var _playDelay = 0;
+//var _noCache:Boolean = false;
 
 
 
-if (getParam("pointSize") != ""){
-	_pointSize = Number(getParam("pointSize"));
-}
-if (getParam("pointFill") != ""){
-	_pointFill = Boolean(getParam("pointFill"));
-}
-if (getParam("checkItems") != ""){
-	//_customList = Boolean(getParam("checkItems"));
-}
-if (getParam("checkItems") != ""){
-	//_customList = Boolean(getParam("checkItems"));
-}
+//if (getParam("pointSize") != ""){
+	//_pointSize = Number(getParam("pointSize"));
+//}
+var _pointFill:Boolean  = (getParam("pointFill") =="false"?false:true);
+var _noCache:Boolean  = (getParam("noCache") == "true"?true:false);
+var _doGet:Boolean  = (getParam("doGet") == "true"?true:false);
 
 // global data
 
@@ -32,10 +27,9 @@ if (getParam("checkItems") != ""){
 _unselOpacityString = "Unselected Opacity - ";
 _clearButtonString = "Show all";
 _sequenceOptionString = "Sequence";
+_defaultColourString = "Default Colours";
 _sequenceModeString = "Sequence Mode";
 
-//var _variablesData = new Object();
-//var _pointsData = new Object();
 
 // variable data read from XML
 var _variableData = new Object();
@@ -61,6 +55,7 @@ Mouse.addListener(mouseListener);
 // popUpListener - change the data types
 var seqListener:Object = new Object();
 // drop down lists for vertual/log
+var colourListener:Object = new Object();
 var xTypeListener:Object = new Object();
 var yTypeListener:Object = new Object();
 var _sequenceFormat:TextFormat = new TextFormat();
@@ -74,25 +69,47 @@ _sequenceFormat.font = "axisFont";
 // set up some defaults
 var _menuList = new Array(); 
 if (_xmlFile == ""){
+	_noCache = false;
+	trace("doGet");
+// for testing purposes 
+	
 	_xmlFile = "c:\\netprojs\\flash\\graph\\sjm8.xml";
+	//_xmlFile = "http://localhost/FlashDice/FlashDice.aspx";
 	//_xmlFile = "c:\\netprojs\\flash\\graph\\uncd1.xml";
 	//_xmlFile = "c:\\netprojs\\flash\\graph\\vs.xml";
 	//_xmlFile = "c:\\netprojs\\flash\\graph\\iquango.xml";
+	//_xmlFile = "c:\\netprojs\\flash\\graph\\co2.xml";
 }
 if (_pointSize == undefined ){
 	_pointSize = 2 ;
 }
 
 data_xml = new XML();
+var _sendLv:LoadVars = new LoadVars();
 data_xml.onLoad = startGraph;
-data_xml.load(_xmlFile);
+trace("doGet " + _doGet);
+
+if (_doGet == true){
+	trace("doing get " + _xmlFile);
+	_data_xml.sendAndLoad(_xmlFile + "?q=dummy",data_xml);
+} else {
+	if (_noCache == true){
+		data_xml.load(_xmlFile + "?cachebuster=" + new Date().getTime());
+		//data_xml.load(_xmlFile);
+	} else {
+		data_xml.load(_xmlFile);
+	}
+}
 data_xml.ignoreWhite = true;
 
 // the following are various items of global data
 // could be picked up from xml or passed params
 
-var _xLen:Number = 420; // length of axes
-var _yLen:Number = 420;
+// length of axes
+var _xLen:Number = getParam("xLen") == ""?420:Number(getParam("xLen"));
+var _yLen:Number = getParam("yLen") == ""?420:Number(getParam("yLen"));
+
+//var _yLen:Number = 420;
 var _xOrig:Number = 50; // origin
 var _yOrig:Number = _yLen + 30;
 var _intervalFont = 10;
@@ -107,9 +124,8 @@ var _markLen = 5;
 
 var _seqOrig:Number = _yOrig + _markLen + _intervalHeight + _titleHeight + 10;
 var _seqXOrig:Number = _xOrig + 50;
-
-
 //these are global, just for convenience
+
 var _xMult:Number = 1;
 var _yMult:Number = 1;
 var _seqMult:Number = 1;
@@ -121,16 +137,24 @@ var _seqStart:Number = 0;
 var _xLogMult:Number = 1;
 var _yLogMult:Number = 1;
 
-var _xName:String = "";
-var _yName:String = "";
-if (getParam("xName") != ""){
-	_xName = Boolean(getParam("xName"));
-}
-if (getParam("xName") != ""){
-	_yName = Boolean(getParam("yName"));
-}
+//var _xName:String = "";
+//var _yName:String = "";
+
+var _xName:String = (getParam("xName") == ""?"":getParam("xName"));
+var _yName:String = (getParam("yName") == ""?"":getParam("yName"));
+var _colour1:String = (getParam("colour1") == ""?"0000ff":getParam("colour1"));
+var _colour2:String = (getParam("colour2") == ""?"00ff00":getParam("colour2"));
+var _colour3:String = (getParam("colour3") == ""?"ff0000":getParam("colour3"));
+var _defaultColour:String = (getParam("defaultColour") == ""?"ffffff":getParam("defaultColour"));
+var _numRanges:Number = (getParam("numRanges") == ""?7:Number(getParam("numRanges")));
+_colour1 = "ff0000";
+_colour2 = "00ff00";
+_colour3 = "0000ff";
+_numRanges=7;
 
 
+
+//trace("Check params " + _urlStr);
 
 var _seqName:String = "";
 
@@ -139,33 +163,22 @@ var _playMode = false;
 
 var _playCount:Number = 0;;
 var _delayCount = 0;
+var _colourMin = 0;
+var _colourMax = -1;
+var _colourVar = "";
 
 
-
-//_root.attachMovie("popUpSymbol","popUp_mc",_root.getNextHighestDepth(),{_x:_xOrig  + 100,_y:50});
-
-var lev:Number=10000;
-//this.createEmptyMovieClip("popUpBack_mc",10009/*_root.getNextHighestDepth()*/);
-//this.popUpBack_mc._x = 50;
-//this.popUpBack_mc._y = 50;
 var lev:Number=200010;
-this.createClassObject(mx.controls.List,"popUp_lb",200010,{_x:50,_y:50});
+this.createClassObject(mx.controls.List,"popUp_lb",lev,{_x:50,_y:50});
 this.popUp_lb.hScrollPolicy = "on";
 this.popUp_lb.maxHPosition = _popUpWidth * 2;
 this.popUp_lb.addEventListener("change", popUpListener);
 this.popUp_lb._visible = false;
 this.popUp_lb.setSize(_popUpWidth, popUp_lb._height);
-this.popUp_lb.background=true;
-this.popUp_lb.backgroundColor=0x999999;
 this.popUp_lb._alpha=100;
-
-
 
 //Create seq list
 
-//var _seqList = ["Compare","Sequence"]; 
-var lev:Number=10000;
-//createClassObject(mx.controls.CheckBox,"seq_ch",_root.getNextHighestDepth(),{_x:5,_y:_seqOrig - 30,_width:100,label:"Sequences",selected:false});
 
 playSpeed_mc =  _root.attachMovie("ScrollBarSymbol","playSpeed",_root.getNextHighestDepth(),{_x:5,_y:_seqOrig + 17,boxLen:0,len:25,width:20,scrollStyle:"meter",name:"playSpeed"});
 createTextField("playMax_txt", _root.getNextHighestDepth(),playSpeed_mc._x + 20,this.playSpeed_mc._y - 10,_root._titleWidth,_root._titleHeight);
@@ -187,7 +200,6 @@ createClassObject(mx.controls.ComboBox,"xType_cb",_root.getNextHighestDepth(),{_
 createClassObject(mx.controls.ComboBox,"yType_cb",_root.getNextHighestDepth(),{_x:0,_y:0});
 this.createClassObject(mx.controls.ProgressBar,"progressBar_pb",_root.getNextHighestDepth(),{_x:100,_y:100});
 this["progressBar_pb"].mode="manual";
-
 xType_cb.addEventListener("change", xTypeListener);
 xType_cb.setSize(60,xType_cb._height);
 xType_cb.setDataProvider(_typeList);
@@ -204,10 +216,11 @@ trace("loaded=" + loaded +",total=" + total);
 
 function getParam(str:String)
 {
- 	trace(str + "," + _urlStr);
+
+ 	//trace(str + "," + _urlStr);
 	for(var i=0; i<_urls.length;i++)
 	{
-	 	trace(str + "," + _urls[i]);
+	 	//trace(str + "," + _urls[i]);
 		var temp = _urls[i].split("=");
 		if (temp.length == 2 && temp[0] == str)
 		{
@@ -350,17 +363,6 @@ function doXAxis(nodeName:String,linear:Boolean){
 	var xInterval = calcInterval(xMax,_xStart);
 	_xMult = calcMult(xInterval,xMax,_xLen,_xStart);
 	_xLogMult = calcLogMult(xInterval,xMax,_xLen,_xStart);
-	//_xName = nodeName;
-	
-	// this bit handles the sequences - amy want to 
-	// be switchablke on of 
-	//_seqList = node["sequences"];
-	/*
-	seq_cb.setDataProvider(_seqList);
-	seq_cb._visible = true;
-	seq_cb.selectedIndex = _seqList.length -1;
-	_seqNumber = seq_cb.selectedItem;
-	*/
 	trace("_xLogMult=" + _xLogMult +",_seqNumber="+_seqNumber+",index=")
 	//trace("trace _xname is " + _xName);
 	//trace ("doXAxis xmax is " +  xMax + ",xInterval " + xInterval + ",xMult " + _xMult);
@@ -376,7 +378,19 @@ function doXAxis(nodeName:String,linear:Boolean){
 	doXPopUp(xAxis_mc,_xLen/ 3 + _xOrig,_yLen - popUp_lb.height);
 	
 	//xAxis_mc._visible = true;
-	
+	//setColour();	
+}
+function setColour(noX:Boolean){
+
+	//colour_cb.setDataProvider(_menuList);
+//	trace("setColour " + _menuList.length);
+	colour_cb.addItemAt(0,{label:_defaultColourString,data:_defaultColourString});
+	for (var i=0; i <_menuList.length;i++){
+		colour_cb.addItemAt(i + 1,{label:_menuList[i].label,data:_menuList[i].data});
+	}
+	colour_cb.sortItemsBy("label","ASC");
+	//colour_cb.
+
 }
 
 function setSequence(seqMode:Boolean){
@@ -427,11 +441,6 @@ function doSeqAxis(force:Boolean,x:Number,y:Number){
 	// creates the sequence (x) axis
 	trace("doSeqAxis isSequenceOn=" + isSequenceOn() + ",force=" + force + ",yName=" + _yName + ",x=" + x + ",y=" + y)
 	
-	//need to fix this - removeclip won't work because
-	// getnextHighestlevel is duff !
-	// also better to attach once and use create
-	// method to update
-
 	setSequence(false);
 	
 	if (seqAxis_mc != null ){
@@ -452,9 +461,6 @@ function doSeqAxis(force:Boolean,x:Number,y:Number){
 			return;
 		}
 	}
-	//if (_seqList == undefined || _seqList.length == 0){
-		//return;
-	//}
 	_seqNumber = _seqList[_seqList.length - 1];
 	
 	//play_btn._visible = true;
@@ -521,6 +527,7 @@ function doSeqAxis(force:Boolean,x:Number,y:Number){
 		 doXPopUp(seqAxis_mc,_xLen/ 3 + _xOrig,_yLen - popUp_lb.height);
 	} else {
 		seqAxis_mc.onRelease = function(){
+			colourSel = false;
 			trace("trace seqAxis release " + this._xmouse + "," + _root._xmouse);
 			_root._seqNumber = this.positionPointer(this._xmouse);
 			
@@ -545,7 +552,7 @@ function getNode(nodeName:String,yAxis:Boolean){
 	if (nodeName == null ){
 		nodeName = (yAxis==true?_yName:_xName);
 	}
-	trace("getNode " + nodeName );
+	//trace("getNode " + nodeName );
 	//var node:XMLNode;
 	var node:Object;
 	if (nodeName == ""){
@@ -578,15 +585,6 @@ function doYaxis(nodeName:String,linear:Boolean){
 	//var node:Object;
 	
 	var node:Object = getNode(nodeName,true);
-	/*
-	if (nodeName == undefined || nodeName == ""){
-		node = getVariableNum(1);
-		nodeName = node["name"];
-	} else {
-		node = getVariable(nodeName);
-	}
-	*/
-
 	var yTitle = node["title"];
 	var yMax = node["max"];
 	var yMin = node["min"];
@@ -608,6 +606,7 @@ function doYaxis(nodeName:String,linear:Boolean){
 	yAxis_mc._visible = true;
 
 	yAxis_mc.onRelease = function(){
+		colourSel = false;
 		if (verticalAxis == true && popUp_lb._visible == true){
 			// ie were previously on y
 			// so hide pop up
@@ -620,18 +619,11 @@ function doYaxis(nodeName:String,linear:Boolean){
 			if (popUp_lb.getItemAt(0).label == _sequenceOptionString){
 				popUp_lb.removeItemAt(0);
 			}
-			
-			
 			popUp_lb._x = 50;
 			popUp_lb._y = 50;
-			//popUpBack_mc._x = 50;
-			//popUpBack_mc._y = 50;
 			popUp_lb._visible = true;
 		}
 		verticalAxis = true;
-		//var yNode:Object = getNode(_yName,true);
-		//trace("xSeq_mc y " + yNode + "," + yNode["sequences"] + ":" + yNode["max"]);
-		//xSeq_ch._visible = (yNode["sequences"] != null);
 	}
 }
 
@@ -669,10 +661,6 @@ function doSeqList(){
 function doGraph(nmeX:String,nmeY:String) {
 	//doSeqList();
 	trace ("seqList is  " + _seqList);
-	//xAxis_mc._visible = false;
-	//xAxis_mc.removeMovieClip();
-	//yAxis_mc._visible = false;
-	//yAxis_mc.removeMovieClip();
 	doXAxis(nmeX);
 	doYaxis(nmeY);
 	doSeqAxis(false);
@@ -687,29 +675,28 @@ function clearPoints(){
 		//_pointObjs[nme].removeMovieClip();
 	}
 	// the rest is obselesent
-/*
-	for (var i=0;i <_points.length;i++){
-		_points[i].removeMovieClip();
-	}
-	_points.splice(0,_points.length);
-*/
 }
 function getHighestPointDataSeq(nme:String,varName:String){
-	trace("getHighestPointDataSeq nme=" + nme + ",varName=" + varName);
-	if (_seqList == undefined){
+	//return null;
+	var list;
+	var node = getVariable(varName);
+	var list = node["sequences"];
+	//trace("getHighestPointDataSeq nme=" + nme + ",varName=" + varName + ",list=" + list + ",listlen=" + list.length);
+	if (list == null){
 		return null;
 	}
-	for (var i =_seqList.length -1 ;i >= 0; i--){
-		var val:Number = getPointDataSeq(nme,varName,_seqList[i]);
+	//trace("getHighestPointDataSeq searching");
+	for (var i = list.length -1 ;i >= 0; i--){
+		var val:Number = getPointDataSeq(nme,varName,list[i]);
 		
-		trace("i=" + i + ",year=" + _seqList[i] + ",val=" + val);
+		//trace("i=" + i + ",year=" + list[i] + ",val=" + val);
 		if (val != undefined){
 			return val;
 		}
 	}
 	return null;
 }
-function getPointDataSeq(nme:String,varName:String,seqNum:Number){
+function getPointSequenceObj(nme:String,varName:String,seqNum:Number){
 	//trace("getsequencedata nme=" + nme + ",varName=" + varName +",seqNum=" + seqNum);
 	if (seqNum < 0){
 		return null;
@@ -729,50 +716,71 @@ function getPointDataSeq(nme:String,varName:String,seqNum:Number){
 		return null;
 	}
 	var temp:String = "s" + seqNum;
-	if (_playMode == false){
-		return variableNode["s" + seqNum];
+
+	var seqObj:Object = variableNode["s" + seqNum];
+	return seqObj;
+}
+
+
+
+function getPointDataSeq(nme:String,varName:String,seqNum:Number){
+	//trace("getsequencedata nme=" + nme + ",varName=" + varName +",seqNum=" + seqNum);
+	var seqObj:Object = getPointSequenceObj(nme,varName,seqNum);
+	if (seqObj != null){
+		return seqObj.value;
+	}
+	return null;
+						 
+}
+function getValue(nme:String,varName:String){
+	// gets the value of data in normal case
+	// when we are plotting one type of data against
+	// another
+	//trace ("getValue nme=" + nme + ",varName=" + varName);
+	var val:Number;
+	if (isSequenceOn() == false){
+		val = getPointDataVar(nme,varName);
+		//trace("val=" + val);
+		if (val == null){
+			val = getHighestPointDataSeq(nme,varName);
+			//trace("val=" + val);
+		}
+		return val;
 	} else {
-		return variableNode["s" + seqNum];
-	/*
-		var upperNum = Math.ceil(seqNum);
-		var lowerNum = math.floor(seqNum);
-		var num1 = variableNode["s" + lowerNum];
-		var num2 = variableNode["s" + upperNum];
-		var fraction = seqNum - lowerNum;
-		return (num1 + (num2 - num1)* fraction);
-	*/
+		//trace("in sequence seq=" + _seqNumber + ",val=" + getPointDataSeq(nme,varName,_seqNumber));
+		return getPointDataSeq(nme,varName,_seqNumber);
 	}
 }
+function getValueSeq(nme:String,varName:String){
+	// This loks for the sequence value first,
+	// takes a variable if sequence not found
+	var val:Number = null;
+	if (isSequenceOn() == true){
+		val = getPointDataSeq(nme,varName,_seqNumber);
+		trace("getValueSeq in sequence seq=" + _seqNumber + ",val=" + val);
+	}
+	if (val == null){
+		//val = getPointDataVar(nme,varName);
+		val = getValue(nme,varName);
+		trace("getValueSeq val was null nme=" + nme + ",varName=" + varName + ",val=" + val);
+	}
+	return val;
+		
+		
+}
+
 
 function getXValue(nme:String){
 	// gets the value of data in normal case
 	// when we are plotting one type of data against
 	// another
-	var val:Number;
-	if (isSequenceOn() == false){
-		val = getPointDataVar(nme,_xName);
-		if (val == null){
-			val = getHighestPointDataSeq(nme,_xName);
-		}
-		return val;
-	} else {
-		return getPointDataSeq(nme,_xName,_seqNumber);
-	}
+	return getValue(nme,_xName);
 }
 function getYValue(nme:String){
 	// gets the value of data in normal case
 	// when we are plotting one type of data against
 	// another
-	var val:Number;
-	if (isSequenceOn() == false){
-		val = getPointDataVar(nme,_yName);
-		if (val == null){
-			val = getHighestPointDataSeq(nme,_yName);
-		}
-		return val;
-	} else {
-		return getPointDataSeq(nme,_yName,_seqNumber);
-	}
+	return getValue(nme,_yName);
 }
 function getSeqValue(nme:String){
 	// gets the value of data in the case case
@@ -807,9 +815,12 @@ function doPoints(xLinear:Boolean,yLinear:Boolean,traceMode:Boolean,seqMode:Bool
 	for (var nme in _pointData){
 		//trace ("doPoints in loop -  nme is " + nme);
 		var node:Object = _pointData[nme];
-		trace ("doPoints node is " + node + "\n_xName " + _xName + " _yName " + _yName);
+		//trace ("doPoints node is " + node + "\n_xName " + _xName + " _yName " + _yName);
 		var colour:String  = "0x" + node["colour"];
 		var pointSize:Number  = node["pointsize"];
+		if (pointSize == null){
+			pointSize = _pointSize;
+		}
 		var group:String  = node["group"];
 		var link:String  = node["link"];
 		var xVal:Number;
@@ -823,10 +834,10 @@ function doPoints(xLinear:Boolean,yLinear:Boolean,traceMode:Boolean,seqMode:Bool
 			yVal = getPointDataSeq(nme,_yName,_seqNumber);
 			xDesc  = String(_seqList[_seqNumber]);
 			xUnits = "";
-			trace("_seqList=" + _seqList + ",seqNumber," +_seqNumber + ",seqMode=" + seqMode + ",xVal=" + xVal + ",yVal=" + yVal);
+			//trace("_seqList=" + _seqList + ",seqNumber," +_seqNumber + ",seqMode=" + seqMode + ",xVal=" + xVal + ",yVal=" + yVal);
 			if (xVal != null && yVal != null){
 				x = _xOrig + ((xVal - _seqStart)/_seqMult);
-				trace ("x=" + x);
+				//trace ("x=" + x);
 			}
 		} else {
 			xVal = getXValue(nme);
@@ -851,13 +862,6 @@ function doPoints(xLinear:Boolean,yLinear:Boolean,traceMode:Boolean,seqMode:Bool
 		//trace ("doPoints xVal " + xVal + " yVal " + yVal);
 		
 		if (xVal != null && yVal != null){
-			/*
-			if (xLinear == true){
-				x = _xOrig + ((xVal - _xStart)/_xMult);
-			}else {
-				x = _xOrig + (Math.log(xVal - _xStart)/_xLogMult);
-			}
-			*/
 			var y:Number;
 			if (yLinear == true){
 				var y = _yOrig - ((yVal - _yStart)/_yMult);
@@ -867,7 +871,7 @@ function doPoints(xLinear:Boolean,yLinear:Boolean,traceMode:Boolean,seqMode:Bool
 					continue;
 				}
 			}
-			trace ("y=" + y);
+			//trace ("y=" + y);
 			var opacity:Number = 100;
 			var sel:Boolean = false;
 			if (selItems == true){
@@ -892,7 +896,7 @@ function doPoints(xLinear:Boolean,yLinear:Boolean,traceMode:Boolean,seqMode:Bool
 			 	);
 			} else {
 				newPoint = _pointObjs[nme];
-				trace("tracemode="+ traceMode + ",visible="+ newPoint._visible);
+				//trace("tracemode="+ traceMode + ",visible="+ newPoint._visible);
 				if ((selItems == false  || sel == true) && traceMode == true && newPoint._visible == true){
 					lineStyle(0,colour,100);
 					moveTo(newPoint._x,newPoint._y);
@@ -914,6 +918,24 @@ function doPoints(xLinear:Boolean,yLinear:Boolean,traceMode:Boolean,seqMode:Bool
 				newPoint.sel=sel;
 				newPoint._visible = true;
 			}
+			//trace("_colourVar="  + _colourVar +",_colourMax=" +_colourMax + ",_colourMin=" + _colourMin);
+			if (_colourVar != "" && _colourMin >=0  && _colourMax > _colourMin){
+				var colourVal:Number = 0;
+				if (_colourVar == _xName){
+					colourVal = xVal;
+				} else  if (_colourVar == _yName){
+					colourVal = yVal;
+				} else  {
+					//colourVal = getPointDataVar(nme,_colourVar);
+					//colourVal = getValueSeq(nme,_colourVar);
+					colourVal = getValue(nme,_colourVar);
+					//trace("called getvalueSeq nme=" + nme + ",_colourVar=" + _colourVar + "," + _colourMax + "," +  _colourMin + ":" + colourVal);
+				}
+				trace ("calling getColour " +  colourVal + "," + _colourMin + "," +  _colourMax);
+				colour = colourGrad_mc.getColour(colourVal,true);
+				//trace ("get colour " +  yVal + "," + _colourMax + "," +  _colourMin);
+			}
+				
 			newPoint.create(Number(colour));
 			//_points.push(newPoint);
 			_pointObjs[nme] = newPoint;
@@ -922,7 +944,7 @@ function doPoints(xLinear:Boolean,yLinear:Boolean,traceMode:Boolean,seqMode:Bool
 	trace("finished doPoints");
 }
 
-function updatePoints() {
+function updatePoints(checkColour:Boolean) {
 	var cnt = 0;
 	var selItems:Boolean = isAnySelected();
 	trace("starting updatePoints " + selItems);
@@ -931,13 +953,21 @@ function updatePoints() {
 	for(var nme in _pointObjs){
 		//trace ("doPoints starting loop. nme is " + nme);
 		var pt:MovieClip = _pointObjs[nme]; 
-		//var nme = pt.name;
 		//trace("nme=" + nme);
 		pt._alpha = 100;
 		pt.sel = false;
 		if (selItems == true){
-			pt.sel = isSelected(nme);
+			var sel = isSelected(nme);
+			
+			pt.sel = sel;
 			pt._alpha = (pt.sel==true?100:_opacity);
+			if (checkColour == true && _colourMax > 0 && _colourMax > _colourMin){
+				//colour = colour_mc.getColour(yvalue * 100 / (_colourMax - _colourMin));
+				colour = colourGrad_mc.getColour(yVal * 100 / (_colourMax - _colourMin),true);
+				trace ("get colour " +  yVal + "," + _colourMax + "," +  _colourMin);
+				trace ("get colour " +  yVal * 100 / (_colourMax - _colourMin) + "," + colour);
+			}
+
 		}
 		pt.create();
 	}
@@ -961,10 +991,8 @@ function startGraph(success:Boolean) {
 				//trace("trace temp is " + temp);
 				_menuList.addItem({label:temp,data:nme});
 				//trace ("trace textstyle " +popUp_lb.textstyle + ":" + popUp_lb.textStyle.getTextExtent("STUFF"));
-				if (this.textstyle.getTextExtent(temp) > maxSize){
-					maxSize = popUp_lb.textstyle.getTextExtent(temp);
-				}
 			}
+			setColour();
 			//trace ("data provider=" + _menuList);
 			//popUp_mc.rowCount = 2;
 			popUp_lb.rowCount = 10;//_menuList.length;
@@ -1028,11 +1056,20 @@ function parsePointData(pointData:XMLNode) {
 				var valList = new Object();
 				var vals = sequences[j].childNodes;
 				//trace("inside sequences Node " + vals.length);
-				for (var k = 0; k<vals.length; k++) {
+				for (var k = 0; k< vals.length; k++) {
 					var temp:String=vals[k].nodeName;
-					//trace("varName " + sequences[j].nodeName);
-					//trace("adding value to seqList in pointsData - name=" + temp + ",val=" + vals[k].firstChild.nodeValue);
-					valList[temp]=vals[k].firstChild.nodeValue;
+					var seqObj:Object = new Object();
+					seqObj["value"] = vals[k].firstChild.nodeValue;
+					var temp1:XMLNode = vals[k];
+					if (vals[k].attributes != null){
+						trace("special again");
+						for(var attr in temp1.attributes){
+							seqObj[attr] = temp1.attributes[attr];
+						}
+					}
+					//}
+					//valList[temp]=vals[k].firstChild.nodeValue;
+					valList[temp]= seqObj;
 				}
 				seqList[sequences[j].nodeName]=valList;
 			}
@@ -1102,31 +1139,28 @@ function parsePoints(points:XMLNode) {
 	this["sequence_txt"]._alpha = 50;	
 	//this["sequence_txt"].text = "Ok there";
 	this["sequence_txt"]._visible = false;
+	//colourGrad_mc = _root.attachMovie("colourGradSymbol","colourGrad",_root.getNextHighestDepth(),{_x:_xOrig + _xLen + 25,_y:60,width:10,height:80});
+	colourGrad_mc = _root.attachMovie("colourGradSymbol","colourGrad",lev + 1,{_x:_xOrig + _xLen + 25,_y:60,width:10,height:80});
+	colourGrad_mc._visible = false;
+	this.createClassObject(mx.controls.ComboBox,"colour_cb",lev + 2 /*5000000000*//*_root.getNextHighestDepth()*/,{_x:_xLen + _xOrig + 35 ,_y:30});
+	//this.createClassObject(mx.controls.ComboBox,"colour_cb",5000000000/*_root.getNextHighestDepth()*/,{_x:_xLen + _xOrig + 15 ,_y:55});
+	//this.createClassObject(mx.controls.ComboBox,"colour_cb",_root.getNextHighestDepth(),{_x:100,_y:100});
+	colour_cb.addEventListener("change", colourListener);
+	colour_cb.hScrollPolicy = "on";
+	colour_cb.rowCount = 4;
+	colour_cb.maxHPosition = _popUpWidth * 2;
+	colour_cb.setSize(_popUpWidth -10, colour_cb._height);
+	colour_cb._alpha=100;
 	if (_customList == true){
 		itemList_mc = _root.attachMovie("ItemListSymbol","itemList",_root.getNextHighestDepth(),{_x:_xLen + _xOrig + 25,_y:150});
 		opacity_mc =  _root.attachMovie("ScrollBarSymbol","opacity",_root.getNextHighestDepth(),{_x:_xLen + _xOrig + 55,_y:420,boxLen:0,len:150,width:20,vertical:false,scrollStyle:"meter",name:"opacity",startLabel:"0",endLabel:"100"});
 		opacity_mc._rotation = -90;
 		this.createTextField("opacity_txt", _root.getNextHighestDepth(),_xLen + _xOrig + 45,415,_root._titleWidth,_root._titleHeight);
-		//var temp1 = this.opacity_txt._x + this.opacity_txt._width + 5 ;
-		//var temp2 = this.opacity_txt._y;
 		//trace("trace x=" + temp1 + ",y=" + temp2);
-		//this.createTextField("opacityVal_txt", _root.getNextHighestDepth(),this.opacity_txt._x + this.opacity_txt._width + 5  ,this.opacity_txt._y  ,_root._titleWidth,_root._titleHeight);
 		this["opacity_txt"].text= _unselOpacityString + _opacity + " %";
 		this["opacity_txt"].autoSize=true;
 		//this["opacityVal_txt"].text= _opacity.toString();
-		//test1_mc = _root.attachMovie("ScrollBarSymbol","scroll1",_root.getNextHighestDepth(),{_x:_xOrig + 50,_y:150});
-		//test2_mc = _root.attachMovie("ScrollBarSymbol","scroll2",_root.getNextHighestDepth(),{_x:_xOrig + 150,_y:150});
-		//test2_mc._rotation = 90;
-
 	}else {
-		/*
-		createClassObject(mx.controls.List,"itemList_mc",_root.getNextHighestDepth(),{_x:_xLen + _xOrig + 25,_y:100});
-		itemList_mc.setDataProvider(_itemList);
-		itemList_mc.multipleSelection = true;
-		itemList_mc.setSize(150,200);
-		itemList_mc.addEventListener("change", mpListener);
-		*/
-		
 	}
 	//test_mc.create();
 	trace("mpList length=" + _itemList.length);
@@ -1152,29 +1186,6 @@ function getItem(node:XMLNode,item:String){
 	return null;
 }
 
-/*
-function getPointVariable(node:XMLNode) {
-		var children = node.childNodes;
-		for (var i = 0; i<children.length; i++) {
-		//trace ("getPointVariable looking through point :- " + children[i].nodeName);
-		if (children[i].nodeName == "variables") {
-			return children[i];
-		}
-	}
-	return null;
-}
-
-
-function getPointData(name:String,item:String) {
-	if (_pointsData[name] != null){
-		var point = _pointsData[name];
-		if (nme != "variable" ){
-			return getItem(point,item);
-		}
-	}
-	return null;
-}
-*/
 
 function getPointDataVar(name:String,item:String) {
 	var pointData:Object = _pointData[name];
@@ -1204,7 +1215,6 @@ function getVariableNum(num:Number) {
 
 
 function getVariable(nme:String) {
-	trace("getvariable " + nme);
 	return _variableData[nme];
 }
 function getVariableData(name:String,item:String) {
@@ -1218,11 +1228,41 @@ function doSeqPointer(d:Number,x:Number) {
 	if (x == undefined){
 		x = _seqXOrig;
 	}
-	trace("x=" + x);
 	seqPointer_mc._x = x + d;
 }
 
 // Now the listeners
+
+colourListener.change = function(evnt:Object) {
+    trace("colourListener " + colour_cb.selectedIndex + "," + colour_cb.selectedIndex.data );
+	if (colour_cb.selectedIndex == 0){
+		_colourVar  = "";
+		trace("colour range " + _colourMin + ":" + _colourMax);
+	}	else if (colour_cb.selectedIndex == 1){
+		_colourMin  = getVariableData("population","min");
+		_colourMax  = getVariableData("population","max");
+		_colourVar  = colour_cb.selectedItem;
+		trace("colour range " + _colourMin + ":" + _colourMax);
+	} else {
+		
+		_colourMin  = getVariableData(colour_cb.selectedItem.data,"min");
+		_colourMax  = getVariableData(colour_cb.selectedItem.data,"max");
+		_colourVar  = colour_cb.selectedItem.data;
+		trace("colour range " + colour_cb.selectedItem.data + "," +  colour_cb.selectedItem.label);
+		trace("colour range " + _colourMin + ":" + _colourMax);
+		
+	}
+
+		if (_colourMax == undefined || _colourMin == undefined || _colourVar == undefined || _colourVar == ""){
+			_colourVar  = "";
+			colourGrad_mc._visible = false;
+		} else {
+			trace("setting colour gradient");
+			colourGrad_mc.setMaxMin(_colourMin,_colourMax);
+			colourGrad_mc._visible = true;
+			doPoints();
+	}
+}
 
 xTypeListener.change = function(evnt:Object) {
     trace("xType listener " + xType_cb.selectedIndex + "," + yType_cb.selectedIndex );
@@ -1261,17 +1301,8 @@ popUpListener.change = function(evnt:Object) {
 			doSeqAxis(true,_xOrig,_yOrig);
 			xType_cb.enabled = false;
 			doPoints(null,true,false,true)
-			//setSequence(true);
-			//doPoints(null,null,false,true);
-
-			//xAxis_mc = xAxis_mc.removeMovieClip();
-			//trace("removed xAxis \"" + xAxis_mc + "\"" + temp);
-		
-			//doSeqAxis(true,_xOrig,_yOrig);
 			
 		} else {
-			//xAxis_mc._visible = false;
-			//xAxis_mc.removeMovieClip();
 			doXAxis(popUp_lb.selectedItem.data);
 			doSeqAxis(false);
 			doPoints();
@@ -1282,7 +1313,6 @@ popUpListener.change = function(evnt:Object) {
 	xSeq_ch._visible = (yNode["sequences"] != null);
 	xType_cb.enabled = true;
 	trace("xSeq_mc y " + yNode + "," + yNode["sequences"] + ":" + yNode["max"]+"," + xSeq_ch._visible);
-
 }
 
 xSequenceCheckListener.click  = function(){
@@ -1300,10 +1330,6 @@ xSequenceCheckListener.click  = function(){
 		doPoints()
 	}
 }
-
-
-
-
 mouseListener.onMouseDown = function() {
 	trace("mouse down");
 	if (_root.seqPointer_mc.hitTest(_root._xmouse, _root._ymouse)) {
@@ -1315,14 +1341,13 @@ mouseListener.onMouseDown = function() {
 }
 
 mouseListener.onMouseUp = function() {
-	trace("mouse up");
+	//trace("mouse up");
 	if (_root.seqPointer_mc.dragged == true) {
 		_root._seqNumber = seqAxis_mc.positionPointer(_root._xmouse - _xOrig);
 		trace("are dragging pointer seqNum=" + _root._seqNumber);
 		_root.doSeqPointer(seqAxis_mc.setPointerVal(_root._seqNumber)); 
 		_root.seqPointer_mc.stopDrag();
 		_root.seqPointer_mc.dragged = false;
-		trace("DOPOINTS being called");
 		doPoints();
 	}
 }
@@ -1370,12 +1395,8 @@ play_btn.onRelease = function(){
 		play_btn.label = "Play";
 		_playMode = false;
 	}
-//	doSeqAxis();
-//	doPoints()
 }
 function isSequenceOn(){
-	//return(seq_btn.label != "Sequences On");
-	//return(seq_ch.selected);
 	return (_seqList != undefined && _seqList.length > 0);
 }
 function isPlayOn(){
@@ -1429,10 +1450,9 @@ function isSelected(nme:String){
 	return (itemList_mc.selectedList[nme] != undefined && itemList_mc.selectedList[nme] == true);
 }
 function handleScroll(d:Number,range:Number,round:Boolean,name:String,finish:Boolean){
-	trace("handleScroll d=" + d + ",range=" + range);
+	//trace("handleScroll d=" + d + ",range=" + range);
 	var ratio = d / range;
 	if (name == "opacity"){
-		//_opacity = 10 + Math.floor(ratio * 90);
 		_opacity = 0 + Math.floor(ratio * 100);
 		trace("opacity=" + _opacity);
 		opacity_txt.text = _unselOpacityString + _opacity + " %";

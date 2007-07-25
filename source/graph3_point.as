@@ -5,12 +5,15 @@ function Point() {
 	this.createTextField("toolTip",this.getNextHighestDepth(),0,-50,250,70);
 	this.createTextField("details_txt",this.getNextHighestDepth(),-50,0,250,70);
 	//this["toolTip"].text="I am here " + xVal;
+	this["toolTip"].background = true;
+	this["toolTip"].backgroundColor = 0xffffcc;
+	this["toolTip"]._alpha = 100;
 	this["toolTip"]._visible = false;
 	this["toolTip"].multiline = true;
 	this["toolTip"].multiline = true;
 	this["toolTip"].autoSize=true;
 	this["details_txt"]._visible = false;
-	this["details"].autoSize=true;
+	this["details_txt"].autoSize=true;
 	//this["toolTip"].background = true;
 	//this["toolTip"].backgroundColor  = 0xffffcc;
 	this.colour=0x999999;
@@ -37,9 +40,12 @@ Point.prototype.create = function(colour:Number,len:Number) {
 	}
 	this.draw(_root._pointFill);
 	if (this.sel == true){
-		this.details_txt.text=this.name;
+		//this.details_txt.text=this.name;
+		this.toolTip.text=this.name;
+		this.updatePos("toolTip");
 	}
-	this.details_txt._visible = this.sel;
+	//this.details_txt._visible = this.sel;
+	this.toolTip._visible = this.sel;
 }
 
 Point.prototype.draw = function(doFill:Boolean) {
@@ -56,19 +62,69 @@ Point.prototype.draw = function(doFill:Boolean) {
 		this.endFill();
 	}
 }
+Point.prototype.updatePos = function(txtName:String) {
+	trace("trace updatePos " + txtName +" - " + this._x + ":" + this._y);
+	var temp = this._x - (_root._xOrig + _root._xLen - this[txtName]._width);
+	//if (this._x > _root._xOrig + _root._xLen - this[txtName]._width){
+		//this[txtName]._x =( - this[txtName]._width);
+	if (temp > 0){
+		this[txtName]._x = - temp;
+	} else {
+		this[txtName]._x = 0;
+	}
+	var temp = this._y - (_root._yOrig - this[txtName]._width);
+	//if (this._y > _root._yOrig - this[txtName]._height){
+		//this[txtName]._y =( - this[txtName]._height);
+	//if (this._y > temp){
+		//this[txtName]._y = - temp;
+	//} else {
+		this[txtName]._y = 0;
+	//}
+	trace("trace new x " + txtName +" - " + this._x + ":" + this._y);
+}
+
 Point.prototype.onRollOver = function() {
+	if (this._alpha == 0){
+		return;
+	}
 	//trace("name is " + this.name +  " x is " + this.xVal + " y is " + this.yVal);
 
 	//trace("rollover " + this.link + ",vals=" + this.xVal + ":" + this.yVal);
 	//this["toolTip"].text = this.name + "(" + this.group + ")" + "\n" + this.xName + ":" + /*addUnits(this.xVal,this.xUnits)*/convertUnits(this.xUnits,this.xVal,false) + "\n" + this.yName + " : " + /*addUnits(this.yVal,this.yUnits)*/convertUnits(this.yUnits,this.yVal,false);;
-	this["toolTip"].text = this.name + "(" + this.group + ")";
+	//trace("trace point " + this.xName);
+	if (this.xName == "undefined"){
+		this.xName = "";
+		//trace("trace point set xName " +  this.xName);
+	}
+
+	
+	this["toolTip"].text = this.name + (this.group == undefined?"":"(" + this.group + ")");
+	//this["toolTip"].text+=(" trace " + this.xName);
+
 	this["toolTip"].text+=(this.xName==""?"":"\n" + this.xName + " : " + convertUnits(this.xUnits,this.xVal,false));
 	this["toolTip"].text+=(this.yName==""?"":"\n" + this.yName + " : " + convertUnits(this.yUnits,this.yVal,false));
 	if (this.link != null && this.link != ""){
 		this["toolTip"].text+=("\n" + "(click to view)");
 	}
+	trace("trace x " + this._x + "," + this._width);
+	trace("trace pos " + _root._xOrig + "," + _root._xLen );
+	this.updatePos("toolTip");
+	/*
+	if (this._x > _root._xOrig + _root._xLen - this["toolTip"]._width){
+		this["toolTip"]._x =( - this["toolTip"]._width);
+	} else {
+		this["toolTip"]._x = 0;
+	}
+	if (this._y > _root._yOrig - this["toolTip"]._height){
+		this["toolTip"]._y =( - this["toolTip"]._height);
+	} else {
+		this["toolTip"]._y = 0;
+	}
+	trace("trace new x " + this._x + ":" + this._y);
+	*/
+	
 	this["toolTip"]._visible = true;
-
+	this.details_txt._visible = false;	
 	//this.outline.col.setRGB(0xFF);
 }
 
@@ -77,6 +133,10 @@ Point.prototype.onRollOut = function() {
 	if(!this.selected) {
     	//this.outline.col.setRGB(this.outline.rgb);
   	}
+	//this.details_txt._visible = this.sel;	
+	this.toolTip.text = this.name;
+	this.updatePos("toolTip");
+	this.toolTip._visible = this.sel;
 }
 Point.prototype.onRelease = function() {
 	if (this.link != null && this.link != ""){

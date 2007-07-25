@@ -1,11 +1,7 @@
-﻿//var axisColour:Number = 0xffffff;
-// constructor for axis
+﻿
 
 this.colour=0x999999;
 
-//trace("selectedCnt=" + selectedCnt);
-//var boxLen:Number = 10;
-//var width:Number = 10;
 if (len == undefined){
 	//var len:Number = 200;
 	len = 200;
@@ -63,6 +59,23 @@ if (scrollStyle == "standard"){
 	this.lineTo(0,temp);
 	this.moveTo(this.width,boxLen);
 	this.lineTo(this.width,temp);
+	this.endFill();
+
+	var temp1 = 4;
+	var temp2 = 5;
+	this.beginFill(0x000000,100);	
+	this.moveTo(this.width/2,this.boxLen/temp2);
+	this.lineTo(this.width/temp2, temp1 * this.boxLen/temp2);
+	this.lineTo(temp1 * this.width/temp2, temp1 * this.boxLen/temp2);
+	this.lineTo(this.width/2, this.boxLen/temp2);
+	
+	this.moveTo(this.width/2,this.len - this.boxLen/temp2);
+	this.lineTo(this.width/temp2, this.len - (temp1 * this.boxLen/temp2));
+	this.lineTo(temp1 * this.width/temp2, this.len - (temp1 * this.boxLen/temp2));
+	this.lineTo(this.width/2, this.len - this.boxLen/temp2);
+	this.endFill();	
+	
+	
 } else if (scrollStyle == "meter"){
 	darkColour = 0x000000;
 	this.lineStyle(2, darkColour, 100);
@@ -184,20 +197,20 @@ this.onMouseMove = function(){
 	}
 }
 this.onMouseUp = function(){
-	trace("mouse up");
+	//trace("mouse up");
 	this.clicking = false;
 }
 this.onMouseDown = function(){
-	trace("new scrollbar mouse down " + this.scrollBarButton_mc.dragging );
+	//trace("new scrollbar mouse down " + this.scrollBarButton_mc.dragging );
 	if (this.hitTest(_root._xmouse,_root._ymouse) != true){
-		trace("new not on scrollbar ");
+		//trace("new not on scrollbar ");
 		return;
 	}
-	trace("on new scrollbar " + this.scrollBarButton_mc.dragging);
+	//trace("on new scrollbar " + this.scrollBarButton_mc.dragging);
 	if (this.scrollBarButton_mc.hitTest(_root._xmouse,_root._ymouse) == true){
-		trace("on button");
+		//trace("on button");
 	} else {
-		trace("not on button");
+		//trace("not on button");
 		this.doClick(this._ymouse);
 		this.clicking = true;
 		this.clickDelay=12;
@@ -280,5 +293,3 @@ onEnterFrame = function() {
 		this.clickDelay = 2;
 	}
 }
-
-// 

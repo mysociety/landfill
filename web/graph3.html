@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta http-equuiv="Expires" content="Mon, 04 Dec 1999 21:29:02 GMT"/>
 <title>graph version 2</title>
 <script language="JavaScript" type="text/javascript">
-var path = "iquango.xml";
 <!--
 // -----------------------------------------------------------------------------
 // Globals
@@ -123,13 +123,26 @@ function DetectFlashVer(reqMajorVer, reqMinorVer, reqRevision)
 <!--text used in the movie-->
 <script language="JavaScript" type="text/javascript">
 <!-- 
+var path = "iquango.xml";
+var colour1 = "ff0000";
+var colour2 = "00ff00";
+var colour3 = "0000ff";
+var defaultColour = "ffffff";
+var numRanges = "7";
+var pointFill = "true";
+var pointSize = "2";
+var xLen = "420";
+var yLen = "420";
+var noCache = "false";
+var doGet = "false";
+
 var hasRightVersion = DetectFlashVer(requiredMajorVersion, requiredMinorVersion, requiredRevision);
 if(hasRightVersion) {  // if we've detected an acceptable version
     var oeTags = '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"'
     + 'width="700" height="550"'
     + 'codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab">'
-    + '<param name="movie" value="graph2.swf?xml=' + path + '&pointSize=2&pointFill=true&checkItems=false" /><param name="quality" value="high" /><param name="bgcolor" value="#ffffff" />'
-    + '<embed src="graph2.swf?xml=' + path + '&pointFill=true&checkItems=false" quality="high" bgcolor="#ffffff" '
+    + '<param name="movie" value="graph3.swf?xml=' + path + '&pointSize=' + pointSize + '&pointFill=' + pointFill + '&doGet=' + doGet + '&noCache=' + noCache + '&xLen=' + xLen + '&yLen=' + yLen + '&colour1=' + colour1 + '&colour2=' + colour2 + '&colour3=' + colour3 + '&defaultColour=' + defaultColour + '&numRanges=' + numRanges + '" /><param name="quality" value="high" /><param name="bgcolor" value="#ffffff" />'
+    + '<embed src="graph3.swf?xml=' + path + '&pointSize=' + pointSize + '&pointFill=' + pointFill + '&noCache=' + noCache +  + '&doGet=' + doGet + '&xLen=' + xLen + '&yLen=' + yLen + '&colour1=' + colour1 + '&colour2=' + colour2 + '&defaultColour=' + defaultColour + '&colour3=' + colour3 + '&numRanges=' + numRanges + '" quality="high" bgcolor="#ffffff" '
     + 'width="700" height="550" name="graph1" align="middle"'
     + 'play="true"'
     + 'loop="false"'

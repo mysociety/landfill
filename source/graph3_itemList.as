@@ -1,7 +1,4 @@
-﻿//var axisColour:Number = 0xffffff;
-// constructor for axis
-
-this.colour=0x999999;
+﻿this.colour=0x999999;
 var selectedCount = 0;
 var selectedList:Object = new Object();
 
@@ -160,96 +157,11 @@ this.clear_btn.onRelease = function(){
 	_root.updatePoints();
 }
 
-/*
-this.scrollBar_mc.scrollBarButton_mc.onRelease = function(){
-	//trace("listItem button release ");
-	this.stopDrag();
-	this.dragging = false;
-}
-this.scrollBar_mc.scrollBarButton_mc.onReleaseOutside = function(){
-	trace("listItem button outside release ");
-	this.onRelease();
-	//this.dragging = false;
-}
-this.scrollBar_mc.onMouseMove = function(){
-	//trace("moving " + this.scrollBarButton_mc.dragging);
-	if (this.scrollBarButton_mc.dragging == true && this._ymouse >= this.scrollStart & this._ymouse <= this.scrollEnd){
-		//trace("scrolling y=" + this._ymouse + this.scrollStart + "," + this.scrollEnd);
-		setItems(this._ymouse,true);
-	}
-}
-this.scrollBar_mc.onMouseDown = function(){
-	trace("scrollbar mouse down " + this.scrollBarButton_mc.dragging);
-	if (this.hitTest(_root._xmouse,_root._ymouse) != true){
-		trace("not on scrollbar " + this.scrollBarButton_mc.dragging);
-		return;
-	}
-	trace("On scrollbar " + this.scrollBarButton_mc.dragging);
 
-	
-	if (this.scrollBarButton_mc.hitTest(_root._xmouse,_root._ymouse) == true){
-		trace("on button");
-	} else {
-		trace("not on button");
-		this._parent.doClick(this._ymouse);
-	}
-
+items_mc.onPress = function(){
+	trace ("press " + this._xmouse +"," + this._ymouse);
 }
-*/
-/*
-this.scrollBar_mc.onMouseUp = function(){
-	trace("scrollbar mouse up " + this.scrollBarButton_mc.dragging);
-}
-*/
 
 
-/*
-this.scrollBar_mc.onPress = function(){
-	super();
-	return;
-	trace("press scrolBar");
-	if (this.scrollBarButton_mc.hitTest(this._xmouse,this._ymouse) == true){
-		trace("on button");
-		this.scrollBarButton_mc.onpress();
-	}
-}
-*/
-/*
-function doClick(d:Number){
-	trace("doClick " + d);
-	if (d < boxLen)
-	{
-		//trace(this.scrollBar_mc.scrollBarButton_mc._y);
-		if (this.scrollBar_mc.scrollBarButton_mc._y > boxLen + 10){
-			this.scrollBar_mc.scrollBarButton_mc._y-=10;
-		} else { 
-			this.scrollBar_mc.scrollBarButton_mc._y = boxLen;
-		}
-	} else if (d > len - 2 * boxLen){
-		if (this.scrollBar_mc.scrollBarButton_mc._y < (len - 2 * boxLen - 10)){
-			this.scrollBar_mc.scrollBarButton_mc._y+=10;
-		} else { 
-			this.scrollBar_mc.scrollBarButton_mc._y = len - 2 * boxLen;
-		}
-		//trace(this.scrollBar_mc.scrollBarButton_mc._y);
-	} else if (d <  this.scrollBar_mc.scrollBarButton_mc._y){
-		if (this.scrollBar_mc.scrollBarButton_mc._y >(boxLen + 50 )){
-			this.scrollBar_mc.scrollBarButton_mc._y-=50;
-		} else { 
-			this.scrollBar_mc.scrollBarButton_mc._y = boxLen;
-		}
-		//trace(this.scrollBar_mc.scrollBarButton_mc._y);
-	} else if (d > this.scrollBar_mc.scrollBarButton_mc._y ){
-		if (this.scrollBar_mc.scrollBarButton_mc._y < (len - 2 * boxLen - 50)){
-			this.scrollBar_mc.scrollBarButton_mc._y+=50;
-		} else { 
-			this.scrollBar_mc.scrollBarButton_mc._y = len - 2 * boxLen;
-		}
-	}
-		//trace(this.scrollBar_mc.scrollBarButton_mc._y);
-	setItems(this.scrollBar_mc.scrollBarButton_mc._y,true);
-}
-*/
 
 
-// 

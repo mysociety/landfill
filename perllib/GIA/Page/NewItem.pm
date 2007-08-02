@@ -6,7 +6,7 @@
 # Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: NewItem.pm,v 1.7 2005-10-21 19:22:50 matthew Exp $
+# $Id: NewItem.pm,v 1.8 2007-08-02 11:45:07 matthew Exp $
 #
 
 package GIA::Page::NewItem;
@@ -19,7 +19,8 @@ use Digest::SHA1 qw(sha1_hex);
 use mySociety::DBHandle qw(dbh);
 use mySociety::EvEl;
 use mySociety::MaPit;
-use mySociety::Util qw(is_valid_email is_valid_postcode);
+use mySociety::EmailUtil qw(is_valid_email);
+use mySociety::PostcodeUtil qw(is_valid_postcode);
 
 use GIA;
 use GIA::Web;

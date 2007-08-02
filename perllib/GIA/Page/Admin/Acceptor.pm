@@ -6,7 +6,7 @@
 # Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: Acceptor.pm,v 1.3 2005-10-20 13:31:03 chris Exp $
+# $Id: Acceptor.pm,v 1.4 2007-08-02 11:45:07 matthew Exp $
 #
 
 package GIA::Page::Admin::Acceptor;
@@ -19,7 +19,8 @@ use POSIX qw(strftime);
 
 use mySociety::DBHandle qw(dbh);
 use mySociety::MaPit;
-use mySociety::Util qw(is_valid_email is_valid_postcode);
+use mySociety::EmailUtil qw(is_valid_email);
+use mySociety::PostcodeUtil qw(is_valid_postcode);
 
 use GIA;
 use GIA::Form;

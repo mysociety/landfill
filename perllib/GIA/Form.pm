@@ -6,7 +6,7 @@
 # Copyright (c) 2005 Chris Lightfoot. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: Form.pm,v 1.4 2005-10-21 19:22:47 matthew Exp $
+# $Id: Form.pm,v 1.5 2007-08-02 11:45:07 matthew Exp $
 #
 
 package GIA::Form;
@@ -15,7 +15,7 @@ use strict;
 
 use Digest::SHA1;
 
-use mySociety::Util qw(random_bytes);
+use mySociety::Random qw(random_bytes);
 
 use GIA;
 

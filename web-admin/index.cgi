@@ -7,7 +7,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: index.cgi,v 1.2 2006-03-15 17:28:21 francis Exp $';
+my $rcsid = ''; $rcsid .= '$Id: index.cgi,v 1.3 2007-08-02 11:45:06 matthew Exp $';
 
 use strict;
 require 5.8.0;
@@ -24,7 +24,6 @@ use LWP::Simple;
 use mySociety::Config;
 mySociety::Config::set_file('../conf/general');
 
-use mySociety::Util;
 use mySociety::EvEl;
 
 use CVSWWW;

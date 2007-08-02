@@ -7,7 +7,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.19 2006-12-14 11:07:57 ben Exp $';
+my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.20 2007-08-02 11:45:06 matthew Exp $';
 
 use strict;
 require 5.8.0;
@@ -24,7 +24,7 @@ use LWP::Simple;
 use mySociety::Config;
 mySociety::Config::set_file('../conf/general');
 
-use mySociety::Util;
+use mySociety::EmailUtil;
 use mySociety::EvEl;
 
 use CVSWWW;
@@ -242,7 +242,7 @@ sub do_register_page ($) {
     push(@errors, "Please enter your name so that we know who you are") if (!$name);
     if ($email) {
         push(@errors, "The email address '$email' doesn't appear to be valid; please check it and try again")
-            if (!mySociety::Util::is_valid_email($email))
+            if (!mySociety::EmailUtil::is_valid_email($email))
     } else {
         push(@errors, "Please enter your email address so we can get in touch with you");
     }

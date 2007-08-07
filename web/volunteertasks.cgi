@@ -7,7 +7,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.21 2007-08-07 15:53:55 matthew Exp $';
+my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.22 2007-08-07 15:56:03 matthew Exp $';
 
 use strict;
 require 5.8.0;
@@ -385,7 +385,7 @@ Good luck!
             $q->end_table(),
             $q->end_form();
     } else {
-        print $q->p('This task has now been closed; use the Comment link below if you wish to add a comment.');
+        print $q->p($q->big($q->em('This task has now been closed; use the Comment link below if you wish to add a comment.')));
 	print $q->p($q->a({ -href => '/volunteertasks' }, 'Back to task list'));
     }
 

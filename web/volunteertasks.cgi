@@ -7,7 +7,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.22 2007-08-07 15:56:03 matthew Exp $';
+my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.23 2007-08-07 16:35:47 matthew Exp $';
 
 use strict;
 require 5.8.0;
@@ -258,14 +258,14 @@ sub do_register_page ($) {
 
         # build up list of people to CC the "hello" email
         my @ccers = ( $mysociety_email );
-        my $sth = $dbh->prepare("select name, email
-            from volunteer_interest
-            where ticket_num = ? and ccme = 'TRUE'");
-        $sth->execute( $tn );
-        while (my ($vname, $vemail)  = $sth->fetchrow_array()) {
-            push @ccers, $vemail;
-        }
-        $sth->finish;
+#        my $sth = $dbh->prepare("select name, email
+#            from volunteer_interest
+#            where ticket_num = ? and ccme = 'TRUE'");
+#        $sth->execute( $tn );
+#        while (my ($vname, $vemail)  = $sth->fetchrow_array()) {
+#            push @ccers, $vemail;
+#        }
+#        $sth->finish;
 
         # Insert volunteer into the DB
         $dbh->do('
@@ -280,7 +280,7 @@ sub do_register_page ($) {
         my $s = decode_entities($heading);
 
         mySociety::EvEl::send(
-            { 'To' => $email, 'Cc' => \@ccers, 
+            { 'To' => [[$email,$name]], 'Cc' => \@ccers, 
               'From' => $mysociety_email, 
               'Subject' => "mySociety task: $s",
               '_unwrapped_body_' => "$name,
@@ -288,17 +288,28 @@ sub do_register_page ($) {
 Thanks for expressing an interest in helping with this task:
 '$s'.
 
-Next step - join our public developers' email list
-https://secure.mysociety.org/admin/lists/mailman/listinfo/developers-public
-If you like, tell us a bit about yourself, and your ideas for doing this task.
+If you need any information before you can get going, or after you've begun,
+please join our public developers' email list:
 
-Also, pop by our public internet chat room and say 'hi'!
-http://www.irc.mysociety.org
+    https://secure.mysociety.org/admin/lists/mailman/listinfo/developers-public
 
-You can find the task in our ticket tracking system here. Please append remarks with any information you find out, and as you make progress.
-https://secure.mysociety.org/cvstrac/tktview?tn=$tn
+where other mySociety volunteers and developers will be happy to help you. Or,
+if your request or question isn't suitable for a public mailing list, just hit
+reply to this email.
 
-Good luck!
+You could also pop by our public internet chat room and say hi to us:
+
+    http://www.irc.mysociety.org/
+
+
+The task also has a page in our internal system, where we can track its progress.
+To add any information you have, click the \"Add remarks\" link on this page:
+
+    https://secure.mysociety.org/cvstrac/tktview?tn=$tn
+
+Or again, post any results you get to our mailing list or email us.
+ 
+Good luck, and we hope to hear from you soon!
 
 -- the mySociety team
 "

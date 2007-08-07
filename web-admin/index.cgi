@@ -7,7 +7,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: index.cgi,v 1.3 2007-08-02 11:45:06 matthew Exp $';
+my $rcsid = ''; $rcsid .= '$Id: index.cgi,v 1.4 2007-08-07 12:21:08 matthew Exp $';
 
 use strict;
 require 5.8.0;
@@ -45,7 +45,7 @@ sub do_view_volunteers ($) {
     print $q->h1("Signed up volunteers");
 
     my @volunteers = @{$dbh->selectall_arrayref(
-                    "select ticket_num, name, email, whenregistered from volunteer_interest order by ticket_num, whenregistered desc")};
+                    "select ticket_num, name, email, whenregistered, ccme from volunteer_interest order by ticket_num, whenregistered desc")};
     my %bytask;
     foreach my $volunteer (@volunteers) {
         push @{$bytask{$volunteer->[0]}}, $volunteer;
@@ -54,7 +54,7 @@ sub do_view_volunteers ($) {
     print map { 
         $q->h2($q->a({ -href => "https://secure.mysociety.org/cvstrac/tktview?tn=$_" }, $ticket_titles{$_})),
         $q->table ( { -border => 1 },
-            map { $q->Tr({}, $q->td([$_->[1],$_->[2], strftime('%e %B %Y', localtime($_->[3]))])) } @{$bytask{$_}}
+            map { $q->Tr({}, $q->td([$_->[1],$_->[2], strftime('%e %B %Y', localtime($_->[3])), $_->[4] ])) } @{$bytask{$_}}
         )
         } sort keys %bytask;
 

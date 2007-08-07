@@ -6,7 +6,7 @@
 # Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
 # Email: francis@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: CVSWWW.pm,v 1.2 2007-05-14 10:35:58 francis Exp $
+# $Id: CVSWWW.pm,v 1.3 2007-08-07 15:53:55 matthew Exp $
 #
 
 package CVSWWW;
@@ -38,7 +38,7 @@ sub start_html ($$) {
     my ($q, $title) = @_;
     return $q->start_html(
                 -encoding => 'utf-8',
-                -title => ($title ? "mySociety: $title" : "mySociety"),
+                -title => ($title ? "$title - mySociety" : "mySociety"),
                 -style => {
                     -src => 'http://www.mysociety.org/global.css',
                     -media => 'screen',

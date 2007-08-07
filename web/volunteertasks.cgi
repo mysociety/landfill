@@ -7,7 +7,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.20 2007-08-02 11:45:06 matthew Exp $';
+my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.21 2007-08-07 15:53:55 matthew Exp $';
 
 use strict;
 require 5.8.0;
@@ -29,9 +29,7 @@ use mySociety::EvEl;
 
 use CVSWWW;
 
-#
-my $mysociety_email = "volunteers\@mysociety.org";
-
+my $mysociety_email = "volunteers" . chr(64) . "mysociety.org";
 
 my $dbh = CVSWWW::dbh();
 
@@ -82,7 +80,7 @@ EOF
     my %blurb = (
         nontech => <<EOF,
 <p>People sometimes think that we're only interested in programmers, but
-nothing could be further from the truth. In 2006 we want our various
+nothing could be further from the truth. We want our various
 sites to grow, and to be more and more widely used by people in as
 many places as possible: people who can tell their friends, put up
 posters, hold dinners, write to newspapers, design brochures and so on
@@ -138,7 +136,7 @@ EOF
                 ", {}, $skills_needed);
 
     if ($ntasks == 0) {
-        print $q->p("Unfortunately, there aren't any volunteer tasks suitable for $skills_desc{$skills_needed} at the moment. Please drop us a mail to", $q->a({ -href => 'mailto:team@mysociety.org' }, 'team@mysociety.org'), "to ask how you can get involved");
+        print $q->p("Unfortunately, there aren't any volunteer tasks suitable for $skills_desc{$skills_needed} at the moment. Please drop us a mail to", $q->a({ -href => 'mailto:team&#64;mysociety.org' }, 'team&#64;mysociety.org'), "to ask how you can get involved");
     } else {
         my %howlong_desc = (
                 '30mins' => 'up to half an hour',
@@ -210,9 +208,9 @@ sub do_register_page ($) {
 
     my $tn = $q->param('tn');
 
-    my ($orig, $change, $extra1, $extra2)
+    my ($orig, $change, $extra1, $extra2, $status)
         = $dbh->selectrow_array("
-                        select origtime, changetime, extra1, extra2
+                        select origtime, changetime, extra1, extra2, status
                         from ticket
                         where tn = ?", {}, $tn);
     my ($heading, $content) = CVSWWW::html_format_ticket($tn);
@@ -224,7 +222,8 @@ sub do_register_page ($) {
                     -status => 400,
                     -type => 'text/html; charset=utf-8'),
                 CVSWWW::start_html($q, 'Oops'),
-                $q->p("We couldn't find a volunteer task for the link you clicked on."),
+                $q->p("We couldn't find a volunteer task for the link you clicked on.",
+        	    $q->a({ -href => '/volunteertasks' }, 'Back to task list')),
                 CVSWWW::end_html($q);
         return;
     }
@@ -247,7 +246,7 @@ sub do_register_page ($) {
         push(@errors, "Please enter your email address so we can get in touch with you");
     }
 
-    if ($q->param('edited') && !@errors) {
+    if ($status eq 'new' && $q->param('edited') && !@errors) {
         # all go - perform the signup
 
 
@@ -359,7 +358,8 @@ Good luck!
         print $q->ul($q->li([map { encode_entities($_) } @errors]));
     }
 
-    print $q->start_form(-method => 'POST'),
+    if ($status eq 'new') {
+        print $q->start_form(-method => 'POST'),
             $q->hidden(-name => 'edited', -value => '1'),
             $q->hidden(-name => 'tn'),
             $q->hidden(-name => 'prevurl'),
@@ -383,9 +383,14 @@ Good luck!
                         -value => 'Register my interest'))
             ),
             $q->end_table(),
-            $q->end_form(),
-            $q->p( $q->a({ -href => "https://secure.mysociety.org/cvstrac/tktview?tn=$tn" }, "Comment on or update this task (in cvstrac)")),
-            CVSWWW::end_html($q);
+            $q->end_form();
+    } else {
+        print $q->p('This task has now been closed; use the Comment link below if you wish to add a comment.');
+	print $q->p($q->a({ -href => '/volunteertasks' }, 'Back to task list'));
+    }
+
+    print $q->p( $q->a({ -href => "https://secure.mysociety.org/cvstrac/tktview?tn=$tn" }, "Comment on or update this task")),
+        CVSWWW::end_html($q);
 }
 
 

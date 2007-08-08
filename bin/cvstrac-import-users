@@ -9,7 +9,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: cvstrac-import-users,v 1.5 2007-05-14 10:21:46 francis Exp $';
+my $rcsid = ''; $rcsid .= '$Id: cvstrac-import-users,v 1.6 2007-08-08 15:56:07 francis Exp $';
 
 use strict;
 
@@ -24,7 +24,7 @@ sub escape ($) {
 my $dbfile = shift;
 die "need sqlite cvstrac database as first param" if !$dbfile;
 my $permissions = shift;
-die "need permissions as second param, e.g. aijknorsw" if !$permissions;
+die "need permissions as second param, e.g. aijnorsw" if !$permissions;
 my $dbh = DBI->connect("dbi:SQLite:dbname=$dbfile", '', '', {RaiseError => 1, AutoCommit => 0});
 
 # Do everything in a transaction. Actually that's how this version of
@@ -36,7 +36,7 @@ foreach my $user (split(/,?\s+/, $group_members)) {
     $gcos =~ s#,.+##;
 
     if ($dbh->selectrow_array('select count(*) from user where id = ?', {}, $name)) {
-        $dbh->do('update user set passwd = ? where id = ?', {}, $passwd, $name);
+        $dbh->do('update user set passwd = ?, capabilities = ? where id = ?', {}, $passwd, $permissions, $name);
     } else {
         $dbh->do(q#insert into user (id, name, email, passwd, capabilities)
                     values (?, ?, ?, ?, ?)#, {},

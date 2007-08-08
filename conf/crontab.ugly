@@ -5,11 +5,11 @@
 # Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
 # Email: francis@mysociety.org. WWW: http://www.mysociety.org/
 #
-# $Id: crontab.ugly,v 1.7 2006-10-03 09:28:05 francis Exp $
+# $Id: crontab.ugly,v 1.8 2007-08-08 15:54:20 francis Exp $
 #
 
 MAILTO=infrastructure@lists.mysociety.org
 
 # Once an hour import system users into cvstrac.
-0 * * * * root /data/vhost/!!(*= $vhost *)!!/mysociety/cvswww/bin/cvstrac-import-users /usr/local/cvs/mysociety/mysociety.db aijknorsw
+0 * * * * root /data/vhost/!!(*= $vhost *)!!/mysociety/cvswww/bin/cvstrac-import-users /usr/local/cvs/mysociety/mysociety.db aijnorsw
 

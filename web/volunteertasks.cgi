@@ -7,7 +7,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.23 2007-08-07 16:35:47 matthew Exp $';
+my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.24 2007-08-08 22:52:11 matthew Exp $';
 
 use strict;
 require 5.8.0;
@@ -288,22 +288,18 @@ sub do_register_page ($) {
 Thanks for expressing an interest in helping with this task:
 '$s'.
 
-If you need any information before you can get going, or after you've begun,
-please join our public developers' email list:
+If you need any information before you can get going, or after you've begun, please join our public developers' email list:
 
     https://secure.mysociety.org/admin/lists/mailman/listinfo/developers-public
 
-where other mySociety volunteers and developers will be happy to help you. Or,
-if your request or question isn't suitable for a public mailing list, just hit
-reply to this email.
+where other mySociety volunteers and developers will be happy to help you. Or, if your request or question isn't suitable for a public mailing list, just hit reply to this email.
 
 You could also pop by our public internet chat room and say hi to us:
 
     http://www.irc.mysociety.org/
 
 
-The task also has a page in our internal system, where we can track its progress.
-To add any information you have, click the \"Add remarks\" link on this page:
+The task also has a page in our internal system, where we can track its progress.  To add any information you have, click the \"Add remarks\" link on this page:
 
     https://secure.mysociety.org/cvstrac/tktview?tn=$tn
 

@@ -397,10 +397,12 @@ void wiki_page(void){
   isLocked = azPage[0] && atoi(azPage[1])!=0;
 
   if( zTime==0 && !overload ){
-    if( g.okAdmin ){
-      /* admin or up can always edit */
+/*  Disabled by Francis
+   if( g.okAdmin ){
+      // admin or up can always edit 
       canEdit = 1;
-    }else if( isHome ){
+    } else */
+    if( isHome ){
       /* users can always edit their own "home page" */
       canEdit = 1;
     }else if( !isUser && g.okWiki && !isLocked ){

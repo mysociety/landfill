@@ -60,6 +60,12 @@ my $search_term = &handle_search_term(); #' 1 = 1 ';
 		#}
 
 		$more_link= $result->{link};
+		my $cache_link='';
+
+		if (defined $ENV{"PANOPTICON_CACHE_PATH"} and $ENV{"PANOPTICON_CACHE_PATH"} ne '') {
+				$cache_link= " (<a href=\"cache/$result->{entryid}.html\">cached</a>) ";
+		}
+
 		print <<EOfragment;
 <div class="entry entry_$c">
 	<a href="$result->{link}" target="govtsays"><strong>$result->{title}</strong></a><br />
@@ -70,8 +76,8 @@ my $search_term = &handle_search_term(); #' 1 = 1 ';
 	</span>
 	<blockquote>
 		$result->{shortcontent}
-		<a href="$more_link" target="govtsays">Read more</a>
-		(<a href="../cache/$result->{entryid}.html">cache</a>)
+		<a href="$more_link">Read more</a>
+		$cache_link
 	</blockquote>
 </div>
 

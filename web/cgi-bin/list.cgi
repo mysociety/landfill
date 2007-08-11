@@ -48,7 +48,7 @@ my $search_term = &handle_search_term($ENV{'QUERY_STRING'} || ''); # &handle_sea
 	my $google_terms;
 	my $show_link;
 	my $more_link;
-	my $count;
+	my $count=0;
 	while ($result=$query->fetchrow_hashref) {
 
 		next if ($result->{shortcontent} =~ m#HARD NEWS#);
@@ -64,7 +64,12 @@ my $search_term = &handle_search_term($ENV{'QUERY_STRING'} || ''); # &handle_sea
 		#}
 
 		$more_link= $result->{link};
+		
+		my $cache_link='';
 
+		if (defined $ENV{"PANOPTICON_CACHE_PATH"} and $ENV{"PANOPTICON_CACHE_PATH"} ne '') {
+				$cache_link= " (<a href=\"cache/$result->{entryid}.html\">cached</a>) ";
+		}
 		print <<EOfragment;
 	<div class="entry entry_$count">
 		<a href="$result->{link}" class="panopticon_title">$result->{title}</a>
@@ -74,7 +79,7 @@ my $search_term = &handle_search_term($ENV{'QUERY_STRING'} || ''); # &handle_sea
 		<small>seen at  $result->{first_seen_formatted}
 		for
 		<a href="$result->{feed_site_url}">$result->{feed_name}</a> for <strong>$result->{tag}</strong>
-		(<a href="cache/$result->{entryid}.html">cached</a>)
+		$cache_link
 		.
 		</small>
 		</span>

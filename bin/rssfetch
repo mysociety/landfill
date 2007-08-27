@@ -1,6 +1,4 @@
-#!/usr/bin/perl 
-
-BEGIN {push @INC, $ENV{PANOPTICON_PATH}.'/bin/'}
+#!/usr/bin/perl  -I./bin
 
 use warnings;
 use strict;
@@ -15,6 +13,7 @@ use HTML::Scrubber;
 	my $feeds_query=$dbh->prepare(" select  feedid, feedurl, tag from  feeds where active=1");
 	$feeds_query->execute || die $dbh->errstr;
 	while (my $r= $feeds_query->fetchrow_hashref) {
+
 		&handle_feed($r->{feedurl}, $r->{feedid}, $r->{tag});
 	}
 }
@@ -95,6 +94,8 @@ sub process_item {
 	return if (($item->link =~ m#http://www\.theyworkforyou\.com#i) and ($tag =~ /theyworkforyou/i) );
 	return if (($item->link =~ m#http://www\.publicwhip\.#i) and ($tag =~ /PublicWhip/i) );
 
+	return if ($item->link =~ m#http://www.recycledart.org#i);
+
 	if (defined $ENV{DEBUG}) {print STDERR "foo\n";}
 	my $content= $item->content;
 	$content ||= $item->title;
@@ -118,9 +119,15 @@ sub process_item {
 
 
 	$encoded{"title"}=~ s#Â##g;
+        my $like_title='';
+        if ($encoded{'title'} =~ m#'(.{200}).+'# ) {
+                   $like_title= "or title like '$1%'" ;
+        }
+
+
 	#$encoded{"title"}=~ s#\£#\&amp;pound;#g;
 
-	if ($content =~ m/(.{210}.+?\b)/) {
+	if ($content =~ m/(.{200}.+?\b)/) {
 		$encoded{shortcontent}= $dbh->quote($1 . "...");
 	} else  {
 		$encoded{shortcontent}= $encoded{"content"};
@@ -128,10 +135,11 @@ sub process_item {
 
 	my $query= $dbh->prepare ("
 		select entryid from entries where
-		   title  =$encoded{title} and
-		   link   =$encoded{link} and
-		   content=$encoded{content}
-		");
+                   ( title  =$encoded{title} 
+                        $like_title
+                   ) and
+		   link   =$encoded{link}
+		"); # may want to knock out content here if the snippets are always different
 
 	$query->execute();
 
@@ -149,8 +157,8 @@ sub process_item {
 		my $query= $dbh->do ("
 		insert into entries set
 		   feedid= $encoded{feedid}  ,
-		   title  =$encoded{title}   ,
 		   link   =$encoded{link}    ,
+		   title   =$encoded{title}    ,
 		   content=$encoded{content} ,
 		   shortcontent=$encoded{shortcontent} ,
 		   first_seen=now()

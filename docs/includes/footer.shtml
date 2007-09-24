@@ -2,7 +2,7 @@
 <div id="footer"> <ul class="footer">
     <li><a href="mailto:team&#64;placeopedia.com">contact us</a></li>
     <li><a id="mysocietylink" href="http://www.mysociety.org/"><span class="hidden">My Society</span></a></li>
-    <li><a href="/data/">XML and Syndicaton</a></li>
+    <li><a href="/data/">XML and Syndication</a></li>
 <!--<li><a href="/about/privacy/">privacy policy</a></li> -->
 </ul>
 <a class="hidden" href="#top">back to top of page</a>

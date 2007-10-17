@@ -16,11 +16,10 @@ $home = ($_SERVER['PHP_SELF'] == $path . '/index.php');
 <? if (!$home) { ?>
 <table align="center" border="0" cellpadding="10" cellspacing="0">
 <tr>
-<td colspan="3"><a href="<?=$path ?>/brokencivicinfrastructure/">Broken Civic Infrastructure Mapping</a>
+<td colspan="3"><a href="<?=$path ?>/fixmystreet/">FixMyStreet</a>
 <td align="right" colspan="3"><a href="<?=$path ?>/hearfromyourcouncillor/">HearFromYourCouncillor</a>
 </tr>
 <tr>
-<td colspan="2"><a href="<?=$path ?>/giveitaway/">GiveItAway</a>
 <td colspan="2"><a href="<?=$path ?>/pledgebank/">PledgeBank</a>
 <td align="right" colspan="2"><a href="<?=$path ?>/writetothem/">WriteToThem</a>
 </tr>

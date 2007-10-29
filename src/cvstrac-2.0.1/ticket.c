@@ -1537,6 +1537,14 @@ void ticket_append(void){
   doSubmit = P("submit")!=0;
   zText = remove_blank_lines(PD("r",""));
   if( doSubmit ){
+    /* Check magic spam-avoidance word if they aren't logged in */
+    if (strcmp(g.zUser, "anonymous") == 0) {
+        if (!P("mw") || strcmp(P("mw"), "tangible")!=0) {
+            print_spam_trap_failure();
+            return;
+        }
+    }
+
     zErrMsg = is_edit_allowed(0,zText);
     if( zText[0] && 0==zErrMsg ){
       time_t now;

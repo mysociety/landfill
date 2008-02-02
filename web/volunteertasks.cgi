@@ -7,7 +7,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.25 2008-02-02 18:26:06 matthew Exp $';
+my $rcsid = ''; $rcsid .= '$Id: volunteertasks.cgi,v 1.26 2008-02-02 19:55:14 matthew Exp $';
 
 use strict;
 require 5.8.0;
@@ -403,10 +403,10 @@ Good luck, and we hope to hear from you soon!
 # FastCGI signal handling
 my $exit_requested = 0;
 my $handling_request = 0;
-$SIG{TERM} = $SIG{USR1} = sub {
-    $exit_requested = 1;
-    # exit(0) unless $handling_request;
-};
+#$SIG{TERM} = $SIG{USR1} = sub {
+#    $exit_requested = 1;
+#    # exit(0) unless $handling_request;
+#};
 
 while (my $q = new CGI::Fast()) {
     $handling_request = 1;

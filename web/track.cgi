@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.29 2006-09-05 14:33:48 chris Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.30 2008-02-02 18:26:06 matthew Exp $';
 
 use strict;
 
@@ -407,7 +407,16 @@ EOF
     }
 }
 
+# FastCGI signal handling
+my $exit_requested = 0;
+my $handling_request = 0;
+$SIG{TERM} = $SIG{USR1} = sub {
+    $exit_requested = 1;
+    # exit(0) unless $handling_request;
+};
+
 while (my $q = new CGI::Fast()) {
+    $handling_request = 1;
     $q->charset('utf-8');
 
     # Do we already have a cookie, and if so, is it valid?
@@ -434,6 +443,8 @@ while (my $q = new CGI::Fast()) {
     } else {
         do_web_bug($q, $track_id, $track_cookie);
     }
+    $handling_request = 0;
+    last if $exit_requested;
 }
 
 do_commit() if ($n_since_lastcommit > 0);

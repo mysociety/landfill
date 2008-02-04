@@ -14,13 +14,13 @@ use CGI qw/param/;
 use HTML::Entities;
 use XML::Simple;
 use URI::Escape;
-use CGI::Fast;
+use mySociety::CGIFast;
 
 
 my $site_name= mySociety::Config::get('SITE_NAME');
 
 
-while (my $q = new CGI::Fast()) {
+while (my $q = new mySociety::CGIFast()) {
         print "Content-Type: application/vnd.google-earth.kml+xml\r\n\r\n";
 	my $limiter='';
 	# my $search_term = &handle_search_term($q); #' 1 = 1 ';

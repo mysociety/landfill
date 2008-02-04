@@ -12,7 +12,7 @@ BEGIN {
 use PoP;
 #use CGI qw/param/;
 use CGI;
-use CGI::Fast;
+use mySociety::CGIFast;
 use CGI::Carp qw/fatalsToBrowser/;
 use Date::Manip;
 use HTML::Entities;
@@ -25,7 +25,7 @@ our $url_prefix=mySociety::Config::get('URL');
 my $Js='';
 
 
-while (my $q = new CGI::Fast()) {
+while (my $q = new mySociety::CGIFast()) {
     my $type = $q->param('type') || 'details';
         if ($type eq 'xml') {
             print "Content-Type: application/xml; charset=utf-8\n\n";

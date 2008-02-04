@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.31 2008-02-02 19:45:53 matthew Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.32 2008-02-04 22:50:30 matthew Exp $';
 
 use strict;
 
@@ -19,7 +19,7 @@ BEGIN {
     mySociety::Config::set_file('../conf/general');
 }
 
-use CGI::Fast;
+use mySociety::CGIFast;
 use Digest::SHA1;
 use Error qw(:try);
 use HTML::Entities;
@@ -407,16 +407,7 @@ EOF
     }
 }
 
-# FastCGI signal handling
-my $exit_requested = 0;
-my $handling_request = 0;
-#$SIG{TERM} = $SIG{USR1} = sub {
-#    $exit_requested = 1;
-#    # exit(0) unless $handling_request;
-#};
-
-while (my $q = new CGI::Fast()) {
-    $handling_request = 1;
+while (my $q = new mySociety::CGIFast()) {
     $q->charset('utf-8');
 
     # Do we already have a cookie, and if so, is it valid?
@@ -443,8 +434,6 @@ while (my $q = new CGI::Fast()) {
     } else {
         do_web_bug($q, $track_id, $track_cookie);
     }
-    $handling_request = 0;
-    last if $exit_requested;
 }
 
 do_commit() if ($n_since_lastcommit > 0);

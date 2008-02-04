@@ -7,13 +7,13 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: index.cgi,v 1.5 2007-08-07 15:53:55 matthew Exp $';
+my $rcsid = ''; $rcsid .= '$Id: index.cgi,v 1.6 2008-02-04 22:50:28 matthew Exp $';
 
 use strict;
 require 5.8.0;
 
 use CGI qw(-no_xhtml);
-use CGI::Fast;
+use mySociety::CGIFast;
 use DBI;
 use HTML::Entities;
 use POSIX;
@@ -59,7 +59,7 @@ sub do_view_volunteers ($) {
     print CVSWWW::end_html_admin($q);
 }
 
-while (my $q = new CGI::Fast()) {
+while (my $q = new mySociety::CGIFast()) {
 #    $q->encoding('utf-8');
     $q->autoEscape(0);
     do_view_volunteers($q);

@@ -6,7 +6,7 @@
 # Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
-# $Id: Web.pm,v 1.5 2005-10-21 19:22:48 matthew Exp $
+# $Id: Web.pm,v 1.6 2008-02-04 23:25:27 matthew Exp $
 #
 
 package GIA::Web;
@@ -20,7 +20,7 @@ use GIA;
 use CGI qw(-nosticky -no_xhtml);
 my $have_cgi_fast = 0;
 eval {
-    use CGI::Fast;
+    use mySociety::CGIFast;
     $have_cgi_fast = 1;
 };
 
@@ -30,14 +30,14 @@ use fields qw(q);
 =item new [QUERY]
 
 Construct a new GIA::Web object, optionally from an existing QUERY. Uses
-CGI::Fast if available, or CGI otherwise.
+mySociety::CGIFast if available, or CGI otherwise.
 
 =cut
 sub new ($;$) {
     my ($class, $q) = @_;
     if (!defined($q)) {
-        $q = $have_cgi_fast ? new CGI::Fast() : new CGI();
-        return undef if (!defined($q)); # reproduce CGI::Fast behaviour
+        $q = $have_cgi_fast ? new mySociety::CGIFast() : new CGI();
+        return undef if (!defined($q)); # reproduce mySociety::CGIFast behaviour
     }
     my $self = fields::new('GIA::Web');
     $self->{q} = $q;

@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.33 2008-02-06 15:20:29 matthew Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.34 2008-02-06 15:59:10 matthew Exp $';
 
 use strict;
 
@@ -157,7 +157,7 @@ sub start_html ($;$) {
     return $q->start_html(
                 -title => 'mySociety User Tracking'
                             . ($title ? ": " . encode_entities($title) : ''),
-                -style => { src => 'global.css' },
+                -style => { src => 'track.css' },
                 -encoding => 'utf-8'
             ) . <<EOF
 <div id="masthead"><img src="mslogo.gif" alt="mySociety.org"></div>

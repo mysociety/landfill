@@ -8,7 +8,7 @@
 # Email: chris@mysociety.org; WWW: http://www.mysociety.org/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.32 2008-02-04 22:50:30 matthew Exp $';
+my $rcsid = ''; $rcsid .= '$Id: track.cgi,v 1.33 2008-02-06 15:20:29 matthew Exp $';
 
 use strict;
 
@@ -19,7 +19,7 @@ BEGIN {
     mySociety::Config::set_file('../conf/general');
 }
 
-use mySociety::CGIFast;
+use mySociety::CGIFast qw(-no_xhtml);
 use Digest::SHA1;
 use Error qw(:try);
 use HTML::Entities;
@@ -160,12 +160,8 @@ sub start_html ($;$) {
                 -style => { src => 'global.css' },
                 -encoding => 'utf-8'
             ) . <<EOF
-<div class="top">
-<div class="masthead"><img src="mslogo.gif" alt="mySociety.org"/></div>
-</div>
-<div class="page-body">
-
-<div id="content" class="narrowColumn">
+<div id="masthead"><img src="mslogo.gif" alt="mySociety.org"></div>
+<div id="content">
 EOF
             . $q->h1(
                     "User Tracking"
@@ -175,7 +171,7 @@ EOF
 
 sub end_html ($) {
     return <<EOF;
-</div></div></body></html>
+</div></body></html>
 EOF
 }
 
@@ -321,7 +317,7 @@ we had stored.</li>
 EOF
                 : <<EOF
 <li>You can view the tracking data that we hold about you, or opt out of being
-tracked in this way, at any time, using these buttons:<br/>
+tracked in this way, at any time, using these buttons:<br>
 $actionsform
 </li>
 EOF

@@ -59,14 +59,14 @@ sub generate {
                     my $converted = $row->{t} ? 1 : 0;
                     (my $extradata = $row->{extradata}) =~ s#^from_[a-z]+=1; ##;
                     (my $first = $row->{first}) =~ s#\..*##;
-                    if (!$out{$period}{$site}{$extradata}{first} || $first lt $out{$period}{$site}{$extradata}{first}) {
-                        $out{$period}{$site}{$extradata}{first} = $first;
+                    if (!$out{$site}{$extradata}{$period}{first} || $first lt $out{$site}{$extradata}{$period}{first}) {
+                        $out{$site}{$extradata}{$period}{first} = $first;
                     }
                     (my $last = $row->{last}) =~ s#\..*##;
-                    if (!$out{$period}{$site}{$extradata}{last} || $last gt $out{$period}{$site}{$extradata}{last}) {
-                        $out{$period}{$site}{$extradata}{last} = $last;
+                    if (!$out{$site}{$extradata}{$period}{last} || $last gt $out{$site}{$extradata}{$period}{last}) {
+                        $out{$site}{$extradata}{$period}{last} = $last;
                     }
-                    $out{$period}{$site}{$extradata}{$converted} += $row->{count};
+                    $out{$site}{$extradata}{$period}{$converted} += $row->{count};
                 }
             }
         }

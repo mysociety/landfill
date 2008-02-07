@@ -17,8 +17,8 @@ my %periods = (
 );
 
 my %sites = (
-    'writetothem' => ['hfymp','fms','gny','twfy_alerts','cheltenhamhfyc'],
-    'fixmystreet' => ['gny','hfymp','twfy_alerts','cheltenhamhfyc'],
+    'writetothem' => ['hfymp','fms','gny','twfy_alerts','cheltenhamhfyc','pb'],
+    'fixmystreet' => ['gny','hfymp','twfy_alerts','cheltenhamhfyc','pb'],
     'theyworkforyou' => ['hfymp','fms','gny','twfy-alert-word', 'twfy-alert-person','cheltenhamhfyc'],
 );
 
@@ -30,6 +30,7 @@ my %adverts = (
     'fms' => ['added-problem', 'fixmystreet'],
     'twfy-alert-person' => ['%advert=%', 'theyworkforyou'],
     'twfy-alert-word' => ['%advert=%', 'theyworkforyou'],
+    'pb' => ['NOTUSED', 'pledgebank'],
 );
 
 sub generate {

@@ -5,7 +5,7 @@
 # Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
 # Email: chris@mysociety.org. WWW: http://www.mysociety.org/
 #
-# $Id: crontab.ugly,v 1.1 2006-08-15 12:21:09 chris Exp $
+# $Id: crontab.ugly,v 1.2 2008-02-07 18:10:45 matthew Exp $
 #
 
 PATH=/usr/local/bin:/usr/bin:/bin
@@ -13,3 +13,6 @@ MAILTO=team@mysociety.org
 
 # Delete rows older than 28 days, once every 12 hours.
 0 */12 * * * !!(*= $user *)!! !!(*= $randomly *)!! run-with-lockfile -n /data/vhost/!!(*= $vhost *)!!/delete-old.lock /data/vhost/!!(*= $vhost *)!!/mysociety/track/bin/delete-old
+
+# Once a week, store some stats from the database
+30 1 * * 0 !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/mysociety/track/bin/store-stats

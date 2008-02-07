@@ -1,0 +1,27 @@
+#!/usr/bin/perl -w
+
+use strict;
+use FindBin;
+use lib "$FindBin::Bin/../perllib";
+use lib "$FindBin::Bin/../../perllib";
+use POSIX qw(strftime);
+
+use Track::Stats;
+use Track;
+
+my $date = strftime('%Y-%m-%d', localtime);
+
+my %out = Track::Stats::generate();
+open(FP, '>>../../../trackstats.log') or die $!;
+foreach my $site (sort keys %out) {
+    my $adverts = $out{$site};
+    foreach my $ad (sort keys %$adverts) {
+        my %periods = %{$adverts->{$ad}};
+        $periods{week}{1} = 0 unless defined $periods{week}{1};
+        $periods{month}{1} = 0 unless defined $periods{month}{1};
+        my $shown_week = (defined($periods{week}{0}) ? $periods{week}{0} : 0) + $periods{week}{1};
+        my $shown_month = (defined($periods{month}{0}) ? $periods{month}{0} : 0) + $periods{month}{1};
+        print FP "$date;$site;$ad;$shown_week;$shown_month;$periods{week}{1};$periods{month}{1}\n";
+    }
+}
+close FP;

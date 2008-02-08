@@ -48,7 +48,7 @@ static void other_methods_footer() {
 @ <a href="http://www.mysociety.org/cvs/mysociety.tar.gz">http://www.mysociety.org/cvs/mysociety.tar.gz</a>
 @ </p>
 @ <p><strong>Licence.</strong> Most of mySociety's code is made available under
-@ <a href="/cvstrac/fileview?f=mysociety/LICENSE.txt">the Affero GPL</a>; parts
+@ <a href="/cvstrac/fileview?f=mysociety/LICENSE.txt">the GNU Affero GPL</a>; parts
 @ are available under other free licences, as noted in the source. If you want
 @ to reuse some of our code, but its existing licence would prohibit you from
 @ doing so, ask us about relicensing.</p>

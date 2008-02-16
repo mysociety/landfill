@@ -3,10 +3,11 @@
 package Track::Stats;
 
 use strict;
+use FindBin;
 
 use mySociety::Config;
 BEGIN {
-    mySociety::Config::set_file('../../track/conf/general');
+    mySociety::Config::set_file("$FindBin::Bin/../../track/conf/general");
 }
 use mySociety::DBHandle qw(select_all);
 use Track;

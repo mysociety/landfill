@@ -12,7 +12,7 @@ use Track;
 my $date = strftime('%Y-%m-%d', localtime);
 
 my %out = Track::Stats::generate();
-open(FP, '>>../../../trackstats.log') or die $!;
+open(FP, ">>$FindBin::Bin/../../../trackstats.log") or die $!;
 foreach my $site (sort keys %out) {
     my $adverts = $out{$site};
     foreach my $ad (sort keys %$adverts) {

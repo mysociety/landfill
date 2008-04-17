@@ -21,12 +21,13 @@ my %sites = (
     'writetothem' => ['hfymp','fms','gny','twfy_alerts','cheltenhamhfyc','pb'],
     'fixmystreet' => ['gny','hfymp','twfy_alerts','cheltenhamhfyc','pb'],
     'theyworkforyou' => ['hfymp','fms','gny','twfy-alert-word', 'twfy-alert-person','cheltenhamhfyc'],
-    'hearfromyourmp' => ['twfy_alerts', 'fms', 'pb'],
+    'hearfromyourmp' => ['twfy', 'fms', 'pb'],
 );
 
 my %adverts = (
     'cheltenhamhfyc' => ['subscribed=1%', 'hearfromyourcouncillor'],
     'twfy_alerts' => ['%advert=%', 'theyworkforyou'],
+    'twfy' => ['%advert=%', 'theyworkforyou'],
     'hfymp' => ['subscribed=1%', 'hearfromyourmp'],
     'gny' => ['added-group', 'groupsnearyou'],
     'fms' => ['added-problem', 'fixmystreet'],

@@ -18,9 +18,9 @@ my %periods = (
 );
 
 my %sites = (
-    'writetothem' => ['hfymp','fms','gny','twfy_alerts','cheltenhamhfyc','pb'],
+    'writetothem' => ['hfymp','fms','gny','twfy_alerts','cheltenhamhfyc','twfy','pb'],
     'fixmystreet' => ['gny','hfymp','twfy_alerts','cheltenhamhfyc','pb'],
-    'theyworkforyou' => ['hfymp','fms','gny','twfy-alert-word', 'twfy-alert-person','cheltenhamhfyc'],
+    'theyworkforyou' => ['hfymp','fms','gny','twfy-alert-word', 'twfy-alert-person','cheltenhamhfyc','pb'],
     'hearfromyourmp' => ['twfy', 'fms', 'pb'],
 );
 

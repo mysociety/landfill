@@ -62,6 +62,7 @@ sub generate {
                 foreach my $row (@$d) {
                     my $converted = $row->{t} ? 1 : 0;
                     (my $extradata = $row->{extradata}) =~ s#^from_[a-z]+=1; ##;
+                    $extradata =~ s#^subscribed=1; ##;
                     (my $first = $row->{first}) =~ s#\..*##;
                     if (!$out{$site}{$extradata}{$period}{first} || $first lt $out{$site}{$extradata}{$period}{first}) {
                         $out{$site}{$extradata}{$period}{first} = $first;

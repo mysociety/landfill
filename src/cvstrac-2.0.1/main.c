@@ -191,10 +191,12 @@ static void check_schema() {
 */
 static char *get_base_url(void){
   int i;
-  char *zHost = getenv("HTTP_HOST");
+  char *zHost = getenv("HTTP_X_FORWARDED_HOST"); /* To get proxied */
   char *zMode = getenv("HTTPS");
+  if ( zHost ) zMode = "on";
   char *zCur = getenv("REQUEST_URI");
   if( zCur==0 ) zCur = "/";
+  if( zHost==0 ) zHost = getenv("HTTP_HOST");
   if( zHost==0 ) zHost = "";
 
   for(i=0; zCur[i] && zCur[i]!='?' && zCur[i]!='#'; i++){}

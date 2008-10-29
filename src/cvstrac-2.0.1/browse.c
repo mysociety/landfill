@@ -760,7 +760,7 @@ void browse_dirview(void){
 ** content embedded in the page.
 */
 void browse_fileview(void){
-  const char *zFile = g.zExtra ? g.zExtra : P("f");
+  const char *zFile = g.zExtra ? g.zExtra : PD("f", "");
   const char *zVers = PD("v","");
   char *zGetFile;
   char *zDir, *z;

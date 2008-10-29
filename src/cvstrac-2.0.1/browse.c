@@ -43,8 +43,8 @@ static void other_methods_footer() {
 @ Windows. On Unix or on a Mac just type
 @ "<tt>cvs -d :pserver:anonymous@cvs.mysociety.org:/repos co mysociety</tt>" at
 @ a terminal.</p>
-@ <p><strong>HTTP download</strong>. This compressed archive is updated once a
-@ day.
+@ <p><strong>HTTP download</strong>. This compressed archive of the entire
+@ codebase is updated once a day.
 @ <a href="http://www.mysociety.org/cvs/mysociety.tar.gz">http://www.mysociety.org/cvs/mysociety.tar.gz</a>
 @ </p>
 @ <p><strong>Licence.</strong> Most of mySociety's code is made available under

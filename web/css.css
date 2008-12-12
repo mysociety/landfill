@@ -1,0 +1,95 @@
+body {
+	font-family: sans-serif;
+	max-width: 59em;
+	margin: 1em auto;
+	padding: 0;
+	line-height: 1.4;
+}
+
+h1, h2, h3 {
+	font-family: serif;
+	color: #005689;
+}
+
+h1 {
+	margin: 0;
+}
+
+label {
+	cursor: pointer;
+}
+
+dt {
+	font-weight: bold;
+	margin-top: 0.5em;
+}
+dd p {
+	margin-top: 0;
+}
+
+#errors {
+	color: #000000;
+	background-color: #ffcccc;
+	border: solid 2px #990000;
+}
+#note {
+	color: #000000;
+	background-color: #ffffcc;
+	border: solid 2px #ffcc66;
+	padding: 0.5em;
+}
+
+#heading {
+	border-bottom: solid 1px #00ccff;
+	font-size: 200%;
+	font-weight: bold;
+	font-family: serif;
+	color: #005689;
+	margin-bottom: 0.5em;
+}
+
+#navigation {
+	float: left;
+	width: 14%;
+	margin: 0 1%;
+	padding: 0;
+	list-style-type: none;
+}
+#navigation li {
+	border-bottom: dotted 1px #00ccff;
+	padding: 0.5em 0;
+}
+#navigation li a {
+	color: #000000;
+	text-decoration: none;
+}
+#navigation li a:hover {
+	color: #00ccff;
+}
+
+#content {
+	float: right;
+	width: 80%;
+	margin-right: 1%;
+}
+
+#footer {
+	clear: both;
+	border-top: solid 1px #00ccff;
+	padding-top: 1em;
+}
+
+#idea_type {
+	padding-left: 1em;
+	margin-left: 0;
+	list-style-type: none;
+}
+#idea_type li {
+	margin-bottom: 1em;
+}
+
+.ticktextareas {
+	list-style-type: none;
+	padding-left: 1em;
+	margin-left: 0;
+}

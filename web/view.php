@@ -6,7 +6,7 @@ include_once '../../phplib/utility.php';
 include_once '../../phplib/template.php';
 include_once '../../phplib/db.php';
 
-template_set_style('templates');
+template_set_style('../templates');
 template_draw('header');
 echo '<h1>Logged ideas</h1>';
 

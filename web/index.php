@@ -1,7 +1,7 @@
 <?
 include_once '../../phplib/template.php';
 include_once '../../phplib/utility.php';
-template_set_style('templates');
+template_set_style('../templates');
 template_draw('header'); ?>
 
 <h1>Welcome to the Ideas Bank</h1>

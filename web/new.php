@@ -9,7 +9,7 @@ include_once '../../phplib/auth.php';
 include_once '../../phplib/rabx.php';
 include_once '../../phplib/db.php';
 
-template_set_style('templates');
+template_set_style('../templates');
 template_draw('header');
 echo '<form action="/new" method="post">';
 

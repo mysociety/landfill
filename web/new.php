@@ -100,7 +100,7 @@ function idea_submitted($data = array()) {
         $data['id'] = idea_save($data);
 	$token = auth_token_store('ideasbank', $data['id']);
 	db_commit();
-	$url = 'http://balti.ukcod.org.uk/new/' . $token;
+	$url = 'http://www.guardianideabank.co.uk/new/' . $token;
 	echo '<div id="note">Your current submission has been saved. To start editing
 	again, simply visit this unique and private URL:
 	<a href="', $url, '">', $url, '</a></div>';

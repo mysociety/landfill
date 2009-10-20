@@ -15,7 +15,7 @@ $id = intval(get_http_var('id'));
 if ($id) {
     view_id($id);
 } else {
-    view_all();
+    view_all(array(1,2,3,4,5));
 }
 
 template_draw('footer');
@@ -112,24 +112,4 @@ function view_timing($idea) {
 	}
     }
 }
-
-function view_all() {
-    $ideas = db_getAll("select * from idea where saved_at='done' order by id");
-    echo '<table cellpadding="5" cellspacing="0" border="0">';
-    echo '<tr><th>ID</th><th>Title</th><th>Type</th><th>Raised by</th><th>Department</th><th>Submitted</th></tr>';
-    foreach ($ideas as $idea) {
-        $modified = preg_replace('#\..*#', '', $idea['modified']);
-	if ($idea['idea_type'] == 5) {
-	    $idea_type = '3 month; entirely new';
-	} elseif ($idea['idea_type'] == 4) {
-	    $idea_type = '3 month; addition to existing with new data/content';
-	} elseif ($idea['idea_type'] == 3) {
-	    $idea_type = '3 week; addition to existing with no new data/content';
-	}
-        echo '<tr><td><a href="./view/', $idea['id'], '">', $idea['id'], '</a></td><td>', $idea['title'], '</td><td>', $idea_type, '</td><td><a href="mailto:', $idea['email'], '">', $idea['name'], '</a></td><td>', $idea['department'], '</td><td>', $modified, '</td></tr>';
-    }
-    echo '</table>';
-}
-
-# ---
 

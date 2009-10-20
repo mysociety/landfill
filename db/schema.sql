@@ -4,7 +4,7 @@
 -- Copyright (c) 2008 UK Citizens Online Democracy. All rights reserved.
 -- Email: matthew@mysociety.org; WWW: http://www.mysociety.org/
 --
--- $Id: schema.sql,v 1.1 2008-12-12 14:56:57 matthew Exp $
+-- $Id: schema.sql,v 1.2 2009-10-20 12:16:17 matthew Exp $
 --
 
 -- secret
@@ -56,7 +56,7 @@ create table idea (
     modified timestamp not null,
     saved_at text not null,
 
-    idea_type integer not null check (idea_type > 0 and idea_type < 6),
+    idea_type integer not null check (idea_type > 0 and idea_type < 7),
 
     name text not null,
     email text not null,
@@ -67,7 +67,7 @@ create table idea (
 
     benefits text,
 
-    change_section text not null,
+    change_section text,
 
     evidence text,
     research text,
@@ -79,10 +79,10 @@ create table idea (
     cost_future text,
 
     timing_constraint boolean,
-    timing_why integer not null,
-    timing_live text not null,
-    date_fixed integer not null,
-    timing_comments text not null,
+    timing_why integer,
+    timing_live text,
+    date_fixed integer,
+    timing_comments text,
 
     stats text,
     webstats_text text,

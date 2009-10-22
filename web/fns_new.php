@@ -42,12 +42,12 @@ function idea_new_main($type = '') {
 			echo ' <input type="submit" name="tostep" value="Back">';
 		}
 		if ($next_step == 'done') {
-		    echo ' <input type="submit" name="tostep" value="Submit">';
+		    echo ' <input type="submit" name="tostep" value="Submit idea">';
 		} else {
 		    echo ' <input type="submit" name="tostep" value="Next">';
 		}
 		if ($current_step != 'intro' && $current_step != 'department' && $current_step != 'user') {
-			echo ' <input type="submit" name="tostep" value="Save">';
+			echo ' <input type="submit" name="tostep" value="Save current progress">';
 		}
 	}
 }
@@ -86,17 +86,17 @@ function idea_submitted($data = array(), $type='') {
     } elseif ($data['idea_type']==4 || $data['idea_type']==5) {
 	$next_steps = array('', 'intro', 'user', 'basics', 'wherefits', 'evidence', 'datasource', 'cost', 'timing', 'webstats', 'otherbenefits', 'sponsorship', 'done');
     } elseif ($data['idea_type']==6) {
-	$next_steps = array('', 'intro', 'user', 'basics', 'whowilluseit', 'solves', 'done');
+	$next_steps = array('', 'user', 'basics', 'whowilluseit', 'solves', 'done');
     }
 
-    if ($data['tostep'] == 'Save') {
+    if ($data['tostep'] == 'Save current progress') {
         $data['id'] = idea_save($data);
 	$token = auth_token_store('ideasbank', $data['id']);
 	db_commit();
 	$url = 'http://www.guardianideabank.co.uk/';
 	if ($type == 'commercial') $url .= 'commercial/';
 	$url .= 'new/' . $token;
-	echo '<div id="note">Your current submission has been saved. To start editing
+	echo '<div id="note">Your progress with your current submission has been saved. To start editing
 	again, simply visit this unique and private URL:
 	<a href="', $url, '">', $url, '</a></div>';
     }
@@ -109,7 +109,7 @@ function idea_submitted($data = array(), $type='') {
         # ILLEGAL STEP SUPPLIED
         return;
     } else {
-        if ($data['tostep'] == 'Next' || $data['tostep'] == 'Submit') {
+        if ($data['tostep'] == 'Next' || $data['tostep'] == 'Submit idea') {
 	    $errors = step_error_check($data);
 	    if (count($errors)) {
 	    	step_show_errors($errors);
@@ -122,7 +122,7 @@ function idea_submitted($data = array(), $type='') {
         } elseif ($data['tostep'] == 'Back') {
             $now_step = $next_steps[$index-1];
             $next_step = $next_steps[$index];
-        } elseif ($data['tostep'] == 'Save' || $data['tostep'] == 'Load') {
+        } elseif ($data['tostep'] == 'Save current progress' || $data['tostep'] == 'Load') {
             $now_step = $data['step'];
             $next_step = $next_steps[$index+1];
 	}

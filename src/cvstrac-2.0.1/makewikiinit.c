@@ -98,7 +98,7 @@ int main(int argc, char **argv){
                          "SELECT name, text FROM wiki WHERE name='%s' LIMIT 1",
                          azName[i]);
     rc = sqlite3_exec(db,zSql,generate_page,0,&zErrMsg);
-    free(zSql);
+    sqlite3_free(zSql);
     if( rc!=SQLITE_OK ){
       fprintf(stderr,"Database error: %s\n", zErrMsg);
       exit(1);

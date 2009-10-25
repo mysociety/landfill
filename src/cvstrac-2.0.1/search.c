@@ -29,11 +29,6 @@
 
 
 /*
-** We'll use this routine in several places.
-*/
-extern int sqlite3StrNICmp(const char*,const char*,int);
-
-/*
 ** Search for a keyword in text.  Return a matching score:
 **
 **     0     No sign of the word was found in the text
@@ -54,7 +49,7 @@ static int score_word(const char *zWord, const char *zText, int n, int *pIdx){
   }
   if( n<=0 ) n = strlen(zWord);
   for(i=0; zText[i]; i++){
-    if( (zText[i]==c1 || zText[i]==c2) && sqlite3StrNICmp(zWord,&zText[i],n)==0){
+    if( (zText[i]==c1 || zText[i]==c2) && strncasecmp(zWord,&zText[i],n)==0){
       int score = 6;
       if( (i==0 || !isalnum(zText[i-1]))
            && (zText[i+n]==0 || !isalnum(zText[i+n])) ){
@@ -282,7 +277,7 @@ static void highlightFunc(sqlite3_context *context, int argc, sqlite3_value **ar
           int n;
           if( tolower(c)!=tolower(azKey[k][0]) ) continue;
           n = keySize[k];
-          if( sqlite3StrNICmp(&zAll[j],azKey[k],n)==0 ){
+          if( strncasecmp(&zAll[j],azKey[k],n)==0 ){
             strcpy(z,"<b>");
             z += 3;
             while( n ){

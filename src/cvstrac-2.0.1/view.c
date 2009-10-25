@@ -219,8 +219,6 @@ static void view_add_functions(int tabs){
 ** pointer to an error message string (obtained from malloc) if
 ** there is a problem.
 */
-extern int sqlite3StrNICmp(const char*,const char*,int);
-extern int sqlite3StrICmp(const char*,const char*);
 char *verify_sql_statement(char *zSql){
   int i;
 
@@ -228,7 +226,7 @@ char *verify_sql_statement(char *zSql){
   ** the first token is "SELECT" and that there are no unquoted semicolons.
   */
   for(i=0; isspace(zSql[i]); i++){}
-  if( sqlite3StrNICmp(&zSql[i],"select",6)!=0 ){
+  if( strncasecmp(&zSql[i],"select",6)!=0 ){
     return mprintf("The SQL must be a SELECT statement");
   }
   for(i=0; zSql[i]; i++){

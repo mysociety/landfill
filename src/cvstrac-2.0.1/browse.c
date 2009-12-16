@@ -35,6 +35,12 @@
 
 static void other_methods_footer() {
 @ <hr>
+@ <p><strong>We are gradually moving all projects to git</strong>. They are in 
+@ our own git repostiory, which automatically updates the repositories in the
+@ <a href="http://github.com/mysociety">mysociety github account</a>. Look there
+@ first, otherwise look in CVS. If you'd like us to move a particular website
+@ to git quicker, please <a href="mailto:team@mysociety.org">let us know</a>.
+@ </p>
 @ <p>Instead of browsing above, you can get all the mySociety source code in two ways:</p>
 @ <p><strong>Anonymous CVS</strong>. This is updated as we commit new changes. 
 @ Set CVSROOT to <tt>:pserver:anonymous@cvs.mysociety.org:/repos</tt> 

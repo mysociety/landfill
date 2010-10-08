@@ -4,10 +4,10 @@
 # Copyright (c) 2008 UK Citizens Online Democracy. All rights reserved.
 # Email: francis@mysociety.org. WWW: http://www.mysociety.org/
 #
-# $Id: crontab.ugly,v 1.3 2008-08-28 09:24:55 francis Exp $
+# $Id: crontab.ugly,v 1.4 2010-10-08 14:41:04 matthew Exp $
 
 PATH=/usr/local/bin:/usr/bin:/bin
-MAILTO=team@mysociety.org
+MAILTO=sysadmin@mysociety.org
 
 # Once an hour
 25 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/mysociety/piwik/web/misc/cron/archive.sh >/dev/null

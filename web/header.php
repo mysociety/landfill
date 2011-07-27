@@ -1,5 +1,5 @@
 <?
-$path = '';
+$path = '/~matthew/oldcouk';
 $home = ($_SERVER['PHP_SELF'] == $path . '/index.php');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -11,7 +11,7 @@ $home = ($_SERVER['PHP_SELF'] == $path . '/index.php');
 </head>
 <body<? if ($home) print ' id="home"'; ?>>
 <?=($home?'<h1 id="header">':'<div id="header"><a href="' . $path . '/">')
-?><img border="0" src="/i/logo.png" alt="mySociety" width="311" height="68"><?=($home?'</h1>':'</a></div>') ?>
+?><img border="0" src="<?=$path?>/i/logo.png" alt="mySociety" width="311" height="68"><?=($home?'</h1>':'</a></div>') ?>
 
 <? if (!$home) { ?>
 <table align="center" border="0" cellpadding="10" cellspacing="0">
@@ -26,7 +26,7 @@ $home = ($_SERVER['PHP_SELF'] == $path . '/index.php');
 </table>
 
 <?  if (!isset($nopdf)) { ?>
-<a href="/pdfs<?=dirname($_SERVER['PHP_SELF']) ?>.pdf"><img align="right" src="/i/pdf.png" width="75" height="75" alt="PDF Document"></a>
+<a href="<?=$path?>/pdfs<?=str_replace($path, '', dirname($_SERVER['PHP_SELF'])) ?>.pdf"><img align="right" src="<?=$path?>/i/pdf.png" width="75" height="75" alt="PDF Document"></a>
 <?      }
     } ?>
 

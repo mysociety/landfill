@@ -1,0 +1,37 @@
+cvstrac for Debian
+==================
+
+Quickstart
+----------
+
+Let's assume you have a CVS repository called test in /home/hugo, i.e.
+
+  /home/hugo $ ll
+  total 1
+  drwxrwxrwx  3 hugo hugo 856 Jan 12  2004 CVSROOT/
+  drwxrwxrwx  3 hugo hugo 128 Apr 27 13:59 test/
+
+Then inititalize your database:
+
+  /home/hugo $ cvstrac init /home/hugo test
+  /home/hugo $ ll
+  total 73
+  drwxrwxrwx  3 hugo hugo   856 Jan 12  2004 CVSROOT/
+  drwxrwxrwx  3 hugo hugo   128 Apr 27 13:59 test/
+  -rw-r--r--  1 hugo hugo 70656 Oct  6 22:00 test.db
+
+Now run your cvstrac server standalone (for more advanced
+methods via inetd, with chroot etc. see the CVSTrac Wiki at
+http://www.cvstrac.org/cvstrac/wiki?p=CvstracInstallation):
+
+  /home/hugo $ cvstrac server 8722 /home/hugo
+
+Point your favourite browser to http://localhost:8722/test/ and login with
+UserID=setup and Password=setup. Select "User".."setup" and define a new
+password, define additional users as needed.
+Select "Home".."Setup".."CVS Repository" and enter /home/hugo for the
+repository, Module prefix as needed. Then use the button "Reread
+CVSROOT/history", on the next screen "Reconstruct" and finally (back on the
+"CVS Repository" screen) "Submit".
+
+ -- Edelhard Becker <edelhard@debian.org>, Wed,  6 Oct 2004 14:10:24 +0200

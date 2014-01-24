@@ -1,0 +1,28 @@
+How To Compile CVSTrac
+
+  1.  You will need the SQLite library version 3.0.0 or newer. The 3.3.x
+      series is recommended. If you do not already have this library installed, 
+      obtain a copy from http://www.sqlite.org
+
+  2.  Choose a directory to compile in.  The directory in which you compile
+      does not need to be the same as the source directory.  By default,
+      the compilation directory should be a sibling of the source directory
+      but this is not required.
+
+  3.  Make a copy of one of the platform-specific *.mk files into the
+      compilation directory and rename it 'Makefile'. Currently available are:
+
+        bsd-gcc.mk linux-gcc.mk linux-mingw.mk osx-gcc.mk
+
+  4.  Edit the file you just copied to adjust the parameters to your system.
+
+  5.  Type "make" to build the CVSTrac executable.
+      Type "make APPNAME=svntrac" to build a SvnTrac executable.
+      Type "make APPNAME=gittrac" to build a GitTrac executable.
+
+  6.  Copy the resulting executable to /usr/bin or /usr/local/bin or
+      wherever you want to install it.
+
+For additional information on how CVSTrac is put together (information you may
+want to know if you would like to try to make improvements to CVSTrac) see
+the file called "howitworks.html".

@@ -1,0 +1,15 @@
+#
+# crontab.ugly:
+# Timed tasks for cvs.mysociety.org. Template file.
+#
+# Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
+# Email: francis@mysociety.org. WWW: http://www.mysociety.org/
+#
+# $Id: crontab.ugly,v 1.14 2012-11-19 10:19:52 matthew Exp $
+#
+
+MAILTO=sysadmin@mysociety.org
+
+# Once an hour import system users into cvstrac.
+0 * * * * root /data/vhost/!!(*= $vhost *)!!/mysociety/cvswww/bin/cvstrac-import-users /usr/local/cvs/mysociety/mysociety.db ior
+5 * * * * root /data/mysociety/bin/anoncvs-export

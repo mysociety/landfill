@@ -1,0 +1,26 @@
+#!/bin/sh
+#
+# mail-new-ticket:
+# Mail information about a new ticket in CVSTrac
+#
+# $Id: mail-new-ticket,v 1.4 2006-07-03 13:51:25 chris Exp $
+#
+ticket=$1
+if [ x$ticket = x ] ; then
+    echo 'mail-new-ticket: single argument is ticket number' >&2
+    exit 1
+fi
+if ! echo "$ticket" | grep '^[0-9]\+$' > /dev/null ; then
+    echo "mail-new-ticket: single argument should be a decimal number, not '$ticket'" >&2
+    exit 1
+fi
+(
+    echo "https://secure.mysociety.org/cvstrac/tktview?tn=$ticket"
+    echo ""
+    # Use cvs.mysociety.org so can get by HTTP
+    lynx -dump -force_html -nolist "http://cvs.mysociety.org/cvstrac/tktview?tn=$ticket" | tail +5
+    cat <<EOF
+-- 
+mail-new-ticket, \$Id: mail-new-ticket,v 1.4 2006-07-03 13:51:25 chris Exp $
+EOF
+) | mail -s "ticket #$ticket created/changed" cvs-public@lists.mysociety.org

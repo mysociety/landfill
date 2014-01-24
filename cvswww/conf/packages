@@ -1,0 +1,4 @@
+chrootuid
+libdbd-sqlite3-perl
+libsqlite3-dev
+sqlite3

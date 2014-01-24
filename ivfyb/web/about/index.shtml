@@ -1,0 +1,47 @@
+<!--#set var="page_title" value="About Us" -->
+<!--#include virtual="/includes/header.shtml" -->
+
+<h2><span>About</span> NotApathetic.com</h2>
+
+
+<p>
+NotApathetic is a place where if you are not going to vote at the
+General Election, you can tell the world why.
+</p>
+
+<p>
+We won't try to persuade you that voting is a good idea, and we won't
+promise that by writing something here that anyone is going to listen.
+</p>
+
+<p>
+All we promise is that instead of having no voice at all, you can
+explain why you won't be participating come election day. All you have
+to tolerate is that fact that if you put a reason up, other members of
+the public are allowed to respond to it.
+</p>
+
+<p>
+Any reason for not voting is an acceptable reason to submit to the
+site. Whether you don't have the time, or whether you're not allowed
+to vote, or if you don't like any of the parties, this site is for
+you.
+</p>
+
+<p>
+Perhaps the main aim of this site is to let you respond to politicians
+and journalists who like to theorise about why you might be chosing to
+stay at home, often attributing motives to you which you might not
+agree with. By posting here, you can talk back, and make your case for
+not voting.
+</p>
+</div>
+<div id="inputBox">
+		<!--#include virtual="/includes/new-stage1.shtml" -->
+		<h2>Contact Us</h2>
+		<p>Our email address is: <a href="mailto:team@notapathetic.com">team@notapathetic.com</a>.
+		Tell us what you think of the site.</p>
+		<!--#include virtual="/includes/searchform.shtml" -->
+
+<!--#include virtual="/includes/footer.shtml" -->
+

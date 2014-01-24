@@ -1,0 +1,32 @@
+<!--#set var="page_title" value="Reporting a comment" -->
+<!--#include virtual="/includes/header.shtml" -->
+<h2>Reporting a comment</h2>
+<p> Please enter a brief reason why you think the comment should
+be deleted. Thanks for your help!</p> 
+<form action="/cgi-bin/send-abuse-report.cgi" method="post" id="comment">
+<div>
+	<label for="name">Your name:</label>
+	<input type="text" name="name" id="name" value="" maxlength="50" size="30" />
+</div>
+
+<div>
+	<label for="emailt">Email address:</label>
+	<input type="text" name="emailt" id="email" value="" maxlength="100" size="30" class="form" />
+</div>
+
+<div>
+	<label for="abusereasons">Why should this comment be deleted?<label>
+	<textarea name="body" rows="10" cols="45" id="abusereasons"></textarea>
+
+	<input type="submit" value="Send report" />
+</div>
+</form>
+</div>
+
+<div id="inputBox">
+<h2>The comment you're reporting</h2>
+
+<!--#include virtual="/cgi-bin/show-abuse.cgi?${QUERY_STRING}" -->
+
+<!--#include virtual="/includes/footer.shtml" -->
+

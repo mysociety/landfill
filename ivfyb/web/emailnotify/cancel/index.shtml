@@ -1,0 +1,5 @@
+<!--#set var="page_title" value="Cancel notification" -->
+<!--#include virtual="/includes/header.shtml" -->
+<!--#include virtual="/cgi-bin/emailnotify/cancel.cgi?${QUERY_STRING}" -->
+<!--#include virtual="/includes/footer.shtml" -->
+

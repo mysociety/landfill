@@ -1,0 +1,53 @@
+<?php
+/*
+ * general-example:
+ * Example values for the "general" config file.
+ *
+ * Configuration parameters, in PHP syntax. Configuration parameters are set
+ * using the PHP define('OPTION_...', '...') function. Both perl and PHP code
+ * parse this properly, so you can use comments and conditionals and whatnot,
+ * but unless essential it's better to keep it simple....
+ *
+ * Copy this file to one called "general" in the same directory.  Or
+ * have multiple config files and use a symlink to change between them.
+ * 
+ * Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
+ * Email: matthew@mysociety.org; WWW: http://www.mysociety.org
+ *
+ * $Id: general-example,v 1.2 2005-10-07 19:07:54 matthew Exp $
+ * 
+ */
+
+// MySQL database for PoP
+define('OPTION_DB_TYPE', 'mysql');
+define('OPTION_PHP_MAINDB', 'POP');
+define('OPTION_POP_DB_NAME', 'notapathetic');
+define('OPTION_POP_DB_STR', 'DBI:mysql:notapathetic:localhost');
+define('OPTION_POP_DB_USER', 'notapathetic');
+define('OPTION_POP_DB_PASS', 'wearenottellingyou');
+
+# Domain name for the site.
+# Just the domain, used for email and with www. prefix
+define('OPTION_DOMAIN', 'notapathetic.com');
+
+# when comments/posts are turned off, change this to 0.
+define('OPTION_OPEN', 1);
+
+#what's the name of the website - not necessarily the domain
+define('OPTION_SITE_NAME', 'NotApathetic.com');
+
+# things which you shouldn't have to change
+define('OPTION_ADMIN_URL', 'https://secure.notapathetic.com/admin'); # XXX still needs fixing
+
+# where automated messages that don't need a reply come from
+define('OPTION_EMAIL_NOREPLY', 'donotreply@' . OPTION_DOMAIN);
+
+# the people who run the website. 
+define('OPTION_EMAIL_CATCHALL', 'team@' . OPTION_DOMAIN);
+
+# who deals with abuse reports. May or may not be the same as the above
+define('OPTION_EMAIL_ABUSE', 'abuse@' . OPTION_DOMAIN);
+
+define('OPTION_EMAIL_DOMAIN', '@' . OPTION_DOMAIN); #used. May want to remove it eventually.
+define('OPTION_URL', 'http://www.' . OPTION_DOMAIN); # absolute URL. No slash on the end
+

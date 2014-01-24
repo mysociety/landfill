@@ -1,0 +1,20 @@
+<h3 class="green">About the site</h3>
+<ul id="sitelinks" class="pins">
+    <li>Hello, and welcome to Placeopedia, a simple site where you can connect
+Wikipedia articles with places, and then make use of our database either to browse, or 
+syndicate the whole lot. We hope that lots of people will connect
+places they know with their corresponding Wikipedia article, and then
+our <a href="/data/">syndicated data</a> can be used as a general geographic lookup table
+for Wikipedia.          
+</li>
+<li><strong>Latest news:</strong>
+We've removed email confirmation, as it was making it too time-consuming to add many
+posts. We've also made the map a little bit wider, so New Zealanders don't feel left out; 
+and while the map still shows only the latest 15 additions, we've added a count
+underneath the map of the number of pins <em>not</em> shown on the map. Zoom in and
+pan around to make them appear.
+<li>We've also set up a
+<a href="https://secure.mysociety.org/admin/lists/mailman/listinfo/maps">public discussion list</a>
+for people interested in the development of the open source software that Placeopedia runs on.
+</li>
+</ul>

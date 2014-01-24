@@ -1,0 +1,52 @@
+<!--#include virtual="/includes/header.shtml" -->
+
+<h2>API</h2>
+
+<p>All data created on Placeopedia and YourHistoryHere is being made
+freely available under the
+<a href="http://creativecommons.org/licenses/by-sa/2.5/">Creative
+Commons Attribution-ShareAlike license version 2.5</a> for use by whoever is
+interested. This is part of our effort to offer coders and users
+an easy, standard system for mapping annotation that interoperates
+easily with current and future geographic-based tools and systems.</p>
+
+<h3 class="blue">Google Earth auto-update</h3>
+<p>To add Placeopedia to Google Earth, such that it automatically shows you the latest additions on the map you're looking at, auto-updating as you move around, please use this <a href="placeopedia.kml">KML file</a>.
+<br />
+
+<h3 class="blue">Feeds of 50 latest additions</h3>
+<ul><li><a href="/cgi-bin/postsxml.cgi">XML data</a>
+    <li><a href="/cgi-bin/rss.cgi">RSS feed</a>
+    <li><a href="/cgi-bin/kml.cgi/placeopedia.kml">KML file</a> (for Google Earth)</li>
+</ul>
+
+<p>To restrict the RSS or XML feed to a particular geographic area, specify a bounding box in the URL as follows:<br />
+<tt><a href="/cgi-bin/rss.cgi?topleft_long=-1;topleft_lat=54;bottomright_long=1;bottomright_lat=50">http://www.placeopedia.com/cgi-bin/rss.cgi?topleft_long=-1;topleft_lat=54;bottomright_long=1;bottomright_lat=50</a></tt>
+or 
+
+<tt><a href="/cgi-bin/postsxml.cgi?topleft_long=-1;topleft_lat=54;bottomright_long=1;bottomright_lat=50">http://www.placeopedia.com/cgi-bin/postsxml.cgi?topleft_long=-1;topleft_lat=54;bottomright_long=1;bottomright_lat=50</a></tt>
+
+<p>Similarly, to specify the number of results you would like returned, use the num_results parameter.</p>
+<tt><a href="/cgi-bin/rss.cgi?num_results=10
+">http://www.placeopedia.com/cgi-bin/rss.cgi?num_results=10</a></tt>
+<br />
+or
+<br />
+<tt><a href="/cgi-bin/postsxml.cgi?num_results=10
+">http://www.placeopedia.com/cgi-bin/postsxml.cgi?num_results=10</a></tt>
+
+
+<h3 class="blue">Dump of all locations</h3>
+<p>Apologies for taking so long to make this available!</p>
+<ul>
+<li><a href="all.xml">XML data of all locations</a></li>
+<li><a href="all.rss">RSS feed of all locations</a></li>
+<li><a href="all.kml">KML file of all locations</a></li>
+</ul>
+
+</div>
+<div id="inputBox">
+<a name="input"></a>
+<div class="hideme"><a href="#top">back to top of page</a></div>
+<!--#include virtual="/includes/description.shtml" -->
+<!--#include virtual="/includes/footer.shtml" -->

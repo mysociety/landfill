@@ -1,0 +1,97 @@
+<!--#config errmsg="[File config.shtml missing: please copy config.shtml-example and configure]" -->
+<!--#include file="config.shtml" -->
+<!--#config errmsg="[an error occurred while processing this directive]" -->
+<!--#include virtual="/includes/header.shtml" -->
+<div id="search_container">
+<div id="map"></div>
+<p id="mapbanner">(Map shows latest 15 additions in area shown<span id="notshown"></span>)</p>
+</div>
+<!--#include virtual="/includes/description.shtml" -->
+</div>
+<div id="inputBox">
+
+<div id="search_results"></div>
+
+<div id="recent_places">
+    <h3 class="green">Recent Additions on Map</h3>
+    <div id="list"><!--#include virtual="/cgi-bin/list.cgi?show=${QUERY_STRING}" --></div>
+</div>
+
+<div id="add_place" style="display: none">
+    <form method="post" id="f" onsubmit="add_place(this); return false;" action="#">
+        <h3 class="blue">Add new place</h3>
+
+        <ol>
+            <li><strong>Enter <a href="http://en.wikipedia.org/">Wikipedia</a> article name</strong>
+        <input type="text" autocomplete="off" maxLength="1024" size="25" name="q" />
+        <span id="titleerror"></span>
+        <p><small>(this will auto-complete; might take a short time to respond)</small></p>
+        </li>
+        <li><strong>Find the place on the map</strong>
+        <p>Use the arrow and zoom controls, or enter a location or UK postcode in the search box above. When you have found the rough area, click to place a yellow pin over the exact place corresponding with the Wikipedia article. If you click in the wrong place, don't worry &mdash; just click again to move the yellow pin.</p>
+        <p><em>The zoom level of the map is stored along with the location, so do pick an appropriate level for the article &mdash; e.g. very zoomed in for a house, zoomed out for a city.</em></p>
+        <p><small>Location selected:<br /><span id="show_where">none selected</span></small></p>
+        </li>
+        <li><strong>Enter your details</strong>
+        <label for="emailname">Your name:</label>
+        <input type="text" name="name" id="emailname" size="30" />
+        <span id="nameerror"></span>
+        <label for="emailreason">Email address:</label>
+        <input type="text" name="email" id="emailreason" size="30" />
+        <span id="emailerror"></span>
+        <br />
+        </li>
+        <li><input id="add_submit" type="submit" value="Submit" /></li>
+    </ol>
+    </form>
+    <p><a onclick="show_recent_places(); return false" href="#needsJS">Back to recently added places</a></p>
+</div>
+
+<div id="add_success" style="display:none">
+<h3 class="blue">Add new place</h3>
+<p>Thanks for creating that entry, it has now been added.</p>
+<p><a href="#needsJS" onclick="add_place_form(); return false;">Add another</a></p>
+</div>
+
+<div id="incorrect_entry" style="display:none">
+    <form method="post" id="f2" onsubmit="report_post(this); return false;">
+        <input type="hidden" name="postid" id="report_id" value="" />
+        <h3 class="blue">Report an incorrect location</h3>
+        <ol>
+            <li>You're reporting the entry:<br />
+            <span id="report_title">ENTRY TITLE</span>
+            <label for="emailexplain">Please give a short reason why you're reporting this entry:</label>
+            <input type="text" name="explain" id="emailexplain" size="30" />
+            <span id="explainerror"></span>
+            <br />
+            </li>
+
+            <li>Optionally, if appropriate please also give the correct location on the map. Use the arrow and zoom
+            controls, or enter a location or UK postcode in the search box above. When you have
+            found the rough area, click to place a yellow pin over the exact place corresponding
+            with the Wikipedia article. If you click in the wrong place, don't worry &mdash; just
+            click again to move the yellow pin.
+            <p><small>Location selected:<br /><span id="show_where2">none selected</span></small></p>
+            </li>
+            <li><strong>Enter your details</strong>
+            <label for="emailname2">Your name:</label>
+            <input type="text" name="name" id="emailname2" size="30" />
+            <span id="nameerror2"></span>
+            <label for="emailreason2">Email address:</label>
+            <input type="text" name="email" id="emailreason2" size="30" />
+            <span id="emailerror2"></span>
+            <br />
+            </li>
+            <li><input id="report_submit" type="submit" value="Submit" /></li>
+        </ol>
+    </form>
+    <p><a onclick="show_recent_places(); return false" href="#needsJS">Back to recently added places</a></p>
+</div>
+
+<div id="report_success" style="display:none">
+<h3 class="blue">Report an incorrect location</h3>
+<p>Thanks for reporting that entry - we'll take a look as soon as we can.</p>
+<p><a onclick="show_recent_places(); return false" href="#needsJS">Back to recently added places</a></p>
+</div>
+
+<!--#include virtual="/includes/footer.shtml" -->

@@ -1,0 +1,32 @@
+<?php
+/*
+ * general-example:
+ * General configuration for GiveItAway.
+ * 
+ * Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
+ * Email: chris@mysociety.org; WWW: http://www.mysociety.org/
+ *
+ * $Id: general-example,v 1.1 2005-10-20 09:18:53 chris Exp $
+ * 
+ */
+
+// PostgreSQL database for GIA
+/*
+// Host and port, if needed.
+define('OPTION_GIA_DB_HOST', 'dbhost');
+define('OPTION_GIA_DB_PORT', '5432');
+*/
+define('OPTION_GIA_DB_NAME', 'gia');
+define('OPTION_GIA_DB_USER', 'gia');
+define('OPTION_GIA_DB_PASS', '');
+
+// Base URL of the site, without trailing "/"
+define('OPTION_BASE_URL', 'http://gia.fishsoupisgoodforyou.com');
+
+// URL of MaPit service.
+define('OPTION_MAPIT_URL', 'http://services.mysociety.org/mapit');
+
+// EvEl service
+define('OPTION_EVEL_URL', 'http://mssvcs.fishsoupisgoodforyou.com/evel');
+
+?>

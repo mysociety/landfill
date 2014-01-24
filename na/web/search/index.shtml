@@ -1,0 +1,37 @@
+<!--#set var="page_title" value="Search results" -->
+<!--#set var="rss_query" value="${QUERY_STRING}" -->
+<!--#include virtual="/includes/header.shtml" -->
+
+<h2>Search results</h2>
+<!--#include virtual="/cgi-bin/list.cgi?search=${QUERY_STRING}" -->
+
+</div>
+
+<div id="inputBox">
+<h2>Email notification and RSS</h2>
+<p>If you would like to be notified of future posts containing
+the keyword(s), then please <a href="/emailnotify/?<!--#echo var="QUERY_STRING"-->">click here</a></p>
+<p>We also offer custom-tailored RSS feeds -
+<a href="/cgi-bin/rss.cgi?<!--#echo var="QUERY_STRING"-->">click here</a> to get
+download a live RSS feed of your keywords.</p>
+<h2>Search again</h2>
+
+<form method="get" action="/cgi-bin/search.cgi">
+			<input type="text" name="q" />
+			<input type="submit" value="Go" />
+</form>
+
+
+
+<h4>Advanced Searchers</h4>
+<p>
+	If you wish to make your own searches in a 'del.icio.us'ish 
+	style manner, you can enter arbitrary search criteria:
+        <tt>http://www.notapathetic.com/search/?/<span class="i"> </span>one/<span class="i"> </span>two/<span class="i"> </span>three+four/<span class="i"> </span>five</tt>
+	will search for (one or two or (three and four) or five).
+</p>
+
+<!--#include virtual="/cgi-bin/list.cgi?type=summary&search=${QUERY_STRING}" -->
+
+
+	<!--#include virtual="/includes/footer.shtml" -->

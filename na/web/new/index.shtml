@@ -1,0 +1,15 @@
+<!--#set var="page_title" value="New Entry" -->
+<!--#include virtual="/includes/header.shtml" -->
+
+<h2>I <span>didn't vote</span> because...</h2>
+
+<form method="post" action="/cgi-bin/new-stage1.cgi">
+        <textarea name="why" rows="15" cols="70"></textarea>
+        <label for="email">Email address <small>(It will never be shown)</small></label>
+        <input type="text" name="email" id="email" size="30">
+		<input type="submit" value="Submit">
+</form>
+
+
+<!--#include virtual="/includes/footer.shtml" -->
+

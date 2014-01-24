@@ -1,0 +1,16 @@
+<!--#set var="page_title" value="Please check your email" -->
+<!--#include virtual="/includes/header.shtml" -->
+<h2><span>Please</span> check your email</h2>
+
+<p>
+   We've sent you an email to confirm that your email
+   address is valid. When you follow the link in that
+   email, your posting will appear.
+</p>
+
+<h4>If you do not follow the link, your message will not appear</h4>
+
+
+
+<!--#include virtual="/includes/footer.shtml" -->
+

@@ -1,0 +1,78 @@
+
+This is the MySociety.org NotApathetic.com code
+repository.
+
+To run NotApathetic.com, you need an Apache webserver
+MySQL database (although it should be relatively easy
+to port to another database if necessary).
+
+Perl modules needed are:
+        Mail::Mailer;
+        XML::RSS;
+        CGI;
+        DBI;
+        Date::Manip;
+        Email::Valid;
+        HTML::Entities;
+        HTML::Scrubber;
+        Mail::Mailer;
+        Text::Wrap;
+        XML::Simple;
+many of them are installed by default with Perl.
+
+Files that you need to edit
+    copy 
+        cgi-bin/mysociety/NotApathetic/Config.pm-incvs
+    to 
+         cgi-bin/mysociety/NotApathetic/Config.pm
+and edit the relevant lines.
+
+There are a selection of SSI files which need editing:
+    includes/header.shtml
+    includes/footer.shtml
+All design of the site is controlled through those files,
+along with the stylesheet /na.css
+You may find grep useful when trying to track through
+some of the includes. Please let us know where 
+NotApathetic.com is hardcoded into the site, so we
+can remove it for the people who follow you.
+
+
+Pages which will need rewriting for each site are: 
+    about/index.shtml (including email address)
+    news/index.shtml
+    includes/description.shtml
+    about/privacy/index.shtml
+
+Similarly, some images in /images/ and favicon.ico
+will need replacing with your images.
+
+If you get error messages from Apache immediately on installation,
+you may need to edit the .htaccess files for your local server. The
+defaults will probably work.
+
+
+For the site admin interface, you will need to edit /admin/.htaccess
+to point it at a .htpasswd file. The username that 
+performs admin functions is included in the notifications. You might
+want to put it on a SSL server or similar.  You should
+create a new virtual host for the installaion - there are
+significant amount of hardcoded references to /cgi-bin and
+other paths. If you need to run the site as part of another domain,
+we recommend you first install it under it's own virtual host, and then
+do a second install on your site once you're familiar with the processes,
+and you have a working site to compare to.
+
+
+
+
+
+Finally, once it's working, please email mysociety-na@mysociety.org to 
+tell us about your site so we can take a look at what you've done.
+We are also willing to accept diffs which add non-site-specific
+functionality which make life easier for those who install it after you.
+
+
+Sam Smith 
+    personal email: s@msmith.net
+

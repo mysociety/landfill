@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Not Apathetic Admin</title>
+<style type="text/css" media="screen">
+/* <![CDATA[ */
+	@import url("http://www.notapathetic.com/na.css");
+/* ]]> */
+</style>
+<link rel="shortcut icon" href="/favicon.ico" />
+<script type="text/javascript" src="/forms.js"></script>
+</head>
+<body>
+	<div id="wrap">
+	<div id="top">
+		<h1><a href="/"><img align="right" src="/images/na2.png" alt="not apathetic - I'm not voting because..." /></a></h1>
+	</div>
+	<ul id="nav">
+	<li><a href="/"><span>H</span>ome</a></li>
+	<li><a href="/admin/"><span>A</span>dmin home</a></li>
+	</ul>
+	<!-- end of header -->
+	<div id="adminMain">

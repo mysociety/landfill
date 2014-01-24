@@ -1,0 +1,15 @@
+<!--#set var="page_title" value="News" -->
+<!--#include virtual="/includes/header.shtml" -->
+
+<p>
+You should put some site news here.
+</p>
+
+<p>
+There's no reason you can't replace this with a feed from
+blog entries or a whole blog. We simply didn't need to 
+&mdash; we posted 3 entries here.
+</p>
+
+<!--#include virtual="/includes/footer.shtml" -->
+

@@ -1,0 +1,29 @@
+<!--#include virtual="/includes/vars.shtml" -->
+<!--#include virtual="/includes/header.shtml" -->
+
+    <div id="map"></div>
+<p id="where" style="display:none"><small>Where: <span id="show_where">none selected</span></small></p>
+<div id="search_container">
+    <!--#include virtual="/includes/description.shtml" -->
+</div>
+</div>
+<div id="inputBox">
+<div id="search_results"></div>
+<div id="recent_places">
+<h3 class="blue">About This Place...</h3>
+<!--#include virtual="/cgi-bin/comments.cgi?${QUERY_STRING}" -->
+<!--#include virtual="/includes/commentform.shtml" -->
+</div>
+<!--#include virtual="/includes/new-stage1.shtml" -->
+
+<div id="add_success" style="display:none">
+<h3 class="blue">Add new place</h3>
+<p>Thanks for creating that entry - we've sent you an email to confirm your post.
+When you follow the link in that email, your post will appear.</p>
+<h4>If you do not follow the link, your message will not appear</h4>
+<p><a href="#needsJS" onclick="add_place_form(0); return false;">Add another</a></p>
+</div>
+
+<!--#include virtual="/includes/footer.shtml" -->
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!--#set var="page_title" value="where's your place?" -->
+<!--#include virtual="/includes/header.shtml" -->
+
+<h2>API</h2>
+
+<p>
+	We intend to have a full web service API. Using GET/POST requests,
+	you should be able to submit/receive informaton which interacts
+	the same way our web pages do. All data is available via XML
+	for reuse. 
+</p>
+
+<h3 class="blue">Google Earth</h3>
+<p>To add YourHistoryHere to Google Earth, such that it automatically shows you the latest additions, auto-updating as you move around, please use this <a href="yourhistoryhere.kml">KML file</a>.
+<br />
+
+<h3 class="blue">Feeds of 50 latest additions</h3>
+<ul>
+    <li><a href="/cgi-bin/postsxml.cgi">XML data</a>
+    <li><a href="/cgi-bin/rss.cgi">RSS feed</a>
+    <li><a href="/cgi-bin/kml.cgi/yourhistoryhere.kml">KML file</a> (for Google Earth)</li>
+</ul>
+
+<p>To restrict the RSS feed to a particular geographic area, specify a bounding box in the URL as follows:<br />
+<tt><a href="/cgi-bin/rss.cgi?topleft_long=-1;topleft_lat=54;bottomright_long=1;bottomright_lat=50">http://www.placeopedia.com/cgi-bin/rss.cgi?topleft_long=-1;topleft_lat=54;bottomright_long=1;bottomright_lat=50</a></tt>
+</p>
+
+<h4>Submit data</h4>
+<p>Fake the submission form effectively. submit.cgi returns XML of failure or success.
+</p>
+
+<h4>Search</h4>
+<p>
+	Have a target=xml flag to search box. 
+</p>
+
+</div>
+<div id="inputBox">
+<a name="input"></a>
+<div class="hideme"><a href="#top">back to top of page</a></div>
+<!--#include virtual="/includes/description.shtml" -->
+<!--#include virtual="/includes/footer.shtml" -->
+

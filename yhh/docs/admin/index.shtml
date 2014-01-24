@@ -1,0 +1,13 @@
+<!--#include virtual="/includes/header.shtml" -->
+
+<h2>Admin Interface</h2>
+<p>
+	The admin interface to NA.
+	If you're not supposed to be here, go away.
+</p>
+
+<!--#include virtual="cgi-bin/list.cgi" -->
+
+
+<!--#include virtual="/includes/footer.shtml" -->
+

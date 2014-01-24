@@ -1,0 +1,40 @@
+<div class="hidden" id="add_place">
+    <a name="input"></a>
+    <h3 class="blue">Add your place...</h3>
+    <p align="right"><a onclick="remove_place_form(); return false" href="#needsJS">Back to recent places</a></p>
+    <p>To find a place on the map, either use the arrow and zoom controls, or enter a place name in the search box above. When you have found the rough area, click to put
+    a yellow pin over the exact place, fill in the form below and click submit.</p>
+    <form id="f" method="post" onsubmit="add_place(this); return false;">
+        <fieldset>
+            <label for="title">Title (1-4 words):</label>
+            <input type="text" size="30" id="title" name="title" value="" />
+            <span class="error" id="titleerror"></span>
+            <label for="summary">One paragraph summary:</label>
+            <textarea name="summary" rows="5" cols="40" id="summary"></textarea>
+            <span class="error" id="summaryerror"></span>
+            <p class="enlarge">Full description: <small>(<a id="growtext" onclick="growTextarea('reasons'); return false" href="/new/">Want more space to write in?</a>)</small></p>
+            <textarea name="why" rows="10" cols="40" onclick="if (this.value == 'Add your description here...'){ this.value='';}"  id="reasons">Add your description here...</textarea>
+            <span class="error" id="bodyerror"></span>
+            <br />
+            <label for="name">Your name:</label>
+            <input type="text" id="name" name="name" size="30" value="" />
+            <span class="error" id="nameerror"></span>
+
+            <label for="emailreason">Email address: <small>(to check you are a real user)</small></label>
+            <input type="text" name="email" id="emailreason" size="30" /><br />
+            <span class="error" id="emailerror"></span>
+            <!--
+            Category
+            <select name="category">
+                <option value="general">General</option>
+                <option value="history">History</option>
+                <option value="history_blueplaques">Historical Sites with a Blue Plaque</option>
+            </select>
+            -->
+            <input type="checkbox" name="emailalert" value="checked" />
+            Receive an email whenever someone comments on your post
+
+            <p align="right"><input id="add_submit" type="submit" value="Add place" /></p>
+        </fieldset>
+    </form>
+</div>

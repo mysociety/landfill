@@ -1,0 +1,2 @@
+RewriteEngine on
+RewriteRule ^(.*)	/emailfriend/emailpost.shtml?$1 [L]

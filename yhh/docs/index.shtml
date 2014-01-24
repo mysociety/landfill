@@ -1,0 +1,42 @@
+<!--#set var="page_title" value="where's your place?" -->
+<!--#include virtual="/includes/vars.shtml" -->
+<!--#include virtual="/includes/header.shtml" -->
+    <p style="font-weight: bold; color: #332f5c;">
+	Do you know something unusual about a place, building or street? Some odd factoid, 
+	rumour or tidbit? Share it here, and if you're lucky someone will
+        follow up with more info on your place.
+    </p>
+
+    <div id="map"></div>
+    <p><small>Use the arrows and the zoom on the map to browse to places, and
+click on the red pins to see more info about each place. Go to Add
+Your Place to create a new place.</small>
+<p id="where" style="display:none"><small>Where: <span id="show_where">none selected</span></small></p>
+
+<!--#include virtual="/includes/description.shtml" -->
+</div>
+<div id="inputBox">
+
+<div id="search_results"></div>
+
+<div id="recent_places">
+    <h3 class="green">Recently Added Places</h3>
+    <div id="list">
+	<!--#include virtual="/cgi-bin/list.cgi?page=${QUERY_STRING}" -->
+    </div>
+
+    <h3 class="blue">Recent comments</h3>
+    <!--#include virtual="/cgi-bin/recentcomments.cgi?type=summary" -->
+</div>
+
+<!--#include virtual="/includes/new-stage1.shtml" -->
+
+<div id="add_success" style="display:none">
+<h3 class="blue">Add new place</h3>
+<p>Thanks for creating that entry - we've sent you an email to confirm your post.
+When you follow the link in that email, your post will appear.</p>
+<h4>If you do not follow the link, your message will not appear</h4>
+<p><a href="#needsJS" onclick="add_place_form(0); return false;">Add another</a></p>
+</div>
+
+<!--#include virtual="/includes/footer.shtml" -->

@@ -1,0 +1,16 @@
+<!--#set var="page_title" value="Report Sent" -->
+<!--#include virtual="/includes/header.shtml" -->
+
+<h2>Report sent</h2>
+
+<p>
+	Your report of an abusive comment has been 
+	passed on. We'll look at it as soon as possible.
+</p>
+
+<p>
+	Thanks for letting us know.
+</p>
+
+<!--#include virtual="/includes/footer.shtml" -->
+

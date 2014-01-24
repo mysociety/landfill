@@ -1,0 +1,166 @@
+#!/usr/bin/perl
+
+use File::Basename;
+$ENV{TIMINGBOTPATH}= dirname($0) . "/../";
+use mySociety::Boxes::Config;
+use warnings;
+use strict;
+use XML::RAI;
+use LWP::UserAgent;
+use XML::RSS::TimingBot; # only fetch stuff when needed.
+use XML::RAI; # standard names for entires in RSS feeds.
+use HTML::Scrubber;
+
+{
+	my $feeds_query=$dbh->prepare("
+		select  feedurl, feedid
+ 		  from  feeds
+		  order by feedid desc
+		");
+	$feeds_query->execute;
+	my @elements;
+
+	while (@elements =$feeds_query->fetchrow_array) {
+		&handle_feed( $elements[0], $elements[1]);
+	}
+}
+
+sub handle_feed {
+	my ($feedurl, $feedid)=@_;
+	my $browser = XML::RSS::TimingBot->new;
+	$browser->agent("Sam's RSS Fetcher/0.01 : rssfetcher\@msmith.net");
+	my $response = $browser->get($feedurl);
+	my $tidy_metadata=1; # do this unconditionally now - emtpy feeds are common in mysocland
+
+
+      	if($response->code == 200) {
+		my $content= $response->{_content};
+		$content=~ s#Â##g;
+		$content=~ s#\£#\&amp;pound;#g;
+		if (defined $ENV{DEBUG}) {print STDERR "process_feed $feedid\n";}
+		my $rai= XML::RAI->parse($content);
+		if (defined $ENV{DEBUG}) {print STDERR "parsed: $feedid\n";}
+		if ($rai->item_count) { # the foreach doesn't do this properly
+			foreach my $item (@{$rai->items}) {
+				&process_item ($feedid, $item);
+				$tidy_metadata=1;
+			}
+		}
+		&update_status($feedid, "last_successful_fetch=now(), reason='ok'");
+		if ($tidy_metadata) {&handle_feed_metadata($feedid, $rai);}
+
+      	} elsif($response->code == 304) { # unchanged
+		&update_status($feedid, "last_attempt=now(), reason='unchanged'");
+      	} else {
+        	#print "Hm, couldn't access it: ", $response->status_line, "\n";
+		&update_status($feedid, "last_failed_fetch=now(), reason=" . $dbh->quote($response->status_line)  );
+      	}
+
+      	$browser->commit;   # Save our history.  Don't forget!!
+
+	exit(0);
+
+}
+
+
+sub update_status {
+	my $feedid= shift;
+	my $what= shift;
+	$dbh->do("update feeds set $what where feedid=$feedid");
+}
+
+
+
+
+sub process_item {
+	my ($feedid, $item)=@_; #feedid and RAI object
+	if (defined $ENV{DEBUG}) {print STDERR "process_item $feedid\n";}
+	my $item_query;
+	my %encoded;
+	my $itemid='';
+
+	if (defined $ENV{DEBUG}) {print STDERR "foo\n";}
+	my $content= $item->content;
+	$content ||= $item->title;
+
+	$content=~ s#Â##g;
+	$content=~ s#\£#\&amp;pound;#g;
+	if (defined $ENV{DEBUG}) {print STDERR "content $content\n";}
+	my $scrubber = HTML::Scrubber->new;
+	$scrubber->default(0);
+	$scrubber->allow(qw[a => href]); # only allow links
+	$content=~s/\&#160;//g;
+	#print STDERR "\n\n\n$content\n";
+	$content= $scrubber->scrub($content);
+
+	if (defined $ENV{DEBUG}) {print STDERR "title " . $item->title . "\n";}
+	if (defined $ENV{DEBUG}) {print STDERR "link" . $item->link . "\n";}
+	$encoded{"feedid"}=$dbh->quote($feedid);
+	$encoded{"content"}=$dbh->quote($content or '');
+	$encoded{"title"}=$dbh->quote($item->title or '');
+	$encoded{"link"}=$dbh->quote($item->link or '');
+
+	$encoded{"title"}=~ s#Â##g;
+	#$encoded{"title"}=~ s#\£#\&amp;pound;#g;
+
+	if ($content =~ m/(.{210}.+?\b)/) {
+		$encoded{shortcontent}= $dbh->quote($1 . "...");
+	} else  {
+		$encoded{shortcontent}= $encoded{"content"};
+	}
+
+	my $query= $dbh->prepare ("
+		select entryid from entries where
+		   title  =$encoded{title} and
+		   link   =$encoded{link} and
+		   content=$encoded{content}
+		");
+
+	$query->execute();
+
+	if ($query->rows != 0) {
+		# already exists
+		my ($entryid)= $query->fetchrow_array;
+		$dbh->do("update entries set last_seen=now() 
+  			               where entryid=$entryid");
+
+		return ();
+	} else  {
+		# doesn't exist
+
+		$encoded{feedid}= $dbh->quote($feedid);
+		my $query= $dbh->do ("
+		insert into entries set
+		   feedid= $encoded{feedid}  ,
+		   title  =$encoded{title}   ,
+		   link   =$encoded{link}    ,
+		   content=$encoded{content} ,
+		   shortcontent=$encoded{shortcontent} ,
+		   first_seen=now()
+		");
+		$itemid=$dbh->{'mysql_insertid'};
+	}
+}
+
+
+sub handle_feed_metadata {
+	my ($feedid, $rai)= @_;
+	if (defined $ENV{DEBUG}) {print STDERR "handle_feed_metadata $feedid\n";}
+	my %channel;
+
+	$channel{title}= $dbh->quote($rai->channel->title or 'title');
+	$channel{description}= $dbh->quote($rai->channel->description or 'description');
+	$channel{url}= $dbh->quote($rai->channel->link or '');
+
+	$channel{description}=~ s#£#\&pound;#g;
+
+	$dbh->do("
+		replace into feedinfo set
+			siteurl=$channel{url},
+			description= $channel{description},
+			title=$channel{title},
+ 		  	feedid=$feedid
+		");
+
+
+}

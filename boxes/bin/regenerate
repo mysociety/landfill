@@ -1,0 +1,65 @@
+#!/usr/bin/perl -I../ -I./bin/
+
+use warnings;
+use strict;
+
+use mySociety::Boxes::Config;
+use mySociety::Boxes::Designs;
+use mySociety::Boxes::Routines;
+use File::Copy;
+my $regen_what= shift;
+
+chdir ($Dir_On_Disc) || die "can't chdir to $Dir_On_Disc:$!";
+
+
+{
+	if (defined $regen_what) {
+		$regen_what=' ';
+	} else {
+		$regen_what=' where regen_required=1 ';
+	}
+	my $query= $dbh->prepare("select * from boxinfo $regen_what");
+	$query->execute || die $dbh->errsr;
+	while (my $box= $query->fetchrow_hashref) {
+		my $html= &get_html($box->{boxid});
+		&cache_iframe($box->{boxid}, $html);
+		&cache_js($box->{boxid}, $html);
+		&cache_rss($box->{boxid});
+		$dbh->do("update boxinfo set regen_required=0 where boxid=$box->{boxid}") || warn $dbh->errstr;
+	}
+}
+
+
+
+sub cache_iframe {
+	my ($boxid, $html)=@_;
+
+	# this one doesn't need anything special.
+
+	&output_safely("$boxid.html", $html);
+}
+
+sub cache_js {
+	my ($boxid, $html)=@_;
+
+	$html =~ s#'#\\'#g;
+
+	&output_safely("$boxid.js", "document.write('$html');");
+}
+
+sub cache_rss {
+	my ($boxid)=@_;
+	&output_safely("$boxid.rss", &generate_rss_feed($boxid));
+}
+
+
+sub output_safely {
+	my ($filename, $content)= @_;
+
+	open (OUT, ">$filename.new") ||die "can't open $filename.new:$!";
+	print OUT $content;
+	close (OUT);
+	# link ("$filename.new", $filename) || warn "can't hardlink $filename.new to $filename:$!"; # atomic
+	# unlink("$filename.new") || warn "can't unlink $filename.new:$!";
+	move("$filename.new", $filename) || warn "can't move $filename.new to $filename:$!"; # atomic
+}

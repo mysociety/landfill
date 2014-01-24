@@ -1,0 +1,27 @@
+ToDo.
+
+this list is not exhaustive, contact sam for stuff to do with it.
+
+
+
+	a way of editing style info (styleinfo table)
+		- text boxes for content, drop down to select header/footer,
+		  tag to enter name of design.
+
+	a better way of adding new urls/sources (feeds table)
+		- add URL and also attach to constituency
+		- add URL with placeholder for postcode.
+
+
+
+
+Stuff I have in my sights
+	Write a script to generate iframe/js/rss
+		- mostly done (not necessarily committed)
+		- attach to the go script to update as soon as feed fetching
+		  is done. Only regenerates boxes which have changed content.
+
+
+
+S@mSmith.net
+

@@ -1,0 +1,3 @@
+	<!--#include virtual="includes/header.shtml" -->
+	<!--#include virtual="cgi-bin/history.cgi/${QUERY_STRING}" -->
+	<!--#include virtual="includes/footer.shtml" -->

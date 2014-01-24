@@ -1,0 +1,8 @@
+<!--#include virtual="/includes/header.shtml" -->
+
+<h3>Hot topics</h3>
+<!--#include virtual="map.shtml" -->
+
+
+<!--#include virtual="/includes/footer.shtml" -->
+

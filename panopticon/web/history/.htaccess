@@ -1,0 +1,3 @@
+Options +SymLinksIfOwnerMatch
+RewriteEngine on
+RewriteRule ^(.*-.*)	/history.shtml?$1 [L]

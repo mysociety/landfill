@@ -1,0 +1,3 @@
+	<!--#include virtual="../includes/header.shtml?${QUERY_STRING}" -->
+	<!--#include virtual="monthly.shtml" -->
+	<!--#include virtual="../includes/footer.shtml" -->

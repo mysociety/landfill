@@ -1,0 +1,4 @@
+
+
+	<!-- this should probably be done from cron, rather than per visit -->
+	<!--#include virtual="/cgi-bin/sidebar.cgi" -->

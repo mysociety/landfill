@@ -1,0 +1,16 @@
+	</div>
+
+        <div id="divFooter">
+            <ul id="ulFooterMenu" class="inline">
+                <li><a href="/">Home</a></li>
+                <li><a href="/new/">New subject</a></li>
+                <li><a href="/interests/">All subjects</a></li>
+                <li><a href="/how/">How it works</a></li>
+                <li><a href="/faq/"><acronym title="Frequently asked questions">FAQs</acronym></a></li>
+                <li><a href="/contact/">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>

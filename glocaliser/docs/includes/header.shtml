@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+  <title>glocaliser</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" type="text/css" href="/css/memespring.css" />
+  <link rel="stylesheet" type="text/css" href="/css/additional.css" />
+  <link rel="stylesheet" type="text/css" href="/css/main.css" />
+  <link rel="alternate" href="/cgi-bin/rss.cgi" type="application/rss+xml" />
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+   <!--#if expr="${interest_reg_map}" -->
+    <script src="http://maps.google.com/maps?file=api&v=2&key=ABQIAAAAjMx5sgE5ssgNIfa7MtUg0BRTROIle2SFfALhFY7TpfzxAw_A-xSAsviJkhGO2rUOM6sAqocneKEyTg" type="text/javascript"></script>
+    <script src="/glocaliser.js" type="text/javascript"></script>
+ </head>
+<body onload="mapload()">
+   <!--#else  -->
+ </head>
+<body>
+   <!--#endif -->
+
+    
+    <div id="divPage">
+        <div id="divHeader">
+            <h1><a href="/"><span class="hide">Glocaliser</span></a></h1>
+            <h2><span class="hide">do global things locally</span></h2>
+            <ul id="ulMenu" class="collapse">
+                <li><a class="selected" href="/">Home</a></li>
+
+                <li><a href="/new/">New subject</a></li>
+                <li><a href="/interests/">All subjects</a></li>
+                <li><a href="/how/">How it works</a></li>
+                <li><a href="/faq/"><acronym title="Frequently asked questions">FAQs</acronym></a></li>
+                <li><a href="/contact/">Contact</a></li>
+                <li id="liSearch">
+                    <form id="frmSearch" action="/search/" method="get">
+                        <label for="txtSearch">Search</label>
+                        <input type="text" class="textbox" id="txtSearch" name="search" onclick="javascript:if (this.value=='subject') this.value='';" value="subject" />
+                        <input type="submit" class="button" value="Go" />
+                    </form>
+                </li>                
+            </ul>
+        </div>
+        <div id="divContent">
+
+
+<div class="divContent">
+
+
+

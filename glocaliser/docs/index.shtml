@@ -1,0 +1,56 @@
+<!--#include virtual="/includes/header.shtml" -->
+
+	    <!--
+                <h3>Current subjects</h3>
+                <ul>
+                    <li><a href="jacvascript:switchCurrent();"></a></li>
+                </ul>
+                <div id="divCurrentSubjects">
+                    <div id="divCurrentTagcloud">
+                        <ul class="inline">
+			    Topics:
+                            <li class="weight_1"><a href="#">caribana</a></li>
+                			<li class="weight_2"><a href="#">wordcamp</a></li>
+                			<li class="weight_4"><a href="#">lollapalooza</a></li>
+                			<li class="weight_10"><a href="#">prado</a></li>
+                			<li class="weight_1"><a href="#">bokehsoniceaugust05</a></li>
+                			<li class="weight_5"><a href="#">mobilife</a></li>
+
+                			<li class="weight_8"><a href="#">contextwatcher</a></li>
+                			<li class="weight_2"><a href="#">fakelomo</a></li>
+                			<li class="weight_3"><a href="#">zonetag</a></li>
+                			<li class="weight_5"><a href="#">??</a></li>
+                			<li class="weight_3"><a href="#">gr</a></li>
+                			<li class="weight_5"><a href="#">gaypride</a></li>
+
+                			<li class="weight_3"><a href="#">msh0806</a></li>
+                			<li class="weight_2"><a href="#">grdigital</a></li>
+                			<li class="weight_1"><a href="#">utatadines</a></li>
+                			<li class="weight_1"><a href="#">puertorico</a></li>
+                			<li class="weight_4"><a href="#">cookout</a></li>
+                			<li class="weight_1"><a href="#">hanabi</a></li>
+
+                			<li class="weight_6"><a href="#">treo650</a></li>
+                			<li class="weight_1"><a href="#">seafair</a></li>
+            			</ul>
+                    </div>
+                    <div id="divCurrentMap">
+			Recent messages/places:
+			somewhere.
+                    </div>
+                </div>
+		-->
+
+		<!--#include virtual="/cgi-bin/interests.cgi" -->
+<!--             </div>
+             <div id="divContentRight">
+	     Where are you?
+             google map of 5 latest / interesting subjects 
+             </div>
+
+-->
+
+
+
+
+<!--#include virtual="/includes/footer.shtml" -->

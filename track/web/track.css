@@ -1,0 +1,35 @@
+/*
+ * track.css:
+ *
+ * Copyright (c) 2006 UK Citizens Online Democract. All rights reserved.
+ * Email: chris@mysociety.org; WWW: http://www.mysociety.org/
+ *
+ * $Id: track.css,v 1.4 2008-02-07 17:05:00 matthew Exp $
+ *
+ */
+
+body {
+    line-height: 150%;
+    font-family: sans-serif;
+}
+
+h1, h2 {
+    font-size: 150%;
+    text-align: left;
+    color: #006;
+    font-weight: bold;
+    font-style: italic;
+}
+
+h2 {
+    font-size: 120%;
+    border-bottom: 1px solid #08e;
+}
+
+p, ul {
+    padding-left: 2em;
+}
+
+span {
+    border-bottom: dotted 1px black;
+}

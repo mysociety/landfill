@@ -1,0 +1,33 @@
+#!/usr/bin/perl -w
+#
+# delete-old:
+# Delete old events from the tracking database.
+#
+# Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
+# Email: chris@mysociety.org; WWW: http://www.mysociety.org/
+#
+
+my $rcsid = ''; $rcsid .= '$Id: delete-old,v 1.1 2006-08-15 12:17:25 chris Exp $';
+
+use strict;
+require 5.8.0;
+
+# Horrible boilerplate to set up appropriate library paths.
+use FindBin;
+use lib "$FindBin::Bin/../perllib";
+use lib "$FindBin::Bin/../../perllib";
+
+use mySociety::Config;
+BEGIN {
+    mySociety::Config::set_file("$FindBin::Bin/../conf/general");
+}
+
+use mySociety::DBHandle qw(dbh);
+
+use Track;
+
+# Event logs are kept for 28 days. Strictly we should probably delete user-agent
+# strings which are no longer referenced by any events, since in principle those
+# could be personal data too, but this isn't likely for most users.
+dbh()->do("delete from event where whenlogged < current_timestamp - '28 days'::interval");
+dbh()->commit();

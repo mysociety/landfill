@@ -1,0 +1,42 @@
+<?php
+/*
+ * general-example:
+ * Configuration for tracking service.
+ * 
+ * Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
+ * Email: chris@mysociety.org; WWW: http://www.mysociety.org/
+ *
+ * $Id: general-example,v 1.7 2006-03-09 13:19:45 chris Exp $
+ * 
+ */
+
+// PostgreSQL database for tracking data
+// Host and port, if needed.
+define('OPTION_TRACKING_DB_HOST', 'dbhost');
+define('OPTION_TRACKING_DB_PORT', '5432');
+define('OPTION_TRACKING_DB_NAME', 'track');
+define('OPTION_TRACKING_DB_USER', 'track');
+define('OPTION_TRACKING_DB_PASS', '');
+
+// Shared secret. This must be known to the sites which use us for tracking;
+// this ensures that only authorised sites can record data in our database.
+define('OPTION_TRACKING_SECRET', 'your-secret-value-here');
+
+// The name of the cookie which will be sent to clients.
+define('OPTION_TRACKING_COOKIE_NAME', 'mysociety_tracking');
+
+// Domain and path in which it lives.
+define('OPTION_TRACKING_COOKIE_DOMAIN', 'track.fishsoupisgoodforyou.com');
+define('OPTION_TRACKING_COOKIE_PATH', '/');
+
+// Whether the cookie should be secure-only.
+// XXX to safeguard user privacy, this should be set to 1
+define('OPTION_TRACKING_COOKIE_SECURE', 0);
+
+// Whether user tracking should be enabled on the pages about user-tracking
+define('OPTION_TRACKING', 1);
+
+// URL of web bug.
+define('OPTION_TRACKING_URL', 'http://track.fishsoupisgoodforyou.com/webbug.png');
+
+?>

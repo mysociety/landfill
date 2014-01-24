@@ -1,0 +1,521 @@
+#!/usr/bin/perl -w
+#
+# pgblackbox:
+# Record certain information about a PostgreSQL database server for later
+# analysis and debugging.
+#
+# Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
+# Email: chris@mysociety.org; WWW: http://www.mysociety.org/
+#
+
+my $rcsid = ''; $rcsid .= '$Id: pgblackbox,v 1.15 2007-03-07 14:34:43 louise Exp $';
+
+use strict;
+
+package main;
+
+# Horrible boilerplate to set up appropriate library paths.
+use FindBin;
+use lib "$FindBin::Bin/../perllib";
+use lib "$FindBin::Bin/../../perllib";
+
+use Carp;
+use DBI;
+use DBD::Pg;
+use Errno;
+use Fcntl qw(:DEFAULT :flock);
+use File::Find qw();
+use File::stat;
+use Getopt::Long;
+use Pod::Usage;
+use Pod::Usage;
+use POSIX qw(strftime _exit setsid :sys_wait_h);
+use Sys::Syslog;
+use Time::HiRes qw(sleep);
+
+use PGBlackbox;
+
+# UNIX user and group we run as.
+my $user = 'postgres';
+my $group = 'postgres';
+
+# PID file for the daemon.
+my $pid_file = '';
+
+my $dbuser = 'postgres';
+my $dbpass = '';
+my $dbname_dummy = 'dummy';
+
+my $compression_prog = "/usr/bin/bzip2";
+my $compression_suffix = ".bz2";
+
+# Parameters for cleaning up the spool directory.
+my $compression_age = 86400;
+my $max_size = 1024; # MB
+
+#my $spool_dir = "/var/spool/pgblackbox";
+my $spool_dir = "/tmp/pgblackbox";
+my $spool_slots = 360;  # half an hour
+
+
+# How often we log information about the database, and how often we compress
+# and clean up old data.
+my $interval = 5;
+my $cleanup_interval = 3600;
+
+my $dbh;        # master db connection
+my %dbh_by_db;  # handles for individual databases
+
+# configure [FILE]
+# Read the configuration from the named FILE, or, if it is not specified, the
+# default global config file.
+sub configure (;$) {
+    my $name = shift;
+    $name ||= $PGBlackbox::default_config_file;
+    my $h = new IO::File($name, O_RDONLY);
+    if (!$h) {
+        if ($!{ENOENT}) {
+            print_log('warning', '%s: %s; using defaults', $name, $!);
+            return;
+        } else {
+            print_log('err', '%s: %s; aborting', $name, $!);
+            exit(1);
+        }
+    }
+    my $config = PGBlackbox::read_config($h, $name);
+    $h->close();
+    if (!ref($config)) {
+        print_log('err', '%s', $config);
+        exit(1);
+    }
+    foreach (keys %$config) {
+        no strict 'refs';
+        my $val = $config->{$_};
+        $_ = 'dbname_dummy' if ($_ eq 'dbname');
+        eval "\$$_ = \$val;";
+    }
+
+    if ($user !~ /^(0|[1-9]\d*)$/) {
+        my $uid = getpwnam($user);
+        if (!defined($uid)) {
+            print_log('err', '%s: no such user', $user);
+            exit(1);
+        } else {
+            $user = $uid;
+        }
+    }
+
+    if ($group =~ /^(0|[1-9]\d*)$/) {
+        my $gid = getgrnam($group);
+        if (!defined($gid)) {
+            print_log('err', '%s: no such group', $group);
+            exit(1);
+        } else {
+            $group = $gid;
+        }
+    }
+}
+
+# dbh [DBNAME]
+# Return a handle open on the given DBNAME, or the dummy database if it is not
+# specified. Handles open on individual non-dummy databases are not cached.
+sub dbh (;$);
+sub dbh (;$) {
+    if (@_) {
+        my $dbname = shift;
+        croak "DBNAME must not be undef" unless (defined($dbname));
+
+        my $dbh = $dbh_by_db{$dbname};
+        if ($dbh && !$dbh->ping()) {
+            # XXX log that handle has gone away.
+            undef $dbh;
+        }
+        if (!defined($dbh)) {
+            $dbh = DBI->connect("dbi:Pg:dbname=$dbname", $dbuser, $dbpass, {
+                                AutoCommit => 1, PrintError => 0, Warn => 0
+                            });
+            print_log('err', 'connect to database "%s": %s', $dbname, DBI->errstr())
+                if (!defined($dbh));
+        }
+
+        $dbh_by_db{$dbname} = $dbh if ($dbh && $dbname eq $dbname_dummy);
+
+        return $dbh;
+    } else {
+        return dbh($dbname_dummy);
+    }
+}
+
+# dbname ID
+# Return the name of the database with the given ID.
+sub dbname ($) {
+    my $id = shift;
+croak "db#0" if (0 == $id);
+    our %dbname;
+    if (!exists($dbname{$id})) {
+        $dbname{$id}
+            = dbh()->selectrow_array('
+                    select datname
+                    from pg_stat_database
+                    where datid = ?', {}, $id);
+        $dbname{$id} ||= "<db#$id>";
+    }
+    return $dbname{$id};
+}
+
+# tablename DATABASE TABLE
+# Return the name of the TABLE (ID) in the given DATABASE (ID).
+sub tablename ($$) {
+    my ($d, $t) = @_;
+    # Connect and then disconnect asap. So to avoid unnecessary overhead we
+    # grab all the table names we can every time we are called, so this
+    # function should connect to the database once on startup and once for each
+    # table added to any database.
+    my $dbname = dbname($d);
+    our %tablename;
+    if (!exists($tablename{$dbname}) || !exists($tablename{$dbname}->{$t})) {
+        $tablename{$dbname} ||= { };
+        my $dbh = dbh($dbname);
+        # failure to connect probably means the database doesn't exist for some
+        # reason, but it might be a transient failure, so don't cache the result.
+        return "<rel#$t>" if (!$dbh);
+        my $x = $dbh->selectall_arrayref('
+                    select relid, relname
+                    from pg_stat_user_tables');
+        foreach (@$x) {
+            my ($id, $name) = @$_;
+            $tablename{$dbname}->{$id} = $name;
+        }
+        $tablename{$dbname}->{$t} ||= "<rel#$t>";
+        $dbh->disconnect();
+    }
+    return $tablename{$dbname}->{$t};
+}
+
+# get_state
+# Record relevant state of the database.
+sub get_state () {
+    my $pg_stat_activity
+        = dbh()->selectall_arrayref('
+                select datid, datname, procpid, usesysid, usename,
+                    current_query,
+                    extract(epoch from (current_timestamp - query_start))::integer
+                from pg_stat_activity');
+        # XXX consider only looking at activity rows which are not
+        # "<IDLE>".
+    my $pg_locks
+        = dbh()->selectall_arrayref('
+                select relation, database, transaction, pid, mode, granted
+                from pg_locks');
+    @$pg_locks = grep { !defined($_->[1]) || $_->[1] != 0 } @$pg_locks;
+        # Occasionally we see rows with database = 0 referring to shadow
+        # tables. Ignore these.
+
+    foreach (@$pg_locks) {
+        # Replace relation and database IDs with names.
+        if (defined($_->[0])) {
+            $_->[0] = tablename($_->[1], $_->[0]);
+            $_->[1] = dbname($_->[1]);
+        }
+    }
+
+    # Now grab information about the individual clients, if available.
+    #
+    # XXX Also use this opportunity to clean up old client rows.
+    my $clients = [ ];
+    my $dbh;
+    my $last_datname;
+    foreach (sort { $a->[1] cmp $b->[1] } @{$pg_stat_activity}) {
+        my ($datid, $datname, $procpid) = @$_;
+        if (!defined($dbh) || $datname ne $last_datname) {
+            $dbh->disconnect() if ($dbh);
+            $dbh = dbh($datname);
+            $last_datname = $datname;
+        }
+        my $row = $dbh->selectrow_arrayref('
+                        select backendpid, host,
+                            clientaddr, clientport, serveraddr, serverport,
+                            dbname, dbuser,
+                            pid, ppid,
+                            uid, gid,
+                            argv, environ, cwd,
+                            connected
+                        from debug.client
+                        where backendpid = ?', {}, $procpid);
+        next unless ($row);
+        $row->[12] ||= '';
+        $row->[12] = [split(/\0/, $row->[12])];
+        $row->[13] ||= '';
+        $row->[13] = [split(/\0/, $row->[13])];
+        push(@$clients, $row) if ($row);
+    }
+    $dbh->disconnect() if ($dbh);
+
+    # maybe record other circumstantial information, e.g. load?
+
+    return ($pg_stat_activity, $pg_locks, $clients);
+}
+
+# spoolfile
+# Return current spoolfile object, or undef in case of a fatal error.
+sub spoolfile () {
+    our $current_spoolfile;
+
+    if (!defined($current_spoolfile) || $current_spoolfile->eof()) {
+        my @l = localtime(time());
+        foreach my $d (map { strftime($_, @l) } qw(%Y %Y/%m %Y/%m/%d)) {
+            if (!-d "$spool_dir/$d" && !mkdir("$spool_dir/$d", 0755) && !$!{EEXIST}) {
+                print_log('err', '%s: mkdir: %s', "$spool_dir/$d", $!);
+                return undef;
+            }
+        }
+        
+        my $filename = strftime('%Y/%m/%d/%Y%m%dT%H%M%S.pgb', @l);
+        my $s = PGBlackbox::Spoolfile->create("$spool_dir/$filename", $spool_slots);
+        if (!ref($s)) {
+            print_log('err', '%s: create new spool file: %s', "$spool_dir/$filename", $s);
+            return undef;
+        }
+
+        $current_spoolfile = $s;
+
+        # XXX really we should see whether the last-written spool file has any
+        # free space and open that, but can't be bothered at the moment.
+    }
+
+    return $current_spoolfile;
+}
+
+# do_cleanup
+# Clean up / compress old spool files.
+sub do_cleanup () {
+    my $compression_time = strftime('%Y%m%dT%H%M%S.pgb', localtime(time() - $compression_age));
+    my @to_compress = ( );
+    File::Find::find(sub {
+                return unless ($_ lt $compression_time
+                                && /^\d{8}T\d{6}\.pgb$/);
+                push(@to_compress, $File::Find::name);
+            }, $spool_dir);
+
+    foreach (@to_compress) {
+        unlink("$_$compression_suffix");    # avoid "already exists" error
+        system($compression_prog, $_);
+        # XXX ignores errors / stderr
+    }
+
+    print_log('info', 'compressed %d old spool files', scalar(@to_compress))
+        if (@to_compress);
+        
+    my @all_files = ( );
+    File::Find::find(sub {
+                return unless ($_ =~ /^\d{8}T\d{6}\.pgb(|\Q$compression_suffix\E)$/);
+                push(@all_files, $File::Find::name);
+            }, $spool_dir);
+
+    # Produce list sorted newest first.
+    @all_files = sort { $b cmp $a } @all_files;
+    
+    my $total = 0;
+    my $ndeleted = 0;
+    my $total_deleted = 0;
+    foreach (@all_files) {
+        if ($total / (1024 * 1024) > $max_size) {
+            my $st = stat($_);
+            if ($st && unlink($_)) {
+                ++$ndeleted;
+                $total_deleted += $st->size();
+            }
+        } else {
+            my $st = stat($_);
+            $total += $st->size() if ($st);
+        }
+    }
+
+    print_log('info', 'deleted %d old spool files totaling %d bytes', $ndeleted, $total_deleted)
+        if ($ndeleted > 0);
+}
+
+openlog('pgblackbox', 'ndelay,pid', 'daemon');
+
+sub print_log ($$@) {
+    my ($prio, $fmt, @args) = @_;
+    print STDERR "pgblackbox: ", sprintf($fmt, @args), "\n";
+    syslog($prio, $fmt, @args);
+}
+
+$SIG{__DIE__} = sub {
+    print_log('err', 'perl fatal error: %s', join('', @_));
+};
+
+$SIG{__DIE__} = sub {
+    print_log('err', 'perl warning: %s', join('', @_));
+};
+
+my $foad = 0;
+$SIG{TERM} = $SIG{INT} = sub { $foad = 1; };
+my $alarm_fired = 0;
+$SIG{ALRM} = sub { $alarm_fired = 1; };
+my $child_exited = 0;
+$SIG{CHLD} = sub { $child_exited = 1; };
+
+my $config_file = $PGBlackbox::default_config_file;
+my $debug = 0;
+my $help = 0;
+if (!GetOptions(
+        debug =>            \$debug,
+        help =>             \$help,
+        'config=s' =>       \$config_file)) {
+    print_log('err', "bad options; try --help for help");
+    exit(1);
+}
+
+if ($help) {
+    pod2usage(-exitval => 0, -verbose => 1);
+    exit(0);
+}
+
+configure($config_file);
+
+my $h_pid_file;
+if ($pid_file) {
+    $h_pid_file = new IO::File($pid_file, O_RDWR | O_CREAT, 0644);
+    if (!$h_pid_file) {
+        print_log('err', '%s: open: %s; aborting', $pid_file, $!);
+        exit(1);
+    } elsif (!flock($h_pid_file, LOCK_EX | LOCK_NB)) {
+        if ($!{EAGAIN}) {
+            print_log('err', '%s: flock: already locked; another instance must be running', $pid_file);
+        } else {
+            print_log('err', '%s: flock: %s; aborting', $pid_file, $!);
+        }
+        exit(1);
+    }
+}
+
+# Become a daemon, if necessary.
+if (!$debug) {
+    my $p = fork();
+    if (!defined($p)) {
+        print_log('err', 'fork: %s; aborting', $!);
+        exit(1);
+    } elsif ($p != 0) {
+        exit(0);
+    }
+    POSIX::close(0);
+    POSIX::close(1);
+    POSIX::open("/dev/null", O_RDWR);
+    POSIX::dup(0);
+    POSIX::dup(0);
+    for (my $i = 3; $i < POSIX::sysconf(POSIX::_SC_OPEN_MAX()); ++$i) {
+        POSIX::close($i) unless ($h_pid_file && $i == $h_pid_file->fileno());
+    }
+    # Re-open syslog.
+    openlog('pgblackbox', 'ndelay,pid', 'daemon');
+    if (!setsid()) {
+        print_log('err', 'setsid: %s; aborting', $!);
+        exit(1);
+    }
+    
+    $p = fork();
+    if (!defined($p)) {
+        print_log('err', 'fork: %s; aborting', $!);
+        exit(1);
+    } elsif ($p != 0) {
+        exit(0);
+    }
+
+    # Now close stderr.
+    POSIX::close(2);
+    POSIX::dup(0);
+}
+
+if ($h_pid_file) {
+    $h_pid_file->truncate(0);
+    $h_pid_file->syswrite("$$");
+}
+
+my $last_cleanup = 0;
+my $cleanup_pid;
+while (!$foad) {
+    my ($pg_stat_activity, $pg_locks, $clients) = get_state();
+
+    my $f = spoolfile();
+    if (!$f) {
+        print_log('err', 'fatal error; aborting');
+        exit(1);
+    }
+    my $err = $f->append($pg_stat_activity, $pg_locks, $clients);
+    if ($err) {
+        print_log('err', '%s: %s', spoolfile()->name(), $err);
+    }
+
+    $alarm_fired = 0;
+    alarm($interval);
+    if (!defined($cleanup_pid) && $last_cleanup < time() - $cleanup_interval) {
+        $cleanup_pid = fork();
+        if (!defined($cleanup_pid)) {
+            print_log('err', 'fork (start cleanup process): %s', $!);
+        } elsif (0 == $cleanup_pid) {
+            do_cleanup();
+            _exit(0);
+        } else {
+            print_log('info', 'started new cleanup process, %d', $cleanup_pid);
+            $last_cleanup = time();
+        }
+    }
+
+    if ($child_exited) {
+        my $pid = waitpid(-1, WNOHANG);
+        if ($pid) {
+            if ($?) {
+                print_log('err', 'cleanup process %d exited with bad status %d', $pid, $?);
+            } else {
+                print_log('info', 'cleanup process %d finished', $pid);
+            }
+        }
+        $child_exited = 0;
+        $cleanup_pid = undef;
+    }
+    
+    while (!$alarm_fired) {
+        sleep(0.1);
+    }
+}
+
+print_log('info', 'terminating on signal');
+
+unlink($pid_file) if ($pid_file);
+
+__END__
+
+=head1 NAME
+
+pgblackbox
+
+=head1 SYNOPSIS
+
+pgblackbox --help | [OPTIONS]
+
+=head1 DESCRIPTION
+
+Record data about the state of a PostgreSQL database in a set of spool files,
+for later extraction with pgbextract.
+
+=head1 OPTIONS
+
+=over 4
+
+=item --help
+
+Display information about using the program.
+
+=item --debug
+
+Don't detach from controlling terminal, and log diagnostics to standard error
+as well as the system log.
+
+=item --config FILE
+
+Read the configuration from the named FILE, rather than the configured default.
+
+=back

@@ -1,0 +1,19 @@
+<?php
+/*
+ * general-example:
+ * Configuration for the CommentOnPower website.
+ * 
+ * Copyright (c) 2006 UK Citizens Online Democracy. All rights reserved.
+ * Email: chris@mysociety.org; WWW: http://www.mysociety.org/
+ *
+ * $Id: general-example,v 1.1 2006-02-28 10:59:35 chris Exp $
+ * 
+ */
+
+/* WordPress MySQL database */
+define('OPTION_COP_DB_NAME', '');
+define('OPTION_COP_DB_USER', '');
+define('OPTION_COP_DB_PASSWORD', '');
+define('OPTION_COP_DB_HOST', '');
+
+?>
